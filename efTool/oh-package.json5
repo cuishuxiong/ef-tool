@@ -1,0 +1,9 @@
+{
+  "name": "@yunkss/efTool",
+  "version": "1.0.0",
+  "description": "一款高效的hOpenHarmony工具包.",
+  "main": "index.ets",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}
