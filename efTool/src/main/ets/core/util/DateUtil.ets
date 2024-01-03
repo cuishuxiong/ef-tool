@@ -3,30 +3,55 @@
  * @DateTime 2023/12/29 23:42
  * @TODO DateUtil 日期工具类
  */
-import { StrUtil } from './StrUtil';
 
 export class DateUtil {
-  static parse(dateString: string, formatString: string): Date {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {};
-    if (formatString.includes("YYYY")) {
-      options.year = "numeric";
-    }
-    if (formatString.includes("MM")) {
-      options.month = "2-digit";
-    }
-    if (formatString.includes("DD")) {
-      options.day = "2-digit";
-    }
-    const formatter = new Intl.DateTimeFormat(undefined, options);
-    const formattedDate = formatter.format(date);
-    return new Date(formattedDate);
+
+  static parse(dateString: string): Date {
+    return new Date(dateString);
   }
 
-  static year(date) {
-    const yearPrefix = new Date().getFullYear().toString().slice(0, 2);
-    const yearSuffix = date.getFullYear().toString().slice(2);
-    const fullYear = yearPrefix + yearSuffix;
-    return parseInt(fullYear, 10);
+  static formatDate(value: string, format: string = 'yyyy-MM-dd'): string {
+    const date = new Date(value);
+    if (value.split(' ').length <= 1 && value.split('T').length <= 1) {
+      date.setHours(0);
+      date.setMinutes(0);
+      date.setSeconds(0);
+    }
+    const year = date.getFullYear();
+    const month = this.padZero(date.getMonth() + 1);
+    const day = this.padZero(date.getDate());
+    const hours = this.padZero(date.getHours());
+    const minutes = this.padZero(date.getMinutes());
+    const seconds = this.padZero(date.getSeconds());
+    let formattedDate = format.replace("yyyy", year.toString());
+    formattedDate = formattedDate.replace("MM", month);
+    formattedDate = formattedDate.replace("dd", day);
+    formattedDate = formattedDate.replace("HH", hours);
+    formattedDate = formattedDate.replace("mm", minutes);
+    formattedDate = formattedDate.replace("ss", seconds);
+    return formattedDate;
+  }
+
+  static format(date: Date, formatString: string): string {
+    const year = date.getFullYear();
+    const month = this.padZero(date.getMonth() + 1);
+    const day = this.padZero(date.getDate());
+    const hours = this.padZero(date.getHours());
+    const minutes = this.padZero(date.getMinutes());
+    const seconds = this.padZero(date.getSeconds());
+
+    let formattedDate = formatString.replace("yyyy", year.toString());
+    formattedDate = formattedDate.replace("MM", month);
+    formattedDate = formattedDate.replace("dd", day);
+    formattedDate = formattedDate.replace("HH", hours);
+    formattedDate = formattedDate.replace("mm", minutes);
+    formattedDate = formattedDate.replace("ss", seconds);
+
+
+    return formattedDate;
+  }
+
+  private static padZero(num: number): string {
+    return num.toString().padStart(2, "0");
   }
 }

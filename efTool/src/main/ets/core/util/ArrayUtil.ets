@@ -6,8 +6,6 @@
 import { StrUtil } from './StrUtil'
 
 export class ArrayUtil {
-  public ArrayUtil() {
-  }
 
   static defaultIfEmpty<T>(array: T[], defaultArray: T[]): T[] {
     return ArrayUtil.isEmpty(array) ? defaultArray : array;

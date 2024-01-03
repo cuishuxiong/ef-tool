@@ -7,10 +7,6 @@ import { ArrayUtil } from './ArrayUtil';
 import { CharUtil } from './CharUtil'
 
 export class StrUtil {
-  public StrUtil() {
-
-  }
-
 
   static isBlank(str: string): boolean {
     let length: number;

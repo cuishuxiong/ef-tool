@@ -17,9 +17,11 @@ struct Index {
 
   test() {
 
+    // this.message =  DateUtil.parse('2024-01-03T09:48:15.316Z')+"";
 
+    // this.message = DateUtil.format(new Date(),'yyyy/MM/dd HH:mm:ss')
 
-    // let p:Person = JSONUtil.parseObject<Person>('{"name":"崔树雄","age":18,"birth":"2024-01-03T09:48:15.316Z" }','yyyy/MM/dd HH:mm:ss')
+    // let p:Person = JSONUtil.parseObject<Person>('{"name":"崔树雄","age":18,"birth":"2024-01-03" }','yyyy-MM-dd HH:mm:ss')
     //
     // this.message = p.name+p.birth;
 

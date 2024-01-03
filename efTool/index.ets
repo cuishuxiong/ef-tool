@@ -1,4 +1,3 @@
-// export { MainPage } from './src/main/ets/components/mainpage/MainPage'
 export { ArrayUtil } from './src/main/ets/core/util/ArrayUtil';
 export { CharUtil } from './src/main/ets/core/util/CharUtil';
 export { DateUtil } from './src/main/ets/core/util/DateUtil';
@@ -9,3 +8,4 @@ export { RandomUtil } from './src/main/ets/core/util/RandomUtil';
 export { StrUtil } from './src/main/ets/core/util/StrUtil';
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
 export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
+export { RegexConst } from './src/main/ets/core/const/RegexConst';

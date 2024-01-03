@@ -3,12 +3,8 @@
  * @DateTime 2023/12/29 21:56
  * @TODO ReUtil 正则工具类
  */
-type Consumer = (matched: string) => void;
 import { RegexConst as Const } from '../const/RegexConst'
 import { HashSet } from '../base/HashSet'
-import { MutableObj } from '../base/MutableObj'
-import { StrUtil } from './StrUtil';
-
 export class RegUtil {
 
   /**

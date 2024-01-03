@@ -3,6 +3,9 @@
  * @DateTime 2023/12/29 20:10
  * @TODO JSONUtil   各种json转换工具类
  */
+
+import { DateUtil } from './DateUtil'
+
 export class JSONUtil {
   static toJSONString(object: Object): string {
     return JSON.stringify(object);
@@ -22,7 +25,7 @@ export class JSONUtil {
         result[key] = JSON.stringify(value);
       } else if (this.isDate(value)) {
         // @ts-ignore
-        result[key] = this.formatDate(value, dateFormat);
+        result[key] = DateUtil.formatDate(value, dateFormat);
       } else {
         result[key] = value;
       }
@@ -43,7 +46,7 @@ export class JSONUtil {
           jsonObj[key] = JSON.stringify(value);
         } else if (this.isDate(value)) {
           // @ts-ignore
-          jsonObj[key] = this.formatDate(value, dateFormat);
+          jsonObj[key] = DateUtil.formatDate(value, dateFormat);
         } else {
           jsonObj[key] = value;
         }
@@ -53,65 +56,7 @@ export class JSONUtil {
     return result;
   }
 
-
   static isDate(value: any): value is Date {
     return value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)));
-  }
-
-  static formatDate(value: string, format: string = 'yyyy-MM-dd'): string {
-    const date = new Date(value);
-    const year = date.getFullYear();
-    const month = this.padZero(date.getMonth() + 1);
-    const day = this.padZero(date.getDate());
-    const hour = this.padZero(date.getHours());
-    const minute = this.padZero(date.getMinutes());
-    const second = this.padZero(date.getSeconds());
-    let result;
-    if (this.hasSecondUsingRegExp(value)) {
-      result = format.replace('yyyy', year.toString())
-        .replace('MM', month)
-        .replace('dd', day)
-        .replace('HH', hour)
-        .replace('mm', minute)
-        .replace('ss', second);
-    } else if (this.hasMinuteUsingRegExp(value)) {
-      result = format.replace('yyyy', year.toString())
-        .replace('MM', month)
-        .replace('dd', day)
-        .replace('HH', hour)
-        .replace('mm', minute);
-    } else if (this.hasHourUsingRegExp(value)) {
-      result = format.replace('yyyy', year.toString())
-        .replace('MM', month)
-        .replace('dd', day)
-        .replace('HH', hour);
-    } else {
-      result = format.replace('yyyy', year.toString())
-        .replace('MM', month)
-        .replace('dd', day)
-        .replace('HH', '00')
-        .replace('mm', '00')
-        .replace('ss', '00');
-    }
-    return result;
-  }
-
-  static hasHourUsingRegExp(dateString) {
-    const pattern = /(?:\d{1,2}:)/;
-    return pattern.test(dateString);
-  }
-
-  static hasMinuteUsingRegExp(dateString) {
-    const pattern = /(?:\d{1,2}:\d{2})/;
-    return pattern.test(dateString);
-  }
-
-  static hasSecondUsingRegExp(dateString) {
-    const pattern = /(?:\d{1,2}:\d{2}:\d{2})/;
-    return pattern.test(dateString);
-  }
-
-  static padZero(value: number): string {
-    return value.toString().padStart(2, '0');
   }
 }

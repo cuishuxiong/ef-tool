@@ -4,9 +4,6 @@
  * @TODO CharUtil  字符工具类
  */
 export class CharUtil {
-  public CharUtil() {
-
-  }
 
   /**
    * 是否空白符 空白符包括空格、制表符、全角空格和不间断空格
