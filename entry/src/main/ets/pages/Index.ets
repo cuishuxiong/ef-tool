@@ -1,8 +1,8 @@
-import { ArrayUtil, IdCardUtil, StrUtil, RandomUtil,DateUtil,JSONUtil } from '@yunkss/efTool'
+import { ArrayUtil, IdCardUtil, StrUtil, RandomUtil, DateUtil, JSONUtil, RegUtil, OutDTO } from '@yunkss/efTool'
 
-class Person{
-  name:string;
-  age:number;
+class Person {
+  name: string;
+  age: number;
   birth: Date;
 }
 
@@ -16,6 +16,8 @@ struct Index {
   }
 
   test() {
+
+    this.message = RegUtil.isEmailMatch('').getMsg();
 
     // this.message =  DateUtil.parse('2024-01-03T09:48:15.316Z')+"";
 

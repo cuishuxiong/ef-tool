@@ -18,13 +18,13 @@ export class CharUtil {
     || c == 0x0000;
   }
 
-  static isWhitespace(codePoint: number): boolean {
+  private  static isWhitespace(codePoint: number): boolean {
     const whitespaceRegex = /^\s$/;
     const character = String.fromCodePoint(codePoint);
     return whitespaceRegex.test(character);
   }
 
-  static isSpaceChar(codePoint: number): boolean {
+  private static isSpaceChar(codePoint: number): boolean {
     const spaceCategories = [
       "Zs", // Space separator
       "Zl", // Line separator

@@ -5,21 +5,22 @@
  */
 import { RegexConst as Const } from '../const/RegexConst'
 import { HashSet } from '../base/HashSet'
+import { OutDTO } from '../base/OutDTO'
 export class RegUtil {
 
   /**
    * 正则表达式匹配中文汉字
    */
-  static RE_CHINESE: string = Const.CHINESE;
+  private static RE_CHINESE: string = Const.CHINESE;
   /**
    * 正则表达式匹配中文字符串
    */
-  static RE_CHINESES: string = Const.CHINESES;
+  private static RE_CHINESES: string = Const.CHINESES;
 
   /**
    * 正则中需要被转义的关键字
    */
-  static RE_KEYS: HashSet<string> = new HashSet<string>(['$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|']);
+  private static RE_KEYS: HashSet<string> = new HashSet<string>(['$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|']);
 
 
   /**
@@ -40,4 +41,23 @@ export class RegUtil {
     }
     return new RegExp(pattern).test(content);
   }
+
+  /**
+   * 给定邮箱是否匹配正则
+   *
+   * @param content 邮箱字符串
+   */
+  // @ts-ignore
+  static isEmailMatch(content: string): OutDTO {
+    if (content == null || content == '') {
+      // 提供null的字符串为不匹配
+      return  OutDTO.Error("验证邮箱不能为空");
+    }
+    if (new RegExp(Const.EMAIL).test(content)) {
+      return OutDTO.OK("邮箱格式正确")
+    } else {
+      return OutDTO.Error("邮箱格式不正确,请检查")
+    }
+  }
+
 }

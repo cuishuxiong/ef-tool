@@ -56,7 +56,7 @@ export class JSONUtil {
     return result;
   }
 
-  static isDate(value: any): value is Date {
+  private  static isDate(value: any): value is Date {
     return value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)));
   }
 }

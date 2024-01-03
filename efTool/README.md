@@ -50,6 +50,78 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
     "@yunkss/efTool":'^1.0.0'
  }
 ```
+执行安装命令
+```
+ohpm install
+```
+
+## 📦使用
+1.在项目中引入插件
+```
+import { ArrayUtil, IdCardUtil, StrUtil, RandomUtil,DateUtil,JSONUtil } from '@yunkss/efTool'
+```
+工具类按需引入,使用那个引入那个
+
+2.ArrayUtil的方法
+
+* defaultIfEmpty 集合为空时传入默认集合
+```
+```
+* isNotEmpty 集合为空时传入默认集合
+```
+```
+* isEmpty 集合为空时传入默认集合
+```
+```
+* strValIsEmpty 集合为空时传入默认集合
+```
+```
+* strValIsNotEmpty 集合为空时传入默认集合
+```
+```
+
+
+3.CharUtil的方法
+
+* isBlankChar 集合为空时传入默认集合
+```
+```
+
+4.DateUtil的方法
+
+* parse 集合为空时传入默认集合
+```
+```
+* formatDate 集合为空时传入默认集合
+```
+```
+* format 集合为空时传入默认集合
+```
+```
+5.IdCardUtil的方法
+
+6.IdUtil的方法
+
+7.JSONUtil的方法
+
+* toJSONString 集合为空时传入默认集合
+```
+```
+* parse 集合为空时传入默认集合
+```
+```
+* parseObject 集合为空时传入默认集合
+```
+```
+* parseArray 集合为空时传入默认集合
+```
+```
+
+8.RegUtil的方法
+
+9.CharUtil的方法
+
+10.StrUtil的方法
 
 ## ⭐Star efTool 希望您可以动一动小手点点小⭐
 
