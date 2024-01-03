@@ -20,9 +20,33 @@ export class OutDTO<T = any> {
     return dto;
   }
 
+  static OKByDataRow<T>(msg: string, dataRow: T): OutDTO<T> {
+    let dto = new OutDTO();
+    dto.setSuccess(true);
+    dto.setDataRow(dataRow);
+    dto.setMsg(msg);
+    return dto;
+  }
+
+  static OKByDataTable<T>(msg: string, dataTable: Array<T>): OutDTO<T> {
+    let dto = new OutDTO();
+    dto.setSuccess(true);
+    dto.setDataTable(dataTable);
+    dto.setMsg(msg);
+    return dto;
+  }
+
   static Error(msg: string): OutDTO {
     let dto = new OutDTO();
     dto.setSuccess(false);
+    dto.setMsg(msg);
+    return dto;
+  }
+
+  static ErrorByDataRow<T>(msg: string, dataRow: T): OutDTO<T> {
+    let dto = new OutDTO();
+    dto.setSuccess(false);
+    dto.setDataRow(dataRow);
     dto.setMsg(msg);
     return dto;
   }

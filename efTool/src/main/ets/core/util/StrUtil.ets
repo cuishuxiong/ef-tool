@@ -7,7 +7,6 @@ import { ArrayUtil } from './ArrayUtil';
 import { CharUtil } from './CharUtil'
 
 export class StrUtil {
-
   static isBlank(str: string): boolean {
     let length: number;
     if ((str == null) || ((length = str.length) == 0)) {
@@ -71,7 +70,7 @@ export class StrUtil {
    * @param str 被检测的字符串
    * @return 是否为空
    */
-  public static isEmpty(str: string): boolean {
+  static isEmpty(str: string): boolean {
     return str == null || str.length == 0;
   }
 }
