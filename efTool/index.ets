@@ -8,4 +8,4 @@ export { ObjectUtil } from './src/main/ets/core/util/ObjectUtil';
 export { RandomUtil } from './src/main/ets/core/util/RandomUtil';
 export { StrUtil } from './src/main/ets/core/util/StrUtil';
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
-export { OjcUtil } from './src/main/ets/core/util/OjcUtil';
+export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
