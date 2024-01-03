@@ -1,0 +1,9 @@
+{
+  "name": "eftool",
+  "version": "1.0.0",
+  "description": "一款高效的hOpenHarmony工具包.封装的工具涵盖了字符串、数字、集合、JSON等一系列操作",
+  "main": "index.ets",
+  "author": "csx",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}

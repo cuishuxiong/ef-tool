@@ -6,7 +6,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@yunkss/efTool":'file:../efTool'
+    "@yunkss/efTool":"file:../eftool"
   }
 }
-

@@ -24,8 +24,8 @@
       ]
     },
     {
-      "name": "efTool",
-      "srcPath": "./efTool"
+      "name": "eftool",
+      "srcPath": "./eftool"
     }
   ]
 }
