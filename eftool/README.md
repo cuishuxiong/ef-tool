@@ -62,7 +62,7 @@ ohpm install
 
 ## 📦使用
 
-## 1.在项目中引入插件
+### 1.在项目中引入插件
 
 ```
 import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,RegexConst,OutDTO } from '@yunkss/efTool'
@@ -70,7 +70,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 工具类按需引入,使用那个引入那个
 
-## 2.ArrayUtil的方法
+### 2.ArrayUtil的方法
 
 * defaultIfEmpty 集合为空时传入默认集合
 
@@ -129,7 +129,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  不是空的
 ```
 
-## 3.DateUtil的方法
+### 3.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -156,7 +156,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 20:27:06
 ```
 
-## 4.JSONUtil的方法
+### 4.JSONUtil的方法
 
 * toJSONString 将传入的json对象格式化成json字符串
 
@@ -193,7 +193,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
 
-## 5.RegUtil的方法
+### 5.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -227,7 +227,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  false---身份证号格式不正确,请检查
 ```
 
-## 6.StrUtil的方法
+### 6.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
@@ -264,7 +264,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  false
 ```
 
-## 7.IdUtil的方法
+### 7.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -294,7 +294,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-## 8.RandomUtil的方法
+### 8.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
 
@@ -331,7 +331,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  54
 ```
 
-## 9.IdCardUtil的方法
+### 9.IdCardUtil的方法
 
 * isValidCard18 严格校验18位身份证号是否正确,校验规则如下
 
@@ -365,7 +365,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 ```
 
 
-## 10.OutDTO的方法
+### 10.OutDTO的方法
 
 * 该对象有四个私有成员变量
   //成功失败标识
