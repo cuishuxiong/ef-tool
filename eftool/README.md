@@ -29,11 +29,11 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 |------------|-----------------------------|
 | ArrayUtil  | 提供对集合的一些常用的判断               |
 | DateUtil   | 提供对日期的一系列封装                 |
-| IdCardUtil | 提供对身份证校验系列方法(暂未开发)          |
+| IdCardUtil | 提供对身份证校验系列方法                |
 | IdUtil     | 提供生成ID的一系列方法                |
 | JSONUtil   | 提供对于json对象集合跟json字符串的系列转换方法 |
 | ObjectUtil | 提供对于对象的系列操作方法(暂未开发)         |
-| RandomUtil | 提供随机数的系列操作(暂未开发)            |
+| RandomUtil | 提供随机数的系列操作                  |
 | RegUtil    | 提供对于常用正则表达式的方法              |
 | StrUtil    | 提供对于字符串的操作方法                |
 | RegexConst | 提供常用的正则表达式                  |
@@ -294,7 +294,78 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-10.OutDTO的方法
+10.RandomUtil的方法
+
+* randomBoolean 随机生成一个布尔值
+
+```
+    console.error(RandomUtil.randomBoolean()+"")
+    //输出  true/false
+```
+
+* randomChinese 随机生成一个汉字
+
+```
+    console.error(RandomUtil.randomChinese())
+    //输出  趐
+```
+
+* randomNumber 获得指定范围内的随机数,包含最小值，不包含最大值
+
+```
+    console.error(RandomUtil.randomNumber(1000,10000)+"")
+    //输出  3184
+```
+
+* randomInt 获得随机数number值
+
+```
+    console.error(RandomUtil.randomInt()+"")
+    //输出  842905298955385
+```
+
+* randomLimit 获得指定范围内的随机数 [0,limit) 不包括limit
+
+```
+    console.error(RandomUtil.randomLimit(100)+"")
+    //输出  54
+```
+
+11.IdCardUtil的方法
+
+* isValidCard18 严格校验18位身份证号是否正确,校验规则如下
+
+```
+   /**
+   * 排列顺序从左至右依次为：六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。
+   * 顺序码: 表示在同一地址码所标识的区域范围内，对同年、同月、同 日出生的人编定的顺序号，顺序码的奇数分配给男性，偶数分配 给女性。
+   * <ol>
+   * <li>第1、2位数字表示：所在省份的代码</li>
+   * <li>第3、4位数字表示：所在城市的代码</li>
+   * <li>第5、6位数字表示：所在区县的代码</li>
+   * <li>第7~14位数字表示：出生年、月、日</li>
+   * <li>第15、16位数字表示：所在地的派出所的代码</li>
+   * <li>第17位数字表示性别：奇数表示男性，偶数表示女性</li>
+   * <li>第18位数字是校检码，用来检验身份证的正确性。校检码可以是0~9的数字，有时也用x表示</li>
+   * </ol>
+   * <p>
+   * 第十八位数字(校验码)的计算方法为：
+   * <ol>
+   * <li>将前面的身份证号码17位数分别乘以不同的系数。从第一位到第十七位的系数分别为：7 9 10 5 8 4 2 1 6 3 7 9 10 5 8 4 2</li>
+   * <li>将这17位数字和系数相乘的结果相加</li>
+   * <li>用加出来和除以11，看余数是多少</li>
+   * <li>余数只可能有0 1 2 3 4 5 6 7 8 9 10这11个数字。其分别对应的最后一位身份证的号码为1 0 X 9 8 7 6 5 4 3 2</li>
+   * <li>通过上面得知如果余数是2，就会在身份证的第18位数字上出现罗马数字的Ⅹ。如果余数是10，身份证的最后一位号码就是2</li>
+   * </ol>
+   * @param idcard 待验证的身份证
+   * @return 是否有效的18位身份证，忽略x的大小写
+   */
+    console.error(IdCardUtil.isValidCard18("781111199407190143").getMsg())
+    //输出  省份代码不正确:78
+```
+
+
+12.OutDTO的方法
 
 * 该对象有四个私有成员变量
   //成功失败标识

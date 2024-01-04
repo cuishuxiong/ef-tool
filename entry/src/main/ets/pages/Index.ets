@@ -30,7 +30,7 @@ struct Index {
 
   test() {
 
-    console.error(IdUtil.randomUUID())
+    console.error(IdCardUtil.isValidCard18("781111199407190143").getMsg())
 
     // console.error(StrUtil.hasBlank("", "232323") + "")
 
