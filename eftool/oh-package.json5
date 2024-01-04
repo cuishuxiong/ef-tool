@@ -3,8 +3,16 @@
   "devDependencies": {},
   "author": "csx",
   "name": "@yunkss/eftool",
-  "description": "一款高效的hOpenHarmony工具包.封装的工具涵盖了字符串、数字、集合、JSON等一系列操作",
+  "description": "一款高效的OpenHarmony工具包.封装的工具涵盖了字符串、数字、集合、JSON等一系列操作",
   "main": "index.ets",
   "version": "1.0.0",
-  "dependencies": {}
+  "dependencies": {},
+  "keywords": [
+    "工具类",
+    "json",
+    "实体",
+    "日期"
+  ],
+  "homepage": "https://gitee.com/yunkss/ef-tool.git",
+  "repository": "https://gitee.com/yunkss/ef-tool.git"
 }
