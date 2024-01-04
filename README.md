@@ -30,10 +30,10 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | ArrayUtil  | 提供对集合的一些常用的判断               |
 | DateUtil   | 提供对日期的一系列封装                 |
 | IdCardUtil | 提供对身份证校验系列方法(暂未开发)          |
-| IdUtil     | 提供生成ID的一系列方法(暂未开发)          |
+| IdUtil     | 提供生成ID的一系列方法                |
 | JSONUtil   | 提供对于json对象集合跟json字符串的系列转换方法 |
 | ObjectUtil | 提供对于对象的系列操作方法(暂未开发)         |
-| RandomUtil | 提供随机数的系列操作                  |
+| RandomUtil | 提供随机数的系列操作(暂未开发)            |
 | RegUtil    | 提供对于常用正则表达式的方法              |
 | StrUtil    | 提供对于字符串的操作方法                |
 | RegexConst | 提供常用的正则表达式                  |
@@ -246,8 +246,8 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 * trim 去除传入集合的每个值的前后空格
 
 ```
-console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
-//输出 你好----hi----hello
+    console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
+    //输出 你好----hi----hello
 ```
 
 * hasBlank 判断传入的字符串中是否包含有空值,只要有一个则返回true,否则false
@@ -260,11 +260,41 @@ console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
 * isEmpty 判断传入的字符串是否为空,空白符判断为非空
 
 ```
-console.error(StrUtil.isEmpty(' ')+"")
-//输出  false
+    console.error(StrUtil.isEmpty(' ')+"")
+    //输出  false
 ```
 
-9.OutDTO的方法
+9.IdUtil的方法
+
+* simpleUUID 生成32为UUID不带-
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
+
+* fastUUID 生成36为UUID带-
+
+```
+    console.error(IdUtil.fastUUID())
+    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
+```
+
+* fastSimpleUUID 生成32为UUID带-
+
+```
+    console.error(IdUtil.fastSimpleUUID())
+    //输出  56703FA1-0BB-503-D93-00E94A28422
+```
+
+* randomUUID 生成36为UUID带-,小写
+
+```
+    console.error(IdUtil.randomUUID())
+    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
+```
+
+10.OutDTO的方法
 
 * 该对象有四个私有成员变量
   //成功失败标识

@@ -9,7 +9,8 @@ import {
   OutDTO,
   CharUtil,
   DateConst,
-  RegexConst
+  RegexConst,
+  IdUtil
 } from '@yunkss/eftool'
 
 class Person {
@@ -28,9 +29,10 @@ struct Index {
   }
 
   test() {
-    console.error(this.message)
 
-    console.error(StrUtil.hasBlank("", "232323") + "")
+    console.error(IdUtil.randomUUID())
+
+    // console.error(StrUtil.hasBlank("", "232323") + "")
 
     // console.error(StrUtil.isEmpty(' ')+"")
 
