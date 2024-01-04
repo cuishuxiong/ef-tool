@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.cer",
+          "storePassword": "0000001A1BD6623938948A6D12B84388CB7177FA13444544C3F440D7CD18C2D52767BD318F3B2B826224",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001AD16084DA9BCF078B50FE38FFCF47B5EAB1DF1EE9119468211316467EF224FD0D910AF2964C4E",
+          "profile": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.p12"
+        }
+      }
+    ],
     "compileSdkVersion": 9,
     "compatibleSdkVersion": 9,
     "products": [

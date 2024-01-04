@@ -10,7 +10,7 @@ import {
   CharUtil,
   DateConst,
   RegexConst
-} from '@yunkss/efTool'
+} from '@yunkss/eftool'
 
 class Person {
   name: string;
@@ -21,13 +21,14 @@ class Person {
 @Entry
 @Component
 struct Index {
-  @State message: string = '11'
+  @State message: string = 'yyyy/MM/dd HH:mm:ss'
 
   aboutToAppear() {
     this.test();
   }
 
   test() {
+    console.error(this.message)
 
     // console.error(StrUtil.hasBlank("","232323")+"")
 
@@ -88,9 +89,9 @@ struct Index {
     // p.birth = new Date();
 
     // this.message = JSONUtil.toJSONString(p)
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
-    let res: OutDTO = OutDTO.ErrorByDataRow("只返回失败提示消息~", p);
-    console.error(res.getMsg() + "------" + res.getSuccess()+res.getDataRow())
+    // let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
+    // let res: OutDTO = OutDTO.ErrorByDataRow("只返回失败提示消息~", p);
+    // console.error(res.getMsg() + "------" + res.getSuccess()+res.getDataRow())
 
 
     // pArr.forEach(item => {
