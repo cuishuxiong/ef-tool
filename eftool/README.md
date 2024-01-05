@@ -23,7 +23,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ## 🛠️包含组件
 
-一个OpenHarmony基础工具类，组成各种Util工具类，同时提供以下组件：
+一个OpenHarmony/HarmonyOS基础工具类，组成各种Util工具类，同时提供以下组件：
 
 | 模块         | 介绍                          |
 |------------|-----------------------------|
