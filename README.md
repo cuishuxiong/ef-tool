@@ -368,6 +368,8 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 ### 10.OutDTO的方法
 
 * 该对象有四个私有成员变量
+
+```
   //成功失败标识
   private success: boolean;
   //返回提示信息
@@ -376,6 +378,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
   private dataRow?: T;
   //返回数据集合
   private dataTable?: Array<T>;
+```
 
 * OK 只需要返回成功提示消息时使用
 
