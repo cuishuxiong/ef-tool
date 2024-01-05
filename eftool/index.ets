@@ -23,3 +23,5 @@ export { RegexConst } from './src/main/ets/core/const/RegexConst';
 export { OutDTO } from './src/main/ets/core/base/OutDTO';
 
 export { DateConst } from './src/main/ets/core/const/DateConst';
+
+export { cityJSON } from './src/main/ets/core/const/CityConst';

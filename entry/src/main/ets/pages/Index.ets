@@ -22,7 +22,7 @@ class Person {
 @Entry
 @Component
 struct Index {
-  @State message: string = 'yyyy/MM/dd HH:mm:ss'
+  @State message: string = '11111'
 
   aboutToAppear() {
     this.test();
@@ -30,7 +30,9 @@ struct Index {
 
   test() {
 
-    console.error(IdCardUtil.isValidCard18("781111199407190143").getMsg())
+    this.message = IdCardUtil.isValidCard18("142303199507290633").getMsg();
+
+    console.error(IdCardUtil.isValidCard18("781111199407190123").getMsg())
 
     // console.error(StrUtil.hasBlank("", "232323") + "")
 

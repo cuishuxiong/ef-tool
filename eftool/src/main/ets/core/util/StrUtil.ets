@@ -7,6 +7,11 @@ import { ArrayUtil } from './ArrayUtil';
 import { CharUtil } from './CharUtil'
 
 export class StrUtil {
+  /**
+   *判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
+   * @param str
+   * @returns
+   */
   static isBlank(str: string): boolean {
     let length: number;
     if ((str == null) || ((length = str.length) == 0)) {
@@ -22,11 +27,20 @@ export class StrUtil {
     return true;
   }
 
+  /**
+   *判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
+   * @param str
+   * @returns
+   */
   static isNotBlank(str: string): boolean {
     return false == StrUtil.isBlank(str);
   }
 
-
+  /**
+   *
+   * @param obj
+   * @returns
+   */
   static isBlankIfStr(obj: Object): boolean {
     if (null == obj) {
       return true;
@@ -35,6 +49,11 @@ export class StrUtil {
     }
   }
 
+  /**
+   *
+   * @param obj
+   * @returns
+   */
   static isEmptyIfStr(obj: Object): boolean {
     if (null == obj) {
       return true;
@@ -45,11 +64,17 @@ export class StrUtil {
     }
   }
 
+  /**
+   *去除传入集合的每个值的前后空格
+   * @param strs
+   * @returns
+   */
   static trim(strs: String[]): String[] {
     return strs.map((value) => value.trim());
   }
 
   /**
+   * 判断传入的字符串中是否包含有空值,只要有一个则返回true,否则false
    * @param strs 字符串列表
    * @return 是否包含空字符串
    */
@@ -66,7 +91,7 @@ export class StrUtil {
   }
 
   /**
-   * <p>字符串是否为空，空的定义如下：</p>
+   *  字符串是否为空
    * @param str 被检测的字符串
    * @return 是否为空
    */
