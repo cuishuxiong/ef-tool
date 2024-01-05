@@ -50,7 +50,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ```
 "dependencies": {
-    "@yunkss/efTool":'^1.0.0'
+    "@yunkss/eftool":'1.0.0'
  }
 ```
 
@@ -65,7 +65,7 @@ ohpm install
 ### 1.在项目中引入插件
 
 ```
-import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,RegexConst,OutDTO } from '@yunkss/efTool'
+import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,RegexConst,OutDTO } from '@yunkss/eftool'
 ```
 
 工具类按需引入,使用那个引入那个
