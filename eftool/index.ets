@@ -25,3 +25,7 @@ export { OutDTO } from './src/main/ets/core/base/OutDTO';
 export { DateConst } from './src/main/ets/core/const/DateConst';
 
 export { cityJSON } from './src/main/ets/core/const/CityConst';
+
+export { PageUtil } from './src/main/ets/core/util/PageUtil';
+
+export { PhoneUtil } from './src/main/ets/core/util/PhoneUtil';

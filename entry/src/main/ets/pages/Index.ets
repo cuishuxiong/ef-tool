@@ -11,7 +11,9 @@ import {
   DateConst,
   RegexConst,
   IdUtil,
-  ObjectUtil
+  ObjectUtil,
+  PhoneUtil,
+  PageUtil
 } from '@yunkss/eftool'
 
 class Person {
@@ -44,6 +46,8 @@ struct Index {
 
 
     console.error(ObjectUtil.notEqual("1", "1") + "")
+
+    console.error(PhoneUtil.isPhone("17111114114").getMsg())
     // this.message = IdCardUtil.isValidCard18("420106194201062348").getMsg();
 
     // console.error(StrUtil.hasBlank("", "232323") + "")

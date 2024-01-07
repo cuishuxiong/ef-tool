@@ -38,6 +38,8 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | StrUtil    | 提供对于字符串的操作方法                |
 | RegexConst | 提供常用的正则表达式                  |
 | DateConst  | 提供常用的日期格式化表达式               |
+| PageUtil   | 提供常用的分页操作                   |
+| PhoneUtil  | 提供常用的手机座机等判断                |
 | OutDTO     | 提供常用的返回实体对象                 |
 
 -------------------------------------------------------------------------------
@@ -472,6 +474,72 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 * getDataTable 获取多行数据
 
 * setDataTable 设置多行数据
+
+### 12.PageUtil的方法
+
+* 该对象有四个私有成员变量
+
+```
+  //当前页数
+  private pageNumber: number = 1;
+  //每页记录数
+  private pageSize: number = 20;
+  //总页数
+  private total: number;
+  //当前页数据
+  private list?: Array<T>;
+```
+
+### 13.PhoneUtil的方法
+
+* isMobile 验证是否为手机号码（中国）
+
+```
+    console.error(PhoneUtil.isMobile("17111114114").getMsg())
+    // 输出 手机号为中国号码
+```
+
+* isMobileHk 验证是否为手机号码（香港）
+
+```
+    console.error(PhoneUtil.isMobileHk("111111").getMsg())
+    // 输出 手机号非中国香港号码,请检查
+```
+
+* isMobileTw 验证是否为手机号码（台湾）
+
+```
+    console.error(PhoneUtil.isMobileTw("17111114114").getMsg())
+    // 输出 手机号非中国台湾号码,请检查
+```
+
+* isMobileMo 验证是否为手机号码（澳门）
+
+```
+    console.error(PhoneUtil.isMobileMo("17111114114").getMsg())
+    // 输出 手机号非中国澳门号码,请检查
+```
+
+* isTel 验证是否为座机号码（中国）
+
+```
+    console.error(PhoneUtil.isTel("17111114114").getMsg())
+    // 输出 号码非中国座机,请检查
+```
+
+* isTel400800 验证是否为座机号码（中国）+ 400 + 800
+
+```
+    console.error(PhoneUtil.isTel400800("17111114114").getMsg())
+    // 输出 号码非400800格式的座机,请检查
+```
+
+* isPhone 验证是否为座机号码+手机号码+ 400 + 800电话 + 手机号号码（香港）
+
+```
+    console.error(PhoneUtil.isPhone("17111114114").getMsg())
+    // 输出 手机号为中国号码
+```
 
 ## ⭐Star efTool 希望您可以动一动小手点点小⭐
 
