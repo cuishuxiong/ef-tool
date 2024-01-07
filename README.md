@@ -32,7 +32,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | IdCardUtil | 提供对身份证校验系列方法                |
 | IdUtil     | 提供生成ID的一系列方法                |
 | JSONUtil   | 提供对于json对象集合跟json字符串的系列转换方法 |
-| ObjectUtil | 提供对于对象的系列操作方法(暂未开发)         |
+| ObjectUtil | 提供对于对象的系列操作方法               |
 | RandomUtil | 提供随机数的系列操作                  |
 | RegUtil    | 提供对于常用正则表达式的方法              |
 | StrUtil    | 提供对于字符串的操作方法                |
