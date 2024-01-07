@@ -10,7 +10,8 @@ import {
   CharUtil,
   DateConst,
   RegexConst,
-  IdUtil
+  IdUtil,
+  ObjectUtil
 } from '@yunkss/eftool'
 
 class Person {
@@ -30,9 +31,20 @@ struct Index {
 
   test() {
 
-    this.message = IdCardUtil.isValidCard18("142303199507290633").getMsg();
 
-    console.error(IdCardUtil.isValidCard18("781111199407190123").getMsg())
+    // IdCardUtil.isValidCard18("120102199001015965").getMsg();
+    this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
+
+    console.error(IdCardUtil.isValidCard15("420106840901234").getMsg())
+
+    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    n.forEach(item => {
+      console.error(item);
+    })
+
+
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+    // this.message = IdCardUtil.isValidCard18("420106194201062348").getMsg();
 
     // console.error(StrUtil.hasBlank("", "232323") + "")
 

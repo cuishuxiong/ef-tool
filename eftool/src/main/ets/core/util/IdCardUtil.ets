@@ -7,6 +7,7 @@ import { OutDTO } from '../base/OutDTO'
 import { RegexConst } from '../const/RegexConst'
 import { RegUtil } from './RegUtil'
 import { cityJSON } from '../const/CityConst'
+import { StringBuilder } from '../base/StringBuilder'
 
 export class IdCardUtil {
 
@@ -36,10 +37,6 @@ export class IdCardUtil {
    * 区域代码表
    */
   static DISTRICT_CODES: Map<String, String> = new Map<String, String>();
-  /**
-   * 台湾身份首字母对应数字
-   */
-  static TW_FIRST_CODE: Map<String, Number> = new Map<String, Number>();
 
 
   /**
@@ -51,6 +48,7 @@ export class IdCardUtil {
       IdCardUtil.PROVINCE_CODES.set(province.split('&')[1], province.split('&')[0]);
       //设置城市
       let cityList = cityJSON[province];
+      console.error(cityList)
       for (const city in cityList) {
         IdCardUtil.CITY_CODES.set(city.split('&')[1], city.split('&')[0]);
         //设置区
@@ -60,32 +58,6 @@ export class IdCardUtil {
         }
       }
     }
-    IdCardUtil.TW_FIRST_CODE.set('A', 10)
-    IdCardUtil.TW_FIRST_CODE.set('B', 11)
-    IdCardUtil.TW_FIRST_CODE.set('C', 12)
-    IdCardUtil.TW_FIRST_CODE.set('D', 13)
-    IdCardUtil.TW_FIRST_CODE.set('E', 14)
-    IdCardUtil.TW_FIRST_CODE.set('F', 15)
-    IdCardUtil.TW_FIRST_CODE.set('G', 16)
-    IdCardUtil.TW_FIRST_CODE.set('H', 17)
-    IdCardUtil.TW_FIRST_CODE.set('J', 18)
-    IdCardUtil.TW_FIRST_CODE.set('K', 19)
-    IdCardUtil.TW_FIRST_CODE.set('L', 20)
-    IdCardUtil.TW_FIRST_CODE.set('M', 21)
-    IdCardUtil.TW_FIRST_CODE.set('N', 22)
-    IdCardUtil.TW_FIRST_CODE.set('P', 23)
-    IdCardUtil.TW_FIRST_CODE.set('Q', 24)
-    IdCardUtil.TW_FIRST_CODE.set('R', 25)
-    IdCardUtil.TW_FIRST_CODE.set('S', 26)
-    IdCardUtil.TW_FIRST_CODE.set('T', 27)
-    IdCardUtil.TW_FIRST_CODE.set('U', 28)
-    IdCardUtil.TW_FIRST_CODE.set('V', 29)
-    IdCardUtil.TW_FIRST_CODE.set('X', 30)
-    IdCardUtil.TW_FIRST_CODE.set('Y', 31)
-    IdCardUtil.TW_FIRST_CODE.set('W', 32)
-    IdCardUtil.TW_FIRST_CODE.set('Z', 33)
-    IdCardUtil.TW_FIRST_CODE.set('I', 34)
-    IdCardUtil.TW_FIRST_CODE.set('O', 35)
   }
 
 
@@ -156,6 +128,93 @@ export class IdCardUtil {
     return OutDTO.Error("身份证校验失败");
   }
 
+  /**
+   * 校验15位身份证号是否合法
+   * @param idCard
+   * @returns
+   */
+  static isValidCard15(idCard: string): OutDTO {
+
+    if (IdCardUtil.PROVINCE_CODES.size == 0) {
+      this.init();
+    }
+
+    if (IdCardUtil.CHINA_ID_MIN_LENGTH != idCard.length) {
+      return OutDTO.Error("身份证长度不足15位");
+    }
+
+    // 省份
+    let proCode: string = idCard.substring(0, 2) + "0000";
+    if (null == IdCardUtil.PROVINCE_CODES.get(proCode)) {
+      return OutDTO.Error("省份代码不正确:" + proCode);
+    }
+
+    //城市
+    let cityCode: string = idCard.substring(0, 4) + "00";
+    if (null == IdCardUtil.CITY_CODES.get(cityCode)) {
+      return OutDTO.Error("城市代码不正确:" + cityCode);
+    }
+
+    //乡镇
+    let districtCode: string = idCard.substring(0, 6);
+    if (null == IdCardUtil.DISTRICT_CODES.get(districtCode)) {
+      return OutDTO.Error("区域代码不正确:" + districtCode);
+    }
+
+    //校验生日
+    if (false == this.isBirthday("19" + idCard.substring(6, 12))) {
+      return OutDTO.Error("生日格式不正确:" + idCard.substring(6, 12));
+    }
+
+    return OutDTO.OK("身份证格式正确");
+  }
+
+
+  /**
+   * 将15位身份证号码转换为18位
+   *
+   * @param idCard 15位身份编码
+   * @return 18位身份编码
+   */
+  static convert15To18(idCard: string): OutDTO<string> {
+    let idCard18: StringBuilder = new StringBuilder();
+    if (idCard.length != IdCardUtil.CHINA_ID_MIN_LENGTH) {
+      return null;
+    }
+    if (RegUtil.isMatch(RegexConst.NUMBERS, idCard).getSuccess()) {
+      const prefix = idCard.slice(0, 6); // 前 6 位
+      const suffix = idCard.slice(12); // 后 9 位
+      // 年份补充为 19XX（计算方法参考身份证规则）
+      const fullYear = `19${prefix.slice(0, 2)}`;
+      // 月份补充为 0X（计算方法参考身份证规则）
+      const month = prefix.slice(2, 4);
+      const monthNum = Number(month);
+      const monthPadded = (monthNum < 10 ? '0' : '') + monthNum;
+      // 日期补充为 0X（计算方法参考身份证规则）
+      const day = prefix.slice(4, 6);
+      const dayNum = Number(day);
+      const dayPadded = (dayNum < 10 ? '0' : '') + dayNum;
+      // 拼接转换后的身份证号
+      let tmp = idCard18.append(prefix)
+        .append(fullYear)
+        .append(monthPadded)
+        .append(dayPadded)
+        .append(suffix)
+        .toString();
+      // 获取校验位
+      const sVal = IdCardUtil.getCheckCode18(tmp);
+      idCard18.append(sVal);
+    } else {
+      return null;
+    }
+    return OutDTO.OKByDataRow("转换18为身份证号码成功", idCard18.toString());
+  }
+
+  /**
+   * 获取十八位的校验码
+   * @param idCard
+   * @returns
+   */
   private static getCheckCode18(idCard: string): string {
     const checkDigits: string[] = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
 
@@ -172,6 +231,11 @@ export class IdCardUtil {
     return checkDigits[checkCodeIndex];
   }
 
+  /**
+   * 是否为日期格式
+   * @param str
+   * @returns
+   */
   private static isBirthday(str: string): boolean {
     const reg = /^(\d{4})(\d{2})(\d{2})$/;
     const match = str.match(reg);

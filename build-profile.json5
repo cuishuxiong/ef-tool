@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.cer",
-          "storePassword": "0000001A1BD6623938948A6D12B84388CB7177FA13444544C3F440D7CD18C2D52767BD318F3B2B826224",
+          "certpath": "/Users/csx/.ohos/config/auto_debug_EfTool_com.yunkss.csx.tool_30086000716783967.cer",
+          "storePassword": "0000001A7CC4018A6A426CB7B20CA9D71DCCDBBD8182370F8C9C2D1EAEE0BB6DD08D38DAD50B265F0FF5",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001AD16084DA9BCF078B50FE38FFCF47B5EAB1DF1EE9119468211316467EF224FD0D910AF2964C4E",
-          "profile": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.p7b",
+          "keyPassword": "0000001A4851A4F7622257079F694AE5A5F2B147437A56712CD74947820EC54E14575C3176E4B8A1DE53",
+          "profile": "/Users/csx/.ohos/config/auto_debug_EfTool_com.yunkss.csx.tool_30086000716783967.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.p12"
+          "storeFile": "/Users/csx/.ohos/config/auto_debug_EfTool_com.yunkss.csx.tool_30086000716783967.p12"
         }
       }
     ],

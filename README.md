@@ -129,6 +129,16 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  不是空的
 ```
 
+* append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
+
+```
+    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    n.forEach(item => {
+      console.error(item);
+    })
+    //输出  1 2 3 4
+```
+
 ### 3.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
@@ -339,7 +349,6 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
    /**
    * 排列顺序从左至右依次为：六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。
    * 顺序码: 表示在同一地址码所标识的区域范围内，对同年、同月、同 日出生的人编定的顺序号，顺序码的奇数分配给男性，偶数分配 给女性。
-   * <ol>
    * <li>第1、2位数字表示：所在省份的代码</li>
    * <li>第3、4位数字表示：所在城市的代码</li>
    * <li>第5、6位数字表示：所在区县的代码</li>
@@ -347,16 +356,12 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
    * <li>第15、16位数字表示：所在地的派出所的代码</li>
    * <li>第17位数字表示性别：奇数表示男性，偶数表示女性</li>
    * <li>第18位数字是校检码，用来检验身份证的正确性。校检码可以是0~9的数字，有时也用x表示</li>
-   * </ol>
-   * <p>
    * 第十八位数字(校验码)的计算方法为：
-   * <ol>
    * <li>将前面的身份证号码17位数分别乘以不同的系数。从第一位到第十七位的系数分别为：7 9 10 5 8 4 2 1 6 3 7 9 10 5 8 4 2</li>
    * <li>将这17位数字和系数相乘的结果相加</li>
    * <li>用加出来和除以11，看余数是多少</li>
    * <li>余数只可能有0 1 2 3 4 5 6 7 8 9 10这11个数字。其分别对应的最后一位身份证的号码为1 0 X 9 8 7 6 5 4 3 2</li>
    * <li>通过上面得知如果余数是2，就会在身份证的第18位数字上出现罗马数字的Ⅹ。如果余数是10，身份证的最后一位号码就是2</li>
-   * </ol>
    * @param idcard 待验证的身份证
    * @return 是否有效的18位身份证，忽略x的大小写
    */
@@ -364,8 +369,37 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  省份代码不正确:78
 ```
 
+* convert15To18 将15位身份证号码转换成18位
 
-### 10.OutDTO的方法
+```
+    console.error(IdCardUtil.convert15To18("420106640901234").getDataRow());
+    //输出 420106194201062348
+```
+
+* isValidCard15 校验15位身份证号码是否正确
+
+```
+    console.error(IdCardUtil.isValidCard15("420106640901234").getMsg());
+    //输出 身份证格式正确
+```
+
+### 10.ObjectUtil的方法
+
+* equal 判断两个传入的数值或者是字符串是否相等
+
+```
+    console.error(ObjectUtil.equal("1", "1") + "")
+    //输出 true
+```
+
+* notEqual 判断两个传入的数值或者是字符串是否不相等
+
+```
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+    //输出 false
+```
+
+### 11.OutDTO的方法
 
 * 该对象有四个私有成员变量
 

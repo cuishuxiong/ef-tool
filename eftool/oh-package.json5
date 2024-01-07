@@ -1,17 +1,17 @@
 {
   "license": "Apache-2.0",
   "devDependencies": {},
-  "author": "csx",
-  "name": "@yunkss/eftool",
-  "description": "一款高效的OpenHarmony/HarmonyOS工具包.封装的工具涵盖了字符串、数字、集合、JSON,日期等一系列快捷操作方法。",
-  "main": "index.ets",
-  "version": "1.0.1",
-  "dependencies": {},
   "keywords": [
     "工具类",
     "json",
     "实体",
     "日期"
   ],
-  "repository": "https://gitee.com/yunkss/ef-tool.git"
+  "author": "csx",
+  "name": "@yunkss/eftool",
+  "description": "一款高效的OpenHarmony/HarmonyOS工具包.封装的工具涵盖了字符串、数字、集合、JSON,日期等一系列快捷操作方法。",
+  "main": "index.ets",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
+  "version": "1.0.1",
+  "dependencies": {}
 }
