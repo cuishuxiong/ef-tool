@@ -29,3 +29,7 @@ export { cityJSON } from './src/main/ets/core/const/CityConst';
 export { PageUtil } from './src/main/ets/core/util/PageUtil';
 
 export { PhoneUtil } from './src/main/ets/core/util/PhoneUtil';
+
+export { PageQuery } from './src/main/ets/core/page/PageQuery';
+
+export { PageResult } from './src/main/ets/core/page/PageResult';
