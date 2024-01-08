@@ -51,7 +51,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 执行安装命令
 
 ```
-ohpm install @yunkss/eftool
+ohpm i @yunkss/eftool
 ```
 
 ## 📦使用
