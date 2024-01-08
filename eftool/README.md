@@ -48,18 +48,10 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 🍊ohpm
 
-在项目model中的oh-package.json5的dependencies中加入以下内容:
-
-```
-"dependencies": {
-    "@yunkss/eftool":'1.0.0'
- }
-```
-
 执行安装命令
 
 ```
-ohpm install
+ohpm install @yunkss/eftool
 ```
 
 ## 📦使用
