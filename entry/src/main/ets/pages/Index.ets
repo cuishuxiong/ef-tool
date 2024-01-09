@@ -33,6 +33,11 @@ struct Index {
 
   test() {
 
+    let page: PageUtil = PageUtil.packPageInfo([]);
+
+    page.hasPreviousPage();
+
+    page.getRecords();
 
     // IdCardUtil.isValidCard18("120102199001015965").getMsg();
     this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();

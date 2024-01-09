@@ -469,17 +469,75 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ### 12.PageUtil的方法
 
-* 该对象有四个私有成员变量
+* 该对象有如下私有成员变量
 
 ```
   //当前页数
   private pageNumber: number = 1;
   //每页记录数
   private pageSize: number = 20;
-  //总页数
+  //总记录数
   private total: number;
+  //总页数
+  private pages: number;
   //当前页数据
   private list?: Array<T>;
+  //当前页记录集合
+  private records?: Array<T>;
+```
+
+* packPageInfo 包装分页对象
+
+```
+    let page: PageUtil = PageUtil.packPageInfo(后台获取的全量数据);
+```
+
+* getPrePage 获取上一页页码
+
+```
+     const prePage:number = page.getPrePage();
+```
+
+* getNextPage 获取下一页页码
+
+```
+    const nextPage:number = page.getNextPage();
+```
+
+* getLastPage 获取最后一页页码
+
+```
+    const lastPage:number = page.getLastPage();
+```
+
+* isFirstPage 是否第一页
+
+```
+    const isFirstPage:boolean = page.isFirstPage();
+```
+
+* isLastPage 是否最后一页
+
+```
+    const isLastPage:boolean = page.isLastPage();
+```
+
+* hasPreviousPage 是否有上一页
+
+```
+    const hasPreviousPage:boolean = page.hasPreviousPage();
+```
+
+* hasNextPage 是否有下一页
+
+```
+    const hasNextPage:boolean = page.hasNextPage();
+```
+
+* getRecords 获取当前页记录数
+
+```
+    const records:Array<T> = page.getRecords();
 ```
 
 ### 13.PhoneUtil的方法

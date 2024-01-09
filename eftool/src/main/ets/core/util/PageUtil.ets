@@ -14,22 +14,8 @@ export class PageUtil<T = any> {
   private pages: number;
   //当前页数据
   private list?: Array<T>;
-  //第一页
-  private firstPage: number;
-  //前一页
-  private prePage: number;
-  //下一页
-  private nextPage: number;
-  //最后一页
-  private lastPage: number;
-  //是否为第一页
-  private isFirstPage: boolean = false;
-  //是否为最后一页
-  private isLastPage: boolean = false;
-  //是否有前一页
-  private hasPreviousPage: boolean = false;
-  //是否有下一页
-  private hasNextPage: boolean = false;
+  //当前页记录集合
+  private records?: Array<T>;
   //导航页码数
   private navigatePages: number;
   //所有导航页号
@@ -43,10 +29,13 @@ export class PageUtil<T = any> {
     let pageInfo: PageUtil<T> = new PageUtil<T>();
     pageInfo.setTotal(list.length);
     pageInfo.setPages(pageInfo.totalPage(pageInfo.getTotal(), pageInfo.getPageSize()));
-
+    pageInfo.setList(list);
+    const start: number = (pageInfo.getPageNumber() - 1) * pageInfo.getPageSize(); // 计算起始位置
+    const end: number = start + pageInfo.getPageSize(); // 计算结束位置
+    pageInfo.setRecords(pageInfo.getList().slice(start, end));
     return pageInfo;
-
   }
+
 
   /**
    * 根据总数计算总页数
@@ -55,7 +44,7 @@ export class PageUtil<T = any> {
    * @param pageSize   每页数
    * @return 总页数
    */
-  totalPage(totalCount: number, pageSize: number): number {
+  private totalPage(totalCount: number, pageSize: number): number {
     if (pageSize == 0) {
       return 0;
     }
@@ -86,6 +75,14 @@ export class PageUtil<T = any> {
     return this.total;
   }
 
+  public setRecords(records: Array<T>) {
+    this.records = records;
+  }
+
+  public getRecords(): Array<T> {
+    return this.records;
+  }
+
   public setList(list: Array<T>) {
     this.list = list;
   }
@@ -102,68 +99,41 @@ export class PageUtil<T = any> {
     return this.pages;
   }
 
-  public setFirstPage(firstPage: number) {
-    this.pages = firstPage;
-  }
-
-  public getFirstPage(): number {
-    return this.firstPage;
-  }
-
-  public setPrePage(prePage: number) {
-    this.pages = prePage;
-  }
 
   public getPrePage(): number {
-    return this.prePage;
-  }
-
-  public setNextPage(nextPage: number) {
-    this.pages = nextPage;
+    if (this.hasPreviousPage()) {
+      return this.pageNumber--;
+    }
+    return -1;
   }
 
   public getNextPage(): number {
-    return this.nextPage;
+    if (this.hasNextPage()) {
+      return this.pageNumber++;
+    }
+    return -1;
   }
 
-  public setLastPage(lastPage: number) {
-    this.pages = lastPage;
-  }
 
   public getLastPage(): number {
-    return this.lastPage;
+    return this.pages;
   }
 
-  public setIsFirstPage(isFirstPage: boolean) {
-    this.isFirstPage = isFirstPage;
+  public isFirstPage(): boolean {
+    return this.pageNumber == 1;
   }
 
-  public getIsFirstPage(): boolean {
-    return this.isFirstPage;
+  public isLastPage(): boolean {
+    return this.pageNumber == this.pages;
   }
 
-  public setIsLastPage(isLastPage: boolean) {
-    this.isLastPage = isLastPage;
+
+  public hasPreviousPage(): boolean {
+    return this.pageNumber > 1;
   }
 
-  public getIsLastPage(): boolean {
-    return this.isLastPage;
-  }
-
-  public setHasPreviousPage(hasPreviousPage: boolean) {
-    this.hasPreviousPage = hasPreviousPage;
-  }
-
-  public getHasPreviousPage(): boolean {
-    return this.hasPreviousPage;
-  }
-
-  public setHasNextPage(hasNextPage: boolean) {
-    this.hasNextPage = hasNextPage;
-  }
-
-  public getHasNextPage(): boolean {
-    return this.hasNextPage;
+  public hasNextPage(): boolean {
+    return this.pageNumber < this.pages;
   }
 
   public setNavigatePages(navigatePages: number) {
