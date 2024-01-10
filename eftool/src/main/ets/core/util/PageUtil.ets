@@ -7,7 +7,7 @@ export class PageUtil<T = any> {
   //当前页数
   private pageNumber: number = 1;
   //每页记录数
-  private pageSize: number = 20;
+  private pageSize: number = 10;
   //总记录数
   private total: number;
   //总页数
@@ -27,12 +27,14 @@ export class PageUtil<T = any> {
    */
   static packPageInfo<T>(list: Array<T>): PageUtil<T> {
     let pageInfo: PageUtil<T> = new PageUtil<T>();
+    //设置总数
     pageInfo.setTotal(list.length);
-    pageInfo.setPages(pageInfo.totalPage(pageInfo.getTotal(), pageInfo.getPageSize()));
+    //设置所有记录
     pageInfo.setList(list);
-    const start: number = (pageInfo.getPageNumber() - 1) * pageInfo.getPageSize(); // 计算起始位置
-    const end: number = start + pageInfo.getPageSize(); // 计算结束位置
-    pageInfo.setRecords(pageInfo.getList().slice(start, end));
+    //设置总页数
+    pageInfo.setPages(pageInfo.totalPage());
+    //设置导航集合
+    pageInfo.setNavigatePageNumbers();
     return pageInfo;
   }
 
@@ -44,11 +46,8 @@ export class PageUtil<T = any> {
    * @param pageSize   每页数
    * @return 总页数
    */
-  private totalPage(totalCount: number, pageSize: number): number {
-    if (pageSize == 0) {
-      return 0;
-    }
-    return totalCount % pageSize == 0 ? (totalCount / pageSize) : (totalCount / pageSize + 1);
+  private totalPage(): number {
+    return Math.ceil(this.total / this.pageSize);
   }
 
   public setPageNumber(pageNumber: number) {
@@ -80,6 +79,9 @@ export class PageUtil<T = any> {
   }
 
   public getRecords(): Array<T> {
+    const start: number = (this.pageNumber - 1) * this.pageSize; // 计算起始位置
+    const end: number = start + this.pageSize; // 计算结束位置
+    this.records = this.list.slice(start, end);
     return this.records;
   }
 
@@ -102,16 +104,18 @@ export class PageUtil<T = any> {
 
   public getPrePage(): number {
     if (this.hasPreviousPage()) {
-      return this.pageNumber--;
+      this.pageNumber--;
+      return this.getPageNumber();
     }
-    return -1;
+    return this.getPageNumber();
   }
 
   public getNextPage(): number {
     if (this.hasNextPage()) {
-      return this.pageNumber++;
+      this.pageNumber++;
+      return this.getPageNumber();
     }
-    return -1;
+    return this.getPageNumber();
   }
 
 
@@ -145,8 +149,9 @@ export class PageUtil<T = any> {
   }
 
 
-  public setNavigatePageNumbers(navigatePageNumbers: number[]) {
-    this.navigatePageNumbers = navigatePageNumbers;
+  public setNavigatePageNumbers() {
+    const generateNumberArray = (n: number): number[] => Array.from({ length: n }, (_, index) => index + 1);
+    this.navigatePageNumbers = generateNumberArray(this.pages);
   }
 
   public getNavigatePageNumbers(): number[] {

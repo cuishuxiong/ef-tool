@@ -38,9 +38,10 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | StrUtil    | 提供对于字符串的操作方法                |
 | RegexConst | 提供常用的正则表达式                  |
 | DateConst  | 提供常用的日期格式化表达式               |
-| PageUtil   | 提供常用的分页操作                   |
+| PageUtil   | 提供常用的纯前端分页操作                |
 | PhoneUtil  | 提供常用的手机座机等判断                |
 | OutDTO     | 提供常用的返回实体对象                 |
+| PageQuery  | 提供常用的后端获取分页数据操作             |
 
 -------------------------------------------------------------------------------
 
@@ -589,6 +590,105 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 ```
     console.error(PhoneUtil.isPhone("17111114114").getMsg())
     // 输出 手机号为中国号码
+```
+
+### 14.PageQuery的方法
+
+```
+    有如下私有属性
+    //当前页码
+    private currentPage: number;
+    //每页记录数
+    private pageSize: number;
+    //总数
+    private total: number;
+    //总页数
+    private totalPages: number;
+    //记录数
+    private records: T[];
+```
+
+* queryData 查询分页数据 传入一个返回类型为Promise<PageResult<T>>)且入参类型为(currentPage: number, pageSize: number)
+  的Function
+
+```
+    const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
+      const total = 100; // 假设总记录数为 100
+      const records: Person[] = [];
+      // 模拟循环请求，每次请求返回 pageSize 条记录
+      for (let i = 0; i < pageSize; i++) {
+        const id = (currentPage - 1) * pageSize + i + 1;
+        const person: Person = {
+          name: `person${id}`,
+          birth: new Date(),
+          age: id
+        };
+        records.push(person);
+      }
+      return {
+        total: total,
+        records: records,
+      };
+    };
+```
+
+* totalPage 获取总记录数
+*
+* hasNext 是否有下一页
+
+* hasPrev 是否有上一个页
+
+* nextPage 下一页页码
+
+* prevPage 上一页码
+
+* getRecords 获取记录数
+
+* goToPage 跳转到指定页码
+
+```
+     //完整示例如下
+     //传入当前页数和每页记录数,默认是1,10
+     const pageQuery = new PageQuery<Person>(2, 20);
+     // 定义自己的 queryFunction
+     const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
+       const total = 100; // 假设总记录数为 100
+       const records: Person[] = [];
+       // 模拟循环请求，每次请求返回 pageSize 条记录
+       for (let i = 0; i < pageSize; i++) {
+         const id = (currentPage - 1) * pageSize + i + 1;
+         const person: Person = {
+           name: `person${id}`,
+           birth: new Date(),
+           age: id
+         };
+         records.push(person);
+       }
+       return {
+         total: total,
+         records: records,
+       };
+     };
+     // 调用查询接口
+     await pageQuery.queryData(queryFunction);
+     //获取到记录数
+     pageQuery.getRecords().forEach(item => {
+       console.error(item.name + "--" + item.age + "---" + item.birth)
+     })
+     //上一页
+     console.error(pageQuery.prevPage() + "");
+     //请求上一页数据
+     await pageQuery.queryData(queryFunction);
+     pageQuery.getRecords().forEach(item => {
+       console.error(item.name + "--" + item.age + "---" + item.birth)
+     })
+     //跳转到指定页码
+     await pageQuery.goToPage(4, queryFunction);
+     //获取数据
+     pageQuery.getRecords().forEach(item => {
+       console.error(item.name + "-|-" + item.age + "-|-" + item.birth)
+     })
+
 ```
 
 ## ⭐Star efTool 希望您可以动一动小手点点小⭐

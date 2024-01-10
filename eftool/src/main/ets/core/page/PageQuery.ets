@@ -6,13 +6,15 @@ import { PageResult } from './PageResult';
  */
 export class PageQuery<T> {
   //当前页码
-  currentPage: number;
+  private currentPage: number;
   //每页记录数
-  pageSize: number;
+  private pageSize: number;
   //总数
-  total: number;
+  private total: number;
+  //总页数
+  private totalPages: number;
   //记录数
-  records: T[];
+  private records: T[];
 
   constructor(currentPage = 1, pageSize = 10) {
     this.currentPage = currentPage;
@@ -25,10 +27,11 @@ export class PageQuery<T> {
    * 查询分页数据
    * @param queryFunction
    */
-  async queryData(queryFunction: (currentPage: number, pageSize: number) => Promise<PageResult<T>>) {
+  async queryData(queryFunction: (currentPage: number, pageSize: number) => Promise<PageResult<T>>): Promise<void> {
     const result = await queryFunction(this.currentPage, this.pageSize);
     this.total = result.total;
     this.records = result.records;
+    this.totalPages = Math.ceil(this.total / this.pageSize); // 计算总页数
   }
 
   /**
@@ -36,7 +39,7 @@ export class PageQuery<T> {
    * @returns
    */
   get totalPage(): number {
-    return Math.ceil(this.total / this.pageSize);
+    return this.totalPages;
   }
 
   /**
@@ -80,16 +83,26 @@ export class PageQuery<T> {
   }
 
   /**
+   * 获取记录数
+   * @returns
+   */
+  getRecords(): T[] {
+    return this.records;
+  }
+
+  /**
    * 跳转到指定页码
    * @param pageNumber
    * @returns
    */
-  async goToPage(pageNumber: number) {
-    if (pageNumber >= 1 && pageNumber <= this.totalPage && pageNumber !== this.currentPage) {
-      this.currentPage = pageNumber;
-      await this.queryData;
-      return true;
+  async goToPage(pageNumber: number, queryFunction: (currentPage: number, pageSize: number) => Promise<PageResult<T>>): Promise<void> {
+    // 检查页码是否有效
+    if (pageNumber < 1 || pageNumber > this.totalPages || pageNumber === this.currentPage) {
+      return;
     }
-    return false;
+    // 更新当前页码
+    this.currentPage = pageNumber;
+    // 执行查询
+    await this.queryData(queryFunction);
   }
 }

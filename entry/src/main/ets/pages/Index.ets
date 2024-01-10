@@ -13,13 +13,21 @@ import {
   IdUtil,
   ObjectUtil,
   PhoneUtil,
-  PageUtil
+  PageUtil,
+  PageQuery,
+  PageResult
 } from '@yunkss/eftool'
 
 class Person {
   name: string;
   age: number;
   birth: Date;
+
+  constructor(name: string, age: number, birth: Date) {
+    this.birth = birth;
+    this.name = name;
+    this.age = age;
+  }
 }
 
 @Entry
@@ -31,28 +39,86 @@ struct Index {
     this.test();
   }
 
-  test() {
-
-    let page: PageUtil = PageUtil.packPageInfo([]);
-
-    page.hasPreviousPage();
-
-    page.getRecords();
+  async test() {
 
     // IdCardUtil.isValidCard18("120102199001015965").getMsg();
-    this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
+    // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
 
-    console.error(IdCardUtil.isValidCard15("420106840901234").getMsg())
+    // console.error(IdCardUtil.isValidCard15("420106840901234").getMsg())
 
-    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
-    n.forEach(item => {
-      console.error(item);
+    // let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    // n.forEach(item => {
+    //   console.error(item);
+    // })
+
+    // let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称3","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    //
+    // let page = PageUtil.packPageInfo(pArr);
+    // page.getRecords().forEach(item => {
+    //   console.error(item.name + "----" + item.birth)
+    // })
+    // console.error(page.getTotal() + "getTotal")
+    //
+    // console.error(page.getPages() + ":getPages")
+    // console.error(page.hasPreviousPage() + "hasPreviousPage")
+    // console.error(page.hasNextPage() + "hasNextPage")
+    // console.error(page.getPageNumber() + "getPageNumber")
+    // console.error(page.getPrePage() + "getPrePage")
+    // console.error(page.getNextPage() + "getNextPage")
+    // page.getRecords().forEach(item => {
+    //   console.error(item.name + "----" + item.birth)
+    // })
+    // console.error(page.getLastPage() + "getLastPage")
+    // page.setPageNumber(4);
+    // page.getRecords().forEach(item => {
+    //   console.error(item.name + "----" + item.birth)
+    // })
+    //
+    // console.error(JSON.stringify(page.getNavigatePageNumbers()))
+
+    //传入当前页数和每页记录数,默认是1,10
+    const pageQuery = new PageQuery<Person>(2, 20);
+    // 定义自己的 queryFunction
+    const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
+      const total = 100; // 假设总记录数为 100
+      const records: Person[] = [];
+      // 模拟循环请求，每次请求返回 pageSize 条记录
+      for (let i = 0; i < pageSize; i++) {
+        const id = (currentPage - 1) * pageSize + i + 1;
+        const person: Person = {
+          name: `person${id}`,
+          birth: new Date(),
+          age: id
+        };
+        records.push(person);
+      }
+      return {
+        total: total,
+        records: records,
+      };
+    };
+    // 调用查询接口
+    await pageQuery.queryData(queryFunction);
+    //获取到记录数
+    pageQuery.getRecords().forEach(item => {
+      console.error(item.name + "--" + item.age + "---" + item.birth)
     })
+    //上一页
+    console.error(pageQuery.prevPage() + "");
+    //请求上一页数据
+    await pageQuery.queryData(queryFunction);
+    pageQuery.getRecords().forEach(item => {
+      console.error(item.name + "--" + item.age + "---" + item.birth)
+    })
+    //跳转到指定页码
+    await pageQuery.goToPage(4, queryFunction);
+    //获取数据
+    pageQuery.getRecords().forEach(item => {
+      console.error(item.name + "-|-" + item.age + "-|-" + item.birth)
+    })
+    // console.error(ObjectUtil.notEqual("1", "1") + "")
 
-
-    console.error(ObjectUtil.notEqual("1", "1") + "")
-
-    console.error(PhoneUtil.isPhone("17111114114").getMsg())
+    // console.error(PhoneUtil.isPhone("17111114114").getMsg())
     // this.message = IdCardUtil.isValidCard18("420106194201062348").getMsg();
 
     // console.error(StrUtil.hasBlank("", "232323") + "")

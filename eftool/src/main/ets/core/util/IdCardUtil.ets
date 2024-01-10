@@ -14,35 +14,35 @@ export class IdCardUtil {
   /**
    * 中国公民身份证号码最小长度。
    */
-  static CHINA_ID_MIN_LENGTH: number = 15;
+  private static CHINA_ID_MIN_LENGTH: number = 15;
   /**
    * 中国公民身份证号码最大长度。
    */
-  static CHINA_ID_MAX_LENGTH: number = 18;
+  private static CHINA_ID_MAX_LENGTH: number = 18;
   /**
    * 每位加权因子
    */
-  static POWER: number[] = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+  private static POWER: number[] = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
   /**
    * 省份代码表
    */
-  static PROVINCE_CODES: Map<String, String> = new Map<String, String>();
+  private static PROVINCE_CODES: Map<String, String> = new Map<String, String>();
 
   /**
    * 城市代码表
    */
-  static CITY_CODES: Map<String, String> = new Map<String, String>();
+  private static CITY_CODES: Map<String, String> = new Map<String, String>();
 
   /**
    * 区域代码表
    */
-  static DISTRICT_CODES: Map<String, String> = new Map<String, String>();
+  private static DISTRICT_CODES: Map<String, String> = new Map<String, String>();
 
 
   /**
    * 初始化数据
    */
-  static init(): void {
+  private  static init(): void {
     for (const province in cityJSON) {
       //设置省
       IdCardUtil.PROVINCE_CODES.set(province.split('&')[1], province.split('&')[0]);
@@ -179,7 +179,7 @@ export class IdCardUtil {
   static convert15To18(idCard: string): OutDTO<string> {
     let idCard18: StringBuilder = new StringBuilder();
     if (idCard.length != IdCardUtil.CHINA_ID_MIN_LENGTH) {
-      return null;
+      return OutDTO.Error("身份证长度不足15位");
     }
     if (RegUtil.isMatch(RegexConst.NUMBERS, idCard).getSuccess()) {
       const prefix = idCard.slice(0, 6); // 前 6 位
@@ -205,7 +205,7 @@ export class IdCardUtil {
       const sVal = IdCardUtil.getCheckCode18(tmp);
       idCard18.append(sVal);
     } else {
-      return null;
+      return OutDTO.Error("身份证必须为纯数字");
     }
     return OutDTO.OKByDataRow("转换18为身份证号码成功", idCard18.toString());
   }
