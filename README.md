@@ -633,7 +633,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 ```
 
 * totalPage 获取总记录数
-*
+
 * hasNext 是否有下一页
 
 * hasPrev 是否有上一个页
