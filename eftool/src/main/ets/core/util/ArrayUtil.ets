@@ -72,5 +72,171 @@ export class ArrayUtil {
       return [...source, item];
     }
   }
+
+  /**
+   * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+   *
+   * @param <T>    数组元素类型
+   * @param buffer 已有数组
+   * @param index  位置，大于长度追加，否则替换
+   * @param value  新值
+   * @return 新数组或原有数组
+   */
+  static setOrAppend<T>(buffer: T[], index: number, value: T): T[] {
+    if (index < 0) {
+      return [value, ...buffer];
+    } else if (index >= buffer.length) {
+      return [...buffer, value];
+    } else {
+      return buffer.map((item, i) => (i === index ? value : item));
+    }
+  }
+
+  /**
+   * 将新元素插入到到已有数组中的某个位置<br>
+   * 添加新元素会生成一个新数组或原有数组<br>
+   * 如果插入位置为为负数，那么生成一个由插入元素顺序加已有数组顺序的新数组
+   *
+   * @param <T>    数组元素类型
+   * @param buffer 已有数组
+   * @param index  位置，大于长度追加，否则替换，&lt;0表示从头部追加
+   * @param values 新值
+   * @return 新数组或原有数组
+   */
+  static replace<T>(buffer: T[], index: number, ...values: T[]): T[] {
+    if (index < 0) {
+      return [...values, ...buffer];
+    } else if (index >= buffer.length) {
+      return [...buffer, ...values];
+    } else {
+      return [
+        ...buffer.slice(0, index),
+        ...values,
+        ...buffer.slice(index + 1),
+      ];
+    }
+  }
+
+  /**
+   * 克隆数组(深拷贝)
+   * @param arr
+   * @returns
+   */
+  static clone<T>(arr: T[]): T[] {
+    return arr.map((item) => ArrayUtil.deepClone(item));
+  }
+
+  /**
+   * 深拷贝对象T
+   * @param obj
+   * @returns
+   */
+  static deepClone<T extends any>(obj: T): T {
+    if (obj === null || typeof obj !== "object") {
+      return obj;
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map((item) => ArrayUtil.deepClone(item)) as any;
+    } else if (obj instanceof Date) {
+      return new Date(obj.getTime()) as any;
+    } else if (obj instanceof RegExp) {
+      return new RegExp(obj.source, obj.flags) as any;
+    } else {
+      const result: Record<string, any> = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          result[key] = ArrayUtil.deepClone(obj[key]);
+        }
+      }
+      return result as T;
+    }
+  }
+
+  /**
+   * 通过传入的filter实现来过滤返回需要的元素内容
+   * @param array
+   * @param filter  过滤函数
+   * @returns
+   */
+  static filter<T>(array: T[], filter: (item: T) => boolean): T[] {
+    return filter ? array.filter(filter) : array;
+  }
+
+  /**
+   * 反转数组，会变更原数组
+   *
+   * @param <T>                 数组元素类型
+   * @param array               数组，会变更
+   * @param startIndexInclusive 开始位置（包含） 默认不填为0
+   * @param endIndexExclusive   结束位置（不包含）  默认不填为array.length
+   * @return 变更后的原数组
+   */
+  static reverse<T>(array: T[], startIndexInclusive: number = 0, endIndexExclusive: number = array.length): T[] {
+    for (let i = startIndexInclusive, j = endIndexExclusive - 1; i < j; i++, j--) {
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  /**
+   * 根据传入的数值字符串日期数组取最小值
+   * @param array
+   * @returns
+   */
+  static min<T extends number | string | Date>(array: T[]): T | null {
+    if (array.length === 0) {
+      return null;
+    }
+    let minValue = array[0];
+    for (let i = 1; i < array.length; i++) {
+      if (array[i] < minValue) {
+        minValue = array[i];
+      }
+    }
+    return minValue;
+  }
+
+  /**
+   * 根据传入的数值字符串日期数组取最大值
+   * @param array
+   * @returns
+   */
+  static max<T extends number | string | Date>(array: T[]): T | null {
+    if (array.length === 0) {
+      return null;
+    }
+    let maxValue = array[0];
+    for (let i = 1; i < array.length; i++) {
+      if (array[i] > maxValue) {
+        maxValue = array[i];
+      }
+    }
+    return maxValue;
+  }
+
+  /**
+   * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
+   *
+   * @param <T>      数组元素类型
+   * @param <K>      唯一键类型
+   * @param array    数组
+   * @param uniqueGenerator 唯一键生成器
+   * @param override 是否覆盖模式，如果为{true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+   * @return 去重后的数组
+   */
+  static distinct<T, K>(array: T[], uniqueGenerator: (item: T) => K, isOverride: boolean = false,
+  ): T[] {
+    const resultMap: Map<K, T> = new Map<K, T>();
+    for (const item of array) {
+      const key: K = uniqueGenerator(item);
+      if (isOverride || !resultMap.has(key)
+
+      ) {
+        resultMap.set(key, item);
+      }
+    }
+    return Array.from(resultMap.values());
+  }
 }
 

@@ -42,6 +42,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | PhoneUtil  | 提供常用的手机座机等判断                |
 | OutDTO     | 提供常用的返回实体对象                 |
 | PageQuery  | 提供常用的后端获取分页数据操作             |
+| CharUtil   | 提供常用的字符操作                   |
 
 -------------------------------------------------------------------------------
 
@@ -65,278 +66,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 工具类按需引入,使用那个引入那个
 
-### 2.ArrayUtil的方法
-
-* defaultIfEmpty 集合为空时传入默认集合
-
-```
-    let str: string[] = [];
-    ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
-      this.message += item + "、";
-    })
-    //输出 1、32
-```
-
-* isNotEmpty 集合是否为空集合，不空为true否则false
-
-```
-    let str: string[] = [];
-    if (ArrayUtil.isNotEmpty(str)) {
-      this.message = "不是空的";
-    } else {
-      this.message = "是空的"
-    }
-    //输出 是空的
-```
-
-* isEmpty 集合是否为空集合,空为true否则false
-
-```
-    let str: string[] = [];
-    if (ArrayUtil.isEmpty(str)) {
-      this.message = "是空的";
-    } else {
-      this.message = "不是空的"
-    }
-    //输出 是空的
-```
-
-* strValIsEmpty 集合中每个值都为空则返回true,否则返回false
-
-```
-    let str: string[] = ["", ""];
-    if (ArrayUtil.strValIsEmpty(str)) {
-      this.message = "是空的";
-    } else {
-      this.message = "不是空的"
-    }
-```
-
-* strValIsNotEmpty 集合中只要有一个值不为空则返回true,否则返回false
-
-```
-    let str: string[] = ["1",""];
-    if (ArrayUtil.strValIsNotEmpty(str)) {
-      this.message = "不是空的";
-    } else {
-      this.message = "是空的"
-    }
-    //输出  不是空的
-```
-
-* append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
-
-```
-    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
-    n.forEach(item => {
-      console.error(item);
-    })
-    //输出  1 2 3 4
-```
-
-### 3.DateUtil的方法
-
-* parse 将输入的日期字符串转换为Date日期类型
-
-```
-    console.error(DateUtil.parse("2023-01-01"))
-    //输出  Sun Jan 01 2023 08:00:00 GMT+0800
-```
-
-* formatDate 将传入的日期字符串按照传入的format进行格式化输出,不传默认为yyyy-MM-dd,日期格式化年月日时分秒为y-M-d H:m:s
-
-```
-    console.error(DateUtil.formatDate("2023/1/1"))
-    //输出  2023-01-01
-    console.error(DateUtil.formatDate("2023/1/1",'yyyy-MM-dd HH:mm:ss'))
-    //输出  2023-01-01 00:00:00
-```
-
-* format 将日期类型的Date根据传入的format格式化成日期字符串(format必传)
-
-```
-    console.error(DateUtil.format(new Date,'yyyy-MM-dd HH:mm:ss'))
-    // 输出 2024-01-03 20:25:58
-    console.error(DateUtil.format(new Date,'HH:mm:ss'))
-    // 输出 20:27:06
-```
-
-### 4.JSONUtil的方法
-
-* toJSONString 将传入的json对象格式化成json字符串
-
-```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
-    console.error(JSONUtil.toJSONString(p))
-    //输出  {"name":"测试名称","age":18,"birth":"2024-01-03 00:00:00"}
-```
-
-* parse 将传入的json字符串格式化为Object对象
-
-```
-    JSONUtil.parse('{"name":"测试名称","age":18,"birth":"2024-01-03" }')
-```
-
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
-
-```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
-    console.error(p.name+":"+p.birth)
-    //输出  测试名称:2024-01-03 00:00:00
-```
-
-* parseArray 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
-
-```
-    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]',DateConst.YMD_HLINE_HMS) ;
-    pArr.forEach(item => {
-      console.error(item.name + "---" + item.birth);
-    })
-    //输出
-    //测试名称1---2023-01-01 00:00:00
-    //测试名称2---2021-01-01 12:12:12
-
-```
-
-### 5.RegUtil的方法
-
-* isMatch 给定内容是否匹配正则
-
-```
-    let res: OutDTO = RegUtil.isMatch(RegexConst.EMAIL, '111111');
-    console.error(res.getSuccess() + "---" + res.getMsg());
-    //输出 false---验证字符串格式不正确,请检查
-```
-
-* isEmailMatch 给定邮箱是否匹配正则
-
-```
-    let res: OutDTO = RegUtil.isEmailMatch('13191191111@163.com');
-    console.error(res.getSuccess() + "---" + res.getMsg());
-    //输出  true---邮箱格式正确
-```
-
-* isMobileMatch 给定手机号是否匹配正则
-
-```
-    let res: OutDTO = RegUtil.isMobileMatch('21212');
-    console.error(res.getSuccess() + "---" + res.getMsg());
-    //输出  false---手机号码格式不正确,请检查
-```
-
-* isIdCardMatch 给定身份证号是否匹配正则
-
-```
-    let res: OutDTO = RegUtil.isIdCardMatch('21212');
-    console.error(res.getSuccess() + "---" + res.getMsg());
-    //输出  false---身份证号格式不正确,请检查
-```
-
-### 6.StrUtil的方法
-
-* isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
-
-```
-    console.error(StrUtil.isBlank(' ')+"")
-    //输出  true
-```
-
-* isNotBlank 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
-
-```
-    console.error(StrUtil.isNotBlank('222')+"")
-    //输出  true
-```
-
-* trim 去除传入集合的每个值的前后空格
-
-```
-    console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
-    //输出 你好----hi----hello
-```
-
-* hasBlank 判断传入的字符串中是否包含有空值,只要有一个则返回true,否则false
-
-```
-    console.error(StrUtil.hasBlank("","232323")+"")
-    //输出  true
-```
-
-* isEmpty 判断传入的字符串是否为空,空白符判断为非空
-
-```
-    console.error(StrUtil.isEmpty(' ')+"")
-    //输出  false
-```
-
-### 7.IdUtil的方法
-
-* simpleUUID 生成32为UUID不带-
-
-```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
-```
-
-* fastUUID 生成36为UUID带-
-
-```
-    console.error(IdUtil.fastUUID())
-    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
-```
-
-* fastSimpleUUID 生成32为UUID带-
-
-```
-    console.error(IdUtil.fastSimpleUUID())
-    //输出  56703FA1-0BB-503-D93-00E94A28422
-```
-
-* randomUUID 生成36为UUID带-,小写
-
-```
-    console.error(IdUtil.randomUUID())
-    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
-```
-
-### 8.RandomUtil的方法
-
-* randomBoolean 随机生成一个布尔值
-
-```
-    console.error(RandomUtil.randomBoolean()+"")
-    //输出  true/false
-```
-
-* randomChinese 随机生成一个汉字
-
-```
-    console.error(RandomUtil.randomChinese())
-    //输出  趐
-```
-
-* randomNumber 获得指定范围内的随机数,包含最小值，不包含最大值
-
-```
-    console.error(RandomUtil.randomNumber(1000,10000)+"")
-    //输出  3184
-```
-
-* randomInt 获得随机数number值
-
-```
-    console.error(RandomUtil.randomInt()+"")
-    //输出  842905298955385
-```
-
-* randomLimit 获得指定范围内的随机数 [0,limit) 不包括limit
-
-```
-    console.error(RandomUtil.randomLimit(100)+"")
-    //输出  54
-```
-
-### 9.IdCardUtil的方法
+### 2.IdCardUtil的方法
 
 * isValidCard18 严格校验18位身份证号是否正确,校验规则如下
 
@@ -378,23 +108,68 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 身份证格式正确
 ```
 
-### 10.ObjectUtil的方法
-
-* equal 判断两个传入的数值或者是字符串是否相等
+* getProvinceCodeByIdCard 根据身份编号获取户籍省份编码，只支持15或18位身份证号码
 
 ```
-    console.error(ObjectUtil.equal("1", "1") + "")
-    //输出 true
+    let province = IdCardUtil.getProvinceCodeByIdCard("142303111111111111");
+    console.info(province.getSuccess() + "--" + province.getDataRow() + "--" + province.getMsg())
+    //输出 true--140000--山西省
 ```
 
-* notEqual 判断两个传入的数值或者是字符串是否不相等
+* getCityCodeByIdCard 根据身份编号获取地市级编码，只支持15或18位身份证号码
 
 ```
-    console.error(ObjectUtil.notEqual("1", "1") + "")
-    //输出 false
+    let city = IdCardUtil.getCityCodeByIdCard("142303111111111111");
+    console.info(city.getSuccess() + "--" + city.getDataRow() + "--" + city.getMsg())
+    //输出 true--142300--吕梁地区
 ```
 
-### 11.OutDTO的方法
+* getDistrictCodeByIdCard 根据身份编号获取区县级编码，只支持15或18位身份证号码
+
+```
+    let district = IdCardUtil.getDistrictCodeByIdCard("142303111111111111");
+    console.info(district.getSuccess() + "--" + district.getDataRow() + "--" + district.getMsg())
+    //输出 true--142303--汾阳市
+```
+
+### 3.JSONUtil的方法
+
+* toJSONString 将传入的json对象格式化成json字符串
+
+```
+    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
+    console.error(JSONUtil.toJSONString(p))
+    //输出  {"name":"测试名称","age":18,"birth":"2024-01-03 00:00:00"}
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    JSONUtil.parse('{"name":"测试名称","age":18,"birth":"2024-01-03" }')
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
+    console.error(p.name+":"+p.birth)
+    //输出  测试名称:2024-01-03 00:00:00
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]',DateConst.YMD_HLINE_HMS) ;
+    pArr.forEach(item => {
+      console.error(item.name + "---" + item.birth);
+    })
+    //输出
+    //测试名称1---2023-01-01 00:00:00
+    //测试名称2---2021-01-01 12:12:12
+
+```
+
+### 4.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -468,7 +243,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 * setDataTable 设置多行数据
 
-### 12.PageUtil的方法
+### 5.PageUtil的方法
 
 * 该对象有如下私有成员变量
 
@@ -539,6 +314,329 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
     const records:Array<T> = page.getRecords();
+```
+
+### 6.ArrayUtil的方法
+
+* append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
+
+```
+    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    n.forEach(item => {
+      console.error(item);
+    })
+    //输出  1 2 3 4
+```
+
+* setOrAppend 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+
+```
+    let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
+    console.error(JSON.stringify(arr))
+    //输出  ["1212","3232","你好","645654","64564564x"]
+```
+
+* replace 将新元素插入到到已有数组中的某个位置
+
+```
+    let arr2 = ArrayUtil.replace<string>(["1212", "3232", "5345", "645654", "64564564x"], 1, "halo");
+    console.error(JSON.stringify(arr2))
+    //输出  ["1212","halo","5345","645654","64564564x"]
+```
+
+* clone 克隆数组(深拷贝)
+
+```
+    let source = ["哈哈哈哈哈", 1212, true, new Person("测试", 12, new Date()), "64564564x"];
+    let arr3 = ArrayUtil.clone(source);
+    console.error(JSON.stringify(arr3))
+    //输出  ["哈哈哈哈哈",1212,true,{"birth":"2024-01-11T12:49:44.517Z","name":"测试","age":12},"64564564x"]
+```
+
+* deepClone 深拷贝对象T
+
+```
+    let person = new Person("测试", 12, new Date());
+    let p = ArrayUtil.deepClone<Person>(person);
+    console.error(JSON.stringify(p));
+    //输出  {"birth":"2024-01-11T12:49:44.517Z","name":"测试","age":12}
+```
+
+* filter 通过传入的filter实现来过滤返回需要的元素内容
+
+```
+    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称3","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let flter = ArrayUtil.filter<Person>(pArr, (item: Person) => item.name.includes("4"));
+    console.error(JSON.stringify(flter))
+    //输出  [{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12"}]
+```
+
+* reverse 反转数组，会变更原数组
+
+```
+    ArrayUtil.reverse<Person>(pArr);
+    console.log(JSONUtil.toJSONString(pArr));
+    //输出  [{"name":"测试名称4","age":23,"birth":"2021-01-01 12:12:12"},{"name":"测试名称3","age":34,"birth":"2023-01-01 12:12:12"},{"name":"测试名称2","age":3,"birth":"2021-11-01 12:12:12"},{"name":"测试名称1","age":18,"birth":"2023-01-01 00:00:00"}]
+```
+
+* min 根据传入的数值字符串日期数组取最小值
+
+```
+    console.error(ArrayUtil.min<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    //输出  2
+```
+
+* max 根据传入的数值字符串日期数组取最大值
+
+```
+    console.error(ArrayUtil.max<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    //输出  899076
+```
+
+* distinct 去重数组中的元素，去重后生成新的数组，原数组不变
+
+```
+    let nArr = ArrayUtil.distinct<string, string>(["你", "helo", "哇哈哈哈", "212121", "2222", "哇哈哈哈", "你"], item => item);
+    console.error(JSONUtil.toJSONString(nArr));
+    //输出  ["你","helo","哇哈哈哈","212121","2222"]
+```
+
+* defaultIfEmpty 集合为空时传入默认集合
+
+```
+    let str: string[] = [];
+    ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
+      this.message += item + "、";
+    })
+    //输出 1、32
+```
+
+* isNotEmpty 集合是否为空集合，不空为true否则false
+
+```
+    let str: string[] = [];
+    if (ArrayUtil.isNotEmpty(str)) {
+      this.message = "不是空的";
+    } else {
+      this.message = "是空的"
+    }
+    //输出 是空的
+```
+
+* isEmpty 集合是否为空集合,空为true否则false
+
+```
+    let str: string[] = [];
+    if (ArrayUtil.isEmpty(str)) {
+      this.message = "是空的";
+    } else {
+      this.message = "不是空的"
+    }
+    //输出 是空的
+```
+
+* strValIsEmpty 集合中每个值都为空则返回true,否则返回false
+
+```
+    let str: string[] = ["", ""];
+    if (ArrayUtil.strValIsEmpty(str)) {
+      this.message = "是空的";
+    } else {
+      this.message = "不是空的"
+    }
+```
+
+* strValIsNotEmpty 集合中只要有一个值不为空则返回true,否则返回false
+
+```
+    let str: string[] = ["1",""];
+    if (ArrayUtil.strValIsNotEmpty(str)) {
+      this.message = "不是空的";
+    } else {
+      this.message = "是空的"
+    }
+    //输出  不是空的
+```
+
+### 7.DateUtil的方法
+
+* parse 将输入的日期字符串转换为Date日期类型
+
+```
+    console.error(DateUtil.parse("2023-01-01"))
+    //输出  Sun Jan 01 2023 08:00:00 GMT+0800
+```
+
+* formatDate 将传入的日期字符串按照传入的format进行格式化输出,不传默认为yyyy-MM-dd,日期格式化年月日时分秒为y-M-d H:m:s
+
+```
+    console.error(DateUtil.formatDate("2023/1/1"))
+    //输出  2023-01-01
+    console.error(DateUtil.formatDate("2023/1/1",'yyyy-MM-dd HH:mm:ss'))
+    //输出  2023-01-01 00:00:00
+```
+
+* format 将日期类型的Date根据传入的format格式化成日期字符串(format必传)
+
+```
+    console.error(DateUtil.format(new Date,'yyyy-MM-dd HH:mm:ss'))
+    // 输出 2024-01-03 20:25:58
+    console.error(DateUtil.format(new Date,'HH:mm:ss'))
+    // 输出 20:27:06
+```
+
+### 8.RegUtil的方法
+
+* isMatch 给定内容是否匹配正则
+
+```
+    let res: OutDTO = RegUtil.isMatch(RegexConst.EMAIL, '111111');
+    console.error(res.getSuccess() + "---" + res.getMsg());
+    //输出 false---验证字符串格式不正确,请检查
+```
+
+* isEmailMatch 给定邮箱是否匹配正则
+
+```
+    let res: OutDTO = RegUtil.isEmailMatch('13191191111@163.com');
+    console.error(res.getSuccess() + "---" + res.getMsg());
+    //输出  true---邮箱格式正确
+```
+
+* isMobileMatch 给定手机号是否匹配正则
+
+```
+    let res: OutDTO = RegUtil.isMobileMatch('21212');
+    console.error(res.getSuccess() + "---" + res.getMsg());
+    //输出  false---手机号码格式不正确,请检查
+```
+
+* isIdCardMatch 给定身份证号是否匹配正则
+
+```
+    let res: OutDTO = RegUtil.isIdCardMatch('21212');
+    console.error(res.getSuccess() + "---" + res.getMsg());
+    //输出  false---身份证号格式不正确,请检查
+```
+
+### 9.StrUtil的方法
+
+* isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
+
+```
+    console.error(StrUtil.isBlank(' ')+"")
+    //输出  true
+```
+
+* isNotBlank 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
+
+```
+    console.error(StrUtil.isNotBlank('222')+"")
+    //输出  true
+```
+
+* trim 去除传入集合的每个值的前后空格
+
+```
+    console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
+    //输出 你好----hi----hello
+```
+
+* hasBlank 判断传入的字符串中是否包含有空值,只要有一个则返回true,否则false
+
+```
+    console.error(StrUtil.hasBlank("","232323")+"")
+    //输出  true
+```
+
+* isEmpty 判断传入的字符串是否为空,空白符判断为非空
+
+```
+    console.error(StrUtil.isEmpty(' ')+"")
+    //输出  false
+```
+
+### 10.IdUtil的方法
+
+* simpleUUID 生成32为UUID不带-
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
+
+* fastUUID 生成36为UUID带-
+
+```
+    console.error(IdUtil.fastUUID())
+    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
+```
+
+* fastSimpleUUID 生成32为UUID带-
+
+```
+    console.error(IdUtil.fastSimpleUUID())
+    //输出  56703FA1-0BB-503-D93-00E94A28422
+```
+
+* randomUUID 生成36为UUID带-,小写
+
+```
+    console.error(IdUtil.randomUUID())
+    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
+```
+
+### 11.RandomUtil的方法
+
+* randomBoolean 随机生成一个布尔值
+
+```
+    console.error(RandomUtil.randomBoolean()+"")
+    //输出  true/false
+```
+
+* randomChinese 随机生成一个汉字
+
+```
+    console.error(RandomUtil.randomChinese())
+    //输出  趐
+```
+
+* randomNumber 获得指定范围内的随机数,包含最小值，不包含最大值
+
+```
+    console.error(RandomUtil.randomNumber(1000,10000)+"")
+    //输出  3184
+```
+
+* randomInt 获得随机数number值
+
+```
+    console.error(RandomUtil.randomInt()+"")
+    //输出  842905298955385
+```
+
+* randomLimit 获得指定范围内的随机数 [0,limit) 不包括limit
+
+```
+    console.error(RandomUtil.randomLimit(100)+"")
+    //输出  54
+```
+
+### 12.ObjectUtil的方法
+
+* equal 判断两个传入的数值或者是字符串是否相等
+
+```
+    console.error(ObjectUtil.equal("1", "1") + "")
+    //输出 true
+```
+
+* notEqual 判断两个传入的数值或者是字符串是否不相等
+
+```
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+    //输出 false
 ```
 
 ### 13.PhoneUtil的方法
@@ -689,6 +787,22 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
        console.error(item.name + "-|-" + item.age + "-|-" + item.birth)
      })
 
+```
+
+### 15.CharUtil的方法
+
+* isEmoji 判断是否为emoji表情符
+
+```
+    console.error(CharUtil.isEmoji(38)+"")
+    // 输出 true
+```
+
+* isAscii isAscii
+
+```
+    console.error(CharUtil.isAscii("你")+"")
+    // 输出 false
 ```
 
 ## ⭐Star efTool 希望您可以动一动小手点点小⭐

@@ -41,6 +41,47 @@ struct Index {
 
   async test() {
 
+
+    let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
+    console.error(JSON.stringify(arr))
+
+    let arr2 = ArrayUtil.replace<string>(["1212", "3232", "5345", "645654", "64564564x"], 1, "halo");
+    console.error(JSON.stringify(arr2))
+
+    let source = ["哈哈哈哈哈", 1212, true, new Person("测试", 12, new Date()), "64564564x"];
+    let arr3 = ArrayUtil.clone(source);
+    console.error(JSON.stringify(arr3))
+
+    let person = new Person("测试", 12, new Date());
+    let p = ArrayUtil.deepClone<Person>(person);
+    console.error(JSON.stringify(p));
+
+    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称3","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称4","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let flter = ArrayUtil.filter<Person>(pArr, (item: Person) => item.name.includes("4"));
+    console.error(JSON.stringify(flter))
+
+    ArrayUtil.reverse<Person>(pArr);
+    console.log(JSONUtil.toJSONString(pArr));
+
+    console.error(ArrayUtil.min<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+
+    console.error(ArrayUtil.max<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+
+    let nArr = ArrayUtil.distinct<string, string>(["你", "helo", "哇哈哈哈", "212121", "2222", "哇哈哈哈", "你"], item => item);
+    console.error(JSONUtil.toJSONString(nArr));
+
+
+    let province = IdCardUtil.getProvinceCodeByIdCard("142303111111111111");
+    console.info(province.getSuccess() + "--" + province.getDataRow() + "--" + province.getMsg())
+
+
+    let city = IdCardUtil.getCityCodeByIdCard("142303111111111111");
+    console.info(city.getSuccess() + "--" + city.getDataRow() + "--" + city.getMsg())
+
+
+    let district = IdCardUtil.getDistrictCodeByIdCard("142303111111111111");
+    console.info(district.getSuccess() + "--" + district.getDataRow() + "--" + district.getMsg())
+
     // IdCardUtil.isValidCard18("120102199001015965").getMsg();
     // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
 
@@ -77,45 +118,45 @@ struct Index {
     // console.error(JSON.stringify(page.getNavigatePageNumbers()))
 
     //传入当前页数和每页记录数,默认是1,10
-    const pageQuery = new PageQuery<Person>(2, 20);
+    // const pageQuery = new PageQuery<Person>(2, 20);
     // 定义自己的 queryFunction
-    const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
-      const total = 100; // 假设总记录数为 100
-      const records: Person[] = [];
-      // 模拟循环请求，每次请求返回 pageSize 条记录
-      for (let i = 0; i < pageSize; i++) {
-        const id = (currentPage - 1) * pageSize + i + 1;
-        const person: Person = {
-          name: `person${id}`,
-          birth: new Date(),
-          age: id
-        };
-        records.push(person);
-      }
-      return {
-        total: total,
-        records: records,
-      };
-    };
+    // const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
+    //   const total = 100; // 假设总记录数为 100
+    //   const records: Person[] = [];
+    //   // 模拟循环请求，每次请求返回 pageSize 条记录
+    //   for (let i = 0; i < pageSize; i++) {
+    //     const id = (currentPage - 1) * pageSize + i + 1;
+    //     const person: Person = {
+    //       name: `person${id}`,
+    //       birth: new Date(),
+    //       age: id
+    //     };
+    //     records.push(person);
+    //   }
+    //   return {
+    //     total: total,
+    //     records: records,
+    //   };
+    // };
     // 调用查询接口
-    await pageQuery.queryData(queryFunction);
+    // await pageQuery.queryData(queryFunction);
     //获取到记录数
-    pageQuery.getRecords().forEach(item => {
-      console.error(item.name + "--" + item.age + "---" + item.birth)
-    })
+    // pageQuery.getRecords().forEach(item => {
+    //   console.error(item.name + "--" + item.age + "---" + item.birth)
+    // })
     //上一页
-    console.error(pageQuery.prevPage() + "");
+    // console.error(pageQuery.prevPage() + "");
     //请求上一页数据
-    await pageQuery.queryData(queryFunction);
-    pageQuery.getRecords().forEach(item => {
-      console.error(item.name + "--" + item.age + "---" + item.birth)
-    })
+    // await pageQuery.queryData(queryFunction);
+    // pageQuery.getRecords().forEach(item => {
+    //   console.error(item.name + "--" + item.age + "---" + item.birth)
+    // })
     //跳转到指定页码
-    await pageQuery.goToPage(4, queryFunction);
+    // await pageQuery.goToPage(4, queryFunction);
     //获取数据
-    pageQuery.getRecords().forEach(item => {
-      console.error(item.name + "-|-" + item.age + "-|-" + item.birth)
-    })
+    // pageQuery.getRecords().forEach(item => {
+    //   console.error(item.name + "-|-" + item.age + "-|-" + item.birth)
+    // })
     // console.error(ObjectUtil.notEqual("1", "1") + "")
 
     // console.error(PhoneUtil.isPhone("17111114114").getMsg())

@@ -211,6 +211,65 @@ export class IdCardUtil {
   }
 
   /**
+   * 根据身份编号获取户籍省份编码，只支持15或18位身份证号码
+   *
+   * @param idCard 身份编码
+   * @return 省份编码
+   */
+  static getProvinceCodeByIdCard(idCard: string): OutDTO<string> {
+    if (IdCardUtil.PROVINCE_CODES.size == 0) {
+      this.init();
+    }
+    let len = idCard.length;
+    if (len == IdCardUtil.CHINA_ID_MIN_LENGTH || len == IdCardUtil.CHINA_ID_MAX_LENGTH) {
+      let province = IdCardUtil.PROVINCE_CODES.get(idCard.substring(0, 2) + "0000");
+      return OutDTO.OKByDataRow(province.toString(), idCard.substring(0, 2) + "0000");
+    } else {
+      return OutDTO.Error("身份证长度不正确");
+    }
+  }
+
+  /**
+   * 根据身份编号获取地市级编码，只支持15或18位身份证号码
+   *
+   * @param idCard 身份编码
+   * @return 省份编码
+   */
+  static getCityCodeByIdCard(idCard: string): OutDTO<string> {
+    if (IdCardUtil.PROVINCE_CODES.size == 0) {
+      this.init();
+    }
+    let len = idCard.length;
+    if (len == IdCardUtil.CHINA_ID_MIN_LENGTH || len == IdCardUtil.CHINA_ID_MAX_LENGTH) {
+      let city = IdCardUtil.CITY_CODES.get(idCard.substring(0, 4) + "00");
+      return OutDTO.OKByDataRow(city.toString(), idCard.substring(0, 4) + "00");
+    } else {
+      return OutDTO.Error("身份证长度不正确");
+    }
+  }
+
+
+  /**
+   * 根据身份编号获取区县级编码，只支持15或18位身份证号码
+   *
+   * @param idCard 身份编码
+   * @return 省份编码
+   */
+  static getDistrictCodeByIdCard(idCard: string): OutDTO<string> {
+    if (IdCardUtil.PROVINCE_CODES.size == 0) {
+      this.init();
+    }
+    let len = idCard.length;
+    if (len == IdCardUtil.CHINA_ID_MIN_LENGTH || len == IdCardUtil.CHINA_ID_MAX_LENGTH) {
+      let district = IdCardUtil.DISTRICT_CODES.get(idCard.substring(0, 6));
+      return OutDTO.OKByDataRow(district.toString(), idCard.substring(0, 6));
+    } else {
+      return OutDTO.Error("身份证长度不正确");
+    }
+  }
+
+
+  /**
    * 获取十八位的校验码
    * @param idCard
    * @returns
