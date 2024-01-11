@@ -6,7 +6,7 @@
 
 * 新增ArrayUtil中的setOrAppend,replace,clone,filter,reverse等方法
 * 新增CharUtil中的isAscii,isEmoji等方法
-* 新增IdCardUtil中的getProvinceCodeByIdCard，getCityCodeByIdCard等方法w
+* 新增IdCardUtil中的getProvinceCodeByIdCard，getCityCodeByIdCard等方法
 
 ### 🐞Bug修复
 
