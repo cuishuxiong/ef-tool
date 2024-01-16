@@ -15,7 +15,7 @@ import {
   PhoneUtil,
   PageUtil,
   PageQuery,
-  PageResult
+  PageResult,
 } from '@yunkss/eftool'
 
 class Person {
@@ -40,7 +40,6 @@ struct Index {
   }
 
   async test() {
-
 
     // let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
     // console.error(JSON.stringify(arr))
