@@ -67,6 +67,35 @@ export class DateUtil {
     return formattedDate;
   }
 
+  /**
+   * 计算两个Date的日期差单位为天
+   * @param startDate  开始日期
+   * @param endDate  结束日期
+   * @returns
+   */
+  static dateDiff(startDate: Date, endDate: Date): number {
+    const oneDay = 24 * 60 * 60 * 1000; // 一天的毫秒数
+    // 将时间戳转换为整数天数
+    const start = Math.floor(startDate.getTime() / oneDay);
+    const end = Math.floor(endDate.getTime() / oneDay);
+    const difference = end - start; // 计算差值天数
+    return difference;
+  }
+
+  /**
+   *计算两个字符串日期的差单位为天
+   * @param startDateStr 开始日期字符串
+   * @param endDateStr   结束日期字符串
+   * @returns
+   */
+  static strDateDiff(startDateStr: string, endDateStr: string): number {
+    let startDate = new Date(startDateStr);
+    let endDate = new Date(endDateStr);
+    const oneDay = 24 * 60 * 60 * 1000; // 一天的毫秒数
+    const difference = Math.floor((endDate.getTime() - startDate.getTime()) / oneDay); // 计算差值天数
+    return difference;
+  }
+
   private static padZero(num: number): string {
     return num.toString().padStart(2, "0");
   }

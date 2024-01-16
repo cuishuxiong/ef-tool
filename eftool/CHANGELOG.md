@@ -6,6 +6,7 @@
 
 * 新增ArrayUtil中的removeEmptyValues,remove,,union,zip,unzip等方法
 * 新增StrUtil中的camelCase,capitalize,truncate,toUpper,toLower等方法
+* 新增DateUtil中的dateDiff,strDateDiff方法
 
 ### 🐞Bug修复
 

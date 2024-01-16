@@ -531,6 +531,20 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 20:27:06
 ```
 
+* dateDiff 计算两个Date的日期差单位为天
+
+```
+    const difference = DateUtil.dateDiff(new Date('2023-01-01'), new Date('2023-01-10'));
+    console.log(difference + ""); //输出 9
+```
+
+* strDateDiff 计算两个字符串日期的差单位为天
+
+```
+    const diff = DateUtil.strDateDiff('2023-11-01 12:12:12', '2024-01-10 12:12:12');
+    console.log(diff + ""); //输出 70
+```
+
 ### 8.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则

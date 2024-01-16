@@ -141,6 +141,13 @@ struct Index {
 
 
     console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true]))) //输出  [1,"ssss",true]
+
+    const difference = DateUtil.dateDiff(new Date('2023-01-01'), new Date('2023-01-10'));
+    console.log(difference + ""); // 9
+
+    const diff = DateUtil.strDateDiff('2023-11-01 12:12:12', '2024-01-10 12:12:12');
+    console.log(diff + ""); // 70
+
     // IdCardUtil.isValidCard18("120102199001015965").getMsg();
     // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
 
