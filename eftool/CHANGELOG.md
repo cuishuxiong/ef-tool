@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.0.3] 2024-01
+
+### 🐣新特性
+
+* 新增ArrayUtil中的removeEmptyValues,remove,,union,zip,unzip等方法
+* 新增StrUtil中的camelCase,capitalize,truncate,toUpper,toLower等方法
+
+### 🐞Bug修复
+
+* 暂无
+
 ## [v1.0.2] 2024-01
 
 ### 🐣新特性

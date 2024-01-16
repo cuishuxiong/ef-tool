@@ -42,46 +42,106 @@ struct Index {
   async test() {
 
 
-    let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
-    console.error(JSON.stringify(arr))
+    // let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
+    // console.error(JSON.stringify(arr))
+    //
+    // let arr2 = ArrayUtil.replace<string>(["1212", "3232", "5345", "645654", "64564564x"], 1, "halo");
+    // console.error(JSON.stringify(arr2))
+    //
+    // let source = ["哈哈哈哈哈", 1212, true, new Person("测试", 12, new Date()), "64564564x"];
+    // let arr3 = ArrayUtil.clone(source);
+    // console.error(JSON.stringify(arr3))
+    //
+    // let person = new Person("测试", 12, new Date());
+    // let p = ArrayUtil.deepClone<Person>(person);
+    // console.error(JSON.stringify(p));
+    //
+    // let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称3","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称4","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    // let flter = ArrayUtil.filter<Person>(pArr, (item: Person) => item.name.includes("4"));
+    // console.error(JSON.stringify(flter))
+    //
+    // ArrayUtil.reverse<Person>(pArr);
+    // console.log(JSONUtil.toJSONString(pArr));
+    //
+    // console.error(ArrayUtil.min<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    //
+    // console.error(ArrayUtil.max<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    //
+    // let nArr = ArrayUtil.distinct<string, string>(["你", "helo", "哇哈哈哈", "212121", "2222", "哇哈哈哈", "你"], item => item);
+    // console.error(JSONUtil.toJSONString(nArr));
+    //
+    //
+    // let province = IdCardUtil.getProvinceCodeByIdCard("142303111111111111");
+    // console.info(province.getSuccess() + "--" + province.getDataRow() + "--" + province.getMsg())
+    //
+    //
+    // let city = IdCardUtil.getCityCodeByIdCard("142303111111111111");
+    // console.info(city.getSuccess() + "--" + city.getDataRow() + "--" + city.getMsg())
+    //
+    //
+    // let district = IdCardUtil.getDistrictCodeByIdCard("142303111111111111");
+    // console.info(district.getSuccess() + "--" + district.getDataRow() + "--" + district.getMsg())
 
-    let arr2 = ArrayUtil.replace<string>(["1212", "3232", "5345", "645654", "64564564x"], 1, "halo");
-    console.error(JSON.stringify(arr2))
+    console.error(StrUtil.camelCase("Foo Bar")) //输出 fooBar
+    console.error(StrUtil.camelCase("--foo-bar--")) //输出 fooBar
+    console.error(StrUtil.camelCase("__FOO_BAR__")) //输出 fooBar
 
-    let source = ["哈哈哈哈哈", 1212, true, new Person("测试", 12, new Date()), "64564564x"];
-    let arr3 = ArrayUtil.clone(source);
-    console.error(JSON.stringify(arr3))
+    console.error(StrUtil.capitalize("FooBar")) //输出  Foobar
 
-    let person = new Person("测试", 12, new Date());
-    let p = ArrayUtil.deepClone<Person>(person);
-    console.error(JSON.stringify(p));
+    console.error(StrUtil.endsWith('abc', 'b', 2) + "") //输出  true
 
-    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称3","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称4","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let flter = ArrayUtil.filter<Person>(pArr, (item: Person) => item.name.includes("4"));
-    console.error(JSON.stringify(flter))
+    console.error(StrUtil.repeat("*", 5)) //输出  *****
 
-    ArrayUtil.reverse<Person>(pArr);
-    console.log(JSONUtil.toJSONString(pArr));
+    const str = 'Hello, World';
 
-    console.error(ArrayUtil.min<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    console.log(StrUtil.replace(str, 'Hello', 'Hi')); // 输出：'Hi, World'
+    console.log(StrUtil.replace(str, /world/i, 'Universe')); // 输出：'Hello, Universe'
+    console.log(StrUtil.replace(str, /[aeiou]/ig, 'X')); // 输出：'HXllX, WXXld'
 
-    console.error(ArrayUtil.max<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    console.log(StrUtil.startsWith(str, 'Hello') + ""); // 输出：true
+    console.log(StrUtil.startsWith(str, 'World') + ""); // 输出：false
+    console.log(StrUtil.startsWith(str, 'Hello', 7) + ""); // 输出：false
+    console.log(StrUtil.startsWith(str, 'World', 7) + ""); // 输出：true
 
-    let nArr = ArrayUtil.distinct<string, string>(["你", "helo", "哇哈哈哈", "212121", "2222", "哇哈哈哈", "你"], item => item);
-    console.error(JSONUtil.toJSONString(nArr));
+    console.error(StrUtil.toLower('--Foo-Bar--')); //--foo-bar--
+
+    console.error(StrUtil.toUpper('--Foo-Bar--')); //--FOO-BAR--
+
+    console.log(StrUtil.truncate(str)); // 输出：'Hello, World'
+    console.log(StrUtil.truncate(str, { length: 5 })); // 输出：'Hello...'
+    console.log(StrUtil.truncate(str, { length: 10, omission: '***' })); // 输出：'Hello, Wo***'
+    console.log(StrUtil.truncate(str, { separator: ',' })); // 输出：'Hello, World'
+
+    const longStr = 'This is a very long string that needs to be truncated';
+    console.log(StrUtil.truncate(longStr, { length: 10 })); // 输出：'This is a ....'
+    console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 
 
-    let province = IdCardUtil.getProvinceCodeByIdCard("142303111111111111");
-    console.info(province.getSuccess() + "--" + province.getDataRow() + "--" + province.getMsg())
+    const arr1 = [1, 2, 3];
+    const arr2 = [2, 3, 4];
+    const arr3 = [3, 4, 5];
+
+    const result = ArrayUtil.union(arr1, arr2, arr3);
+    console.log(JSONUtil.toJSONString(result)); // 输出：[1, 2, 3, 4, 5]
+
+    const arr11 = [1, 2, 3];
+    const arr22 = ['a', 'b', 'c'];
+    const arr33 = [true, false, 'd'];
+
+    const result1 = ArrayUtil.zip(arr11, arr22, arr33);
+    console.log(JSONUtil.toJSONString(result1)); // 输出：[[1,"a",true],[2,"b",false],[3,"c","d"]]
+
+    const qwe = ArrayUtil.unzip(result1);
+    console.error(JSONUtil.toJSONString(qwe)) //输出[[1,2,3],["a","b","c"],[true,false,"d"]]
 
 
-    let city = IdCardUtil.getCityCodeByIdCard("142303111111111111");
-    console.info(city.getSuccess() + "--" + city.getDataRow() + "--" + city.getMsg())
+    const array = [1, 2, 3, 4, 5];
+    const removed = ArrayUtil.remove(array, (value: number) => value % 2 === 0);
+    console.log(JSONUtil.toJSONString(removed)); // [4,2]
+    console.log(JSONUtil.toJSONString(array)); // [1, 3, 5]
 
 
-    let district = IdCardUtil.getDistrictCodeByIdCard("142303111111111111");
-    console.info(district.getSuccess() + "--" + district.getDataRow() + "--" + district.getMsg())
-
+    console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true]))) //输出  [1,"ssss",true]
     // IdCardUtil.isValidCard18("120102199001015965").getMsg();
     // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
 

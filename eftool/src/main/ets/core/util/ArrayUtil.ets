@@ -238,5 +238,75 @@ export class ArrayUtil {
     }
     return Array.from(resultMap.values());
   }
+
+  /**
+   * 移除数组中predicate返回为真值的所有元素，并返回移除元素组成的数组
+   * @param array 要修改的数组
+   * @param predicate  断言
+   * @returns 处理后的数组
+   */
+  static remove<T>(array: T[], predicate?: (value: T, index: number, array: T[]) => boolean): T[] {
+    const removed: T[] = [];
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (predicate && predicate(array[i], i, array)) {
+        removed.push(...array.splice(i, 1));
+      }
+    }
+    return removed;
+  }
+
+  /**
+   * 去除集合中的空值
+   * @param arr 待处理的集合
+   * @returns 处理后的集合
+   */
+  static removeEmptyValues(arr: any[]): any[] {
+    return arr.filter((value) => value !== null && value !== undefined && value !== '');
+  }
+
+  /**
+   * 创建一个按顺序排列的唯一值的数组（注：arrays（数组）的并集，按顺序返回，返回数组的元素是唯一的）
+   * @param arrays  要检查的数组
+   * @returns 返回一个新的联合数组
+   */
+  static union<T>(...arrays: T[][]): T[] {
+    const result: T[] = [];
+    for (const arr of arrays) {
+      for (const item of arr) {
+        if (!result.includes(item)) {
+          result.push(item);
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * 创建一个分组元素的数组，数组的第一个元素包含所有给定数组的第一个元素，数组的第二个元素包含所有给定数组的第二个元素，以此类推
+   * @param arrays 要处理的数组
+   * @returns 返回分组元素的新数组
+   */
+  static zip<T extends any[]>(...arrays: [...T: any[]]): T[][] {
+    const maxLength = Math.max(...arrays.map(arr => arr.length));
+    const result: T[][] = [];
+    for (let i = 0; i < maxLength; i++) {
+      result[i] = arrays.map(arr => arr[i]);
+    }
+    return result;
+  }
+
+  /**
+   * 这个方法类似于zip除了它接收分组元素的数组，并且创建一个数组，分组元素到打包前的结构(返回数组的第一个元素包含所有的输入数组的第一元素，第一个元素包含了所有的输入数组的第二元素，依此类推)
+   * @param array 要处理的分组元素数组
+   * @returns 返回重组元素的新数组
+   */
+  static unzip<T extends any[]>(array: T[][]): T[][] {
+    const maxLength = Math.max(...array.map(arr => arr.length));
+    const result: T[][] = [];
+    for (let i = 0; i < maxLength; i++) {
+      result[i] = array.map(arr => arr[i]);
+    }
+    return result;
+  }
 }
 
