@@ -401,6 +401,52 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  ["你","helo","哇哈哈哈","212121","2222"]
 ```
 
+* remove 移除数组中predicate返回为真值的所有元素，并返回移除元素组成的数组
+
+```
+    const array = [1, 2, 3, 4, 5];
+    const removed = ArrayUtil.remove(array, (value: number) => value % 2 === 0);
+    console.log(JSONUtil.toJSONString(removed)); // [4,2]
+    console.log(JSONUtil.toJSONString(array)); // [1, 3, 5]
+```
+
+* removeEmptyValues 去除集合中的空值
+
+```
+    console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true])))  
+    //输出  [1,"ssss",true]
+```
+
+* union 创建一个按顺序排列的唯一值的数组（注：arrays（数组）的并集，按顺序返回，返回数组的元素是唯一的）
+
+```
+    const arr1 = [1, 2, 3];
+    const arr2 = [2, 3, 4];
+    const arr3 = [3, 4, 5];
+    const result = ArrayUtil.union(arr1, arr2, arr3);
+    console.log(JSONUtil.toJSONString(result)); // 输出：[1, 2, 3, 4, 5]
+```
+
+* zip 创建一个分组元素的数组，数组的第一个元素包含所有给定数组的第一个元素，数组的第二个元素包含所有给定数组的第二个元素，以此类推
+
+```
+    const arr11 = [1, 2, 3];
+    const arr22 = ['a', 'b', 'c'];
+    const arr33 = [true, false, 'd'];
+    const result1 = ArrayUtil.zip(arr11, arr22, arr33);
+    console.log(JSONUtil.toJSONString(result1)); 
+    // 输出：[[1,"a",true],[2,"b",false],[3,"c","d"]]
+```
+
+* unzip 这个方法类似于zip除了它接收分组元素的数组，并且创建一个数组，分组元素到打包前的结构(
+  返回数组的第一个元素包含所有的输入数组的第一元素，第一个元素包含了所有的输入数组的第二元素，依此类推)
+
+```
+    const qwe = ArrayUtil.unzip(result1);
+    console.error(JSONUtil.toJSONString(qwe)) 
+    //输出[[1,2,3],["a","b","c"],[true,false,"d"]]
+```
+
 * defaultIfEmpty 集合为空时传入默认集合
 
 ```
@@ -554,6 +600,77 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 ```
     console.error(StrUtil.isEmpty(' ')+"")
     //输出  false
+```
+
+* camelCase 将字符串转换为驼峰
+
+```
+    console.error(StrUtil.camelCase("Foo Bar"))  //输出 fooBar
+    console.error(StrUtil.camelCase("--foo-bar--"))  //输出 fooBar
+    console.error(StrUtil.camelCase("__FOO_BAR__"))  //输出 fooBar
+```
+
+* capitalize 转换字符串首字母为大写，剩下为小写
+
+```
+     console.error(StrUtil.capitalize("FooBar"))  //输出  Foobar
+```
+
+* endsWith 检查字符串是否以给定的字符串结尾
+
+```
+    console.error(StrUtil.endsWith('abc', 'b', 2) + "")  //输出  true
+```
+
+* repeat 重复 N 次给定字符串
+
+```
+    console.error(StrUtil.repeat("*", 5))  //输出  *****
+```
+
+* replace 替换字符串中匹配的正则为给定的字符串
+
+```
+    const str = 'Hello, World';
+    console.log(StrUtil.replace(str, 'Hello', 'Hi')); // 输出：'Hi, World'
+    console.log(StrUtil.replace(str, /world/i, 'Universe')); // 输出：'Hello, Universe'
+    console.log(StrUtil.replace(str, /[aeiou]/ig, 'X')); // 输出：'HXllX, WXXld'
+```
+
+* startsWith 检查字符串是否以给定的字符串卡头
+
+```
+    const str = 'Hello, World';
+    console.log(StrUtil.startsWith(str, 'Hello') + ""); // 输出：true
+    console.log(StrUtil.startsWith(str, 'World') + ""); // 输出：false
+    console.log(StrUtil.startsWith(str, 'Hello', 7) + ""); // 输出：false
+    console.log(StrUtil.startsWith(str, 'World', 7) + ""); // 输出：true
+```
+
+* toLower 转换整个字符串的字符为小写
+
+```
+    console.error(StrUtil.toLower('--Foo-Bar--')); //--foo-bar--
+```
+
+* toUpper 转换整个字符串的字符为大写
+
+```
+    console.error(StrUtil.toUpper('--Foo-Bar--')); //--FOO-BAR--
+```
+
+* truncate 截断字符串，如果字符串超出了限定的最大值。 被截断的字符串后面会以 omission 代替，omission 默认是 "..."
+
+```
+    const str = 'Hello, World';
+    console.log(StrUtil.truncate(str)); // 输出：'Hello, World'
+    console.log(StrUtil.truncate(str, { length: 5 })); // 输出：'Hello...'
+    console.log(StrUtil.truncate(str, { length: 10, omission: '***' })); // 输出：'Hello, Wo***'
+    console.log(StrUtil.truncate(str, { separator: ',' })); // 输出：'Hello, World'
+
+    const longStr = 'This is a very long string that needs to be truncated';
+    console.log(StrUtil.truncate(longStr, { length: 10 })); // 输出：'This is a ....'
+    console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
 ### 10.IdUtil的方法
