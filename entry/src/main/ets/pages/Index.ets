@@ -16,6 +16,7 @@ import {
   PageUtil,
   PageQuery,
   PageResult,
+  BASE64
 } from '@yunkss/eftool'
 
 class Person {
@@ -40,6 +41,14 @@ struct Index {
   }
 
   async test() {
+
+
+    const encodeStr:string = BASE64.encode("你好啊~");
+
+    console.error(encodeStr);
+
+    console.error(BASE64.decode(encodeStr));
+
 
     // let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
     // console.error(JSON.stringify(arr))
