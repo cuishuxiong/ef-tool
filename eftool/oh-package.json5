@@ -15,8 +15,8 @@
   "name": "@yunkss/eftool",
   "description": "一款高效的OpenHarmony/HarmonyOS工具包.封装的工具涵盖了字符串、正则、集合、JSON、分页、日期等,提供一系列快捷操作方法。",
   "main": "index.ets",
-  "homepage": "https://gitee.com/yunkss",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
   "version": "1.0.3",
+  "homepage": "https://gitee.com/yunkss",
   "dependencies": {}
 }

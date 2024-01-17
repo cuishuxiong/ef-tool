@@ -16,7 +16,9 @@ import {
   PageUtil,
   PageQuery,
   PageResult,
-  BASE64
+  BASE64,
+  MD5,
+  RSA
 } from '@yunkss/eftool'
 
 class Person {
@@ -42,12 +44,27 @@ struct Index {
 
   async test() {
 
+    const originalText = "Hello,World!";
+    // const encryptedText = MD5.encrypt(originalText);
+    // console.log("原始文本:", originalText);
+    // console.log("加密后:", encryptedText);
 
-    const encodeStr:string = BASE64.encode("你好啊~");
+    const { publicKey, privateKey } = RSA.generateKeyPair(1024);
 
-    console.error(encodeStr);
+    // 加密消息
+    const encryptedMessage = RSA.encrypt(originalText, publicKey);
 
-    console.error(BASE64.decode(encodeStr));
+    // 解密消息
+    const decryptedMessage = RSA.decrypt(encryptedMessage, privateKey);
+
+
+    console.error("原始文本:", originalText);
+    console.error("公钥:", publicKey);
+    console.error("私钥:", privateKey);
+    console.error("加密后:", encryptedMessage);
+    console.error("解密后:", decryptedMessage);
+    // console.error("加密后:", encryptedMessage.map((value) => value.toString()).join(", "));
+    // console.error("解密后:", decryptedMessage);
 
 
     // let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
@@ -89,73 +106,73 @@ struct Index {
     //
     // let district = IdCardUtil.getDistrictCodeByIdCard("142303111111111111");
     // console.info(district.getSuccess() + "--" + district.getDataRow() + "--" + district.getMsg())
-
-    console.error(StrUtil.camelCase("Foo Bar")) //输出 fooBar
-    console.error(StrUtil.camelCase("--foo-bar--")) //输出 fooBar
-    console.error(StrUtil.camelCase("__FOO_BAR__")) //输出 fooBar
-
-    console.error(StrUtil.capitalize("FooBar")) //输出  Foobar
-
-    console.error(StrUtil.endsWith('abc', 'b', 2) + "") //输出  true
-
-    console.error(StrUtil.repeat("*", 5)) //输出  *****
-
-    const str = 'Hello, World';
-
-    console.log(StrUtil.replace(str, 'Hello', 'Hi')); // 输出：'Hi, World'
-    console.log(StrUtil.replace(str, /world/i, 'Universe')); // 输出：'Hello, Universe'
-    console.log(StrUtil.replace(str, /[aeiou]/ig, 'X')); // 输出：'HXllX, WXXld'
-
-    console.log(StrUtil.startsWith(str, 'Hello') + ""); // 输出：true
-    console.log(StrUtil.startsWith(str, 'World') + ""); // 输出：false
-    console.log(StrUtil.startsWith(str, 'Hello', 7) + ""); // 输出：false
-    console.log(StrUtil.startsWith(str, 'World', 7) + ""); // 输出：true
-
-    console.error(StrUtil.toLower('--Foo-Bar--')); //--foo-bar--
-
-    console.error(StrUtil.toUpper('--Foo-Bar--')); //--FOO-BAR--
-
-    console.log(StrUtil.truncate(str)); // 输出：'Hello, World'
-    console.log(StrUtil.truncate(str, { length: 5 })); // 输出：'Hello...'
-    console.log(StrUtil.truncate(str, { length: 10, omission: '***' })); // 输出：'Hello, Wo***'
-    console.log(StrUtil.truncate(str, { separator: ',' })); // 输出：'Hello, World'
-
-    const longStr = 'This is a very long string that needs to be truncated';
-    console.log(StrUtil.truncate(longStr, { length: 10 })); // 输出：'This is a ....'
-    console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
-
-
-    const arr1 = [1, 2, 3];
-    const arr2 = [2, 3, 4];
-    const arr3 = [3, 4, 5];
-
-    const result = ArrayUtil.union(arr1, arr2, arr3);
-    console.log(JSONUtil.toJSONString(result)); // 输出：[1, 2, 3, 4, 5]
-
-    const arr11 = [1, 2, 3];
-    const arr22 = ['a', 'b', 'c'];
-    const arr33 = [true, false, 'd'];
-
-    const result1 = ArrayUtil.zip(arr11, arr22, arr33);
-    console.log(JSONUtil.toJSONString(result1)); // 输出：[[1,"a",true],[2,"b",false],[3,"c","d"]]
-
-    const qwe = ArrayUtil.unzip(result1);
-    console.error(JSONUtil.toJSONString(qwe)) //输出[[1,2,3],["a","b","c"],[true,false,"d"]]
-
-
-    const array = [1, 2, 3, 4, 5];
-    const removed = ArrayUtil.remove(array, (value: number) => value % 2 === 0);
-    console.log(JSONUtil.toJSONString(removed)); // [4,2]
-    console.log(JSONUtil.toJSONString(array)); // [1, 3, 5]
-
-
-    console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true]))) //输出  [1,"ssss",true]
-
-    const difference = DateUtil.dateDiff(new Date('2023-01-01'), new Date('2023-01-10'));
-    console.log(difference + ""); // 9
-
-    const diff = DateUtil.strDateDiff('2023-11-01 12:12:12', '2024-01-10 12:12:12');
-    console.log(diff + ""); // 70
+    //
+    // console.error(StrUtil.camelCase("Foo Bar")) //输出 fooBar
+    // console.error(StrUtil.camelCase("--foo-bar--")) //输出 fooBar
+    // console.error(StrUtil.camelCase("__FOO_BAR__")) //输出 fooBar
+    //
+    // console.error(StrUtil.capitalize("FooBar")) //输出  Foobar
+    //
+    // console.error(StrUtil.endsWith('abc', 'b', 2) + "") //输出  true
+    //
+    // console.error(StrUtil.repeat("*", 5)) //输出  *****
+    //
+    // const str = 'Hello, World';
+    //
+    // console.log(StrUtil.replace(str, 'Hello', 'Hi')); // 输出：'Hi, World'
+    // console.log(StrUtil.replace(str, /world/i, 'Universe')); // 输出：'Hello, Universe'
+    // console.log(StrUtil.replace(str, /[aeiou]/ig, 'X')); // 输出：'HXllX, WXXld'
+    //
+    // console.log(StrUtil.startsWith(str, 'Hello') + ""); // 输出：true
+    // console.log(StrUtil.startsWith(str, 'World') + ""); // 输出：false
+    // console.log(StrUtil.startsWith(str, 'Hello', 7) + ""); // 输出：false
+    // console.log(StrUtil.startsWith(str, 'World', 7) + ""); // 输出：true
+    //
+    // console.error(StrUtil.toLower('--Foo-Bar--')); //--foo-bar--
+    //
+    // console.error(StrUtil.toUpper('--Foo-Bar--')); //--FOO-BAR--
+    //
+    // console.log(StrUtil.truncate(str)); // 输出：'Hello, World'
+    // console.log(StrUtil.truncate(str, { length: 5 })); // 输出：'Hello...'
+    // console.log(StrUtil.truncate(str, { length: 10, omission: '***' })); // 输出：'Hello, Wo***'
+    // console.log(StrUtil.truncate(str, { separator: ',' })); // 输出：'Hello, World'
+    //
+    // const longStr = 'This is a very long string that needs to be truncated';
+    // console.log(StrUtil.truncate(longStr, { length: 10 })); // 输出：'This is a ....'
+    // console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
+    //
+    //
+    // const arr1 = [1, 2, 3];
+    // const arr2 = [2, 3, 4];
+    // const arr3 = [3, 4, 5];
+    //
+    // const result = ArrayUtil.union(arr1, arr2, arr3);
+    // console.log(JSONUtil.toJSONString(result)); // 输出：[1, 2, 3, 4, 5]
+    //
+    // const arr11 = [1, 2, 3];
+    // const arr22 = ['a', 'b', 'c'];
+    // const arr33 = [true, false, 'd'];
+    //
+    // const result1 = ArrayUtil.zip(arr11, arr22, arr33);
+    // console.log(JSONUtil.toJSONString(result1)); // 输出：[[1,"a",true],[2,"b",false],[3,"c","d"]]
+    //
+    // const qwe = ArrayUtil.unzip(result1);
+    // console.error(JSONUtil.toJSONString(qwe)) //输出[[1,2,3],["a","b","c"],[true,false,"d"]]
+    //
+    //
+    // const array = [1, 2, 3, 4, 5];
+    // const removed = ArrayUtil.remove(array, (value: number) => value % 2 === 0);
+    // console.log(JSONUtil.toJSONString(removed)); // [4,2]
+    // console.log(JSONUtil.toJSONString(array)); // [1, 3, 5]
+    //
+    //
+    // console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true]))) //输出  [1,"ssss",true]
+    //
+    // const difference = DateUtil.dateDiff(new Date('2023-01-01'), new Date('2023-01-10'));
+    // console.log(difference + ""); // 9
+    //
+    // const diff = DateUtil.strDateDiff('2023-11-01 12:12:12', '2024-01-10 12:12:12');
+    // console.log(diff + ""); // 70
 
     // IdCardUtil.isValidCard18("120102199001015965").getMsg();
     // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
@@ -337,7 +354,9 @@ struct Index {
       Column() {
         Text(this.message)
           .fontSize(20)
-          .fontWeight(FontWeight.Bold)
+          .fontWeight(FontWeight.Bold).onClick(() => {
+          this.test();
+        })
       }
       .width('100%')
     }
