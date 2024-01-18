@@ -18,7 +18,8 @@ import {
   PageResult,
   BASE64,
   MD5,
-  RSA
+  RSA,
+  AES
 } from '@yunkss/eftool'
 
 class Person {
@@ -44,25 +45,29 @@ struct Index {
 
   async test() {
 
-    const originalText = "Hello,World!";
+    const keyPair = await  AES.generateAesKey();
+
+
+    console.error("----------：" + keyPair)
+    // const originalText = "Hello,World!";
     // const encryptedText = MD5.encrypt(originalText);
     // console.log("原始文本:", originalText);
     // console.log("加密后:", encryptedText);
 
-    const { publicKey, privateKey } = RSA.generateKeyPair(1024);
+    // const { publicKey, privateKey } = RSA.generateKeyPair(1024);
 
     // 加密消息
-    const encryptedMessage = RSA.encrypt(originalText, publicKey);
+    // const encryptedMessage = RSA.encrypt(originalText, publicKey);
 
     // 解密消息
-    const decryptedMessage = RSA.decrypt(encryptedMessage, privateKey);
+    // const decryptedMessage = RSA.decrypt(encryptedMessage, privateKey);
 
 
-    console.error("原始文本:", originalText);
-    console.error("公钥:", publicKey);
-    console.error("私钥:", privateKey);
-    console.error("加密后:", encryptedMessage);
-    console.error("解密后:", decryptedMessage);
+    // console.error("原始文本:", originalText);
+    // console.error("公钥:", publicKey);
+    // console.error("私钥:", privateKey);
+    // console.error("加密后:", encryptedMessage);
+    // console.error("解密后:", decryptedMessage);
     // console.error("加密后:", encryptedMessage.map((value) => value.toString()).join(", "));
     // console.error("解密后:", decryptedMessage);
 
