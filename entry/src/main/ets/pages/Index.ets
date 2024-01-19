@@ -45,10 +45,15 @@ struct Index {
 
   async test() {
 
-    const keyPair = await  AES.generateAesKey();
+    // let a =await AES.testAesGcm();
+    // console.error("1111111111:" + a);
+
+    const keyPair = await  AES.generateAesKey("AES128");
 
 
-    console.error("----------：" + keyPair)
+    AES.encode("this is  csx test", keyPair);
+
+
     // const originalText = "Hello,World!";
     // const encryptedText = MD5.encrypt(originalText);
     // console.log("原始文本:", originalText);
