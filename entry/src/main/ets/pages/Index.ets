@@ -50,8 +50,13 @@ struct Index {
 
     const keyPair = await  AES.generateAesKey("AES128");
 
+    console.log("密钥、；:", keyPair);
 
-    AES.encode("this is  csx test", keyPair);
+    // AES.testConvertAesKey(keyPair);
+
+    await AES.encode("this is  csx test", keyPair, "AES128");
+
+    await AES.decode(keyPair, 'AES128')
 
 
     // const originalText = "Hello,World!";

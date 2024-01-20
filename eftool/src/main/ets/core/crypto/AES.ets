@@ -12,7 +12,7 @@ export class AES {
   private static globalCipherText;
 
   /**
-   *字节流转成可理解的字符串
+   * 字节流转成可理解的字符串
    * @param unit8Array
    * @returns
    */
@@ -52,10 +52,21 @@ export class AES {
     return new Uint8Array(arr);
   }
 
+  /**
+   * 该方法适用于将密钥转换为convert时所需要的数组
+   * @param str
+   * @returns
+   */
+  private static stringToByteArray(str: string) {
+    const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+    const byteArray: number[] = hexString.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+    return new Uint8Array(byteArray);
+  }
+
 
   /**
    * 生成AES的对称密钥
-   * @returns
+   * @returns AES密钥
    */
   static async generateAesKey(symAlgName: string): Promise<string> {
     // 创建对称密钥生成器
@@ -71,134 +82,69 @@ export class AES {
     // 获取非对称密钥的二进制数据
     return this.unit8ArrayToShowStr(promiseSymKey.getEncoded().data);
   }
-  static genKeyMaterialBlob() {
-    let arr = [
-      0xba, 0x3d, 0xc2, 0x71, 0x21, 0x1e, 0x30, 0x56,
-      0xad, 0x47, 0xfc, 0x5a, 0x46, 0x39, 0xee, 0x7c,
-      0xba, 0x3b, 0xc2, 0x71, 0xab, 0xa0, 0x30, 0x72];    // keyLen = 192 (24 bytes)
-    let keyMaterial = new Uint8Array(arr);
-    return {data : keyMaterial};
-  }
+
   /**
    *
    * @param str
+   * @param aesKey
+   * @param algName
    */
-  static  encode(str: string, aesKey: string) {
-
+  static async encode(str: string, aesKey: string, algName: string) {
+    //组装convertKey所需数据
+    let data = { data: this.stringToByteArray(aesKey) };
     // 创建对称密钥生成器
-    let symKeyGenerator = crypto.createSymKeyGenerator("3DES192");
-     symKeyGenerator.convertKey(this.genKeyMaterialBlob()).then(symKey => {
+    let symKeyGenerator = crypto.createSymKeyGenerator(algName);
+    //转换密钥
+    await symKeyGenerator.convertKey(data).then(symKey => {
       // 初始化加解密操作环境:开始加密
       let mode = crypto.CryptoMode.ENCRYPT_MODE;
-      AES.globalCipher.init(mode, symKey, AES.globalGcmParams, (err,) => {
-        console.error("============:" + err)
-        let plainText = { data: AES.stringToUnit8Array(str) };
-        AES.globalCipher.update(plainText).then((err1, updateOutput) => {
-          AES.globalCipherText = updateOutput;
-          console.error("============:" + err1)
+      this.globalCipher.init(mode, symKey, this.globalGcmParams, (err,) => {
+        //封装加密所需数据
+        let plainText = { data: this.stringToUnit8Array(str) };
+        //开始加密
+        this.globalCipher.update(plainText).then((updateOutput) => {
+          this.globalCipherText = updateOutput;
           console.error("============加密:" + updateOutput)
-          AES.globalCipher.doFinal(null, (err, finalOutput) => {
+          this.globalCipher.doFinal(null, (err, finalOutput) => {
             if (finalOutput != null) {
-              AES.globalCipherText = Array.from(AES.globalCipherText.data);
+              this.globalCipherText = Array.from(this.globalCipherText.data);
               finalOutput = Array.from(finalOutput.data);
-              AES.globalCipherText = AES.globalCipherText.concat(finalOutput);
-              AES.globalCipherText = new Uint8Array(AES.globalCipherText);
-              AES.globalCipherText = { data: AES.globalCipherText };
-              console.error("============最終加密数据:" + AES.globalCipherText)
+              this.globalCipherText = this.globalCipherText.concat(finalOutput);
+              this.globalGcmParams.authTag.data = finalOutput;
+              this.globalCipherText = new Uint8Array(this.globalCipherText);
+              this.globalCipherText = { data: this.globalCipherText };
+              console.error("============最終加密数据:" + this.unit8ArrayToShowStr(this.globalCipherText.data))
             }
           });
         })
 
-      }); // init
+      });
     })
 
 
   }
 
-
-  //
-  // static testAesGcm() {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       resolve('testAesGcm');
-  //     }, 10)
-  //   }).then(() => {
-  //     // 生成对称密钥生成器
-  //     let symAlgName = 'AES128';
-  //     let symKeyGenerator = crypto.createSymKeyGenerator(symAlgName);
-  //     if (symKeyGenerator == null) {
-  //       console.error('createSymKeyGenerator failed');
-  //       return;
-  //     }
-  //     console.info(`symKeyGenerator algName: ${symKeyGenerator.algName}`);
-  //     // 通过密钥生成器随机生成128位长度的对称密钥
-  //     let promiseSymKey = symKeyGenerator.generateSymKey();
-  //     // 构造参数
-  //     globalGcmParams = this.genGcmParamsSpec();
-  //
-  //     // 生成加解密生成器
-  //     let cipherAlgName = 'AES128|GCM|PKCS7';
-  //     try {
-  //       globalCipher = crypto.createCipher(cipherAlgName);
-  //       console.info(`cipher algName: ${globalCipher.algName}`);
-  //     } catch (error) {
-  //       console.error(`createCipher failed, ${error.code}, ${error.message}`);
-  //       return;
-  //     }
-  //     return promiseSymKey;
-  //   })
-  //     .then(key => {
-  //       let encodedKey = key.getEncoded();
-  //       console.info('key hex:' + this.unit8ArrayToShowStr(encodedKey.data));
-  //       globalKey = key;
-  //       return key;
-  //     })
-  //     .then(key => {
-  //       console.error("key:--------------" + JSON.stringify(key))
-  //       // 初始化加解密操作环境:开始加密
-  //       let mode = crypto.CryptoMode.ENCRYPT_MODE;
-  //       let promiseInit = globalCipher.init(mode, key, globalGcmParams); // init
-  //       return promiseInit;
-  //     })
-  //     .then(() => {
-  //       let plainText = { data: this.stringToUnit8Array('this  is  csx  test !') };
-  //       let promiseUpdate = globalCipher.update(plainText); // update
-  //       return promiseUpdate;
-  //     })
-  //     .then(updateOutput => {
-  //       globalCipherText = updateOutput;
-  //       console.error("加密数据为:" + this.unit8ArrayToShowStr(globalCipherText.data))
-  //       let promiseFinal = globalCipher.doFinal(null); // doFinal
-  //       return promiseFinal;
-  //     })
-  //     .then(authTag => {
-  //       // GCM模式需要从doFinal的输出中取出加密后的认证信息并填入globalGcmParams，在解密时传入init()
-  //       globalGcmParams.authTag = authTag;
-  //       return;
-  //     })
-  //     .then(() => {
-  //       // 初始化加解密操作环境:开始解密
-  //       let mode = crypto.CryptoMode.DECRYPT_MODE;
-  //       let promiseInit = globalCipher.init(mode, globalKey, globalGcmParams); // init
-  //       return promiseInit;
-  //     })
-  //     .then(() => {
-  //       let promiseUpdate = globalCipher.update(globalCipherText); // update
-  //       return promiseUpdate;
-  //     })
-  //     .then(updateOutput => {
-  //       console.info('解密数据为==========: ' + this.unit8ArrayToString(updateOutput.data));
-  //       let promiseFinal = globalCipher.doFinal(null); // doFinal
-  //       return promiseFinal;
-  //     })
-  //     .then(finalOutput => {
-  //       if (finalOutput == null) { // 使用finalOutput.data前，先判断结果是否为null
-  //         console.info('GCM finalOutput is null');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error(`catch error, ${error.code}, ${error.message}`);
-  //     })
-  // }
-
+  static async decode(aesKey: string, algName: string) {
+    //组装convertKey所需数据
+    let data = { data: this.stringToByteArray(aesKey) };
+    // 创建对称密钥生成器
+    let symKeyGenerator = crypto.createSymKeyGenerator(algName);
+    //转换密钥
+    await  symKeyGenerator.convertKey(data).then(symKey => {
+      // 初始化加解密操作环境:开始解密
+      let mode = crypto.CryptoMode.DECRYPT_MODE;
+      this.globalCipher.init(mode, symKey, this.globalGcmParams, (err,) => {
+        //解密
+        // let decode = { data: this.unit8ArrayToShowStr(str) };
+        this.globalCipher.update(this.globalCipherText).then((updateOutput) => {
+          console.info('解密后的数据为: ' + this.unit8ArrayToShowStr(updateOutput.data));
+          this.globalCipher.doFinal(null, (err, finalOutput) => {
+            if (finalOutput == null) { // 使用finalOutput.data前，先判断结果是否为null
+              console.info('GCM finalOutput is null');
+            }
+          });
+        })
+      });
+    })
+  }
 }
