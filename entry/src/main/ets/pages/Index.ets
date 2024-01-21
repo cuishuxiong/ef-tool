@@ -45,18 +45,23 @@ struct Index {
 
   async test() {
 
-    // let a =await AES.testAesGcm();
-    // console.error("1111111111:" + a);
+    // AES.testAesGcm();
 
     const keyPair = await  AES.generateAesKey("AES128");
+    console.error("密钥======:", keyPair);
 
-    console.log("密钥、；:", keyPair);
+    const encodeStr = await AES.encode("测试一下中文可否", keyPair);
+    console.error("加密后的字符串======:", encodeStr);
 
-    // AES.testConvertAesKey(keyPair);
+    this.message = "加密:" + encodeStr;
 
-    await AES.encode("this is  csx test", keyPair, "AES128");
+    const decodeStr = await AES.decode(encodeStr, keyPair);
 
-    await AES.decode(keyPair, 'AES128')
+    console.error("解密后的字符------:" + decodeStr);
+
+    this.message = "解密:" + decodeStr;
+
+    // await AES.decode(keyPair, 'AES128')
 
 
     // const originalText = "Hello,World!";
@@ -370,7 +375,7 @@ struct Index {
         Text(this.message)
           .fontSize(20)
           .fontWeight(FontWeight.Bold).onClick(() => {
-          this.test();
+          // this.test();
         })
       }
       .width('100%')
