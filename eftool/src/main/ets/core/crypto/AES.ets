@@ -134,10 +134,7 @@ export class AES {
     let symKeyGenerator = crypto.createSymKeyGenerator(this.symAlgName);
     //转换密钥
     let symKey = await symKeyGenerator.convertKey(data);
-
-    let kerPair = this.unit8ArrayToShowStr(symKey.getEncoded().data);
-
-    // 初始化加解密操作环境:开始加密
+    // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //初始化加密
     await this.globalCipher.init(mode, symKey, this.globalGcmParams);
