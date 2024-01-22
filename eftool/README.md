@@ -133,9 +133,9 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 true--142303--汾阳市
 ```
 
-### 3.RSA的方法
+### 3.RSA的方法【返回结果均为OutDTO对象】
 
-* generateRsaKey 生成AES的非对称密钥【返回结果均为OutDTO对象】
+* generateRsaKey 生成AES的非对称密钥
 
 ```
     const keyPair = await RSA.generateRsaKey();
