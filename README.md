@@ -30,6 +30,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | ArrayUtil  | 提供对集合的一些常用的判断               |
 | DateUtil   | 提供对日期的一系列封装                 |
 | IdCardUtil | 提供对身份证校验系列方法                |
+| RSA        | 提供生成密钥加解密验签等系列方法            |
 | IdUtil     | 提供生成ID的一系列方法                |
 | JSONUtil   | 提供对于json对象集合跟json字符串的系列转换方法 |
 | ObjectUtil | 提供对于对象的系列操作方法               |
@@ -132,7 +133,45 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 true--142303--汾阳市
 ```
 
-### 3.JSONUtil的方法
+### 3.RSA的方法
+
+* generateRsaKey 生成AES的非对称密钥【返回结果均为OutDTO对象】
+
+```
+    const keyPair = await RSA.generateRsaKey();
+    console.error("generateRsaKey结果:" + keyPair.getSuccess() + "---" + keyPair.getMsg()
+    + "\n" + "公钥:" + keyPair.getDataRow().publicKey + "私钥:" + keyPair.getDataRow().privateKey)
+```
+
+* encode 加密
+
+```
+    const encode = await RSA.encode('this is csx RSA!', keyPair.getDataRow().publicKey);
+    console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decode = await RSA.decode(encode.getDataRow(), keyPair.getDataRow().privateKey);
+    console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
+```
+
+* sign 签名
+
+```
+    const sign = await RSA.sign('this is csx RSA', keyPair.getDataRow().privateKey);
+    console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
+```
+
+* verify 验签
+
+```
+    const result = await RSA.verify(sign.getDataRow(), 'this is csx RSA', keyPair.getDataRow().publicKey);
+    console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
+```
+
+### 4.JSONUtil的方法
 
 * toJSONString 将传入的json对象格式化成json字符串
 
@@ -169,7 +208,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
 
-### 4.OutDTO的方法
+### 5.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -243,7 +282,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 * setDataTable 设置多行数据
 
-### 5.PageUtil的方法
+### 6.PageUtil的方法
 
 * 该对象有如下私有成员变量
 
@@ -316,7 +355,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     const records:Array<T> = page.getRecords();
 ```
 
-### 6.ArrayUtil的方法
+### 7.ArrayUtil的方法
 
 * append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
@@ -504,7 +543,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  不是空的
 ```
 
-### 7.DateUtil的方法
+### 8.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -545,7 +584,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.log(diff + ""); //输出 70
 ```
 
-### 8.RegUtil的方法
+### 9.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -579,7 +618,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  false---身份证号格式不正确,请检查
 ```
 
-### 9.StrUtil的方法
+### 10.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
@@ -687,7 +726,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
-### 10.IdUtil的方法
+### 11.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -717,7 +756,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-### 11.RandomUtil的方法
+### 12.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
 
@@ -754,7 +793,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  54
 ```
 
-### 12.ObjectUtil的方法
+### 13.ObjectUtil的方法
 
 * equal 判断两个传入的数值或者是字符串是否相等
 
@@ -770,7 +809,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 false
 ```
 
-### 13.PhoneUtil的方法
+### 14.PhoneUtil的方法
 
 * isMobile 验证是否为手机号码（中国）
 
@@ -821,7 +860,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 手机号为中国号码
 ```
 
-### 14.PageQuery的方法
+### 15.PageQuery的方法
 
 ```
     有如下私有属性
@@ -920,7 +959,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
 
-### 15.CharUtil的方法
+### 16.CharUtil的方法
 
 * isEmoji 判断是否为emoji表情符
 

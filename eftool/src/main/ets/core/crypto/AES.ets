@@ -10,8 +10,6 @@ export class AES {
   private static globalCipher;
   private static globalGcmParams;
   private static symAlgName;
-  private static globalCipherText;
-  private static globalKey;
 
   /**
    * 字节流转成可理解的字符串
@@ -22,6 +20,14 @@ export class AES {
     return Array.prototype.map
       .call(unit8Array, (x) => ('00' + x.toString(16)).slice(-2))
       .join('');
+  }
+
+  private static unit8ArrayToString(array) {
+    let arrayString = '';
+    for (let i = 0; i < array.length; i++) {
+      arrayString += String.fromCharCode(array[i]);
+    }
+    return arrayString;
   }
 
   private  static genGcmParamsSpec() {
@@ -82,7 +88,7 @@ export class AES {
     let cipherAlgName = 'AES128|GCM|PKCS7';
     //生成加解密生成器
     this.globalCipher = crypto.createCipher(cipherAlgName);
-    // 获取非对称密钥的二进制数据
+    // 获取对称密钥的二进制数据
     return this.unit8ArrayToShowStr(promiseSymKey.getEncoded().data);
   }
 
@@ -112,9 +118,9 @@ export class AES {
     //拼接
     let finalOutput = await this.globalCipher.doFinal(null);
     if (finalOutput != null) {
+      this.globalGcmParams.authTag = finalOutput;
       finalOutput = Array.from(finalOutput.data);
       encodeStr = encodeStr.concat(finalOutput);
-      this.globalGcmParams.authTag.data = finalOutput;
     }
     encodeStr = new Uint8Array(encodeStr);
     let finalStr = this.unit8ArrayToShowStr(encodeStr);
@@ -139,118 +145,17 @@ export class AES {
     //初始化加密
     await this.globalCipher.init(mode, symKey, this.globalGcmParams);
     //拼接需要解密的数据
-    let decodeObj = { data: this.stringToUnit8Array(str) };
+    let decodeObj = { data: this.stringToByteArray(str) };
     //解密
     let updateOutput = await this.globalCipher.update(decodeObj);
-    let upd = this.unit8ArrayToShowStr(updateOutput.data);
     //判断是否完成
-    let finalOutput = await this.globalCipher.doFinal(null);
-    if (finalOutput != null) {
-      let fin = this.unit8ArrayToShowStr(finalOutput.data);
-    }
-    let decodeStr = this.unit8ArrayToShowStr(updateOutput.data);
+    // let finalOutput = await this.globalCipher.doFinal(null);
+    // if (finalOutput != null) {
+    //   let fin = this.unit8ArrayToString(finalOutput.data);
+    // }
+    let decodeStr = this.unit8ArrayToString(updateOutput.data)
+    // Array.from(updateOutput.data, byte => String.fromCharCode(byte)).join(''); // 将 Uint8Array 转换为字符串
 
     return decodeStr;
-
-    //转换密钥
-    // await  symKeyGenerator.convertKey(data).then(symKey => {
-    //   // 初始化加解密操作环境:开始解密
-    //   let mode = crypto.CryptoMode.DECRYPT_MODE;
-    //   this.globalCipher.init(mode, symKey, this.globalGcmParams, (err,) => {
-    //     //解密
-    //     // let decode = { data: this.unit8ArrayToShowStr(str) };
-    //     this.globalCipher.update(str).then((updateOutput) => {
-    //       console.info('解密后的数据为: ' + this.unit8ArrayToShowStr(updateOutput.data));
-    //       this.globalCipher.doFinal(null, (err, finalOutput) => {
-    //         if (finalOutput == null) { // 使用finalOutput.data前，先判断结果是否为null
-    //           console.info('GCM finalOutput is null');
-    //         }
-    //       });
-    //     })
-    //   });
-    // })
-  }
-
-  // AES GCM模式示例，自动生成密钥（promise写法）
-  static testAesGcm() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('testAesGcm');
-      }, 10)
-    }).then(() => {
-      // 生成对称密钥生成器
-      let symAlgName = 'AES128';
-      let symKeyGenerator = crypto.createSymKeyGenerator(symAlgName);
-      if (symKeyGenerator == null) {
-        console.error('createSymKeyGenerator failed');
-        return;
-      }
-      console.info(`symKeyGenerator algName: ${symKeyGenerator.algName}`);
-      // 通过密钥生成器随机生成128位长度的对称密钥
-      let promiseSymKey = symKeyGenerator.generateSymKey();
-      // 构造参数
-      this.globalGcmParams = this.genGcmParamsSpec();
-
-      // 生成加解密生成器
-      let cipherAlgName = 'AES128|GCM|PKCS7';
-      try {
-        this.globalCipher = crypto.createCipher(cipherAlgName);
-        console.info(`cipher algName: ${this.globalCipher.algName}`);
-      } catch (error) {
-        console.error(`createCipher failed, ${error.code}, ${error.message}`);
-        return;
-      }
-      return promiseSymKey;
-    })
-      .then(key => {
-        let encodedKey = key.getEncoded();
-        console.info('key hex:' + this.unit8ArrayToShowStr(encodedKey.data));
-        this.globalKey = key;
-        return key;
-      })
-      .then(key => {
-        // 初始化加解密操作环境:开始加密
-        let mode = crypto.CryptoMode.ENCRYPT_MODE;
-        let promiseInit = this.globalCipher.init(mode, key, this.globalGcmParams); // init
-        return promiseInit;
-      })
-      .then(() => {
-        let plainText = { data: this.stringToUnit8Array('this is test!') };
-        let promiseUpdate = this.globalCipher.update(plainText); // update
-        return promiseUpdate;
-      })
-      .then(updateOutput => {
-        this.globalCipherText = updateOutput;
-        let promiseFinal = this.globalCipher.doFinal(null); // doFinal
-        return promiseFinal;
-      })
-      .then(authTag => {
-        // GCM模式需要从doFinal的输出中取出加密后的认证信息并填入globalGcmParams，在解密时传入init()
-        this.globalGcmParams.authTag = authTag;
-        return;
-      })
-      .then(() => {
-        // 初始化加解密操作环境:开始解密
-        let mode = crypto.CryptoMode.DECRYPT_MODE;
-        let promiseInit = this.globalCipher.init(mode, this.globalKey, this.globalGcmParams); // init
-        return promiseInit;
-      })
-      .then(() => {
-        let promiseUpdate = this.globalCipher.update(this.globalCipherText); // update
-        return promiseUpdate;
-      })
-      .then(updateOutput => {
-        console.info('decrypt plainText: ' + this.unit8ArrayToShowStr(updateOutput.data));
-        let promiseFinal = this.globalCipher.doFinal(null); // doFinal
-        return promiseFinal;
-      })
-      .then(finalOutput => {
-        if (finalOutput == null) { // 使用finalOutput.data前，先判断结果是否为null
-          console.info('GCM finalOutput is null');
-        }
-      })
-      .catch(error => {
-        console.error(`catch error, ${error.code}, ${error.message}`);
-      })
   }
 }

@@ -1,122 +1,191 @@
+import crypto from "@ohos.security.cryptoFramework"
+import { OutDTO } from '../base/OutDTO';
+
 /**
  * @Author csx
  * @DateTime 2024/1/17 14:46:01
  * @TODO RSA
  */
 export class RSA {
-  private static modExp(base: number, exponent: number, modulus: number): number {
-    if (modulus === 1) return 0;
-    let result = 1;
-    base = base % modulus;
-    while (exponent > 0) {
-      if (exponent % 2 === 1) {
-        result = (result * base) % modulus;
-      }
-      exponent = exponent >> 1;
-      base = (base * base) % modulus;
+
+  /**
+   * 生成AES的非对称密钥
+   * @returns RSA密钥{publicKey:公钥,privateKey:私钥}
+   */
+  static async generateRsaKey(): Promise<OutDTO<RsaKey>> {
+    // 创建非对称密钥生成器
+    let rsaGenerator = crypto.createAsyKeyGenerator("RSA1024|PRIMES_2");
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 获取非对称密钥的二进制数据
+    //公钥二进制
+    let publicKey = promiseKeyPair.pubKey.getEncoded().data;
+    //私钥二进制
+    let privateKey = promiseKeyPair.priKey.getEncoded().data;
+    return OutDTO.OKByDataRow('生成公私钥成功~', {
+      publicKey: this.unit8ArrayToShowStr(publicKey),
+      privateKey: this.unit8ArrayToShowStr(privateKey)
+    });
+  }
+
+  /**
+   * 字节流转成可理解的字符串
+   * @param unit8Array
+   * @returns
+   */
+  private static unit8ArrayToShowStr(unit8Array) {
+    return Array.prototype.map
+      .call(unit8Array, (x) => ('00' + x.toString(16)).slice(-2))
+      .join('');
+  }
+
+
+  /**
+   * 可理解的字符串转成字节流
+   * @param str
+   * @returns
+   */
+  private static stringToUnit8Array(str) {
+    let arr = [];
+    for (let i = 0, j = str.length; i < j; ++i) {
+      arr.push(str.charCodeAt(i));
     }
-    return result;
+    return new Uint8Array(arr);
   }
 
-  private static stringToAsciiArray(message: string): number[] {
-    const asciiArray: number[] = [];
-    for (let i = 0; i < message.length; i++) {
-      asciiArray.push(message.charCodeAt(i));
+
+  /**
+   * 该方法适用于将密钥转换为convert时所需要的数组
+   * @param str
+   * @returns
+   */
+  private static stringToByteArray(str: string) {
+    const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+    const byteArray: number[] = hexString.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+    return new Uint8Array(byteArray);
+  }
+
+  /**
+   * 加密
+   * @param encodeStr  待加密的字符串
+   * @param pubKey  RSA公钥
+   */
+  static async encode(str: string, pubKey: string): Promise<OutDTO<string>> {
+    //生成密钥器
+    let asyKeyGenerator = crypto.createAsyKeyGenerator("RSA1024|PRIMES_2");
+    let publicKey = { data: this.stringToByteArray(pubKey) };
+    //将公钥转换
+    let pubPair = await asyKeyGenerator.convertKey(publicKey, null);
+    //生成加密器
+    let encoder = crypto.createCipher("RSA1024|PKCS1");
+    //初始化加密环境
+    await encoder.init(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
+    //转换加密字符串
+    let input = { data: this.stringToUnit8Array(str) };
+    //加密
+    let output = await encoder.doFinal(input);
+    if (output != null) {
+      let encodeStr = this.unit8ArrayToShowStr(output.data);
+      return OutDTO.OKByDataRow('加密成功~', encodeStr);
+    } else {
+      return OutDTO.Error("加密失败~");
     }
-    return asciiArray;
   }
 
-  private static asciiArrayToString(array: number[]): string {
-    let result: string = '';
-    for (let i = 0; i < array.length; i++) {
-      result += String.fromCharCode(array[i]);
+  /**
+   * 解密【目前不支持中文解密】
+   * @param str  待解密的字符串
+   * @param priKey  私钥
+   */
+  static async decode(str: string, priKey: string): Promise<OutDTO<string>> {
+    let asyKeyGenerator = crypto.createAsyKeyGenerator("RSA1024|PRIMES_2");
+    let privateKey = { data: this.stringToByteArray(priKey) };
+    //将私钥转换
+    let priPair = await asyKeyGenerator.convertKey(null, privateKey);
+    //生成解密器
+    let decoder = crypto.createCipher("RSA1024|PKCS1");
+    //初始化加密环境
+    await decoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
+    //转换加密字符串
+    let input = { data: this.stringToByteArray(str) };
+    //加密
+    let output = await decoder.doFinal(input);
+    if (output != null) {
+      let decodeStr = Array.from(output.data, byte => String.fromCharCode(byte)).join(''); // 将 Uint8Array 转换为字符串
+      return OutDTO.OKByDataRow('解密成功~', decodeStr);
+    } else {
+      return OutDTO.Error("解密失败~");
     }
-    return result;
   }
 
-  private static isPrime(num: number): boolean {
-    if (num <= 1) return false;
-    if (num <= 3) return true;
-    if (num % 2 === 0 || num % 3 === 0) return false;
-    let i = 5;
-    while (i * i <= num) {
-      if (num % i === 0 || num % (i + 2) === 0) return false;
-      i += 6;
+
+  /**
+   * 签名
+   * @param str  需要签名的字符串
+   * @param priKey  私钥
+   * @returns OutDTO<string> 签名对象
+   */
+  static async sign(str: string, priKey: string): Promise<OutDTO<string>> {
+    let asyKeyGenerator = crypto.createAsyKeyGenerator("RSA1024|PRIMES_2");
+    let privateKey = { data: this.stringToByteArray(priKey) };
+    //将私钥转换
+    let priPair = await asyKeyGenerator.convertKey(null, privateKey);
+    //创建签名器
+    let signer = crypto.createSign("RSA1024|PKCS1|SHA256");
+    //初始化签名器
+    await signer.init(priPair.priKey);
+    //签名的字符串
+    let input = { data: this.stringToByteArray(str) };
+    await signer.update(input);
+    let sign = await signer.sign(input);
+    if (sign != null) {
+      let signStr = this.unit8ArrayToShowStr(sign.data);
+      return OutDTO.OKByDataRow('签名成功~', signStr);
+    } else {
+      return OutDTO.Error("签名失败~");
     }
-    return true;
   }
 
-  private static gcd(a: number, b: number): number {
-    if (b === 0) return a;
-    return this.gcd(b, a % b);
-  }
-
-  private static modInverse(a: number, m: number): number {
-    for (let x = 1; x < m; x++) {
-      if ((a * x) % m === 1) return x;
+  /**
+   * 验签
+   * @param signStr  已签名的字符串
+   * @param verifyStr  需要验签的字符串
+   * @param pubKey  RSA公钥
+   * @returns 验签结果OutDTO对象,其中Msg为验签结果
+   */
+  static async verify(signStr: string, verifyStr: string, pubKey: string): Promise<OutDTO> {
+    let asyKeyGenerator = crypto.createAsyKeyGenerator("RSA1024|PRIMES_2");
+    let publicKey = { data: this.stringToByteArray(pubKey) };
+    //将公钥转换
+    let pubPair = await asyKeyGenerator.convertKey(publicKey, null);
+    //验签器
+    let verifyer = crypto.createVerify("RSA1024|PKCS1|SHA256");
+    //初始化验签器
+    await verifyer.init(pubPair.pubKey);
+    //验签的字符串
+    let verify = { data: this.stringToByteArray(verifyStr) };
+    let sign = { data: this.stringToByteArray(signStr) };
+    await verifyer.update(verify);
+    let result = await verifyer.verify(verify, sign);
+    if (result) {
+      return OutDTO.OK("验签成功,签名正确");
+    } else {
+      return OutDTO.Error("验签失败,签名不正确");
     }
-    return 1;
-  }
-
-  public static generateKeyPair(bitLength: number): {
-    publicKey: PublicKey;
-    privateKey: PrivateKey
-  } {
-    let p = 0, q = 0, n = 0, phi = 0, e = 0, d = 0;
-
-    // 选择两个大素数 p 和 q
-    do {
-      p = 2 * Math.floor(Math.random() * 100) + 1;
-    } while (!this.isPrime(p));
-
-    do {
-      q = 2 * Math.floor(Math.random() * 100) + 1;
-    } while (!this.isPrime(q));
-
-    // 计算 n 和 phi
-    n = p * q;
-    phi = (p - 1) * (q - 1);
-
-    // 选择 e，使得 1 < e < phi 且 e 与 phi 互质
-    do {
-      e = 2 * Math.floor(Math.random() * phi - 2) + 1;
-    } while (this.gcd(e, phi) !== 1);
-
-    // 计算 d，使得 e * d ≡ 1 (mod phi)
-    d = this.modInverse(e, phi);
-
-    const publicKey: PublicKey = { e, n };
-    const privateKey: PrivateKey = { d, n };
-
-    return { publicKey, privateKey };
-  }
-
-  public static encrypt(message: string, publicKey: PublicKey): number[] {
-    const asciiArray = this.stringToAsciiArray(message);
-    const encryptedArray: number[] = [];
-    for (let i = 0; i < asciiArray.length; i++) {
-      const encryptedValue = this.modExp(asciiArray[i], publicKey.e, publicKey.n);
-      encryptedArray.push(encryptedValue);
-    }
-    return encryptedArray;
-  }
-
-  public static decrypt(encryptedMessage: number[], privateKey: PrivateKey): string {
-    const decryptedArray: number[] = [];
-    for (let i = 0; i < encryptedMessage.length; i++) {
-      const decryptedValue = this.modExp(encryptedMessage[i], privateKey.d, privateKey.n);
-      decryptedArray.push(decryptedValue);
-    }
-    return this.asciiArrayToString(decryptedArray);
   }
 }
 
-interface PublicKey {
-  e: number;
-  n: number;
-}
 
-interface PrivateKey {
-  d: number;
-  n: number;
+/**
+ * RSA密钥对象
+ */
+class RsaKey {
+  /**
+   * 公钥
+   */
+  publicKey: string;
+  /**
+   * 私钥
+   */
+  privateKey: string;
 }

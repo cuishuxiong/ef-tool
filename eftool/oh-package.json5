@@ -5,18 +5,18 @@
     "工具类",
     "json",
     "实体",
-    "日期",
+    "RSA",
     "分页",
     "校验",
-    "转换",
+    "加密",
     "正则"
   ],
   "author": "csx",
   "name": "@yunkss/eftool",
-  "description": "一款高效的OpenHarmony/HarmonyOS工具包.封装的工具涵盖了字符串、正则、集合、JSON、分页、日期等,提供一系列快捷操作方法。",
+  "description": "一款高效的OpenHarmony/HarmonyOS工具包.封装的工具涵盖了字符串、正则、集合、加解密、分页、日期、数据转换等,提供一系列快捷操作方法。",
   "main": "index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {}
 }

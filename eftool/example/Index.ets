@@ -16,8 +16,8 @@ import {
   PageUtil,
   PageQuery,
   PageResult,
-// BASE64,
-// MD5,
+  BASE64,
+  MD5,
   RSA,
 // AES
 } from '@yunkss/eftool'
