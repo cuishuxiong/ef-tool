@@ -30,7 +30,9 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | ArrayUtil  | 提供对集合的一些常用的判断               |
 | DateUtil   | 提供对日期的一系列封装                 |
 | IdCardUtil | 提供对身份证校验系列方法                |
-| RSA        | 提供生成密钥加解密验签等系列方法            |
+| RSA        | 提RSA供生成密钥加解密验签等系列方法         |
+| AES        | 提供AES生成密钥加解密等系列方法           |
+| MD5        | 提供摘要方法                      |
 | IdUtil     | 提供生成ID的一系列方法                |
 | JSONUtil   | 提供对于json对象集合跟json字符串的系列转换方法 |
 | ObjectUtil | 提供对于对象的系列操作方法               |
@@ -44,6 +46,7 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | OutDTO     | 提供常用的返回实体对象                 |
 | PageQuery  | 提供常用的后端获取分页数据操作             |
 | CharUtil   | 提供常用的字符操作                   |
+| Logger     | 提供常用的打印日志的方法                |
 
 -------------------------------------------------------------------------------
 
@@ -135,7 +138,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ### 3.RSA的方法【返回结果均为OutDTO对象】
 
-* generateRsaKey 生成AES的非对称密钥
+* generateRsaKey 生成RSA的非对称密钥
 
 ```
     const keyPair = await RSA.generateRsaKey();
@@ -171,7 +174,39 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
 ```
 
-### 4.JSONUtil的方法
+### 4.AES的方法【返回结果均为OutDTO对象】
+
+* generateAesKey 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* encode 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+### 5.MD5的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    let md5 = await MD5.digest('这个是测试MD5摘要字符串~');
+    console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
+```
+
+### 6.JSONUtil的方法
 
 * toJSONString 将传入的json对象格式化成json字符串
 
@@ -208,7 +243,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
 
-### 5.OutDTO的方法
+### 7.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -282,7 +317,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 * setDataTable 设置多行数据
 
-### 6.PageUtil的方法
+### 8.PageUtil的方法
 
 * 该对象有如下私有成员变量
 
@@ -355,7 +390,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     const records:Array<T> = page.getRecords();
 ```
 
-### 7.ArrayUtil的方法
+### 9.ArrayUtil的方法
 
 * append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
@@ -543,7 +578,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  不是空的
 ```
 
-### 8.DateUtil的方法
+### 10.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -584,7 +619,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.log(diff + ""); //输出 70
 ```
 
-### 9.RegUtil的方法
+### 11.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -618,7 +653,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  false---身份证号格式不正确,请检查
 ```
 
-### 10.StrUtil的方法
+### 12.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
@@ -726,7 +761,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
-### 11.IdUtil的方法
+### 13.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -756,7 +791,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-### 12.RandomUtil的方法
+### 14.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
 
@@ -793,7 +828,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  54
 ```
 
-### 13.ObjectUtil的方法
+### 15.ObjectUtil的方法
 
 * equal 判断两个传入的数值或者是字符串是否相等
 
@@ -809,7 +844,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 false
 ```
 
-### 14.PhoneUtil的方法
+### 16.PhoneUtil的方法
 
 * isMobile 验证是否为手机号码（中国）
 
@@ -860,7 +895,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 手机号为中国号码
 ```
 
-### 15.PageQuery的方法
+### 17.PageQuery的方法
 
 ```
     有如下私有属性
@@ -959,7 +994,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
 
-### 16.CharUtil的方法
+### 18.CharUtil的方法
 
 * isEmoji 判断是否为emoji表情符
 
@@ -968,11 +1003,43 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 true
 ```
 
-* isAscii isAscii
+* isAscii 判断字符是否为ascii码
 
 ```
     console.error(CharUtil.isAscii("你")+"")
     // 输出 false
+```
+
+### 19.Logger的方法
+
+* constructor 构造 第一个入参为应用名,第二个为域可不填
+
+```
+    let logger = new Logger('应用名');
+```
+
+* debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
+
+```
+    logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* info info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】黄色
+
+```
+    logger.info("info错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* warn warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 白色
+
+```
+    logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* error error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 红色
+
+```
+    logger.error("error错误原因为:", 'xxxxxxxxxxxx')
 ```
 
 ## ⭐Star efTool 希望您可以动一动小手点点小⭐

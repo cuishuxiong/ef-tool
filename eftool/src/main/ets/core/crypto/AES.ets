@@ -1,4 +1,6 @@
 import crypto from '@ohos.security.cryptoFramework';
+import util from '@ohos.util';
+import { OutDTO } from '../base/OutDTO';
 
 /**
  * @Author csx
@@ -22,14 +24,6 @@ export class AES {
       .join('');
   }
 
-  private static unit8ArrayToString(array) {
-    let arrayString = '';
-    for (let i = 0; i < array.length; i++) {
-      arrayString += String.fromCharCode(array[i]);
-    }
-    return arrayString;
-  }
-
   private  static genGcmParamsSpec() {
     let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // 12 bytes
     let dataIv = new Uint8Array(arr);
@@ -48,19 +42,6 @@ export class AES {
   }
 
   /**
-   * 可理解的字符串转成字节流
-   * @param str
-   * @returns
-   */
-  private  static stringToUnit8Array(str) {
-    let arr = [];
-    for (let i = 0, j = str.length; i < j; ++i) {
-      arr.push(str.charCodeAt(i));
-    }
-    return new Uint8Array(arr);
-  }
-
-  /**
    * 该方法适用于将密钥转换为convert时所需要的数组
    * @param str
    * @returns
@@ -76,7 +57,7 @@ export class AES {
    * 生成AES的对称密钥
    * @returns AES密钥
    */
-  static async generateAesKey(symAlgName: string): Promise<string> {
+  static async generateAesKey(symAlgName: string): Promise<OutDTO<string>> {
     this.symAlgName = symAlgName;
     // 创建对称密钥生成器
     let symKeyGenerator = crypto.createSymKeyGenerator(symAlgName);
@@ -89,7 +70,7 @@ export class AES {
     //生成加解密生成器
     this.globalCipher = crypto.createCipher(cipherAlgName);
     // 获取对称密钥的二进制数据
-    return this.unit8ArrayToShowStr(promiseSymKey.getEncoded().data);
+    return OutDTO.OKByDataRow('生成AES密钥成功~', this.unit8ArrayToShowStr(promiseSymKey.getEncoded().data));
   }
 
   /**
@@ -98,7 +79,7 @@ export class AES {
    * @param aesKey   AES密钥
    * @returns
    */
-  static async encode(str: string, aesKey: string): Promise<string> {
+  static async encode(str: string, aesKey: string): Promise<OutDTO<string>> {
     //组装convertKey所需数据
     let data = { data: this.stringToByteArray(aesKey) };
     // 创建对称密钥生成器
@@ -110,21 +91,17 @@ export class AES {
     //初始化加密
     await this.globalCipher.init(mode, symKey, this.globalGcmParams);
     //封装加密所需数据
-    let plainText = { data: this.stringToUnit8Array(str) };
+    let encode = new util.TextEncoder();
+    let plainText = { data: encode.encodeInto(str) };
     //开始加密
     let updateOutput = await this.globalCipher.update(plainText);
-    let encodeStr = updateOutput;
-    encodeStr = Array.from(encodeStr.data);
     //拼接
     let finalOutput = await this.globalCipher.doFinal(null);
     if (finalOutput != null) {
       this.globalGcmParams.authTag = finalOutput;
-      finalOutput = Array.from(finalOutput.data);
-      encodeStr = encodeStr.concat(finalOutput);
     }
-    encodeStr = new Uint8Array(encodeStr);
-    let finalStr = this.unit8ArrayToShowStr(encodeStr);
-    return finalStr;
+    let finalStr = this.unit8ArrayToShowStr(updateOutput.data);
+    return OutDTO.OKByDataRow('AES加密成功~', finalStr);
   }
 
 
@@ -133,7 +110,7 @@ export class AES {
    * @param str  加密的字符串
    * @param aesKey  AES密钥
    */
-  static async decode(str: string, aesKey: string) {
+  static async decode(str: string, aesKey: string): Promise<OutDTO<string>> {
     //组装convertKey所需数据
     let data = { data: this.stringToByteArray(aesKey) };
     // 创建对称密钥生成器
@@ -149,13 +126,14 @@ export class AES {
     //解密
     let updateOutput = await this.globalCipher.update(decodeObj);
     //判断是否完成
-    // let finalOutput = await this.globalCipher.doFinal(null);
-    // if (finalOutput != null) {
-    //   let fin = this.unit8ArrayToString(finalOutput.data);
-    // }
-    let decodeStr = this.unit8ArrayToString(updateOutput.data)
-    // Array.from(updateOutput.data, byte => String.fromCharCode(byte)).join(''); // 将 Uint8Array 转换为字符串
-
-    return decodeStr;
+    let finalOutput = await this.globalCipher.doFinal(null);
+    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    let decodeStr;
+    if (finalOutput != null) {
+      decodeStr = decode.decodeWithStream(finalOutput.data);
+    } else {
+      decodeStr = decode.decodeWithStream(updateOutput.data);
+    }
+    return OutDTO.OKByDataRow('AES解密成功~', decodeStr);
   }
 }

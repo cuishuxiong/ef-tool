@@ -34,7 +34,7 @@ export { PageResult } from './src/main/ets/core/page/PageResult';
 
 // export { BASE64 } from './src/main/ets/core/crypto/BASE64';
 
-// export { MD5 } from './src/main/ets/core/crypto/MD5';
+export { MD5 } from './src/main/ets/core/crypto/MD5';
 
 // export { SM3 } from './src/main/ets/core/crypto/SM3';
 
@@ -42,4 +42,6 @@ export { PageResult } from './src/main/ets/core/page/PageResult';
 
 export { RSA } from './src/main/ets/core/crypto/RSA';
 
-// export { AES } from './src/main/ets/core/crypto/AES';
+export { AES } from './src/main/ets/core/crypto/AES';
+
+export { Logger } from './src/main/ets/core/util/Logger';
