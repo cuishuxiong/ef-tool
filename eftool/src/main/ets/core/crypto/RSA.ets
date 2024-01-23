@@ -1,4 +1,5 @@
 import crypto from "@ohos.security.cryptoFramework"
+import util from '@ohos.util';
 import { OutDTO } from '../base/OutDTO';
 
 /**
@@ -39,21 +40,6 @@ export class RSA {
       .join('');
   }
 
-
-  /**
-   * 可理解的字符串转成字节流
-   * @param str
-   * @returns
-   */
-  private static stringToUnit8Array(str) {
-    let arr = [];
-    for (let i = 0, j = str.length; i < j; ++i) {
-      arr.push(str.charCodeAt(i));
-    }
-    return new Uint8Array(arr);
-  }
-
-
   /**
    * 该方法适用于将密钥转换为convert时所需要的数组
    * @param str
@@ -81,7 +67,8 @@ export class RSA {
     //初始化加密环境
     await encoder.init(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
     //转换加密字符串
-    let input = { data: this.stringToUnit8Array(str) };
+    let encode = new util.TextEncoder();
+    let input = { data: encode.encodeInto(str) };
     //加密
     let output = await encoder.doFinal(input);
     if (output != null) {
@@ -93,7 +80,7 @@ export class RSA {
   }
 
   /**
-   * 解密【目前不支持中文解密】
+   * 解密
    * @param str  待解密的字符串
    * @param priKey  私钥
    */
@@ -104,14 +91,15 @@ export class RSA {
     let priPair = await asyKeyGenerator.convertKey(null, privateKey);
     //生成解密器
     let decoder = crypto.createCipher("RSA1024|PKCS1");
-    //初始化加密环境
+    //初始化解密环境
     await decoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
-    //转换加密字符串
+    //转换解密字符串
     let input = { data: this.stringToByteArray(str) };
-    //加密
+    //解密
     let output = await decoder.doFinal(input);
     if (output != null) {
-      let decodeStr = Array.from(output.data, byte => String.fromCharCode(byte)).join(''); // 将 Uint8Array 转换为字符串
+      let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+      let decodeStr = decode.decodeWithStream(output.data);
       return OutDTO.OKByDataRow('解密成功~', decodeStr);
     } else {
       return OutDTO.Error("解密失败~");
@@ -174,7 +162,6 @@ export class RSA {
     }
   }
 }
-
 
 /**
  * RSA密钥对象

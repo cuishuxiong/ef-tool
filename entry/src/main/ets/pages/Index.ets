@@ -21,6 +21,7 @@ import {
   RSA,
 // AES
 } from '@yunkss/eftool'
+import util from '@ohos.util';
 
 class Person {
   name: string;
@@ -45,12 +46,12 @@ struct Index {
 
   async test() {
 
-
     const keyPair = await RSA.generateRsaKey();
     console.error("generateRsaKey结果:" + keyPair.getSuccess() + "---" + keyPair.getMsg()
     + "\n" + "公钥:" + keyPair.getDataRow().publicKey + "私钥:" + keyPair.getDataRow().privateKey)
 
-    const encode = await RSA.encode('this is csx RSA!', keyPair.getDataRow().publicKey);
+    const encode = await RSA.encode('从API version 7开始支持，从API version 9开始废弃，建议使用decodeWithStream9+替代。', keyPair.getDataRow()
+      .publicKey);
     console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
 
 
@@ -58,10 +59,10 @@ struct Index {
     console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
 
 
-    const sign = await RSA.sign('this is csx RSA', keyPair.getDataRow().privateKey);
+    const sign = await RSA.sign('测试中文 RSA!', keyPair.getDataRow().privateKey);
     console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
 
-    const result = await RSA.verify(sign.getDataRow(), 'this is csx RSA', keyPair.getDataRow().publicKey);
+    const result = await RSA.verify(sign.getDataRow(), '测试中文 RSA!', keyPair.getDataRow().publicKey);
     console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
 
     this.message = "验签结果:" + JSON.stringify(result);
