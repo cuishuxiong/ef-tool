@@ -8,6 +8,10 @@
 * 新增MD5摘要方法
 * 新增Logger日志工具类
 
+### 🐞Bug修复
+
+* 优化JSONUtil中toJSONString方法在API10中转换map问题
+
 ## [v1.0.5] 2024-01
 
 ### 🐞Bug修复
