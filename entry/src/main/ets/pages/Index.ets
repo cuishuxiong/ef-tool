@@ -20,7 +20,9 @@ import {
   MD5,
   RSA,
   AES,
-  Logger
+  Logger,
+  ToastUtil,
+  DialogUtil
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 
@@ -47,48 +49,51 @@ struct Index {
 
   async test() {
 
-    const keyPair1 = await RSA.generateRsaKey();
-    console.error("generateRsaKey结果:" + keyPair1.getSuccess() + "---" + keyPair1.getMsg()
-    + "\n" + "公钥:" + keyPair1.getDataRow().publicKey + "私钥:" + keyPair1.getDataRow().privateKey)
+    ToastUtil.showToast('使用默认参数');
+    // ToastUtil.showToast('这个是工具生成提示', { duration: 4000, bottom: '50vp' });
 
-    const encode = await RSA.encode('从API version 7开始支持，从API version 9开始废弃，建议使用decodeWithStream9+替代。', keyPair1.getDataRow()
-      .publicKey);
-    console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
-
-
-    const decode = await RSA.decode(encode.getDataRow(), keyPair1.getDataRow().privateKey);
-    console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
-
-
-    const sign = await RSA.sign('测试中文 RSA!', keyPair1.getDataRow().privateKey);
-    console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
-
-    const result = await RSA.verify(sign.getDataRow(), '测试中文 RSA!', keyPair1.getDataRow().publicKey);
-    console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
-
-    this.message = "验签结果:" + JSON.stringify(result);
-
-    const keyPair = await  AES.generateAesKey("AES128");
-    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
-
-    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
-    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
-
-    this.message = "加密:" + encodeStr.getDataRow();
-
-    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
-    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
-
-    this.message = "解密:" + decodeStr.getDataRow();
-
-    let md5 = await MD5.digest('这个是测试MD5摘要字符串~');
-    console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
-
-    let logger = new Logger('吃嘛');
-    logger.error("error错误原因为:", 'xxxxxxxxxxxx')
-    logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
-    logger.info("info错误原因为:", 'xxxxxxxxxxxx')
-    logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+    // const keyPair1 = await RSA.generateRsaKey();
+    // console.error("generateRsaKey结果:" + keyPair1.getSuccess() + "---" + keyPair1.getMsg()
+    // + "\n" + "公钥:" + keyPair1.getDataRow().publicKey + "私钥:" + keyPair1.getDataRow().privateKey)
+    //
+    // const encode = await RSA.encode('从API version 7开始支持，从API version 9开始废弃，建议使用decodeWithStream9+替代。', keyPair1.getDataRow()
+    //   .publicKey);
+    // console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
+    //
+    //
+    // const decode = await RSA.decode(encode.getDataRow(), keyPair1.getDataRow().privateKey);
+    // console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
+    //
+    //
+    // const sign = await RSA.sign('测试中文 RSA!', keyPair1.getDataRow().privateKey);
+    // console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
+    //
+    // const result = await RSA.verify(sign.getDataRow(), '测试中文 RSA!', keyPair1.getDataRow().publicKey);
+    // console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
+    //
+    // this.message = "验签结果:" + JSON.stringify(result);
+    //
+    // const keyPair = await  AES.generateAesKey("AES128");
+    // console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+    //
+    // const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    // console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+    //
+    // this.message = "加密:" + encodeStr.getDataRow();
+    //
+    // const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    // console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+    //
+    // this.message = "解密:" + decodeStr.getDataRow();
+    //
+    // let md5 = await MD5.digest('这个是测试MD5摘要字符串~');
+    // console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
+    //
+    // let logger = new Logger('吃嘛');
+    // logger.error("error错误原因为:", 'xxxxxxxxxxxx')
+    // logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
+    // logger.info("info错误原因为:", 'xxxxxxxxxxxx')
+    // logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
 
     // let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
     // console.error(JSON.stringify(arr))
@@ -375,10 +380,21 @@ struct Index {
   build() {
     Row() {
       Column() {
-        Text(this.message)
-          .fontSize(20)
-          .fontWeight(FontWeight.Bold).onClick(() => {
-          // this.test();
+        Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
+          ToastUtil.showToast('duration:2000,bottom:10vp');
+        })
+        Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
+          ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp' });
+        })
+        Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
+          DialogUtil.showDialog({
+            // title: '修改',
+            // okText: 'ok',
+            // cancelText: 'cancel',
+            msg: '这是一个弹框提示',
+            okCallBack: this.test,
+            // cancelCallBack: this.test
+          });
         })
       }
       .width('100%')

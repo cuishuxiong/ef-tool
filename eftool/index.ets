@@ -45,3 +45,7 @@ export { RSA } from './src/main/ets/core/crypto/RSA';
 export { AES } from './src/main/ets/core/crypto/AES';
 
 export { Logger } from './src/main/ets/core/util/Logger';
+
+export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';
+
+export { DialogUtil } from './src/main/ets/ui/prompt/DialogUtil';
