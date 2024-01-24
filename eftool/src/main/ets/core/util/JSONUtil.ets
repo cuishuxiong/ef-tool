@@ -12,7 +12,17 @@ export class JSONUtil {
    * @returns
    */
   static toJSONString(object: Object): string {
-    return JSON.stringify(object);
+    if (object instanceof Map) {
+      let jsonObject: Record<string, Object> = {}
+      object.forEach((value, key) => {
+        if (key != undefined && value != undefined) {
+          jsonObject[key] = value;
+        }
+      })
+      return JSON.stringify(jsonObject);
+    } else {
+      return JSON.stringify(object);
+    }
   }
 
   /**
