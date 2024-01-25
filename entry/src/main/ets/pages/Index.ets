@@ -388,12 +388,12 @@ struct Index {
         })
         Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
           DialogUtil.showDialog({
-            // title: '修改',
-            // okText: 'ok',
-            // cancelText: 'cancel',
+            title: '修改',
+            okText: 'ok',
+            cancelText: 'cancel',
             msg: '这是一个弹框提示',
             okCallBack: this.test,
-            // cancelCallBack: this.test
+            cancelCallBack: this.test
           });
         })
       }

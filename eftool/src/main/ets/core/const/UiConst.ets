@@ -8,7 +8,7 @@ export class UiConst {
   /**
    * 弹出提示类显示时间
    */
-  static readonly ANIMATION_DURATION: number = 1500;
+  static readonly ANIMATION_DURATION: number = 2000;
 
   /**
    * dialog标题

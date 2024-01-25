@@ -7,7 +7,8 @@
 * 新增AES加密,提供了生成密钥,加密,解密等方法
 * 新增MD5摘要方法
 * 新增ToastUtil工具类showToast方法
-* 新增DialogUtil工具类showDialog
+* 新增DialogUtil工具类showDialog方法
+* 新增ActionUtil工具类showAction方法
 * 新增Logger日志工具类
 
 ### 🐞Bug修复

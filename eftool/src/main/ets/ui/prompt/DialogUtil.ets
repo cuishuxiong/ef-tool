@@ -9,7 +9,7 @@ import { UiConst as Const } from '../../core/const/UiConst'
 export class DialogUtil {
 
   /**
-   * 创建一个dialog提示框
+   * 弹出一个Dialog提示框
    * @param options: {title:标题默认为温馨提示,msg:提示消息,okText:确定按钮文本,okCallBack:取消按钮文本,okCallBack:确定按钮事件,cancelCallBack:取消按钮事件}
    */
   static showDialog(options: {
