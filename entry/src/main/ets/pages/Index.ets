@@ -22,7 +22,8 @@ import {
   AES,
   Logger,
   ToastUtil,
-  DialogUtil
+  DialogUtil,
+  ActionUtil
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 
@@ -395,6 +396,9 @@ struct Index {
             okCallBack: this.test,
             cancelCallBack: this.test
           });
+        })
+        Button("action").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showActionMenu({});
         })
       }
       .width('100%')
