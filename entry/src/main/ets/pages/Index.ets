@@ -16,7 +16,7 @@ import {
   PageUtil,
   PageQuery,
   PageResult,
-// BASE64,
+BASE64,
   MD5,
   RSA,
   AES,
@@ -50,7 +50,10 @@ struct Index {
 
   async test() {
 
-    ToastUtil.showToast('使用默认参数');
+     let base64 = BASE64.create();
+     this.message =  base64.toByteArray('测试BASE64').length+""
+
+    // ToastUtil.showToast('使用默认参数');
     // ToastUtil.showToast('这个是工具生成提示', { duration: 4000, bottom: '50vp' });
 
     // const keyPair1 = await RSA.generateRsaKey();
@@ -381,6 +384,7 @@ struct Index {
   build() {
     Row() {
       Column() {
+        Text(this.message)
         Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:2000,bottom:10vp');
         })

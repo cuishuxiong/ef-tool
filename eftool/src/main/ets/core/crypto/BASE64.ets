@@ -9,31 +9,36 @@ export class BASE64 {
   private revLookup = []
   private Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
   private code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  private static base64: BASE64;
 
   constructor() {
-
-    for (var i = 0, len = code.length; i < len; ++i) {
+    for (let i = 0, len = this.code.length; i < len; ++i) {
       this.lookup[i] = this.code[i]
-      revLookup[code.charCodeAt(i)] = i
+      this.revLookup[code.charCodeAt(i)] = i
     }
-    revLookup['-'.charCodeAt(0)] = 62
-    revLookup['_'.charCodeAt(0)] = 63
+    this.revLookup['-'.charCodeAt(0)] = 62
+    this.revLookup['_'.charCodeAt(0)] = 63
+  }
+
+  static create() {
+    if (!this.base64) {
+      this.base64 = new BASE64();
+    }
+    return this.base64;
   }
 
 
-  getLens(b64) {
-    var len = b64.length
+  private getLens(b64) {
+    let len = b64.length
 
     if (len % 4 > 0) {
       throw new Error('Invalid string. Length must be a multiple of 4')
     }
 
-    // Trim off extra bytes after placeholder bytes are found
-    // See: https://github.com/beatgammit/base64-js/issues/42
-    var validLen = b64.indexOf('=')
+    let validLen = b64.indexOf('=')
     if (validLen === -1) validLen = len
 
-    var placeHoldersLen = validLen === len
+    let placeHoldersLen = validLen === len
       ? 0
       : 4 - (validLen % 4)
 
@@ -41,39 +46,40 @@ export class BASE64 {
   }
 
   // base64 is 4/3 + up to two characters of the original data
-  byteLength(b64) {
-    var lens = getLens(b64)
-    var validLen = lens[0]
-    var placeHoldersLen = lens[1]
+  public byteLength(b64) {
+    let lens = this.getLens(b64)
+    let validLen = lens[0]
+    let placeHoldersLen = lens[1]
     return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
   }
 
-  _byteLength(b64, validLen, placeHoldersLen) {
+  private _byteLength(b64, validLen, placeHoldersLen) {
     return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
   }
 
-  static toByteArray(b64) {
-    var tmp
-    var lens = getLens(b64)
-    var validLen = lens[0]
-    var placeHoldersLen = lens[1]
+  public toByteArray(b64) {
+    let tmp
+    let lens = this.getLens(b64)
+    let validLen = lens[0]
+    let placeHoldersLen = lens[1]
 
-    var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
 
-    var curByte = 0
+    let arr = new this.Arr(this._byteLength(b64, validLen, placeHoldersLen))
+
+    let curByte = 0
 
     // if there are placeholders, only get up to the last complete 4 chars
-    var len = placeHoldersLen > 0
+    let len = placeHoldersLen > 0
       ? validLen - 4
       : validLen
 
-    var i
+    let i
     for (i = 0; i < len; i += 4) {
       tmp =
-      (revLookup[b64.charCodeAt(i)] << 18) |
-      (revLookup[b64.charCodeAt(i + 1)] << 12) |
-      (revLookup[b64.charCodeAt(i + 2)] << 6) |
-      revLookup[b64.charCodeAt(i + 3)]
+      (this.revLookup[b64.charCodeAt(i)] << 18) |
+      (this.revLookup[b64.charCodeAt(i + 1)] << 12) |
+      (this.revLookup[b64.charCodeAt(i + 2)] << 6) |
+      this.revLookup[b64.charCodeAt(i + 3)]
       arr[curByte++] = (tmp >> 16) & 0xFF
       arr[curByte++] = (tmp >> 8) & 0xFF
       arr[curByte++] = tmp & 0xFF
@@ -81,16 +87,16 @@ export class BASE64 {
 
     if (placeHoldersLen === 2) {
       tmp =
-      (revLookup[b64.charCodeAt(i)] << 2) |
-      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+      (this.revLookup[b64.charCodeAt(i)] << 2) |
+      (this.revLookup[b64.charCodeAt(i + 1)] >> 4)
       arr[curByte++] = tmp & 0xFF
     }
 
     if (placeHoldersLen === 1) {
       tmp =
-      (revLookup[b64.charCodeAt(i)] << 10) |
-      (revLookup[b64.charCodeAt(i + 1)] << 4) |
-      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+      (this.revLookup[b64.charCodeAt(i)] << 10) |
+      (this.revLookup[b64.charCodeAt(i + 1)] << 4) |
+      (this.revLookup[b64.charCodeAt(i + 2)] >> 2)
       arr[curByte++] = (tmp >> 8) & 0xFF
       arr[curByte++] = tmp & 0xFF
     }
@@ -98,36 +104,36 @@ export class BASE64 {
     return arr
   }
 
-  tripletToBase64(num) {
-    return lookup[num >> 18 & 0x3F] +
-    lookup[num >> 12 & 0x3F] +
-    lookup[num >> 6 & 0x3F] +
-    lookup[num & 0x3F]
+  private tripletToBase64(num) {
+    return this.lookup[num >> 18 & 0x3F] +
+    this.lookup[num >> 12 & 0x3F] +
+    this.lookup[num >> 6 & 0x3F] +
+    this.lookup[num & 0x3F]
   }
 
-  encodeChunk(uint8, start, end) {
-    var tmp
-    var output = []
-    for (var i = start; i < end; i += 3) {
+  private encodeChunk(uint8, start, end) {
+    let tmp
+    let output = []
+    for (let i = start; i < end; i += 3) {
       tmp =
       ((uint8[i] << 16) & 0xFF0000) +
       ((uint8[i + 1] << 8) & 0xFF00) +
       (uint8[i + 2] & 0xFF)
-      output.push(tripletToBase64(tmp))
+      output.push(this.tripletToBase64(tmp))
     }
     return output.join('')
   }
 
-  static fromByteArray(uint8) {
-    var tmp
-    var len = uint8.length
-    var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-    var parts = []
-    var maxChunkLength = 16383 // must be multiple of 3
+  public fromByteArray(uint8) {
+    let tmp
+    let len = uint8.length
+    let extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+    let parts = []
+    let maxChunkLength = 16383 // must be multiple of 3
 
     // go through the array every three bytes, we'll deal with trailing stuff later
-    for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-      parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+    for (let i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+      parts.push(this.encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
     }
 
     // pad the end with zeros, but make sure to not forget the extra bytes

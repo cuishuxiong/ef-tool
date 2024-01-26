@@ -32,7 +32,7 @@ export { PageQuery } from './src/main/ets/core/page/PageQuery';
 
 export { PageResult } from './src/main/ets/core/page/PageResult';
 
-// export { BASE64 } from './src/main/ets/core/crypto/BASE64';
+export { BASE64 } from './src/main/ets/core/crypto/BASE64';
 
 export { MD5 } from './src/main/ets/core/crypto/MD5';
 
