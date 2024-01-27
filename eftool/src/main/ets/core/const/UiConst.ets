@@ -16,6 +16,11 @@ export class UiConst {
   static readonly DIALOG_TITLE: string = '温馨提示';
 
   /**
+   * action标题
+   */
+  static readonly ACTION_TITLE: string = '操作菜单';
+
+  /**
    * dialog确定文字
    */
   static readonly DIALOG_OK: string = '确定';

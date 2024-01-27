@@ -7,19 +7,26 @@
 export class BASE64 {
   private lookup = []
   private revLookup = []
-  private Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+  private Arr = Uint8Array
   private code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
   private static base64: BASE64;
 
+  /**
+   * 构造
+   */
   constructor() {
     for (let i = 0, len = this.code.length; i < len; ++i) {
       this.lookup[i] = this.code[i]
-      this.revLookup[code.charCodeAt(i)] = i
+      this.revLookup[this.code.charCodeAt(i)] = i
     }
     this.revLookup['-'.charCodeAt(0)] = 62
     this.revLookup['_'.charCodeAt(0)] = 63
   }
 
+  /**
+   * 创建一个BASE64实例化对象
+   * @returns
+   */
   static create() {
     if (!this.base64) {
       this.base64 = new BASE64();
@@ -45,7 +52,11 @@ export class BASE64 {
     return [validLen, placeHoldersLen]
   }
 
-  // base64 is 4/3 + up to two characters of the original data
+  /**
+   * 获取字节长度
+   * @param b64
+   * @returns
+   */
   public byteLength(b64) {
     let lens = this.getLens(b64)
     let validLen = lens[0]
@@ -57,6 +68,11 @@ export class BASE64 {
     return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
   }
 
+  /**
+   * 将字符串转换为byte
+   * @param b64  字符串
+   * @returns byte数组
+   */
   public toByteArray(b64) {
     let tmp
     let lens = this.getLens(b64)
@@ -124,6 +140,11 @@ export class BASE64 {
     return output.join('')
   }
 
+  /**
+   * 将byte数组转换为字符串
+   * @param uint8 byte数组
+   * @returns 字符串
+   */
   public fromByteArray(uint8) {
     let tmp
     let len = uint8.length

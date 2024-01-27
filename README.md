@@ -1,4 +1,4 @@
-# <center>efTool</center>
+# <center>eftool</center>
 
 -------------------------------------------------------------------------------
 
@@ -6,15 +6,15 @@
 
 `efTool`是一个功能丰富且易用的**OpenHarmony/HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
 这些封装的工具涵盖了字符串、数字、集合、JSON等一系列操作，
-可以满足各种不同的开发需求。本人为Java开发,故封装思路借鉴Java的工具类Hutool扩展。
+可以满足各种不同的开发需求。本人为Java开发,故封装思路借鉴Java的工具类Hutool，同时扩展了HarmonyOS的UI组件。
 
-### 🎁efTool名称的由来
+### 🎁eftool名称的由来
 
-efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
+eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
-### 🍺efTool理念
+### 🍺eftool理念
 
-`efTool`既是一个工具集，也是一个知识库，我从不自诩代码原创，大多数工具类都是**搬运**而来，因此：
+`eftool`既是一个工具集，也是一个知识库，我从不自诩代码原创，大多数工具类都是**搬运**而来，因此：
 
 - 你可以引入使用，也可以**拷贝**和修改使用，而**不必标注任何信息**，只是希望能把bug及时反馈回来。
 - 我努力健全**中文**注释，为源码学习者提供良好地学习环境，争取做到人人都能看得懂。
@@ -23,32 +23,41 @@ efTool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ## 🛠️包含组件
 
-一个OpenHarmony/HarmonyOS基础工具类，组成各种Util工具类，同时提供以下组件：
+一个OpenHarmony/HarmonyOS基础工具类，组成各种Util工具类，同时提供以下两部分组件：
 
-| 模块         | 介绍                          |
-|------------|-----------------------------|
-| ArrayUtil  | 提供对集合的一些常用的判断               |
-| DateUtil   | 提供对日期的一系列封装                 |
-| IdCardUtil | 提供对身份证校验系列方法                |
-| RSA        | 提RSA供生成密钥加解密验签等系列方法         |
-| AES        | 提供AES生成密钥加解密等系列方法           |
-| MD5        | 提供摘要方法                      |
-| IdUtil     | 提供生成ID的一系列方法                |
-| JSONUtil   | 提供对于json对象集合跟json字符串的系列转换方法 |
-| ObjectUtil | 提供对于对象的系列操作方法               |
-| RandomUtil | 提供随机数的系列操作                  |
-| RegUtil    | 提供对于常用正则表达式的方法              |
-| StrUtil    | 提供对于字符串的操作方法                |
-| RegexConst | 提供常用的正则表达式                  |
-| DateConst  | 提供常用的日期格式化表达式               |
-| PageUtil   | 提供常用的纯前端分页操作                |
-| PhoneUtil  | 提供常用的手机座机等判断                |
-| OutDTO     | 提供常用的返回实体对象                 |
-| PageQuery  | 提供常用的后端获取分页数据操作             |
-| CharUtil   | 提供常用的字符操作                   |
-| Logger     | 提供常用的打印日志的方法                |
+### 1.基础类组件
 
--------------------------------------------------------------------------------
+| 模块         | 介绍                                   |
+|------------|--------------------------------------|
+| IdCardUtil | 提供对身份证校验系列方法                         |
+| JSONUtil   | 提供对于JSON对象集合跟JSON字符串的系列转换方法          |
+| RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| MD5        | 提供摘要方法(基于HarmonyOS API)              |
+| BASE64     | 提供BASE64对头的一系列方法                     |
+| IdUtil     | 提供生成ID的一系列方法                         |
+| ArrayUtil  | 提供对集合的一些常用的方法                        |
+| DateUtil   | 提供对日期的一系列封装                          |
+| ObjectUtil | 提供对于对象的系列操作方法                        |
+| RandomUtil | 提供随机数的系列方法                           |
+| RegUtil    | 提供对于常用正则表达式的方法                       |
+| StrUtil    | 提供对于字符串的操作方法                         |
+| PageUtil   | 提供常用的纯前端分页操作                         |
+| PhoneUtil  | 提供常用的手机座机等判断                         |
+| OutDTO     | 提供常用的返回实体对象                          |
+| PageQuery  | 提供常用的后端获取分页数据操作                      |
+| CharUtil   | 提供常用的字符操作                            |
+| Logger     | 提供常用的打印日志的方法                         |
+| RegexConst | 提供常用的正则表达式常量                         |
+| DateConst  | 提供常用的日期格式化表达式常量                      |
+
+### 2.UI类组件
+
+| 模块         | 介绍            |
+|------------|---------------|
+| ToastUtil  | 提供对文本提示的一系列方法 |
+| DialogUtil | 提供对弹出框的一系列方法  |
+| ActionUtil | 提供对操作菜单的一系列方法 |
 
 ## 📦安装
 
@@ -65,12 +74,14 @@ ohpm install @yunkss/eftool
 ### 1.在项目中引入插件
 
 ```
-import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,RegexConst,OutDTO } from '@yunkss/eftool'
+import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 ```
 
-工具类按需引入,使用那个引入那个
+类按需引入,项目需要使用那个就引入
 
-### 2.IdCardUtil的方法
+### 2.基础组件使用API
+
+#### 1.IdCardUtil的方法
 
 * isValidCard18 严格校验18位身份证号是否正确,校验规则如下
 
@@ -136,7 +147,44 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 true--142303--汾阳市
 ```
 
-### 3.RSA的方法【返回结果均为OutDTO对象】
+#### 2.JSONUtil的方法
+
+* toJSONString 将传入的json对象格式化成json字符串
+
+```
+    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
+    console.error(JSONUtil.toJSONString(p))
+    //输出  {"name":"测试名称","age":18,"birth":"2024-01-03 00:00:00"}
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    JSONUtil.parse('{"name":"测试名称","age":18,"birth":"2024-01-03" }')
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
+    console.error(p.name+":"+p.birth)
+    //输出  测试名称:2024-01-03 00:00:00
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]',DateConst.YMD_HLINE_HMS) ;
+    pArr.forEach(item => {
+      console.error(item.name + "---" + item.birth);
+    })
+    //输出
+    //测试名称1---2023-01-01 00:00:00
+    //测试名称2---2021-01-01 12:12:12
+
+```
+
+#### 3.RSA的方法【返回结果均为OutDTO对象】
 
 * generateRsaKey 生成RSA的非对称密钥
 
@@ -174,7 +222,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
 ```
 
-### 4.AES的方法【返回结果均为OutDTO对象】
+#### 4.AES的方法【返回结果均为OutDTO对象】
 
 * generateAesKey 生成AES的对称密钥
 
@@ -197,7 +245,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
 ```
 
-### 5.MD5的方法【返回结果均为OutDTO对象】
+#### 5.MD5的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -206,44 +254,37 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
 ```
 
-### 6.JSONUtil的方法
+#### 6.IdUtil的方法
 
-* toJSONString 将传入的json对象格式化成json字符串
-
-```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
-    console.error(JSONUtil.toJSONString(p))
-    //输出  {"name":"测试名称","age":18,"birth":"2024-01-03 00:00:00"}
-```
-
-* parse 将传入的json字符串格式化为Object对象
+* simpleUUID 生成32为UUID不带-
 
 ```
-    JSONUtil.parse('{"name":"测试名称","age":18,"birth":"2024-01-03" }')
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
 ```
 
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* fastUUID 生成36为UUID带-
 
 ```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
-    console.error(p.name+":"+p.birth)
-    //输出  测试名称:2024-01-03 00:00:00
+    console.error(IdUtil.fastUUID())
+    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* fastSimpleUUID 生成32为UUID带-
 
 ```
-    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]',DateConst.YMD_HLINE_HMS) ;
-    pArr.forEach(item => {
-      console.error(item.name + "---" + item.birth);
-    })
-    //输出
-    //测试名称1---2023-01-01 00:00:00
-    //测试名称2---2021-01-01 12:12:12
-
+    console.error(IdUtil.fastSimpleUUID())
+    //输出  56703FA1-0BB-503-D93-00E94A28422
 ```
 
-### 7.OutDTO的方法
+* randomUUID 生成36为UUID带-,小写
+
+```
+    console.error(IdUtil.randomUUID())
+    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
+```
+
+#### 7.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -317,7 +358,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 * setDataTable 设置多行数据
 
-### 8.PageUtil的方法
+#### 8.PageUtil的方法
 
 * 该对象有如下私有成员变量
 
@@ -390,7 +431,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     const records:Array<T> = page.getRecords();
 ```
 
-### 9.ArrayUtil的方法
+#### 9.ArrayUtil的方法
 
 * append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
@@ -578,7 +619,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  不是空的
 ```
 
-### 10.DateUtil的方法
+#### 10.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -619,7 +660,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.log(diff + ""); //输出 70
 ```
 
-### 11.RegUtil的方法
+#### 11.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -653,7 +694,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  false---身份证号格式不正确,请检查
 ```
 
-### 12.StrUtil的方法
+#### 12.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
@@ -761,37 +802,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
-### 13.IdUtil的方法
-
-* simpleUUID 生成32为UUID不带-
-
-```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
-```
-
-* fastUUID 生成36为UUID带-
-
-```
-    console.error(IdUtil.fastUUID())
-    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
-```
-
-* fastSimpleUUID 生成32为UUID带-
-
-```
-    console.error(IdUtil.fastSimpleUUID())
-    //输出  56703FA1-0BB-503-D93-00E94A28422
-```
-
-* randomUUID 生成36为UUID带-,小写
-
-```
-    console.error(IdUtil.randomUUID())
-    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
-```
-
-### 14.RandomUtil的方法
+#### 13.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
 
@@ -828,7 +839,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出  54
 ```
 
-### 15.ObjectUtil的方法
+#### 14.ObjectUtil的方法
 
 * equal 判断两个传入的数值或者是字符串是否相等
 
@@ -844,7 +855,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     //输出 false
 ```
 
-### 16.PhoneUtil的方法
+#### 15.PhoneUtil的方法
 
 * isMobile 验证是否为手机号码（中国）
 
@@ -895,7 +906,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 手机号为中国号码
 ```
 
-### 17.PageQuery的方法
+#### 16.PageQuery的方法
 
 ```
     有如下私有属性
@@ -994,7 +1005,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
 
 ```
 
-### 18.CharUtil的方法
+#### 17.CharUtil的方法
 
 * isEmoji 判断是否为emoji表情符
 
@@ -1010,7 +1021,7 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     // 输出 false
 ```
 
-### 19.Logger的方法
+#### 18.Logger的方法
 
 * constructor 构造 第一个入参为应用名,第二个为域可不填
 
@@ -1042,6 +1053,81 @@ import { ArrayUtil, CharUtil, StrUtil, RandomUtil,DateUtil,JSONUtil,RegUtil,Rege
     logger.error("error错误原因为:", 'xxxxxxxxxxxx')
 ```
 
-## ⭐Star efTool 希望您可以动一动小手点点小⭐
+### 3.UI组件使用API
 
-## 👴封装思路来源于Java的工具类HuTool,希望大家如有好的需求踊跃提交，我闲暇时间会扩充
+#### 1.ToastUtil的方法
+
+* showToast 弹出文本消息提示框
+
+```
+  入参
+  msg:提示消息
+  options {
+    duration: 显示时长,默认为2s,
+    bottom: 距离底部默认为20vp
+  }
+  示例
+  ToastUtil.showToast('提示信息');//使用默认参数
+  ToastUtil.showToast('提示信息', { duration: 4000, bottom: '50vp' });//修改参数
+```
+
+#### 2.DialogUtil的方法
+
+* showDialog 弹出一个Dialog提示框
+
+```
+    入參
+    options: {
+      title:标题 默认为温馨提示,
+      msg:提示消息,
+      okText:确定按钮文本 默认为确定,
+      okCallBack:取消按钮文本 默认为取消,
+      okCallBack:确定按钮事件,
+      cancelCallBack:取消按钮事件
+    }
+    //使用默认参数
+    DialogUtil.showDialog({
+      msg: '这是一个弹框提示',
+      okCallBack: this.test   //调用方法无需小括号()
+    });
+    //使用自定义参数
+    DialogUtil.showDialog({
+      title: '修改',
+      okText: 'ok',
+      cancelText: 'cancel',
+      msg: '这是一个弹框提示',
+      okCallBack: this.ok,    //调用方法无需小括号()
+      cancelCallBack: this.cancel       //调用方法无需小括号()
+    });
+```
+
+#### 3.ActionUtil的方法
+
+* showActionMenu 显示操作菜单
+
+```
+    入參
+    options: {
+      title:标题 默认为温馨提示,
+      btn:需要显示的菜单项,最大支持6个
+    }
+    Buttons:{
+      text:菜单项标题
+      color:菜单项颜色
+      btnCallBack:点击菜单项对应触发的事件
+    }
+    //使用默认参数
+    ActionUtil.showActionMenu({ btn: [
+      { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
+      { text: '测试2', color: '#108ee9', btnCallBack: this.two }
+    ]});
+    //使用自定义参数
+    ActionUtil.showActionMenu({ title: '修改后的标题', btn: [
+      { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
+      { text: '测试2', color: '#108ee9', btnCallBack: this.two }
+    ] });
+```
+
+## star`eftool`希望您可以动一动小手点点小⭐⭐
+
+## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化

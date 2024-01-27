@@ -34,6 +34,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
 | AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
 | MD5        | 提供摘要方法(基于HarmonyOS API)              |
+| BASE64     | 提供BASE64对头的一系列方法                     |
 | IdUtil     | 提供生成ID的一系列方法                         |
 | ArrayUtil  | 提供对集合的一些常用的方法                        |
 | DateUtil   | 提供对日期的一系列封装                          |
@@ -1102,10 +1103,29 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 #### 3.ActionUtil的方法
 
-* showAction 构造 第一个入参为应用名,第二个为域可不填
+* showActionMenu 显示操作菜单
 
 ```
-    let logger = new Logger('应用名');
+    入參
+    options: {
+      title:标题 默认为温馨提示,
+      btn:需要显示的菜单项,最大支持6个
+    }
+    Buttons:{
+      text:菜单项标题
+      color:菜单项颜色
+      btnCallBack:点击菜单项对应触发的事件
+    }
+    //使用默认参数
+    ActionUtil.showActionMenu({ btn: [
+      { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
+      { text: '测试2', color: '#108ee9', btnCallBack: this.two }
+    ]});
+    //使用自定义参数
+    ActionUtil.showActionMenu({ title: '修改后的标题', btn: [
+      { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
+      { text: '测试2', color: '#108ee9', btnCallBack: this.two }
+    ] });
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐

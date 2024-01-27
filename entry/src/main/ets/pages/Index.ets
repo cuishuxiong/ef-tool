@@ -16,7 +16,7 @@ import {
   PageUtil,
   PageQuery,
   PageResult,
-BASE64,
+  BASE64,
   MD5,
   RSA,
   AES,
@@ -48,10 +48,21 @@ struct Index {
     this.test();
   }
 
-  async test() {
+  can() {
+    ToastUtil.showToast('11111111111')
+  }
 
-     let base64 = BASE64.create();
-     this.message =  base64.toByteArray('测试BASE64').length+""
+  two() {
+    ToastUtil.showToast('22222222222')
+  }
+
+  test() {
+
+    let base64 = BASE64.create();
+    let a = base64.toByteArray('测试BASE64')
+
+    let b = base64.fromByteArray(a);
+
 
     // ToastUtil.showToast('使用默认参数');
     // ToastUtil.showToast('这个是工具生成提示', { duration: 4000, bottom: '50vp' });
@@ -402,7 +413,16 @@ struct Index {
           });
         })
         Button("action").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showActionMenu({});
+          ActionUtil.showActionMenu({ title: '修改后的标题', btn: [
+            { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
+            { text: '测试2', color: '#108ee9', btnCallBack: this.two }
+          ] });
+        })
+        Button("action默认标题").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showActionMenu({ btn: [
+            { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
+            { text: '测试2', color: '#108ee9', btnCallBack: this.two }
+          ] });
         })
       }
       .width('100%')
