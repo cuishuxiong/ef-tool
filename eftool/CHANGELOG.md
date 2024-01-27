@@ -8,7 +8,7 @@
 * 新增MD5摘要方法
 * 新增ToastUtil工具类showToast方法
 * 新增DialogUtil工具类showDialog方法
-* 新增ActionUtil工具类showAction方法
+* 新增ActionUtil工具类showActionMenu方法
 * 新增base64工具类create,byteLength,toByteArray,fromByteArray等方法
 * 新增Logger日志工具类
 
