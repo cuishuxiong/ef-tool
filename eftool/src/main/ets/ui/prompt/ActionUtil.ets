@@ -41,6 +41,38 @@ export class ActionUtil {
   }
 
   /**
+   * 显示操作菜单
+   * @param options: {title:标题,btn:菜单字符串数组,clickCallBack:点击菜单回调函数，默认传回当前点击菜单项}
+   */
+  static showMenu(options: {
+    title?: ResourceStr,
+    btn: Array<string>,
+    clickCallBack:(data:string)=>void
+  }) {
+    let { title = Const.ACTION_TITLE,btn,clickCallBack } = options;
+    // @ts-ignore
+    const btns: [Button, Button?, Button?, Button?, Button?, Button?] = [
+      { text: btn[0], color: Const.ALERT_OK_BG_COLOR  }
+    ];
+    //判断传入的数据赋值
+    btn.forEach((item, index) => {
+      if (index > 0 && index <6 ) {
+        if (item) {
+          btns[index] = { text: item, color: index%2==0?Const.ALERT_OK_BG_COLOR:Const.MENU_BG_COLOR };
+        }
+      }
+    })
+    let action = promptAction.showActionMenu({
+      title: title,
+      buttons: btns
+    });
+    action.then(data => {
+       clickCallBack(btn[data.index]);
+    })
+  }
+
+
+  /**
    * 显示一个列表选择弹窗
    * @param options  {title:提示,msg:内容,alignment:弹框对齐方式默认为(底部Bottom),sheets:列表项字符串数组,clickCallBack:点击列表项回调事件,默认传回选中的当前项}
    */

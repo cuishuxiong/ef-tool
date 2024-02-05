@@ -408,8 +408,8 @@ struct Index {
             okText: 'ok',
             cancelText: 'cancel',
             msg: '这是一个弹框提示',
-            okCallBack: this.test,
-            cancelCallBack: this.test
+            okCallBack: this.can,
+            cancelCallBack: this.two
           });
         })
         Button("action").margin({ bottom: '10vp' }).onClick(() => {
@@ -423,6 +423,16 @@ struct Index {
             { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
             { text: '测试2', color: '#108ee9', btnCallBack: this.two }
           ] });
+        })
+        Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showMenu({btn:["菜单1","菜单2"],clickCallBack:(data)=>{
+            ToastUtil.showToast(data);
+          }})
+        })
+        Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showMenu({title:'修改了菜单标题',btn:["菜单1","菜单2"],clickCallBack:(data)=>{
+            ToastUtil.showToast(data);
+          }})
         })
         Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
           DialogUtil.showAlertDialog("这个是一个，默认警告弹框");

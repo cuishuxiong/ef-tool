@@ -1173,6 +1173,31 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 ```
 
 
+* showMenu 显示操作菜单便捷操作
+
+```
+    入參
+    options: {
+      title:标题,
+      btn:菜单字符串数组 最多6个大于6个显示前6个,
+      clickCallBack:点击菜单回调函数，默认传回当前点击菜单项
+    }
+    //使用默认参数
+    Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
+      ActionUtil.showMenu({btn:["菜单1","菜单2"],clickCallBack:(data)=>{
+        ToastUtil.showToast(data);
+      }})
+    })
+    //使用自定义参数
+    Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
+      ActionUtil.showMenu({title:'修改了菜单标题',btn:["菜单1","菜单2"],clickCallBack:(data)=>{
+        ToastUtil.showToast(data);
+      }})
+    })
+```
+
+
+
 * showActionSheet 显示一个列表选择弹窗
 
 ```

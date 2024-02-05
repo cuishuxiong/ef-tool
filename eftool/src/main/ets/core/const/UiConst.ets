@@ -62,6 +62,11 @@ export class UiConst {
   static readonly ALERT_CANCEL_BG_COLOR:string = "#dcdfe6";
 
   /**
+   * action menu 背景颜色
+   */
+  static readonly MENU_BG_COLOR:string ="#323233";
+
+  /**
    * dialog取消颜色
    */
   static readonly DIALOG_CANCEL_COLOR: string = '#606266';

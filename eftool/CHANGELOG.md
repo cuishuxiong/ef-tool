@@ -5,6 +5,7 @@
 ### 🐣新特性
 
 * 新增ActionUtil工具类的showActionSheet方法
+* 新增ActionUtil工具类的showMenu方法
 
 ## [v1.0.7] 2024-02
 
