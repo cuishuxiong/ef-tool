@@ -12,7 +12,7 @@ export class ToastUtil {
    * @param msg 提示消息
    * @param options: {duration:'',bottom:''}  提示参数duration为显示时长，bottom为距离底部位置
    */
-  static showToast(msg: string | Resource, options?: {
+  static showToast(msg: ResourceStr, options?: {
     duration?: number,
     bottom?: string | number
   }): void {

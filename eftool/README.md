@@ -1172,6 +1172,39 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     ] });
 ```
 
+
+* showActionSheet 显示一个列表选择弹窗
+
+```
+    入參
+    options: {
+      title:提示可不填,
+      msg:内容可不填,
+      alignment:弹框对齐方式默认为(底部Bottom),
+      sheets:列表项字符串数组,
+      clickCallBack:点击列表项回调事件,默认传回选中的当前项
+    }
+    //使用默认参数
+     Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
+       ActionUtil.showActionSheet({
+         sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+         clickCallBack: (data: string) => {
+           ToastUtil.showToast(data);
+         } });
+     })
+    //使用自定义参数
+    Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
+      ActionUtil.showActionSheet({
+        title:'弹框的标题',
+        msg:'弹框的消息',
+        alignment:DialogAlignment.Top,
+        sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        clickCallBack: (data: string) => {
+          ToastUtil.showToast(data);
+        } });
+    })
+```
+
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化

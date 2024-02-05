@@ -14,6 +14,7 @@ export class UiConst {
    * dialog标题
    */
   static readonly DIALOG_TITLE: string = '温馨提示';
+
   /**
    * alert标题
    */

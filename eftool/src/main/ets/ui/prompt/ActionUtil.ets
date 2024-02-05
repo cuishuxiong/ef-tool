@@ -13,7 +13,7 @@ export class ActionUtil {
    * @param options: {title:标题,btn:{text:显示文本,color:显示颜色,btnCallBack:点击菜单触发的事件}}
    */
   static showActionMenu(options: {
-    title?: string | Resource,
+    title?: ResourceStr,
     btn: Buttons[]
   }) {
     let { title = Const.ACTION_TITLE,btn } = options;
@@ -39,6 +39,35 @@ export class ActionUtil {
       }
     })
   }
+
+  /**
+   * 显示一个列表选择弹窗
+   * @param options  {title:提示,msg:内容,alignment:弹框对齐方式默认为(底部Bottom),sheets:列表项字符串数组,clickCallBack:点击列表项回调事件,默认传回选中的当前项}
+   */
+  static showActionSheet(options: {
+    title?: ResourceStr,
+    msg?: ResourceStr,
+    alignment?: DialogAlignment
+    sheets: Array<string>,
+    clickCallBack:(data:string)=>void
+  }) {
+    //解构入参
+    let { title='',msg='',alignment=DialogAlignment.Bottom,sheets=[""],clickCallBack } = options || {};
+    let sheetList = [];
+    //遍历组装数据
+    sheets.forEach(item=>{
+      sheetList.push({title:item,action:()=>clickCallBack(item)})
+    })
+    ActionSheet.show({
+      title: title,
+      message: msg,
+      autoCancel: true,
+      alignment: alignment,
+      offset: alignment == DialogAlignment.Bottom ? { dx: 0, dy: -20 } : alignment == DialogAlignment.Top ? { dx: 0,dy: 20} : {dx: 0,dy: 0 },
+      sheets: sheetList
+    })
+  }
+
 }
 
 /**

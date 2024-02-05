@@ -428,13 +428,30 @@ struct Index {
           DialogUtil.showAlertDialog("这个是一个，默认警告弹框");
         })
         Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
-          DialogUtil.showAlertDialog("这个是一个警告弹框",{
-            title:'标题',
+          DialogUtil.showAlertDialog("这个是一个警告弹框", {
+            title: '标题',
+            alignment: DialogAlignment.Top,
+            buttons: [
+              { callBack: this.can },
+              { callBack: this.two }
+            ] });
+        })
+        Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showActionSheet({
+            sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            clickCallBack: (data: string) => {
+              ToastUtil.showToast(data);
+            } });
+        })
+        Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showActionSheet({
+            title:'弹框的标题',
+            msg:'弹框的消息',
             alignment:DialogAlignment.Top,
-            buttons:[
-              {callBack:this.can },
-              {callBack:this.two}
-            ]});
+            sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            clickCallBack: (data: string) => {
+              ToastUtil.showToast(data);
+            } });
         })
       }
       .width('100%')

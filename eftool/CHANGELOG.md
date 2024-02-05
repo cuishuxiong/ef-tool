@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.8] 2024-02
+
+### 🐣新特性
+
+* 新增ActionUtil工具类的showActionSheet方法
+
 ## [v1.0.7] 2024-02
 
 ### 🐣新特性

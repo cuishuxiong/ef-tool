@@ -14,10 +14,10 @@ export class DialogUtil {
    * @param options: {title:标题默认为温馨提示,msg:提示消息,okText:确定按钮文本,okCallBack:取消按钮文本,okCallBack:确定按钮事件,cancelCallBack:取消按钮事件}
    */
   static showDialog(options: {
-    title?: string | Resource,
-    msg: string | Resource,
-    okText?: string | Resource,
-    cancelText?: string | Resource,
+    title?: ResourceStr,
+    msg: ResourceStr,
+    okText?: ResourceStr,
+    cancelText?: ResourceStr,
     okCallBack: () => void,
     cancelCallBack?: () => void
   }) {
@@ -58,19 +58,19 @@ export class DialogUtil {
    * @param msg  警告消息
    * @param options  {title:提示标题默认为(警告提示),autoCancel:点击遮罩是否自动关闭默认为(false),alignment:弹框对齐方式默认为(底部Bottom),gridCount:宽度所占用栅格数默认为10,buttons:按钮}
    * @Param buttons:AlertDialogBtn 弹框按钮类只允许有两个第一个为确认按按,第二个为取消按钮
-   * @Param   确定按钮值: value:确定按钮文本默认为确定,fontColor:文本颜色默认为#fff,backgroundColor:背景颜色默认值为#409eff,callBack:确定按钮回调事件
-   * @Param   取消按钮值: value:取消按钮文本默认为取消,fontColor:文本颜色默认为#fff,backgroundColor:背景颜色默认值为#dcdfe6,callBack:取消按钮回调事件
+   * @Param 确定按钮值: value:确定按钮文本默认为确定,fontColor:文本颜色默认为#fff,backgroundColor:背景颜色默认值为#409eff,callBack:确定按钮回调事件
+   * @Param 取消按钮值: value:取消按钮文本默认为取消,fontColor:文本颜色默认为#fff,backgroundColor:背景颜色默认值为#dcdfe6,callBack:取消按钮回调事件
    */
-  static showAlertDialog(msg: string | Resource,options?: {
-    title?: string | Resource,
+  static showAlertDialog(msg: ResourceStr, options?: {
+    title?: ResourceStr,
     autoCancel?: boolean,
     alignment?: DialogAlignment
-    buttons: [ Partial<AlertDialogBtn>, Partial<AlertDialogBtn>],
-    gridCount?:number
+    buttons: [Partial<AlertDialogBtn>, Partial<AlertDialogBtn>],
+    gridCount?: number
   }) {
     //设置默认值
     const defaultButtons = [
-      //确定按钮的默认值
+    //确定按钮的默认值
       { value: Const.DIALOG_OK, fontColor: Const.ALERT_OK_COLOR, backgroundColor: Const.ALERT_OK_BG_COLOR },
       //取消按钮的默认值
       { value: Const.DIALOG_CANCEL, fontColor: Const.ALERT_CANCEL_COLOR, backgroundColor: Const.ALERT_CANCEL_BG_COLOR }
@@ -89,7 +89,7 @@ export class DialogUtil {
     // 合并传入的 buttons 和默认的 buttons
     // @ts-ignore
     buttons = buttons.map((btn, index) => ({ ...defaultButtons[index], ...btn }));
-   //分解数据
+    //分解数据
     let primaryBtn = buttons[0];
     let secondBtn = buttons[1];
     //创建警告弹框
@@ -98,7 +98,7 @@ export class DialogUtil {
       message: msg,
       autoCancel: autoCancel,
       alignment: alignment,
-      offset: alignment==DialogAlignment.Bottom?{ dx: 0, dy: -20 }:alignment==DialogAlignment.Top?{ dx: 0, dy: 20 }:{ dx: 0, dy: 0 },
+      offset: alignment == DialogAlignment.Bottom ? { dx: 0, dy: -20 } : alignment == DialogAlignment.Top ? { dx: 0,dy: 20} : {dx: 0,dy: 0 },
       primaryButton: {
         value: primaryBtn.value,
         fontColor: primaryBtn.fontColor,
@@ -114,7 +114,9 @@ export class DialogUtil {
       gridCount
     })
   }
+
 }
+
 
 /**
  * 提供給警告弹窗按钮使用
@@ -123,7 +125,7 @@ class AlertDialogBtn {
   /**
    * 按钮值
    */
-  value?: string | Resource;
+  value?: ResourceStr;
   /**
    * 按钮前景色
    */
