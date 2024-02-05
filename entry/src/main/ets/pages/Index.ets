@@ -49,11 +49,11 @@ struct Index {
   }
 
   can() {
-    ToastUtil.showToast('11111111111')
+    ToastUtil.showToast('点击了确定')
   }
 
   two() {
-    ToastUtil.showToast('22222222222')
+    ToastUtil.showToast('点击了取消')
   }
 
   test() {
@@ -423,6 +423,18 @@ struct Index {
             { text: '测试1', color: '#cdcdcd', btnCallBack: this.can },
             { text: '测试2', color: '#108ee9', btnCallBack: this.two }
           ] });
+        })
+        Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
+          DialogUtil.showAlertDialog("这个是一个，默认警告弹框");
+        })
+        Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
+          DialogUtil.showAlertDialog("这个是一个警告弹框",{
+            title:'标题',
+            alignment:DialogAlignment.Top,
+            buttons:[
+            {callBack:this.can },
+            {callBack:this.two}
+          ]});
         })
       }
       .width('100%')

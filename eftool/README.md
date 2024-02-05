@@ -1101,6 +1101,50 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     });
 ```
 
+* showAlertDialog 弹出一个警告提示框
+
+```
+    入參
+    msg:警告消息
+    {title:,autoCancel:,alignment:,gridCount:,buttons:按钮}
+    options: {
+      title:提示标题默认为(警告提示),
+      autoCancel:点击遮罩是否自动关闭默认为(false),
+      alignment:弹框对齐方式默认为(底部Bottom),
+      gridCount:宽度所占用栅格数默认为10,
+      buttons:按钮数组只能是两个,一个确定一个取消
+    }
+    buttons的类型
+    [
+      {
+        value:确定按钮文本默认为确定,
+        fontColor:文本颜色默认为#fff,
+        backgroundColor:背景颜色默认值为#409eff,
+        callBack:确定按钮回调事件
+      },//确定按钮
+      {
+        value:取消按钮文本默认为取消,
+        fontColor:文本颜色默认为#fff,
+        backgroundColor:背景颜色默认值为#dcdfe6,
+        callBack:取消按钮回调事件
+      }//取消按钮
+    ]
+    //使用默认参数
+    Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
+       DialogUtil.showAlertDialog("这个是一个，默认警告弹框");//调用方法无需小括号()
+    })
+    //使用自定义参数
+    Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
+       DialogUtil.showAlertDialog("这个是一个警告弹框",{
+         title:'标题',
+         alignment:DialogAlignment.Top,
+         buttons:[
+         {callBack:this.can },//调用方法无需小括号()
+         {callBack:this.two}//调用方法无需小括号()
+       ]});
+    })
+```
+
 #### 3.ActionUtil的方法
 
 * showActionMenu 显示操作菜单

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.7] 2024-02
+
+### 🐣新特性
+
+* 新增DialogUtil工具类的showAlertDialog方法
+
 ## [v1.0.6] 2024-01
 
 ### 🐣新特性
