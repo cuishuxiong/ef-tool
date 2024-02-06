@@ -23,7 +23,8 @@ import {
   Logger,
   ToastUtil,
   DialogUtil,
-  ActionUtil
+  ActionUtil,
+  Cascade
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 
@@ -43,6 +44,8 @@ class Person {
 @Component
 struct Index {
   @State message: string = '11111'
+
+  @State show:boolean = false
 
   aboutToAppear() {
     this.test();
@@ -463,6 +466,10 @@ struct Index {
               ToastUtil.showToast(data);
             } });
         })
+        Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
+          this.show = ! this.show;
+        })
+        Cascade({show:$show})
       }
       .width('100%')
     }

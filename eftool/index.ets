@@ -47,3 +47,5 @@ export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';
 export { DialogUtil } from './src/main/ets/ui/prompt/DialogUtil';
 
 export { ActionUtil } from './src/main/ets/ui/prompt/ActionUtil';
+
+export { Cascade } from './src/main/ets/ui/select/Cascade';
