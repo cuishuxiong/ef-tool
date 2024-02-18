@@ -48,7 +48,6 @@ export class IdCardUtil {
       IdCardUtil.PROVINCE_CODES.set(province.split('&')[1], province.split('&')[0]);
       //设置城市
       let cityList = cityJSON[province];
-      console.error(cityList)
       for (const city in cityList) {
         IdCardUtil.CITY_CODES.set(city.split('&')[1], city.split('&')[0]);
         //设置区
