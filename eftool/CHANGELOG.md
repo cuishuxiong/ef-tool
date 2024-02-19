@@ -4,6 +4,9 @@
 
 ### 🐣新特性
 
+* 新增AuthUtil获取用户权限工具类(待完成)
+* 新增websocket工具类(待完成)
+* 新增省市区级联组件Cascade
 * 新增ActionUtil工具类的showActionSheet方法
 * 新增ActionUtil工具类的showMenu方法
 
