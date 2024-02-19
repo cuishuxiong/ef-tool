@@ -802,6 +802,13 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
+* asString 将传入的值转换为字符串类型
+
+```
+    const obj = {'key': 'this is value'} // key的值类型为 string | undefined
+    const test = StrUtil.asString(obj['key']) 
+```
+
 #### 13.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
@@ -1172,7 +1179,6 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     ] });
 ```
 
-
 * showMenu 显示操作菜单便捷操作
 
 ```
@@ -1195,8 +1201,6 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
       }})
     })
 ```
-
-
 
 * showActionSheet 显示一个列表选择弹窗
 

@@ -44,15 +44,16 @@ class Person {
 @Component
 struct Index {
   @State message: string = '11111'
-
-  @State show:boolean = false
+  @State show: boolean = false
 
   aboutToAppear() {
     this.test();
   }
 
   can() {
-    ToastUtil.showToast('点击了确定')
+    const obj = { 'key': 'this is value' } // key的值类型为 string | undefined
+    const test = StrUtil.asString(obj['key'])
+    ToastUtil.showToast('点击了确定:' + test)
   }
 
   two() {
@@ -428,14 +429,14 @@ struct Index {
           ] });
         })
         Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showMenu({btn:["菜单1","菜单2"],clickCallBack:(data)=>{
+          ActionUtil.showMenu({ btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
             ToastUtil.showToast(data);
-          }})
+          } })
         })
         Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showMenu({title:'修改了菜单标题',btn:["菜单1","菜单2"],clickCallBack:(data)=>{
+          ActionUtil.showMenu({ title: '修改了菜单标题', btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
             ToastUtil.showToast(data);
-          }})
+          } })
         })
         Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
           DialogUtil.showAlertDialog("这个是一个，默认警告弹框");
@@ -458,18 +459,19 @@ struct Index {
         })
         Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
           ActionUtil.showActionSheet({
-            title:'弹框的标题',
-            msg:'弹框的消息',
-            alignment:DialogAlignment.Top,
+            title: '弹框的标题',
+            msg: '弹框的消息',
+            alignment: DialogAlignment.Top,
             sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             clickCallBack: (data: string) => {
               ToastUtil.showToast(data);
-            } });
+            }
+          });
         })
         Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
-          this.show = ! this.show;
+          this.show = !this.show;
         })
-        Cascade({show:$show})
+        Cascade({ show: $show })
       }
       .width('100%')
     }

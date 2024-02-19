@@ -28,6 +28,15 @@ export class StrUtil {
   }
 
   /**
+   * 类型转换为字符串
+   * @param s  传入要转换的值
+   * @returns 转换后的字符串
+   */
+  static asString(s: any): string | undefined {
+    return typeof s === 'string' ? s as string : undefined
+  }
+
+  /**
    *判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
    * @param str
    * @returns

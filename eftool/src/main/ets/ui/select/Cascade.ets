@@ -3,7 +3,7 @@
  * @DateTime 2024/2/6 10:02:02
  * @TODO Cascade  级联选择器
  */
-import { cityJSON } from '../../core/const/CityConst'
+import { pcaJSON } from '../../core/const/CityConst'
 import { UiConst } from '../../core/const/UiConst'
 import { JSONUtil } from '../../core/util/JSONUtil'
 /**
@@ -13,17 +13,24 @@ import { JSONUtil } from '../../core/util/JSONUtil'
   .height('3vp').backgroundColor(selected ? "#1989fa" : "fff").width('45vp').margin({ top: 5 })
 }
 
+/**
+ * 顶部省市区文字样式
+ * @param selected
+ */
 @Extend(Text) function txtColor(selected: boolean) {
   .fontSize("14fp").fontColor(selected ? "#969799" : "#000").fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
 }
 
+/**
+ * 省市区list样式
+ */
 @Extend(Text) function cityTxtColor() {
   .height(25)
   .fontSize('16fp')
   .lineHeight(25)
   .textAlign(TextAlign.Start)
   .padding({ top: 3, bottom: 3 })
-  .backgroundColor("#eaeaea")
+  .backgroundColor("#f7f8fa")
 }
 
 
@@ -50,33 +57,35 @@ export struct Cascade {
    * 初始化城市数据
    */
   private init() {
-    for (const province in cityJSON) {
-      //设置省
-      let pro: City = new City(province.split('&')[0], province.split('&')[1]);
+    //解析省市区json
+    this.provinceList = JSONUtil.parseArray<City>(JSONUtil.toJSONString(pcaJSON));
+    this.provinceList.forEach(province => {
       //默认将省数据赋值给当前listview对应的数据
-      this.currentList.push(pro);
-      //设置市
-      let cityList = cityJSON[province];
-      pro.children = new Array();
-      for (const city in cityList) {
-        let c: City = new City(city.split('&')[0], city.split('&')[1]);
-        c.children = new Array();
-        //设置区
-        let districtList = cityList[city];
-        for (const district in districtList) {
-          let d: City = new City(district.split('&')[0], district.split('&')[1]);
-          c.children.push(d);
-        }
-        pro.children.push(c);
-      }
-      this.provinceList.push(pro);
-    }
+      this.currentList.push(new City(province.name, province.code));
+      // @ts-ignore
+      province.children = JSONUtil.parseArray<City>(province.children);
+      province.children.forEach(city => {
+        // @ts-ignore
+        city.children = JSONUtil.parseArray<City>(city.children);
+      })
+    })
   }
 
+  /**
+   * 获取城市数据
+   * @param prevCode 省code
+   * @returns
+   */
   private getCityData(prevCode: string): Array<City> {
     return this.provinceList.find(pro => pro.code == prevCode).children;
   }
 
+  /**
+   * 获取区县数据
+   * @param prevCode 省code
+   * @param cityCode 市code
+   * @returns
+   */
   private getAreaData(prevCode: string, cityCode: string): Array<City> {
     return this.provinceList.find(pro => pro.code == prevCode)
       .children
@@ -84,14 +93,15 @@ export struct Cascade {
       .children;
   }
 
+  /**
+   * 获取省数据
+   * @returns
+   */
   private getProvinceData(): Array<City> {
     let provList: Array<City> = new Array();
-    for (const province in cityJSON) {
-      //设置省
-      let pro: City = new City(province.split('&')[0], province.split('&')[1]);
-      //默认将省数据赋值给当前listview对应的数据
-      provList.push(pro);
-    }
+    pcaJSON.forEach(province => {
+      provList.push(new City(province.name, province.code));
+    })
     return provList;
   }
 
@@ -127,11 +137,6 @@ export struct Cascade {
             Text(this.selectData.provinceName).txtColor(false).onClick(() => {
               this.selectIndex = 0;
               this.currentList = this.getProvinceData();
-              this.selectData.cityCode = "";
-              this.selectData.cityName = "";
-              this.selectData.areaCode = "";
-              this.selectData.areaName = "";
-              this.showArea = false;
             })
             Text("1").cascadeUnderLine(this.selectIndex == 0)
           }
@@ -208,21 +213,24 @@ export struct Cascade {
               if (this.selectIndex === 0) {
                 this.selectData.provinceName = item.name;
                 this.selectData.provinceCode = item.code;
+                this.selectData.cityCode = "";
+                this.selectData.cityName = "";
+                this.selectData.areaCode = "";
+                this.selectData.areaName = "";
                 this.showCity = true;
                 setTimeout(() => {
-                  this.currentList = this.provinceList.find(pro => pro.code == item.code).children;
+                  this.currentList = this.getCityData(item.code);
                   this.selectIndex = 1;
                 }, 200)
               }
               if (this.selectIndex === 1) {
                 this.selectData.cityName = item.name;
                 this.selectData.cityCode = item.code;
+                this.selectData.areaCode = "";
+                this.selectData.areaName = "";
                 this.showArea = true;
                 setTimeout(() => {
-                  this.currentList = this.provinceList.find(pro => pro.code == this.selectData.provinceCode)
-                    .children
-                    .find(city => city.code == item.code)
-                    .children;
+                  this.currentList = this.getAreaData(this.selectData.provinceCode, item.code);
                   this.selectIndex = 2;
                 }, 200)
               }
@@ -234,15 +242,21 @@ export struct Cascade {
           }, item => item.code)
         }
         .listDirection(Axis.Vertical) // 排列方向
-        .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
+        .edgeEffect(EdgeEffect.Spring)
         .width('100%')
-      }.width("100%").margin({ top: 5, left: 20 })
+        .height(500)
+        .scrollBar(BarState.Auto)
+      }
+      .height('100%')
+      .width("100%")
+      .alignItems(VerticalAlign.Top)
+      .margin({ top: 5, left: 20, bottom: 5 })
     }
     .type(PanelType.Temporary)
-    .mode(PanelMode.Half)
-    .dragBar(false) // 默认开启
-    .halfHeight(500) // 默认一半
-    .backgroundColor("#eaeaea")
+    .mode(PanelMode.Full)
+    .dragBar(false)
+    .fullHeight(700)
+    .backgroundColor("#f7f8fa")
     .position({ x: 0, y: 0 })
   }
 }

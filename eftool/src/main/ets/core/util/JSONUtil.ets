@@ -59,12 +59,37 @@ export class JSONUtil {
   }
 
   /**
-   *将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+   * 将传入的json字符串格式化为指定的实体对象集合
+   * @param jsonStr
+   * @returns
+   */
+  static parseArray<T>(jsonStr: string): Array<T> {
+    let result: Array<T> = new Array<T>();
+    let arr = JSON.parse(jsonStr);
+    let jsonObj = {};
+    for (let index = 0; index < arr.length; index++) {
+      const item = arr[index];
+      for (const key in item) {
+        let value = item[key];
+        if (typeof value === 'object' && value !== null) {
+          // @ts-ignore
+          jsonObj[key] = JSON.stringify(value);
+        } else {
+          jsonObj[key] = value;
+        }
+      }
+      result.push(JSON.parse(JSON.stringify(jsonObj)) as T);
+    }
+    return result;
+  }
+
+  /**
+   * 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
    * @param jsonStr
    * @param dateFormat 日期格式化字符串
    * @returns
    */
-  static parseArray<T>(jsonStr: string, dateFormat?: string): Array<T> {
+  static parseArrayDT<T>(jsonStr: string, dateFormat?: string): Array<T> {
     let result: Array<T> = new Array<T>();
     let arr = JSON.parse(jsonStr);
     let jsonObj = {};

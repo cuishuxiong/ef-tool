@@ -9,6 +9,7 @@
 * 新增省市区级联组件Cascade
 * 新增ActionUtil工具类的showActionSheet方法
 * 新增ActionUtil工具类的showMenu方法
+* 新增StrUtil中的asString方法
 
 ## [v1.0.7] 2024-02
 

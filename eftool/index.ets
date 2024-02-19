@@ -49,3 +49,5 @@ export { DialogUtil } from './src/main/ets/ui/prompt/DialogUtil';
 export { ActionUtil } from './src/main/ets/ui/prompt/ActionUtil';
 
 export { Cascade } from './src/main/ets/ui/select/Cascade';
+
+export { pcaJSON } from './src/main/ets/core/const/CityConst';
