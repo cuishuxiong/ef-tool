@@ -10,7 +10,7 @@ import { JSONUtil } from '../../core/util/JSONUtil'
  * 下划线样式
  */
 @Extend(Text) function cascadeUnderLine(selected: boolean) {
-  .height('3vp').backgroundColor(selected ? "#1989fa" : "fff").width('45vp').margin({ top: 5 })
+  .height(UiConst.VP_3).backgroundColor(selected ? "#1989fa" : "fff").width(UiConst.VP_45).margin({ top: UiConst.NUMBER_5 })
 }
 
 /**
@@ -18,18 +18,18 @@ import { JSONUtil } from '../../core/util/JSONUtil'
  * @param selected
  */
 @Extend(Text) function txtColor(selected: boolean) {
-  .fontSize("14fp").fontColor(selected ? "#969799" : "#000").fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
+  .fontSize(UiConst.FONT_14).fontColor(selected ? "#969799" : "#000").fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
 }
 
 /**
  * 省市区list样式
  */
 @Extend(Text) function cityTxtColor() {
-  .height(25)
-  .fontSize('16fp')
-  .lineHeight(25)
+  .height(UiConst.NUMBER_25)
+  .fontSize(UiConst.FONT_16)
+  .lineHeight(UiConst.NUMBER_25)
   .textAlign(TextAlign.Start)
-  .padding({ top: 3, bottom: 3 })
+  .padding({ top: UiConst.NUMBER_3, bottom: UiConst.NUMBER_3 })
   .backgroundColor("#f7f8fa")
 }
 
@@ -37,7 +37,9 @@ import { JSONUtil } from '../../core/util/JSONUtil'
 @Component
 export struct Cascade {
   @Link show: boolean
+  //显示城市
   @State private showCity: boolean = false
+  //显示区域
   @State private showArea: boolean = false
   private provinceList: Array<City> = new Array();
   //点击选择的数据
@@ -110,8 +112,8 @@ export struct Cascade {
       //顶部
       Column() {
         Row() {
-          Text('请选择地区').fontWeight('bold').fontSize('16fp')
-          Image($r("app.media.close")).width('15vp').height('15vp').onClick(() => {
+          Text('请选择地区').fontWeight('bold').fontSize(UiConst.FONT_16)
+          Image($r("app.media.close")).width(UiConst.VP_15).height(UiConst.VP_15).onClick(() => {
             this.show = !this.show;
             this.showCity = false;
             this.showArea = false;
@@ -122,7 +124,7 @@ export struct Cascade {
           })
         }
         .width('100%')
-        .padding({ top: 15, left: 15, right: 15, bottom: 10 })
+        .padding({ top: UiConst.NUMBER_15, left: UiConst.NUMBER_15, right: UiConst.NUMBER_15, bottom: UiConst.NUMBER_10 })
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.SpaceBetween)
       }
@@ -140,7 +142,7 @@ export struct Cascade {
             })
             Text("1").cascadeUnderLine(this.selectIndex == 0)
           }
-        }.margin({ right: 20 })
+        }.margin({ right: UiConst.NUMBER_20 })
         //市
         if (this.showCity) {
           Column() {
@@ -154,7 +156,7 @@ export struct Cascade {
               })
               Text("1").cascadeUnderLine(this.selectIndex == 1)
             }
-          }.margin({ right: 20 })
+          }.margin({ right: UiConst.NUMBER_20 })
         }
         if (this.showArea) {
           //区域
@@ -171,10 +173,10 @@ export struct Cascade {
             }
           }
         }
-      }.width("100%").margin({ top: 10, left: 20 }).justifyContent(FlexAlign.Start).alignItems(VerticalAlign.Center)
+      }.width("100%").margin({ top: UiConst.NUMBER_10, left: UiConst.NUMBER_20 }).justifyContent(FlexAlign.Start).alignItems(VerticalAlign.Center)
 
       Row() {
-        List({ space: 5, initialIndex: 0 }) {
+        List({ space: UiConst.NUMBER_5, initialIndex: 0 }) {
           ForEach(this.currentList, (item) => {
             ListItem() {
               Row() {
@@ -183,7 +185,7 @@ export struct Cascade {
                     .cityTxtColor()
                     .fontColor(item.code == this.selectData.provinceCode ? "#1989fa" : "#323233")
                   if (item.code == this.selectData.provinceCode) {
-                    Image($r("app.media.ok")).width("15vp").height('15vp')
+                    Image($r("app.media.ok")).width(UiConst.VP_15).height(UiConst.VP_15)
                   }
                 }
                 if (this.selectIndex === 1) {
@@ -191,7 +193,7 @@ export struct Cascade {
                     .cityTxtColor()
                     .fontColor(item.code == this.selectData.cityCode ? "#1989fa" : "#323233")
                   if (item.code == this.selectData.cityCode) {
-                    Image($r("app.media.ok")).width("15vp").height('15vp')
+                    Image($r("app.media.ok")).width(UiConst.VP_15).height(UiConst.VP_15)
                   }
                 }
                 if (this.selectIndex === 2) {
@@ -199,14 +201,14 @@ export struct Cascade {
                     .cityTxtColor()
                     .fontColor(item.code == this.selectData.areaCode ? "#1989fa" : "#323233")
                   if (item.code == this.selectData.areaCode) {
-                    Image($r("app.media.ok")).width("15vp").height('15vp')
+                    Image($r("app.media.ok")).width(UiConst.VP_15).height(UiConst.VP_15)
                   }
                 }
               }
               .width("100%")
               .justifyContent(FlexAlign.SpaceBetween)
               .alignItems(VerticalAlign.Center)
-              .padding({ right: 20 })
+              .padding({ right: UiConst.NUMBER_20 })
             }
             .onClick(event => {
               //点击赋值选中的数据
@@ -242,7 +244,7 @@ export struct Cascade {
           }, item => item.code)
         }
         .listDirection(Axis.Vertical) // 排列方向
-        .edgeEffect(EdgeEffect.Spring)
+        .edgeEffect(EdgeEffect.None)
         .width('100%')
         .height(500)
         .scrollBar(BarState.Auto)
@@ -250,7 +252,7 @@ export struct Cascade {
       .height('100%')
       .width("100%")
       .alignItems(VerticalAlign.Top)
-      .margin({ top: 5, left: 20, bottom: 5 })
+      .margin({ top: UiConst.NUMBER_5, left: UiConst.NUMBER_20, bottom: UiConst.NUMBER_5 })
     }
     .type(PanelType.Temporary)
     .mode(PanelMode.Full)

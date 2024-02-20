@@ -73,4 +73,49 @@ export class UiConst {
 
 
 
+  /**
+   * 字体相关
+   */
+  static readonly FONT_12: string = '12fp';
+
+  static readonly FONT_13: string = '13fp';
+
+  static readonly FONT_14: string = '14fp';
+
+  static readonly FONT_15: string = '15fp';
+
+  static readonly FONT_16: string = '16fp';
+
+
+  /**
+   * 数量相关
+   */
+  static readonly NUMBER_3: number = 3;
+
+  static readonly VP_3: string = '3vp';
+
+  static readonly NUMBER_5: number = 5;
+
+  static readonly VP_5: string = '5vp';
+
+  static readonly NUMBER_10: number = 10;
+
+  static readonly VP_10: string = '10vp';
+
+  static readonly NUMBER_15: number = 15;
+
+  static readonly VP_15: string = '15vp';
+
+  static readonly NUMBER_20: number = 20;
+
+  static readonly VP_20: string = '20vp';
+
+  static readonly NUMBER_25: number = 25;
+
+  static readonly VP_25: string = '25vp';
+
+  static readonly NUMBER_45: number = 45;
+
+  static readonly VP_45: string = '45vp';
+
 }
