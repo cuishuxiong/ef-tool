@@ -10,7 +10,10 @@ import { JSONUtil } from '../../core/util/JSONUtil'
  * 下划线样式
  */
 @Extend(Text) function cascadeUnderLine(selected: boolean) {
-  .height(UiConst.VP_3).backgroundColor(selected ? "#1989fa" : "fff").width(UiConst.VP_45).margin({ top: UiConst.NUMBER_5 })
+  .height(UiConst.VP_3)
+  .backgroundColor(selected ? "#1989fa" : "fff")
+  .width(UiConst.VP_45)
+  .margin({ top: UiConst.NUMBER_5 })
 }
 
 /**
@@ -18,7 +21,9 @@ import { JSONUtil } from '../../core/util/JSONUtil'
  * @param selected
  */
 @Extend(Text) function txtColor(selected: boolean) {
-  .fontSize(UiConst.FONT_14).fontColor(selected ? "#969799" : "#000").fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
+  .fontSize(UiConst.FONT_14)
+  .fontColor(selected ? "#969799" : "#000")
+  .fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
 }
 
 /**
@@ -36,6 +41,10 @@ import { JSONUtil } from '../../core/util/JSONUtil'
 
 @Component
 export struct Cascade {
+
+  //反会给上一级的数据
+  @Link callCity: string
+  //是否显示
   @Link show: boolean
   //显示城市
   @State private showCity: boolean = false
@@ -96,6 +105,19 @@ export struct Cascade {
   }
 
   /**
+   * 重置数据
+   */
+  private reset() {
+    this.show = !this.show;
+    this.showCity = false;
+    this.showArea = false;
+    this.selectData = new cascadeCity();
+    this.currentList = new Array();
+    this.selectIndex = 0;
+    this.currentList = this.getProvinceData();
+  }
+
+  /**
    * 获取省数据
    * @returns
    */
@@ -114,17 +136,16 @@ export struct Cascade {
         Row() {
           Text('请选择地区').fontWeight('bold').fontSize(UiConst.FONT_16)
           Image($r("app.media.close")).width(UiConst.VP_15).height(UiConst.VP_15).onClick(() => {
-            this.show = !this.show;
-            this.showCity = false;
-            this.showArea = false;
-            this.selectData = new cascadeCity();
-            this.currentList = new Array();
-            this.selectIndex = 0;
-            this.currentList = this.getProvinceData();
+            this.reset()
           })
         }
         .width('100%')
-        .padding({ top: UiConst.NUMBER_15, left: UiConst.NUMBER_15, right: UiConst.NUMBER_15, bottom: UiConst.NUMBER_10 })
+        .padding({
+          top: UiConst.NUMBER_15,
+          left: UiConst.NUMBER_15,
+          right: UiConst.NUMBER_15,
+          bottom: UiConst.NUMBER_10
+        })
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.SpaceBetween)
       }
@@ -173,7 +194,11 @@ export struct Cascade {
             }
           }
         }
-      }.width("100%").margin({ top: UiConst.NUMBER_10, left: UiConst.NUMBER_20 }).justifyContent(FlexAlign.Start).alignItems(VerticalAlign.Center)
+      }
+      .width("100%")
+      .margin({ top: UiConst.NUMBER_10, left: UiConst.NUMBER_20 })
+      .justifyContent(FlexAlign.Start)
+      .alignItems(VerticalAlign.Center)
 
       Row() {
         List({ space: UiConst.NUMBER_5, initialIndex: 0 }) {
@@ -239,6 +264,10 @@ export struct Cascade {
               if (this.selectIndex === 2) {
                 this.selectData.areaName = item.name;
                 this.selectData.areaCode = item.code;
+                //赋值
+                this.callCity = this.selectData.provinceName + "/" + this.selectData.cityName + "/" + this.selectData.areaName;
+                //赋值后初始化数据
+                this.reset()
               }
             })
           }, item => item.code)

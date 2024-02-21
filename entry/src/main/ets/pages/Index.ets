@@ -45,6 +45,7 @@ class Person {
 struct Index {
   @State message: string = '11111'
   @State show: boolean = false
+  @State callCity: string = ''
 
   aboutToAppear() {
     this.test();
@@ -399,7 +400,7 @@ struct Index {
   build() {
     Row() {
       Column() {
-        Text(this.message)
+        Text(this.callCity)
         Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:2000,bottom:10vp');
         })
@@ -471,7 +472,7 @@ struct Index {
         Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
           this.show = !this.show;
         })
-        Cascade({ show: $show })
+        Cascade({ show: $show, callCity: $callCity })
       }
       .width('100%')
     }

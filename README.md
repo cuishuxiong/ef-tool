@@ -58,6 +58,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | ToastUtil  | 提供对文本提示的一系列方法 |
 | DialogUtil | 提供对弹出框的一系列方法  |
 | ActionUtil | 提供对操作菜单的一系列方法 |
+| Cascade    | 提供省市区级联选择组件   |
 
 ## 📦安装
 
@@ -802,6 +803,13 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
+* asString 将传入的值转换为字符串类型
+
+```
+    const obj = {'key': 'this is value'} // key的值类型为 string | undefined
+    const test = StrUtil.asString(obj['key']) 
+```
+
 #### 13.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
@@ -1172,7 +1180,6 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     ] });
 ```
 
-
 * showMenu 显示操作菜单便捷操作
 
 ```
@@ -1195,8 +1202,6 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
       }})
     })
 ```
-
-
 
 * showActionSheet 显示一个列表选择弹窗
 
@@ -1229,6 +1234,23 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
         } });
     })
 ```
+
+#### 4.Cascade省市区级联
+
+```
+  入参  
+  show  是否显示级联框(TRUE显示FALSE关闭)  
+  callCity 反回选择的省市区数据
+  //使用demo
+  Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
+      this.show = !this.show;
+  })
+  Cascade({ show: $show, callCity: $callCity })
+  //$callCity为调用页面传入给子组件的用于接收返回的值
+```
+
+- 效果图  
+  [![cascade1.th.jpg](https://z4a.net/images/2024/02/21/cascade1.th.jpg)](https://z4a.net/image/jPZx5r)
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 
