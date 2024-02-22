@@ -51,3 +51,5 @@ export { ActionUtil } from './src/main/ets/ui/prompt/ActionUtil';
 export { Cascade } from './src/main/ets/ui/select/Cascade';
 
 export { pcaJSON } from './src/main/ets/core/const/CityConst';
+
+export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';

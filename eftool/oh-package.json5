@@ -7,7 +7,6 @@
     "UI组件",
     "RSA",
     "分页",
-    "校验",
     "加密",
     "正则",
     "身份证",
@@ -19,7 +18,7 @@
   "description": "一款高效的OpenHarmony/HarmonyOS工具包.封装了常用工具类如字符串、正则、加解密、分页、数据转换等和常用UI组件Dialog,Cascade等,提供一系列快捷操作方法。",
   "main": "index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {}
 }

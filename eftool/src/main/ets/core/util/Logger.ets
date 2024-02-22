@@ -5,17 +5,17 @@ import hilog from '@ohos.hilog';
  * @TODO Logger   日志工具类
  */
 export class Logger {
-  private domain: number;
-  private prefix: string;
-  private format: string = '%{public}s%{public}s';
+  private static  domain: number;
+  private static prefix: string;
+  private static format: string = '%{public}s%{public}s';
 
 
   /**
-   * 构造  第一个入参为应用名,第二个为域可不填
-   * @param prefix
-   * @param domain
+   * 初始化Logger，只需传入应用名和域
+   * @param prefix 应用名
+   * @param domain 域
    */
-  constructor(prefix: string = 'efTool', domain: number = 0xFF00) {
+  static init(prefix: string = 'efTool', domain: number = 0xFF00) {
     this.prefix = prefix;
     this.domain = domain;
   }
@@ -25,7 +25,7 @@ export class Logger {
    * debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】
    * @param args 错误信息
    */
-  debug(...args: string[]): void {
+  static debug(...args: string[]): void {
     hilog.debug(this.domain, this.prefix, this.format, args);
   }
 
@@ -33,7 +33,7 @@ export class Logger {
    * info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】
    * @param args 错误信息
    */
-  info(...args: string[]): void {
+  static info(...args: string[]): void {
     hilog.info(this.domain, this.prefix, this.format, args);
   }
 
@@ -41,7 +41,7 @@ export class Logger {
    * warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】
    * @param args 错误信息
    */
-  warn(...args: string[]): void {
+  static warn(...args: string[]): void {
     hilog.warn(this.domain, this.prefix, this.format, args);
   }
 
@@ -49,7 +49,7 @@ export class Logger {
    * error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】
    * @param args 错误信息
    */
-  error(...args: string[]): void {
+  static error(...args: string[]): void {
     hilog.error(this.domain, this.prefix, this.format, args);
   }
 }

@@ -24,7 +24,8 @@ import {
   ToastUtil,
   DialogUtil,
   ActionUtil,
-  Cascade
+  Cascade,
+  CacheUtil
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 
@@ -39,6 +40,7 @@ class Person {
     this.age = age;
   }
 }
+
 
 @Entry
 @Component
@@ -61,12 +63,12 @@ struct Index {
     ToastUtil.showToast('点击了取消')
   }
 
-  test() {
+  async  test() {
 
-    let base64 = BASE64.create();
-    let a = base64.toByteArray('测试BASE64')
-
-    let b = base64.fromByteArray(a);
+    // let base64 = BASE64.create();
+    // let a = base64.toByteArray('测试BASE64')
+    //
+    // let b = base64.fromByteArray(a);
 
 
     // ToastUtil.showToast('使用默认参数');
@@ -92,19 +94,24 @@ struct Index {
     // console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
     //
     // this.message = "验签结果:" + JSON.stringify(result);
+
+    Logger.init('测试应用')
+
+    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+
     //
-    // const keyPair = await  AES.generateAesKey("AES128");
-    // console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+    const keyPair = await  AES.generateAesKey("3DES192");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
     //
-    // const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
-    // console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+    const encodeStr = await AES.encode("测试中文3DES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
     //
-    // this.message = "加密:" + encodeStr.getDataRow();
-    //
-    // const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
-    // console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
-    //
-    // this.message = "解密:" + decodeStr.getDataRow();
+    this.message = "加密:" + encodeStr.getDataRow();
+
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+
+    this.message = "解密:" + decodeStr.getDataRow();
     //
     // let md5 = await MD5.digest('这个是测试MD5摘要字符串~');
     // console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
@@ -400,6 +407,7 @@ struct Index {
   build() {
     Row() {
       Column() {
+        Text(this.message)
         Text(this.callCity)
         Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:2000,bottom:10vp');
