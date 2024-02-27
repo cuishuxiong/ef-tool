@@ -5,7 +5,7 @@ const THREE = BigInt(3)
  * 椭圆曲线域元素
  */
 class ECFieldElementFp {
-  x: ECFieldElementFp
+  x: any
   q: ECFieldElementFp
 
   constructor(q: ECFieldElementFp, x: ECFieldElementFp) {
@@ -24,7 +24,7 @@ class ECFieldElementFp {
   /**
    * 返回具体数值
    */
-  toBigInteger(): ECFieldElementFp {
+  toBigInteger() {
     return this.x
   }
 
@@ -266,7 +266,6 @@ export class ECPointFp {
 /**
  * 椭圆曲线 y^2 = x^3 + ax + b
  */
-
 export class ECCurveFp {
   q: any
   a: ECFieldElementFp
@@ -306,7 +305,8 @@ export class ECCurveFp {
       case 2:
       case 3:
       // 压缩
-        const x = this.fromBigInteger(new BigInteger(s.substr(2), 16))
+
+        const x = this.fromBigInteger(parseInt(s.substr(2), 16))
       // 对 p ≡ 3 (mod4)，即存在正整数 u，使得 p = 4u + 3
       // 计算 y = (√ (x^3 + ax + b) % p)^(u + 1) modp
         let y = this.fromBigInteger(x.multiply(x.square())
@@ -316,10 +316,10 @@ export class ECCurveFp {
           .add(this.b)
           .toBigInteger()
           .modPow(
-            this.q.divide(new BigInteger('4')).add(BigInteger.ONE), this.q
+            this.q.divide(BigInt('4')).add(BigInt(1)), this.q
           ))
       // 算出结果 2 进制最后 1 位不等于第 1 个字节减 2 则取反
-        if (!y.toBigInteger().mod(TWO).equals(new BigInteger(s.substr(0, 2), 16).subtract(TWO))) {
+        if (!y.toBigInteger().mod(TWO).equals(parseInt(s.substr(0, 2), 16)).subtract(TWO)) {
           y = y.negate()
         }
         return new ECPointFp(this, x, y)
@@ -330,7 +330,7 @@ export class ECCurveFp {
         const xHex = s.substr(2, len)
         const yHex = s.substr(len + 2, len)
 
-        return new ECPointFp(this, this.fromBigInteger(new BigInteger(xHex, 16)), this.fromBigInteger(new BigInteger(yHex, 16)))
+        return new ECPointFp(this, this.fromBigInteger(parseInt(xHex, 16)), this.fromBigInteger(parseInt(yHex, 16)))
       default:
       // 不支持
         return null

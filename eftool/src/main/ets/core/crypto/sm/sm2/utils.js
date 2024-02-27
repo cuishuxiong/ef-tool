@@ -1,6 +1,8 @@
 /* eslint-disable no-bitwise, no-mixed-operators, no-use-before-define, max-len */
-const {BigInteger, SecureRandom} = require('jsbn')
+const {BigInteger, SecureRandom} = require('../jsbn')
 const {ECCurveFp} = require('./ec')
+
+
 
 const rng = new SecureRandom()
 const {curve, G, n} = generateEcparam()
