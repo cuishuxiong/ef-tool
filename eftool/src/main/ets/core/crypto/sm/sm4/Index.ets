@@ -354,13 +354,22 @@ function sm4(inArray, key, cryptFlag, {
   }
 }
 
+export class SM4 {
+  static encrypt(inArray, key, options?) {
+    return sm4(inArray, key, 1, options)
+  }
 
-export function encrypt(inArray, key, options) {
-  return sm4(inArray, key, 1, options)
+  static decrypt(inArray, key, options?) {
+    return sm4(inArray, key, 0, options)
+  }
 }
-
-export function decrypt(inArray, key, options) {
-  return sm4(inArray, key, 0, options)
-}
+//
+// export function encrypt(inArray, key, options) {
+//   return sm4(inArray, key, 1, options)
+// }
+//
+// export function decrypt(inArray, key, options) {
+//   return sm4(inArray, key, 0, options)
+// }
 
 

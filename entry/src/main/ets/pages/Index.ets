@@ -25,7 +25,8 @@ import {
   DialogUtil,
   ActionUtil,
   Cascade,
-  CacheUtil
+  CacheUtil,
+  SM4
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 
@@ -63,7 +64,35 @@ struct Index {
     ToastUtil.showToast('点击了取消')
   }
 
-  async  test() {
+  async test() {
+
+    const msg = 'hello world! 我是 崔树雄.' // 可以为 utf8 串或字节数组
+    const key = '0123456789abcdeffedcba9876543210' // 可以为 16 进制串或字节数组，要求为 128 比特
+
+
+    let encryptData = SM4.encrypt(msg, key) // 加密，默认输出 16 进制字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+    let encryptData1 = SM4.encrypt(msg, key, { padding: 'none' }) // 加密，不使用 padding
+    let encryptData2 = SM4.encrypt(msg, key, { padding: 'none', output: 'array' }) // 加密，不使用 padding，输出为字节数组
+    let encryptData3 = SM4.encrypt(msg, key, { mode: 'cbc', iv: 'fedcba98765432100123456789abcdef' }) // 加密，cbc 模式
+
+    console.log(encryptData)
+    console.log(encryptData1)
+    console.log(encryptData2)
+    console.log(encryptData3)
+
+
+    let decryptData = SM4.decrypt(encryptData, key) // 解密，默认输出 utf8 字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+    let decryptData1 = SM4.decrypt(encryptData1, key, { padding: 'none' }) // 解密，不使用 padding
+    let decryptData2 = SM4.decrypt(encryptData2, key, { padding: 'none', output: 'array' }) // 解密，不使用 padding，输出为字节数组
+    let decryptData3 = SM4.decrypt(encryptData3, key, {
+      mode: 'cbc',
+      iv: 'fedcba98765432100123456789abcdef'
+    }) // 解密，cbc 模式
+
+    console.log(decryptData)
+    console.log(decryptData1)
+    console.log(decryptData2)
+    console.log(decryptData3)
 
     // let base64 = BASE64.create();
     // let a = base64.toByteArray('测试BASE64')
@@ -411,6 +440,7 @@ struct Index {
         Text(this.callCity)
         Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:2000,bottom:10vp');
+          this.test()
         })
         Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp' });

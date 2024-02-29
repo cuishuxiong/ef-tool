@@ -1,5 +1,5 @@
 import { BigInteger } from '../JSBN'
-import { ASN1 } from './ASN1'
+import { ASN1 } from './ASN'
 import { Utils } from './Utils'
 import { sm3 } from './SM3'
 
