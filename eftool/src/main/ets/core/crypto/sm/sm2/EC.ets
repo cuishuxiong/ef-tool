@@ -90,7 +90,6 @@ export class ECPointFp {
 
   getX() {
     if (this.zinv === null) this.zinv = this.z.modInverse(this.curve.q)
-
     return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.q))
   }
 
@@ -305,7 +304,6 @@ export class ECCurveFp {
       case 2:
       case 3:
       // 压缩
-
         const x = this.fromBigInteger(parseInt(s.substr(2), 16))
       // 对 p ≡ 3 (mod4)，即存在正整数 u，使得 p = 4u + 3
       // 计算 y = (√ (x^3 + ax + b) % p)^(u + 1) modp

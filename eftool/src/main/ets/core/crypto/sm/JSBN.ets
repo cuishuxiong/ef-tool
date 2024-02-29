@@ -195,6 +195,7 @@ export class BigInteger {
   ];
   private lplim = (1 << 26) / this.lowprimes[this.lowprimes.length - 1];
 
+
   // (public) Constructor
   constructor(a, b?, c?) {
     if (a != null)
@@ -409,6 +410,67 @@ export class BigInteger {
     if (mi) this.ZERO.bnpSubTo(this, this);
   }
 
+  bnXor(a) {
+    var r = this.nbi();
+    this.bnpBitwiseTo(a, this.op_xor, r);
+    return r;
+  }
+
+  bnClone() {
+    var r = this.nbi();
+    this.bnpCopyTo(r);
+    return r;
+  }
+
+  bnModInverse(m: BigInteger) {
+    var ac = m.bnpIsEven();
+    if ((this.bnpIsEven() && ac) || m.bnSigNum() == 0) return m.ZERO;
+    var u = m.bnClone(),
+      v = this.bnClone();
+    var a = this.nbv(1),
+      b = this.nbv(0),
+      c = this.nbv(0),
+      d = this.nbv(1);
+    while (u.bnSigNum() != 0) {
+      while (u.bnpIsEven()) {
+        u.bnpRShiftTo(1, u);
+        if (ac) {
+          if (!a.bnpIsEven() || !b.bnpIsEven()) {
+            a.bnpAddTo(this, a);
+            b.bnpSubTo(m, b);
+          }
+          a.bnpRShiftTo(1, a);
+        } else if (!b.bnpIsEven()) b.bnpSubTo(m, b);
+        b.bnpRShiftTo(1, b);
+      }
+      while (v.bnpIsEven()) {
+        v.bnpRShiftTo(1, v);
+        if (ac) {
+          if (!c.bnpIsEven() || !d.bnpIsEven()) {
+            c.bnpAddTo(this, c);
+            d.bnpSubTo(m, d);
+          }
+          c.bnpRShiftTo(1, c);
+        } else if (!d.bnpIsEven()) d.bnpSubTo(m, d);
+        d.bnpRShiftTo(1, d);
+      }
+      if (u.bnCompareTo(v) >= 0) {
+        u.bnpSubTo(v, u);
+        if (ac) a.bnpSubTo(c, a);
+        b.bnpSubTo(d, b);
+      } else {
+        v.bnpSubTo(u, v);
+        if (ac) c.bnpSubTo(a, c);
+        d.bnpSubTo(b, d);
+      }
+    }
+    if (v.bnCompareTo(m.ONE) != 0) return m.ZERO;
+    if (d.bnCompareTo(m) >= 0) return d.bnSubtract(m);
+    if (d.bnSigNum() < 0) d.bnpAddTo(m, d);
+    else return d;
+    if (d.bnSigNum() < 0) return d.bnAdd(m);
+    else return d;
+  }
 
   // (public) -this
   bnNegate(): BigInteger {
@@ -900,27 +962,9 @@ export class BigInteger {
     return x.bnpMillerRabin(t);
   }
 
-  nextByte() {
-    if (rng_state == null) {
-      rng_seed_time();
-      rng_state = prng_newstate();
-      rng_state.init(rng_pool);
-      for (rng_pptr = 0; rng_pptr < rng_pool.length; ++rng_pptr)
-        rng_pool[rng_pptr] = 0;
-      rng_pptr = 0;
-      //rng_pool = null;
-    }
-    // TODO: allow reseeding after first request
-    return rng_state.next();
-  }
-
-  nextBytes(ba) {
-    var i;
-    for (i = 0; i < ba.length; ++i) ba[i] = this.nextByte();
-  }
 
   // (protected) alternate constructor
-  bnpFromNumber(a: number, b: number, c?) {
+  bnpFromNumber(a: number, b: SecureRandom, c?) {
     if ('number' == typeof b) {
       // new BigInteger(int,int,RNG)
       if (a < 2) this.bnpFromInt(1);
@@ -941,10 +985,10 @@ export class BigInteger {
       var x = new Array(),
         t = a & 7;
       x.length = (a >> 3) + 1;
-      b.nextBytes(x);
+      b.rng_get_bytes(x);
       if (t > 0) x[0] &= (1 << t) - 1;
       else x[0] = 0;
-      this.fromString(x, 256);
+      this.bnpFromString(x, 256);
     }
   }
 
@@ -954,7 +998,7 @@ export class BigInteger {
   }
 
   intAt(s, i) {
-    var c = BI_RC[s.charCodeAt(i)];
+    var c = this.BI_RC[s.charCodeAt(i)];
     return c == null ? -1 : c;
   }
 
@@ -1121,8 +1165,12 @@ export class BigInteger {
   bnMod(a: BigInteger): BigInteger {
     var r = this.nbi();
     this.bnAbs().bnpDivRemTo(a, null, r);
-    if (this.s < 0 && r.bnCompareTo(this.ZERO) > 0) a.subTo(r, r);
+    if (this.s < 0 && r.bnCompareTo(this.ZERO) > 0) a.bnpSubTo(r, r);
     return r;
+  }
+
+  bnEquals(a) {
+    return this.bnCompareTo(a) == 0;
   }
 
 
@@ -1150,73 +1198,6 @@ export class BigInteger {
     // we really want the negative inverse, and -DV < y < DV
     return y > 0 ? this.DV - y : -y;
   }
-
-  // Montgomery reduction
-  Montgomery(m) {
-    this.m = m;
-    this.mp = m.invDigit();
-    this.mpl = this.mp & 0x7fff;
-    this.mph = this.mp >> 15;
-    this.um = (1 << (m.DB - 15)) - 1;
-    this.mt2 = 2 * m.t;
-  }
-
-  // xR mod m
-  montConvert(x) {
-    var r = this.nbi();
-    x.abs().dlShiftTo(this.m.t, r);
-    r.bnpDivRemTo(this.m, null, r);
-    if (x.s < 0 && r.compareTo(BigInteger.ZERO) > 0) this.m.subTo(r, r);
-    return r;
-  }
-
-  // x/R mod m
-  montRevert(x) {
-    var r = this.nbi();
-    x.copyTo(r);
-    this.reduce(r);
-    return r;
-  }
-
-  // x = x/R mod m (HAC 14.32)
-  montReduce(x) {
-    while (
-      x.t <= this.mt2 // pad x so am has enough room later
-    )
-      x[x.t++] = 0;
-    for (var i = 0; i < this.m.t; ++i) {
-      // faster way of calculating u0 = x[i]*mp mod DV
-      var j = x[i] & 0x7fff;
-      var u0 =
-        (j * this.mpl +
-        (((j * this.mph + (x[i] >> 15) * this.mpl) & this.um) << 15)) &
-        x.DM;
-      // use am to combine the multiply-shift-add into one call
-      j = i + this.m.t;
-      x[j] += this.m.am(0, u0, x, i, 0, this.m.t);
-      // propagate carry
-      while (x[j] >= x.DV) {
-        x[j] -= x.DV;
-        x[++j]++;
-      }
-    }
-    x.clamp();
-    x.drShiftTo(this.m.t, x);
-    if (x.compareTo(this.m) >= 0) x.subTo(this.m, x);
-  }
-
-  // r = "x^2/R mod m"; x != r
-  montSqrTo(x, r) {
-    x.squareTo(r);
-    this.reduce(r);
-  }
-
-  // r = "xy/R mod m"; x,y != r
-  montMulTo(x, y, r) {
-    x.multiplyTo(y, r);
-    this.reduce(r);
-  }
-
 
   // (protected) true iff this is even
   bnpIsEven() {
@@ -1248,7 +1229,7 @@ export class BigInteger {
     var z;
     if (e < 256 || m.isEven()) z = new Classic(m);
     else z = new Montgomery(m);
-    return this.exp(e, z);
+    return this.bnpExp(e, z);
   }
 }
 
@@ -1362,7 +1343,7 @@ class Montgomery {
     var r = this.m.nbi();
     x.bnAbs().bnpDLShiftTo(this.m.t, r);
     r.bnpDivRemTo(this.m, null, r);
-    if (x.s < 0 && r.bnCompareTo(this.m.ZERO) > 0) this.m.subTo(r, r);
+    if (x.s < 0 && r.bnCompareTo(this.m.ZERO) > 0) this.m.bnpSubTo(r, r);
     return r;
   }
 
@@ -1414,5 +1395,80 @@ class Montgomery {
   }
 }
 
+class Arcfour {
+  i: number;
+  j: number;
+  S: any[];
+
+  constructor() {
+    this.i = 0;
+    this.j = 0;
+    this.S = new Array();
+  }
+
+  init(key) {
+    var i, j, t;
+    for (i = 0; i < 256; ++i) this.S[i] = i;
+    j = 0;
+    for (i = 0; i < 256; ++i) {
+      j = (j + this.S[i] + key[i % key.length]) & 255;
+      t = this.S[i];
+      this.S[i] = this.S[j];
+      this.S[j] = t;
+    }
+    this.i = 0;
+    this.j = 0;
+  }
+
+  next() {
+    var t;
+    this.i = (this.i + 1) & 255;
+    this.j = (this.j + this.S[this.i]) & 255;
+    t = this.S[this.i];
+    this.S[this.i] = this.S[this.j];
+    this.S[this.j] = t;
+    return this.S[(t + this.S[this.i]) & 255];
+  }
+}
+
 export class SecureRandom {
+  private rng_state;
+  private rng_pool;
+  private rng_pptr;
+  private rng_psize = 256;
+
+  rng_get_bytes(ba) {
+    var i;
+    for (i = 0; i < ba.length; ++i) ba[i] = this.rng_get_byte();
+  }
+
+  rng_seed_time() {
+    this.rng_seed_int(new Date().getTime());
+  }
+
+  prng_newstate() {
+    return new Arcfour();
+  }
+
+  rng_seed_int(x) {
+    this.rng_pool[this.rng_pptr++] ^= x & 255;
+    this.rng_pool[this.rng_pptr++] ^= (x >> 8) & 255;
+    this.rng_pool[this.rng_pptr++] ^= (x >> 16) & 255;
+    this.rng_pool[this.rng_pptr++] ^= (x >> 24) & 255;
+    if (this.rng_pptr >= this.rng_psize) this.rng_pptr -= this.rng_psize;
+  }
+
+  rng_get_byte() {
+    if (this.rng_state == null) {
+      this.rng_seed_time();
+      this.rng_state = this.prng_newstate();
+      this.rng_state.init(this.rng_pool);
+      for (this.rng_pptr = 0; this.rng_pptr < this.rng_pool.length; ++this.rng_pptr)
+        this.rng_pool[this.rng_pptr] = 0;
+      this.rng_pptr = 0;
+      //rng_pool = null;
+    }
+    // TODO: allow reseeding after first request
+    return this.rng_state.next();
+  }
 }
