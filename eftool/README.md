@@ -232,6 +232,15 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
 ```
 
+* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
+
+```
+    const key = await  AES.convertKey('abcdefgabcdefg12');
+    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
+```
+
+
+
 * encode 加密
 
 ```

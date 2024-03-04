@@ -5,12 +5,14 @@
 ### 🐣新特性
 
 * 新增缓存工具类,例如全局用户信息
-* 优化Cascade支持传入级联json数据
+* AES中新增convertKey方法(传入字符串生成密钥)
+* 新增国密SM2,SM3,SM4[迁移和优化sm-crypto](https://gitee.com/yunkss/ef-tool/issues/I93V9W)
 
 ### 🐞Bug修复
 
 * 优化Logger工具类每次使用需要实例化问题
-* 去除@ts-nocheck注释
+* 去除@ts-nocheck注释(更好兼容API11)
+* 优化JSONUtil中的parseObject无法解析嵌套类[issuesI94YTH](https://gitee.com/yunkss/ef-tool/issues/I94YTH)
 
 ## [v1.0.8] 2024-02
 

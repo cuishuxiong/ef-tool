@@ -81,7 +81,7 @@ function utf8ToArray(str) {
   return arr
 }
 
-export function SM3(input, options) {
+export function SM3(input, options?) {
   input = typeof input === 'string' ? utf8ToArray(input) : Array.prototype.slice.call(input)
 
   if (options) {

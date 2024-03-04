@@ -244,8 +244,8 @@ function sms4KeyExt(key, roundKey, cryptFlag) {
 }
 
 function sm4(inArray, key, cryptFlag, {
-  padding = 'pkcs#7', mode, iv = [], output = 'string'
-}) {
+  padding = 'pkcs#7', mode='', iv = [], output = 'string'
+}={}) {
   if (mode === 'cbc') {
     // CBC 模式，默认走 ECB 模式
     if (typeof iv === 'string') iv = hexToArray(iv)
@@ -361,6 +361,29 @@ export class SM4 {
 
   static decrypt(inArray, key, options?) {
     return sm4(inArray, key, 0, options)
+  }
+
+  static generateKey() {
+    // 生成 128 位随机数
+    const randomArray = new Uint8Array(16);
+    for (let i = 0; i < randomArray.length; i++) {
+      randomArray[i] = Math.floor(Math.random() * 256); // 生成 0 到 255 之间的随机整数
+    }
+
+    // 将随机数转换为 16 进制字符串
+    let hexString = "";
+    randomArray.forEach(value => {
+      let hex = value.toString(16);
+      if (hex.length < 2) {
+        hex = "0" + hex; // 确保每个字节都有两位十六进制表示
+      }
+      hexString += hex;
+    });
+
+    return {
+      hexString: hexString,
+      byteArray: randomArray
+    };
   }
 }
 //

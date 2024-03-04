@@ -73,12 +73,6 @@ export struct Cascade {
     this.provinceList.forEach(province => {
       //默认将省数据赋值给当前listview对应的数据
       this.currentList.push(new City(province.name, province.code));
-      // @ts-ignore
-      province.children = JSONUtil.parseArray<City>(province.children);
-      province.children.forEach(city => {
-        // @ts-ignore
-        city.children = JSONUtil.parseArray<City>(city.children);
-      })
     })
   }
 

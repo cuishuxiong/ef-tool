@@ -1,28 +1,39 @@
 import { BigInteger } from '../JSBN'
-import { ASN1 } from './ASN'
-import { Utils } from './Utils'
+import {
+  generateEcparam,
+  leftPad,
+  hexToArray,
+  utf8ToHex,
+  getGlobalCurve,
+  generateKeyPairHex,
+  arrayToHex,
+  arrayToUtf8
+} from './Utils'
 import { sm3 } from './SM3'
-
-
-const {G, curve, n} = Utils.generateEcparam()
-const C1C2C3 = 0
+import { encodeDer, decodeDer } from './ASN1'
 
 /**
  * @Author csx
  * @DateTime 2024/2/29 11:54:02
  * @TODO Index
  */
-export class Index {
 
+const {G, curve, n} = generateEcparam()
+const C1C2C3 = 0
+
+export class SM2 {
+  generateKeyPairHex(a?, b?, c?) {
+    return generateKeyPairHex(a, b, c)
+  }
 
   /**
    * 加密
    */
-  static doEncrypt(msg, publicKey, cipherMode = 1) {
-    msg = typeof msg === 'string' ? Utils.hexToArray(Utils.utf8ToHex(msg)) : Array.prototype.slice.call(msg)
-    publicKey = Utils.getGlobalCurve().decodePointHex(publicKey) // 先将公钥转成点
+  doEncrypt(msg, publicKey, cipherMode = 1) {
+    msg = typeof msg === 'string' ? hexToArray(utf8ToHex(msg)) : Array.prototype.slice.call(msg)
+    publicKey = getGlobalCurve().decodePointHex(publicKey) // 先将公钥转成点
 
-    const keypair = Utils.generateKeyPairHex()
+    const keypair = generateKeyPairHex()
     const k = new BigInteger(keypair.privateKey, 16) // 随机数 k
 
     // c1 = k * G
@@ -31,11 +42,11 @@ export class Index {
 
     // (x2, y2) = k * publicKey
     const p = publicKey.multiply(k)
-    const x2 = Utils.hexToArray(Utils.leftPad(p.getX().toBigInteger().toRadix(16), 64))
-    const y2 = Utils.hexToArray(Utils.leftPad(p.getY().toBigInteger().toRadix(16), 64))
+    const x2 = hexToArray(leftPad(p.getX().toBigInteger().toRadix(16), 64))
+    const y2 = hexToArray(leftPad(p.getY().toBigInteger().toRadix(16), 64))
 
     // c3 = hash(x2 || msg || y2)
-    const c3 = Utils.arrayToHex(sm3([].concat(x2, msg, y2)))
+    const c3 = arrayToHex(sm3([].concat(x2, msg, y2)))
 
     let ct = 1
     let offset = 0
@@ -57,7 +68,7 @@ export class Index {
       // c2 = msg ^ t
       msg[i] ^= t[offset++] & 0xff
     }
-    const c2 = Utils.arrayToHex(msg)
+    const c2 = arrayToHex(msg)
 
     return cipherMode === C1C2C3 ? c1 + c2 + c3 : c1 + c3 + c2
   }
@@ -65,7 +76,7 @@ export class Index {
   /**
    * 解密
    */
-  static doDecrypt(encryptData, privateKey, cipherMode = 1, {
+  doDecrypt(encryptData, privateKey, cipherMode = 1, {
     output = 'string',
   } = {}) {
     privateKey = new BigInteger(privateKey, 16)
@@ -78,12 +89,12 @@ export class Index {
       c2 = encryptData.substr(128, encryptData.length - 128 - 64)
     }
 
-    const msg = Utils.hexToArray(c2)
-    const c1 = Utils.getGlobalCurve().decodePointHex('04' + encryptData.substr(0, 128))
+    const msg = hexToArray(c2)
+    const c1 = getGlobalCurve().decodePointHex('04' + encryptData.substr(0, 128))
 
     const p = c1.multiply(privateKey)
-    const x2 = Utils.hexToArray(Utils.leftPad(p.getX().toBigInteger().toRadix(16), 64))
-    const y2 = Utils.hexToArray(Utils.leftPad(p.getY().toBigInteger().toRadix(16), 64))
+    const x2 = hexToArray(leftPad(p.getX().toBigInteger().toRadix(16), 64))
+    const y2 = hexToArray(leftPad(p.getY().toBigInteger().toRadix(16), 64))
 
     let ct = 1
     let offset = 0
@@ -107,10 +118,10 @@ export class Index {
     }
 
     // c3 = hash(x2 || msg || y2)
-    const checkC3 = Utils.arrayToHex(sm3([].concat(x2, msg, y2)))
+    const checkC3 = arrayToHex(sm3([].concat(x2, msg, y2)))
 
     if (checkC3 === c3.toLowerCase()) {
-      return output === 'array' ? msg : Utils.arrayToUtf8(msg)
+      return output === 'array' ? msg : arrayToUtf8(msg)
     } else {
       return output === 'array' ? [] : ''
     }
@@ -119,15 +130,15 @@ export class Index {
   /**
    * 签名
    */
-  static doSignature(msg, privateKey, {
-    pointPool, der, hash, publicKey, userId
-  }) {
-    let hashHex = typeof msg === 'string' ? Utils.utf8ToHex(msg) : Utils.arrayToHex(msg)
+  doSignature(msg, privateKey, {
+    pointPool=[], der='', hash='', publicKey='', userId=''
+  } = {}) {
+    let hashHex = typeof msg === 'string' ? utf8ToHex(msg) : arrayToHex(msg)
 
     if (hash) {
       // sm3杂凑
-      publicKey = publicKey || Index.getPublicKeyFromPrivateKey(privateKey)
-      hashHex = Index.getHash(hashHex, publicKey, userId)
+      publicKey = publicKey || this.getPublicKeyFromPrivateKey(privateKey)
+      hashHex = this.getHash(hashHex, publicKey, userId)
     }
 
     const dA = new BigInteger(privateKey, 16)
@@ -144,39 +155,39 @@ export class Index {
         if (pointPool && pointPool.length) {
           point = pointPool.pop()
         } else {
-          point = Index.getPoint()
+          point = this.getPoint()
         }
         k = point.k
 
         // r = (e + x1) mod n
         r = e.bnAdd(point.x1).bnMod(n)
-      } while (r.equals(r.ZERO) || r.add(k).equals(n))
+      } while (r.equals(e.ZERO) || r.add(k).equals(n))
 
       // s = ((1 + dA)^-1 * (k - r * dA)) mod n
-      s = dA.bnAdd(r.ONE).bnModInverse(n).bnMultiply(k.subtract(r.multiply(dA))).bnMod(n)
-    } while (s.equals(s.ZERO))
+      s = dA.bnAdd(e.ONE).bnModInverse(n).bnMultiply(k.subtract(r.multiply(dA))).bnMod(n)
+    } while (s.equals(e.ZERO))
 
-    if (der) return ASN1.encodeDer(r, s) // asn.1 der 编码
+    if (der) return encodeDer(r, s) // asn.1 der 编码
 
-    return Utils.leftPad(r.toString(16), 64) + Utils.leftPad(s.toString(16), 64)
+    return leftPad(r.toString(16), 64) + leftPad(s.toString(16), 64)
   }
 
   /**
    * 验签
    */
-  static doVerifySignature(msg, signHex, publicKey, {der, hash, userId= '1234567812345678'}) {
-    let hashHex = typeof msg === 'string' ? Utils.utf8ToHex(msg) : Utils.arrayToHex(msg)
+  doVerifySignature(msg, signHex, publicKey, {der='', hash='', userId=''} = {}) {
+    let hashHex = typeof msg === 'string' ? utf8ToHex(msg) : arrayToHex(msg)
 
     if (hash) {
       // sm3杂凑
-      hashHex = Index.getHash(hashHex, publicKey, userId)
+      hashHex = this.getHash(hashHex, publicKey, userId)
     }
 
     let r;
     let
       s
     if (der) {
-      const decodeDerObj = ASN1.decodeDer(signHex) // asn.1 der 解码
+      const decodeDerObj = decodeDer(signHex) // asn.1 der 解码
       r = decodeDerObj.r
       s = decodeDerObj.s
     } else {
@@ -196,7 +207,7 @@ export class Index {
     const x1y1 = G.multiply(s).add(PA.multiply(t))
 
     // R = (e + x1) mod n
-    const R = e.bnMod(x1y1.getX().toBigInteger()).bnMod(n)
+    const R = e.bnAdd(x1y1.getX().toBigInteger()).bnMod(n)
 
     return r.equals(R)
   }
@@ -204,13 +215,13 @@ export class Index {
   /**
    * sm3杂凑算法
    */
-  static getHash(hashHex, publicKey, userId = '1234567812345678') {
+  getHash(hashHex, publicKey, userId = '1234567812345678') {
     // z = hash(entl || userId || a || b || gx || gy || px || py)
-    userId = Utils.utf8ToHex(userId)
-    const a = Utils.leftPad(G.curve.a.toBigInteger().toRadix(16), 64)
-    const b = Utils.leftPad(G.curve.b.toBigInteger().toRadix(16), 64)
-    const gx = Utils.leftPad(G.getX().toBigInteger().toRadix(16), 64)
-    const gy = Utils.leftPad(G.getY().toBigInteger().toRadix(16), 64)
+    userId = utf8ToHex(userId)
+    const a = leftPad(G.curve.a.toBigInteger().toRadix(16), 64)
+    const b = leftPad(G.curve.b.toBigInteger().toRadix(16), 64)
+    const gx = leftPad(G.getX().toBigInteger().toRadix(16), 64)
+    const gy = leftPad(G.getY().toBigInteger().toRadix(16), 64)
     let px
     let py
     if (publicKey.length === 128) {
@@ -218,10 +229,10 @@ export class Index {
       py = publicKey.substr(64, 64)
     } else {
       const point = G.curve.decodePointHex(publicKey)
-      px = Utils.leftPad(point.getX().toBigInteger().toRadix(16), 64)
-      py = Utils.leftPad(point.getY().toBigInteger().toRadix(16), 64)
+      px = leftPad(point.getX().toBigInteger().toRadix(16), 64)
+      py = leftPad(point.getY().toBigInteger().toRadix(16), 64)
     }
-    const data = Utils.hexToArray(userId + a + b + gx + gy + px + py)
+    const data = hexToArray(userId + a + b + gx + gy + px + py)
 
     const entl = userId.length * 4
     data.unshift(entl & 0x00ff)
@@ -230,27 +241,29 @@ export class Index {
     const z = sm3(data)
 
     // e = hash(z || msg)
-    return Utils.arrayToHex(sm3(z.concat(Utils.hexToArray(hashHex))))
+    return arrayToHex(sm3(z.concat(hexToArray(hashHex))))
   }
 
   /**
    * 计算公钥
    */
-  static getPublicKeyFromPrivateKey(privateKey) {
+  getPublicKeyFromPrivateKey(privateKey) {
     const PA = G.multiply(new BigInteger(privateKey, 16))
-    const x = Utils.leftPad(PA.getX().toBigInteger().toString(16), 64)
-    const y = Utils.leftPad(PA.getY().toBigInteger().toString(16), 64)
+    const x = leftPad(PA.getX().toBigInteger().toString(16), 64)
+    const y = leftPad(PA.getY().toBigInteger().toString(16), 64)
     return '04' + x + y
   }
 
   /**
    * 获取椭圆曲线点
    */
-  static getPoint() {
-    const keypair = Utils.generateKeyPairHex()
+  getPoint() {
+    const keypair = generateKeyPairHex()
     const PA = curve.decodePointHex(keypair.publicKey)
+
     // keypair.k = new BigInteger(keypair.privateKey, 16)
     // keypair.x1 = PA.getX().toBigInteger()
+
     return keypair
   }
 }

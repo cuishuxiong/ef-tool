@@ -54,6 +54,46 @@ export class AES {
 
 
   /**
+   * 将传入的32位字符串转换为32位
+   * @param key
+   * @returns
+   */
+  private static convertToHex32BitString(key: string): string {
+    let hash = 0;
+
+    for (let i = 0; i < key.length; i++) {
+      const char = key.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash &= hash; // Convert to 32bit integer
+    }
+
+    const hexString = hash >>> 0; // Ensure positive number
+    return hexString.toString(16).padStart(32, '0');
+  }
+
+  /**
+   * 将传入的任意格式的key转换为系统所需的key
+   * @returns 自定义的key
+   */
+  static async convertKey(strKey: string): Promise<OutDTO<string>> {
+    this.symAlgName = 'AES128';
+    //组装convertKey所需数据
+    let data = { data: this.stringToByteArray(this.convertToHex32BitString(strKey)) };
+    // 创建对称密钥生成器
+    let symKeyGenerator = crypto.createSymKeyGenerator(this.symAlgName);
+    //转换密钥
+    let promiseSymKey = await symKeyGenerator.convertKey(data);
+    // 构造参数
+    this.globalGcmParams = this.genGcmParamsSpec();
+    // 生成加解密生成器
+    let cipherAlgName = 'AES128|GCM|PKCS7';
+    //生成加解密生成器
+    this.globalCipher = crypto.createCipher(cipherAlgName);
+    // 获取对称密钥的二进制数据
+    return OutDTO.OKByDataRow('转换AES密钥成功~', this.unit8ArrayToShowStr(promiseSymKey.getEncoded().data));
+  }
+
+  /**
    * 生成AES的对称密钥
    * @returns AES密钥
    */
