@@ -34,6 +34,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
 | AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
 | MD5        | 提供摘要方法(基于HarmonyOS API)              |
+| SM3        | 提供国密SM3算法(迁移sm-crypto)               |
+| SM4        | 提供国密SM3算法(迁移和优化sm-crypto)            |
 | BASE64     | 提供BASE64对头的一系列方法                     |
 | IdUtil     | 提供生成ID的一系列方法                         |
 | ArrayUtil  | 提供对集合的一些常用的方法                        |
@@ -50,6 +52,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | Logger     | 提供常用的打印日志的方法                         |
 | RegexConst | 提供常用的正则表达式常量                         |
 | DateConst  | 提供常用的日期格式化表达式常量                      |
+| pcaJSON    | 提标准的省市区级联数据包括港澳台                     |
 
 ### 2.UI类组件
 
@@ -161,18 +164,23 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 * parse 将传入的json字符串格式化为Object对象
 
 ```
-    JSONUtil.parse('{"name":"测试名称","age":18,"birth":"2024-01-03" }')
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
 ```
 
 * parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
 
 ```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
-    console.error(p.name+":"+p.birth)
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    let p = JSONUtil.parseObject<Person>(str, 'yyyy/MM/dd HH:mm:ss')
+    let res: OutDTO<Person> = OutDTO.OKByDataRow('成功过了~', p);
+    console.error(res.getMsg() + "------" + res.getSuccess() + "-----" + res.getDataRow())
     //输出  测试名称:2024-01-03 00:00:00
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* parseArray 将传入的json字符串格式化为指定的实体对象集合
 
 ```
     let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]',DateConst.YMD_HLINE_HMS) ;
@@ -183,6 +191,14 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //测试名称1---2023-01-01 00:00:00
     //测试名称2---2021-01-01 12:12:12
 
+```
+
+* parseArrayDT 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
+    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
 ```
 
 #### 3.RSA的方法【返回结果均为OutDTO对象】
@@ -239,8 +255,6 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
 ```
 
-
-
 * encode 加密
 
 ```
@@ -264,7 +278,68 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
 ```
 
-#### 6.IdUtil的方法
+#### 6.SM3的方法
+
+* SM3 杂凑/hmac
+
+```
+    let hashData = SM3('abc') // 杂凑
+    console.log(hashData)
+
+    // hmac
+    hashData = SM3('abc', {
+      key: 'daac25c1512fe50f79b0e4526b93f5c0e1460cef40b6dd44af13caec62e8c60e0d885f3c6d6fb51e530889e6fd4ac743a6d332e68a0f2a3923f42585dceb93e9', // 要求为 16 进制串或字节数组
+    })
+    console.log(hashData)
+```
+
+#### 7.SM4的方法
+
+* generateKey 随机生成16进制字符串和字节数组 128 比特
+
+```
+     const key = SM4.generateKey().hexString;
+     const key = SM4.generateKey().byteArray;
+     console.log(key)
+```
+
+* encrypt 加密
+
+```
+     const msg = 'hello world! 我是 csx.' // 可以为 utf8 串或字节数组
+     const key = SM4.generateKey().hexString;
+
+     let encryptData = SM4.encrypt(msg, key) // 加密，默认输出 16 进制字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+     let encryptData1 = SM4.encrypt(msg, key, { padding: 'none' }) // 加密，不使用 padding
+     let encryptData2 = SM4.encrypt(msg, key, { padding: 'none', output: 'array' }) // 加密，不使用 padding，输出为字节数组
+     let encryptData3 = SM4.encrypt(msg, key, { mode: 'cbc', iv: 'fedcba98765432100123456789abcdef' }) // 加密，cbc 模式
+
+     console.log(encryptData)
+     console.log(encryptData1)
+     console.log(encryptData2)
+     console.log(encryptData3)
+```
+
+
+* decrypt 解密
+
+```
+     let decryptData = SM4.decrypt(encryptData, key) // 解密，默认输出 utf8 字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+     let decryptData1 = SM4.decrypt(encryptData1, key, { padding: 'none' }) // 解密，不使用 padding
+     let decryptData2 = SM4.decrypt(encryptData2, key, { padding: 'none', output: 'array' }) // 解密，不使用 padding，输出为字节数组
+     let decryptData3 = SM4.decrypt(encryptData3, key, {
+       mode: 'cbc',
+       iv: 'fedcba98765432100123456789abcdef'
+     }) // 解密，cbc 模式
+
+     console.log(decryptData)
+     console.log(decryptData1)
+     console.log(decryptData2)
+     console.log(decryptData3)
+
+```
+
+#### 8.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -294,7 +369,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-#### 7.OutDTO的方法
+#### 9.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -368,7 +443,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 * setDataTable 设置多行数据
 
-#### 8.PageUtil的方法
+#### 10.PageUtil的方法
 
 * 该对象有如下私有成员变量
 
@@ -441,7 +516,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     const records:Array<T> = page.getRecords();
 ```
 
-#### 9.ArrayUtil的方法
+#### 11.ArrayUtil的方法
 
 * append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
@@ -629,7 +704,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出  不是空的
 ```
 
-#### 10.DateUtil的方法
+#### 12.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -670,7 +745,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.log(diff + ""); //输出 70
 ```
 
-#### 11.RegUtil的方法
+#### 13.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -704,7 +779,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出  false---身份证号格式不正确,请检查
 ```
 
-#### 12.StrUtil的方法
+#### 14.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
@@ -819,7 +894,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     const test = StrUtil.asString(obj['key']) 
 ```
 
-#### 13.RandomUtil的方法
+#### 15.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
 
@@ -856,7 +931,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出  54
 ```
 
-#### 14.ObjectUtil的方法
+#### 16.ObjectUtil的方法
 
 * equal 判断两个传入的数值或者是字符串是否相等
 
@@ -872,7 +947,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出 false
 ```
 
-#### 15.PhoneUtil的方法
+#### 17.PhoneUtil的方法
 
 * isMobile 验证是否为手机号码（中国）
 
@@ -923,7 +998,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     // 输出 手机号为中国号码
 ```
 
-#### 16.PageQuery的方法
+#### 18.PageQuery的方法
 
 ```
     有如下私有属性
@@ -1022,7 +1097,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 ```
 
-#### 17.CharUtil的方法
+#### 19.CharUtil的方法
 
 * isEmoji 判断是否为emoji表情符
 
@@ -1038,36 +1113,36 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     // 输出 false
 ```
 
-#### 18.Logger的方法
+#### 20.Logger的方法
 
-* constructor 构造 第一个入参为应用名,第二个为域可不填
+*  init  初始化第一个入参为应用名,第二个为域可不填
 
 ```
-    let logger = new Logger('应用名');
+    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ts的onWindowStageCreate方法中
 ```
 
 * debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
 
 ```
-    logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
+    Logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
 ```
 
 * info info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】黄色
 
 ```
-    logger.info("info错误原因为:", 'xxxxxxxxxxxx')
+    Logger.info("info错误原因为:", 'xxxxxxxxxxxx')
 ```
 
 * warn warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 白色
 
 ```
-    logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
 ```
 
 * error error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 红色
 
 ```
-    logger.error("error错误原因为:", 'xxxxxxxxxxxx')
+    Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
 ```
 
 ### 3.UI组件使用API

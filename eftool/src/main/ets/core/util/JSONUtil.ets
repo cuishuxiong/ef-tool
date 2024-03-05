@@ -96,7 +96,6 @@ export class JSONUtil {
     let arr = JSON.parse(jsonStr);
     for (let index = 0; index < arr.length; index++) {
       const item = arr[index];
-      // let jsonObj = this.parseObject(item);
       result.push(item as T);
     }
     return result;
@@ -117,10 +116,8 @@ export class JSONUtil {
       for (const key in item) {
         let value = item[key];
         if (typeof value === 'object' && value !== null) {
-          // @ts-ignore
           jsonObj[key] = JSON.stringify(value);
         } else if (this.isDate(value)) {
-          // @ts-ignore
           jsonObj[key] = DateUtil.formatDate(value, dateFormat);
         } else {
           jsonObj[key] = value;

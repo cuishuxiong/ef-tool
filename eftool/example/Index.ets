@@ -24,21 +24,55 @@ import {
   ToastUtil,
   DialogUtil,
   ActionUtil,
-  Cascade
+  Cascade,
+  CacheUtil,
+  SM4,
+  SM3,
+  SM2,
+  pcaJSON,
 } from '@yunkss/eftool'
 import util from '@ohos.util';
+import { sm3 } from '@yunkss/eftool/src/main/ets/core/crypto/sm/sm2/SM3';
 
 class Person {
   name: string;
   age: number;
   birth: Date;
+  user: User;
 
-  constructor(name: string, age: number, birth: Date) {
+  constructor(name: string, age: number, birth: Date, user: User) {
     this.birth = birth;
     this.name = name;
     this.age = age;
+    this.user = user;
   }
 }
+
+class User {
+  id: string;
+  name: string;
+
+  constructor(id: string, name: string) {
+    this.name = name;
+    this.id = id;
+  }
+}
+
+
+/**
+ * 选择器所需的数据
+ */
+class City {
+  name: string;
+  code: string;
+  children: Array<City>;
+
+  constructor(name, code) {
+    this.name = name;
+    this.code = code;
+  }
+}
+
 
 @Entry
 @Component
@@ -63,10 +97,53 @@ struct Index {
 
   test() {
 
-    let base64 = BASE64.create();
-    let a = base64.toByteArray('测试BASE64')
+    // const msg = 'hello world! 我是 xxxx.' // 可以为 utf8 串或字节数组
+    // const key = SM4.generateKey().hexString;
 
-    let b = base64.fromByteArray(a);
+
+    // let encryptData = SM4.encrypt(msg, key) // 加密，默认输出 16 进制字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+    // let encryptData1 = SM4.encrypt(msg, key, { padding: 'none' }) // 加密，不使用 padding
+    // let encryptData2 = SM4.encrypt(msg, key, { padding: 'none', output: 'array' }) // 加密，不使用 padding，输出为字节数组
+    // let encryptData3 = SM4.encrypt(msg, key, { mode: 'cbc', iv: 'fedcba98765432100123456789abcdef' }) // 加密，cbc 模式
+
+    // console.log(encryptData)
+    // console.log(encryptData1)
+    // console.log(encryptData2)
+    // console.log(encryptData3)
+
+
+    // let decryptData = SM4.decrypt(encryptData, key) // 解密，默认输出 utf8 字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+    // let decryptData1 = SM4.decrypt(encryptData1, key, { padding: 'none' }) // 解密，不使用 padding
+    // let decryptData2 = SM4.decrypt(encryptData2, key, { padding: 'none', output: 'array' }) // 解密，不使用 padding，输出为字节数组
+    // let decryptData3 = SM4.decrypt(encryptData3, key, {
+    //   mode: 'cbc',
+    //   iv: 'fedcba98765432100123456789abcdef'
+    // }) // 解密，cbc 模式
+
+    // console.log(decryptData)
+    // console.log(decryptData1)
+    // console.log(decryptData2)
+    // console.log(decryptData3)
+
+    // let hashData = SM3('abc') // 杂凑
+    // console.log(hashData)
+
+    // hmac
+    // hashData = SM3('abc', {
+    //   key: 'daac25c1512fe50f79b0e4526b93f5c0e1460cef40b6dd44af13caec62e8c60e0d885f3c6d6fb51e530889e6fd4ac743a6d332e68a0f2a3923f42585dceb93e9', // 要求为 16 进制串或字节数组
+    // })
+    // console.log(hashData)
+
+    // let sm2 = new SM2();
+
+    // let keypair = sm2.generateKeyPairHex()
+
+    // console.log(keypair.publicKey+"---"+keypair.privateKey)
+
+    // let base64 = BASE64.create();
+    // let a = base64.toByteArray('测试BASE64')
+    //
+    // let b = base64.fromByteArray(a);
 
 
     // ToastUtil.showToast('使用默认参数');
@@ -92,18 +169,23 @@ struct Index {
     // console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
     //
     // this.message = "验签结果:" + JSON.stringify(result);
+
+    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+
+    // const key = await  AES.convertKey('abcdefgabcdefg12');
+    // console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
     //
     // const keyPair = await  AES.generateAesKey("AES128");
     // console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
     //
-    // const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    // const encodeStr = await AES.encode("测试中文自定义Key加解密!", key.getDataRow());
     // console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
     //
     // this.message = "加密:" + encodeStr.getDataRow();
-    //
-    // const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+
+    // const decodeStr = await AES.decode(encodeStr.getDataRow(), key.getDataRow());
     // console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
-    //
+
     // this.message = "解密:" + decodeStr.getDataRow();
     //
     // let md5 = await MD5.digest('这个是测试MD5摘要字符串~');
@@ -346,13 +428,18 @@ struct Index {
     // let str = 'yyyy/MM/dd HH:mm:ss';
     // console.error(str)
 
-    // JSONUtil.parse('{"name":"测试名称","age":18,"birth":"2024-01-03" }')
-    // console.error(p.name+":"+p.birth)
-    // this.message = p.name+p.birth;
 
-    // let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
+    // let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    // let str = JSONUtil.toJSONString(person);
+
+
+    // let p = JSONUtil.parseObject<Person>(str, 'yyyy/MM/dd HH:mm:ss')
     // let res: OutDTO<Person> = OutDTO.OKByDataRow('成功过了~', p);
-    // console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataRow())
+    // console.error(res.getMsg() + "------" + res.getSuccess() + "-----" + res.getDataRow())
+
+    // let json = JSONUtil.parseArray<City>(JSONUtil.toJSONString(pcaJSON));
+
+    // console.info(json.length + "")
 
     // this.message = result.getMsg();
 
@@ -369,9 +456,9 @@ struct Index {
     // pArr.forEach(item => {
     //   console.error(item.name + "---" + item.birth);
     // })
-    // let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    // let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
-    // console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
+    let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
+    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
     // // this.message += result.getMsg() + "\n";
     // result.getDataTable().forEach(item => {
     //   this.message += item.name + "\n";
@@ -400,9 +487,11 @@ struct Index {
   build() {
     Row() {
       Column() {
+        Text(this.message)
         Text(this.callCity)
         Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:2000,bottom:10vp');
+          this.test()
         })
         Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp' });

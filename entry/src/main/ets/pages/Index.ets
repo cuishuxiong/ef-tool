@@ -97,46 +97,42 @@ struct Index {
 
   test() {
 
-    const msg = 'hello world! 我是 崔树雄.' // 可以为 utf8 串或字节数组
-    const key = SM4.generateKey().hexString;
-
-    // '0123456789abcdeffedcba9876543210' // 可以为 16 进制串或字节数组，要求为 128 比特
-
-    console.log(key)
-
-    // SM4.generateKey().hexString
-    let encryptData = SM4.encrypt(msg, key) // 加密，默认输出 16 进制字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
-    let encryptData1 = SM4.encrypt(msg, key, { padding: 'none' }) // 加密，不使用 padding
-    let encryptData2 = SM4.encrypt(msg, key, { padding: 'none', output: 'array' }) // 加密，不使用 padding，输出为字节数组
-    let encryptData3 = SM4.encrypt(msg, key, { mode: 'cbc', iv: 'fedcba98765432100123456789abcdef' }) // 加密，cbc 模式
-
-    console.log(encryptData)
-    console.log(encryptData1)
-    console.log(encryptData2)
-    console.log(encryptData3)
+    // const msg = 'hello world! 我是 xxxx.' // 可以为 utf8 串或字节数组
+    // const key = SM4.generateKey().hexString;
 
 
-    let decryptData = SM4.decrypt(encryptData, key) // 解密，默认输出 utf8 字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
-    let decryptData1 = SM4.decrypt(encryptData1, key, { padding: 'none' }) // 解密，不使用 padding
-    let decryptData2 = SM4.decrypt(encryptData2, key, { padding: 'none', output: 'array' }) // 解密，不使用 padding，输出为字节数组
-    let decryptData3 = SM4.decrypt(encryptData3, key, {
-      mode: 'cbc',
-      iv: 'fedcba98765432100123456789abcdef'
-    }) // 解密，cbc 模式
+    // let encryptData = SM4.encrypt(msg, key) // 加密，默认输出 16 进制字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+    // let encryptData1 = SM4.encrypt(msg, key, { padding: 'none' }) // 加密，不使用 padding
+    // let encryptData2 = SM4.encrypt(msg, key, { padding: 'none', output: 'array' }) // 加密，不使用 padding，输出为字节数组
+    // let encryptData3 = SM4.encrypt(msg, key, { mode: 'cbc', iv: 'fedcba98765432100123456789abcdef' }) // 加密，cbc 模式
 
-    console.log(decryptData)
-    console.log(decryptData1)
-    console.log(decryptData2)
-    console.log(decryptData3)
+    // console.log(encryptData)
+    // console.log(encryptData1)
+    // console.log(encryptData2)
+    // console.log(encryptData3)
 
-    let hashData = SM3('abc') // 杂凑
-    console.log(hashData)
+
+    // let decryptData = SM4.decrypt(encryptData, key) // 解密，默认输出 utf8 字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
+    // let decryptData1 = SM4.decrypt(encryptData1, key, { padding: 'none' }) // 解密，不使用 padding
+    // let decryptData2 = SM4.decrypt(encryptData2, key, { padding: 'none', output: 'array' }) // 解密，不使用 padding，输出为字节数组
+    // let decryptData3 = SM4.decrypt(encryptData3, key, {
+    //   mode: 'cbc',
+    //   iv: 'fedcba98765432100123456789abcdef'
+    // }) // 解密，cbc 模式
+
+    // console.log(decryptData)
+    // console.log(decryptData1)
+    // console.log(decryptData2)
+    // console.log(decryptData3)
+
+    // let hashData = SM3('abc') // 杂凑
+    // console.log(hashData)
 
     // hmac
-    hashData = SM3('abc', {
-      key: 'daac25c1512fe50f79b0e4526b93f5c0e1460cef40b6dd44af13caec62e8c60e0d885f3c6d6fb51e530889e6fd4ac743a6d332e68a0f2a3923f42585dceb93e9', // 要求为 16 进制串或字节数组
-    })
-    console.log(hashData)
+    // hashData = SM3('abc', {
+    //   key: 'daac25c1512fe50f79b0e4526b93f5c0e1460cef40b6dd44af13caec62e8c60e0d885f3c6d6fb51e530889e6fd4ac743a6d332e68a0f2a3923f42585dceb93e9', // 要求为 16 进制串或字节数组
+    // })
+    // console.log(hashData)
 
     // let sm2 = new SM2();
 
@@ -460,9 +456,9 @@ struct Index {
     // pArr.forEach(item => {
     //   console.error(item.name + "---" + item.birth);
     // })
-    // let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    // let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
-    // console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
+    let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
+    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
     // // this.message += result.getMsg() + "\n";
     // result.getDataTable().forEach(item => {
     //   this.message += item.name + "\n";
