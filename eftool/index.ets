@@ -52,7 +52,7 @@ export { Cascade } from './src/main/ets/ui/select/Cascade';
 
 export { pcaJSON } from './src/main/ets/core/const/CityConst';
 
-// export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
+export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
 
 // export { SM2 } from './src/main/ets/core/crypto/sm/sm2/Index';
 

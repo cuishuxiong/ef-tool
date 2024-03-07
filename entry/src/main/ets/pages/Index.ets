@@ -28,7 +28,6 @@ import {
   CacheUtil,
   SM4,
   SM3,
-  SM2,
   pcaJSON,
 } from '@yunkss/eftool'
 import util from '@ohos.util';
@@ -136,7 +135,7 @@ struct Index {
 
     // let sm2 = new SM2();
 
-    // let keypair = sm2.generateKeyPairHex()
+    // let keypair = sm2.genKeyPairHex()
 
     // console.log(keypair.publicKey+"---"+keypair.privateKey)
 
@@ -430,7 +429,20 @@ struct Index {
 
 
     // let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    // let str = JSONUtil.toJSONString(person);
+    // CacheUtil.save<Person>("csx", person);
+
+    // let p = CacheUtil.get<Person>("csx");
+    // let str = JSONUtil.toJSONString(p);
+
+    // Logger.error(str);
+
+    // CacheUtil.save<string>("str", str);
+
+    // let st = CacheUtil.get<string>("str");
+
+    // let a = CacheUtil.get<string>("xxx");
+
+    // Logger.error(a);
 
 
     // let p = JSONUtil.parseObject<Person>(str, 'yyyy/MM/dd HH:mm:ss')
@@ -456,9 +468,9 @@ struct Index {
     // pArr.forEach(item => {
     //   console.error(item.name + "---" + item.birth);
     // })
-    let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
-    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
+    // let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    // let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
+    // console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
     // // this.message += result.getMsg() + "\n";
     // result.getDataTable().forEach(item => {
     //   this.message += item.name + "\n";

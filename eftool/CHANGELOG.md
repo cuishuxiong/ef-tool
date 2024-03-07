@@ -1,5 +1,13 @@
 # Changelog
 
+
+## [v1.0.10] 2024-03
+
+### 🐣新特性
+
+* 新增CacheUtil全局缓存
+* 新增国密SM2[迁移和优化sm-crypto](https://gitee.com/yunkss/ef-tool/issues/I93V9W)
+
 ## [v1.0.9] 2024-03
 
 ### 🐣新特性

@@ -22,7 +22,7 @@ const {G, curve, n} = generateEcparam()
 const C1C2C3 = 0
 
 export class SM2 {
-  generateKeyPairHex(a?, b?, c?) {
+  genKeyPairHex(a?, b?, c?) {
     return generateKeyPairHex(a, b, c)
   }
 

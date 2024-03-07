@@ -49,6 +49,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | OutDTO     | 提供常用的返回实体对象                          |
 | PageQuery  | 提供常用的后端获取分页数据操作                      |
 | CharUtil   | 提供常用的字符操作                            |
+| CacheUtil  | 提缓存数据并且提取数据操作                        |
 | Logger     | 提供常用的打印日志的方法                         |
 | RegexConst | 提供常用的正则表达式常量                         |
 | DateConst  | 提供常用的日期格式化表达式常量                      |
@@ -319,7 +320,6 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
      console.log(encryptData2)
      console.log(encryptData3)
 ```
-
 
 * decrypt 解密
 
@@ -1115,7 +1115,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 #### 20.Logger的方法
 
-*  init  初始化第一个入参为应用名,第二个为域可不填
+* init 初始化第一个入参为应用名,第二个为域可不填
 
 ```
     Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ts的onWindowStageCreate方法中
@@ -1143,6 +1143,26 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 ```
     Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
+```
+
+#### 21.CacheUtil的方法
+
+* save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
+
+```
+    //存入对象类型,<>中的类型为必填
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    CacheUtil.save<Person>("csx", person);
+    //存入字符串类型
+    CacheUtil.save<string>("str", str);
+```
+
+* get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
+
+```
+    //获取指定key的数据<>中的类型为必填
+    let p = CacheUtil.get<Person>("csx");
+    let st = CacheUtil.get<string>("str");
 ```
 
 ### 3.UI组件使用API
