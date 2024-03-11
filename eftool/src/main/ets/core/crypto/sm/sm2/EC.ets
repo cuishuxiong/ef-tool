@@ -1,5 +1,13 @@
-const TWO = BigInt(2)
-const THREE = BigInt(3)
+/* eslint-disable no-case-declarations, max-len */
+import { BigInteger } from '../JSBN'
+
+/**
+ * thanks for Tom Wu : http://www-cs-students.stanford.edu/~tjw/jsbn/
+ *
+ * Basic Javascript Elliptic Curve implementation
+ * Ported loosely from BouncyCastle's Java EC code
+ * Only Fp curves implemented for now
+ */
 
 /**
  * 椭圆曲线域元素
@@ -8,7 +16,7 @@ class ECFieldElementFp {
   x: any
   q: ECFieldElementFp
 
-  constructor(q: ECFieldElementFp, x: ECFieldElementFp) {
+  constructor(q: ECFieldElementFp, x: any) {
     this.x = x
     this.q = q
   }
@@ -60,7 +68,7 @@ class ECFieldElementFp {
    * 相除
    */
   divide(b) {
-    return new ECFieldElementFp(this.q, this.x.multiply(b.toBigInteger().modInverse(this.q)).mod(this.q))
+    return new ECFieldElementFp(this.q, this.x.multiply(b.toBigInteger().bnModInverse(this.q)).mod(this.q))
   }
 
   /**
@@ -72,29 +80,30 @@ class ECFieldElementFp {
 }
 
 export class ECPointFp {
-  curve: any
-  x: any
+  curve: ECCurveFp
+  x: ECFieldElementFp
   y: any
-  z: any
-  zinv: any
+  z: BigInteger
+  zinv: BigInteger
+  private THREE = new BigInteger(3)
 
   constructor(curve, x, y, z?) {
     this.curve = curve
     this.x = x
     this.y = y
     // 标准射影坐标系：zinv == null 或 z * zinv == 1
-    this.z = z == null ? BigInt(1) : z
+    this.z = z == null ? new BigInteger(1) : z
     this.zinv = null
     // TODO: compression flag
   }
 
   getX() {
-    if (this.zinv === null) this.zinv = this.z.modInverse(this.curve.q)
+    if (this.zinv === null) this.zinv = this.z.bnModInverse(this.curve.q)
     return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.q))
   }
 
   getY() {
-    if (this.zinv === null) this.zinv = this.z.modInverse(this.curve.q)
+    if (this.zinv === null) this.zinv = this.z.bnModInverse(this.curve.q)
 
     return this.curve.fromBigInteger(this.y.toBigInteger().multiply(this.zinv).mod(this.curve.q))
   }
@@ -112,14 +121,14 @@ export class ECPointFp {
       .multiply(this.z)
       .subtract(this.y.toBigInteger().multiply(other.z))
       .mod(this.curve.q)
-    if (!u.equals(BigInt(0))) return false
+    if (!u.equals(new BigInteger(0))) return false
 
     // v = x2 * z1 - x1 * z2
     const v = other.x.toBigInteger()
       .multiply(this.z)
       .subtract(this.x.toBigInteger().multiply(other.z))
       .mod(this.curve.q)
-    return v.equals(BigInt(0))
+    return v.equals(new BigInteger(0))
   }
 
   /**
@@ -127,7 +136,7 @@ export class ECPointFp {
    */
   isInfinity() {
     if ((this.x === null) && (this.y === null)) return true
-    return this.z.equals(BigInt(0)) && !this.y.toBigInteger().equals(BigInt(0))
+    return this.z.bnEquals(new BigInteger(0)) && !this.y.toBigInteger().equals(new BigInteger(0))
   }
 
   /**
@@ -176,18 +185,18 @@ export class ECPointFp {
     const w5 = y2.multiply(z1).mod(q)
     const w6 = w4.subtract(w5)
 
-    if (BigInt(0).toString() == w3) {
-      if (BigInt(0).toString() == w6) {
+    if (new BigInteger(0).bnEquals(w3)) {
+      if (new BigInteger(0).bnEquals(w6)) {
         return this.twice() // this == b，计算自加
       }
       return this.curve.infinity // this == -b，则返回无穷远点
     }
 
     const w7 = w1.add(w2)
-    const w8 = z1.multiply(z2).mod(q)
+    const w8 = z1.bnMultiply(z2).bnMod(q)
     const w9 = w3.square().mod(q)
     const w10 = w3.multiply(w9).mod(q)
-    const w11 = w8.multiply(w6.square()).subtract(w7.multiply(w9)).mod(q)
+    const w11 = w8.bnMultiply(w6.square()).bnSubtract(w7.multiply(w9)).bnMod(q)
 
     const x3 = w3.multiply(w11).mod(q)
     const y3 = w6.multiply(w9.multiply(w1).subtract(w11)).subtract(w4.multiply(w10)).mod(q)
@@ -221,7 +230,7 @@ export class ECPointFp {
     const q = this.curve.q
     const a = this.curve.a.toBigInteger()
 
-    const w1 = x1.square().multiply(THREE).add(a.multiply(z1.square())).mod(q)
+    const w1 = x1.square().multiply(this.THREE).add(a.multiply(z1.bnSquare())).mod(q)
     const w2 = y1.shiftLeft(1).multiply(z1).mod(q)
     const w3 = y1.square().mod(q)
     const w4 = w3.multiply(x1).multiply(z1).mod(q)
@@ -243,12 +252,12 @@ export class ECPointFp {
     if (!k.signum()) return this.curve.infinity
 
     // 使用加减法
-    const k3 = k.multiply(THREE)
+    const k3 = k.multiply(this.THREE)
     const neg = this.negate()
-    let Q = this
+    let Q;
 
     for (let i = k3.bitLength() - 2; i > 0; i--) {
-      Q = Q.twice()
+      Q = this.twice()
 
       const k3Bit = k3.testBit(i)
       const kBit = k.testBit(i)
@@ -270,6 +279,7 @@ export class ECCurveFp {
   a: ECFieldElementFp
   b: ECFieldElementFp
   infinity: ECPointFp
+  private TWO = new BigInteger(2)
 
   constructor(q, a, b) {
     this.q = q
@@ -304,7 +314,7 @@ export class ECCurveFp {
       case 2:
       case 3:
       // 压缩
-        const x = this.fromBigInteger(parseInt(s.substr(2), 16))
+        const x = this.fromBigInteger(new BigInteger(s.substr(2), 16))
       // 对 p ≡ 3 (mod4)，即存在正整数 u，使得 p = 4u + 3
       // 计算 y = (√ (x^3 + ax + b) % p)^(u + 1) modp
         let y = this.fromBigInteger(x.multiply(x.square())
@@ -314,10 +324,10 @@ export class ECCurveFp {
           .add(this.b)
           .toBigInteger()
           .modPow(
-            this.q.divide(BigInt('4')).add(BigInt(1)), this.q
+            this.q.divide(new BigInteger('4')).add(new BigInteger(1)), this.q
           ))
       // 算出结果 2 进制最后 1 位不等于第 1 个字节减 2 则取反
-        if (!y.toBigInteger().mod(TWO).equals(parseInt(s.substr(0, 2), 16)).subtract(TWO)) {
+        if (!y.toBigInteger().mod(this.TWO).equals(new BigInteger(s.substr(0, 2), 16).bnSubtract(this.TWO))) {
           y = y.negate()
         }
         return new ECPointFp(this, x, y)
@@ -328,7 +338,7 @@ export class ECCurveFp {
         const xHex = s.substr(2, len)
         const yHex = s.substr(len + 2, len)
 
-        return new ECPointFp(this, this.fromBigInteger(parseInt(xHex, 16)), this.fromBigInteger(parseInt(yHex, 16)))
+        return new ECPointFp(this, this.fromBigInteger(new BigInteger(xHex, 16)), this.fromBigInteger(new BigInteger(yHex, 16)))
       default:
       // 不支持
         return null

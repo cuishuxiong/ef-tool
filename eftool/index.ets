@@ -54,7 +54,7 @@ export { pcaJSON } from './src/main/ets/core/const/CityConst';
 
 export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
 
-// export { SM2 } from './src/main/ets/core/crypto/sm/sm2/Index';
+export { SM2 } from './src/main/ets/core/crypto/sm/sm2/Index';
 
 export { SM3 } from './src/main/ets/core/crypto/sm/sm3/Index';
 

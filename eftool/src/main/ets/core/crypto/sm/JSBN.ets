@@ -21,8 +21,8 @@ export class BigInteger {
   private F2 = 2 * this.dbits - this.BI_FP;
   private BI_RC = new Array();
   public am = this.am3;
-  public readonly ZERO = this.nbv(0);
-  public readonly ONE = this.nbv(1);
+  public static ZERO: BigInteger;
+  public static ONE: BigInteger;
   private lowprimes = [
     2,
     3,
@@ -204,6 +204,12 @@ export class BigInteger {
       else this.bnpFromString(a, b);
   }
 
+  if (!BigInteger.ZERO) {
+  BigInteger.ZERO = this.nbv(0);
+}
+if (!BigInteger.ONE) {
+  BigInteger.ZERO = this.nbv(1);
+}
 
   // return bigint initialized to value
   nbv(i): BigInteger {
@@ -306,7 +312,7 @@ export class BigInteger {
       this.bnpDMultiply(Math.pow(b, j));
       this.bnpDAddOffset(w, 0);
     }
-    if (mi) this.ZERO.bnpSubTo(this, this);
+    if (mi) BigInteger.ZERO.bnpSubTo(this, this);
   }
 
   // (protected) r = this - a
@@ -407,7 +413,7 @@ export class BigInteger {
     }
     // this.clamp();
     this.bnpClamp();
-    if (mi) this.ZERO.bnpSubTo(this, this);
+    if (mi) BigInteger.ZERO.bnpSubTo(this, this);
   }
 
   bnXor(a) {
@@ -424,7 +430,7 @@ export class BigInteger {
 
   bnModInverse(m: BigInteger) {
     var ac = m.bnpIsEven();
-    if ((this.bnpIsEven() && ac) || m.bnSigNum() == 0) return m.ZERO;
+    if ((this.bnpIsEven() && ac) || m.bnSigNum() == 0) return BigInteger.ZERO;
     var u = m.bnClone(),
       v = this.bnClone();
     var a = this.nbv(1),
@@ -464,7 +470,7 @@ export class BigInteger {
         d.bnpSubTo(b, d);
       }
     }
-    if (v.bnCompareTo(m.ONE) != 0) return m.ZERO;
+    if (v.bnCompareTo(BigInteger.ONE) != 0) return BigInteger.ZERO;
     if (d.bnCompareTo(m) >= 0) return d.bnSubtract(m);
     if (d.bnSigNum() < 0) d.bnpAddTo(m, d);
     else return d;
@@ -475,7 +481,7 @@ export class BigInteger {
   // (public) -this
   bnNegate(): BigInteger {
     var r = this.nbi();
-    this.ZERO.bnpSubTo(this, r);
+    BigInteger.ZERO.bnpSubTo(this, r);
     return r;
   }
 
@@ -517,7 +523,7 @@ export class BigInteger {
       r[r.t++] = 1;
       r.bnpSubTo(t, r);
     }
-    this.ONE.bnpDLShiftTo(ys, t);
+    BigInteger.ONE.bnpDLShiftTo(ys, t);
     t.bnpSubTo(y, y); // "negative" y so we can replace sub with am later
     while (y.t < ys) y[y.t++] = 0;
     while (--j >= 0) {
@@ -533,12 +539,12 @@ export class BigInteger {
     }
     if (q != null) {
       r.bnpDRShiftTo(ys, q);
-      if (ts != ms) this.ZERO.bnpSubTo(q, q);
+      if (ts != ms) BigInteger.ZERO.bnpSubTo(q, q);
     }
     r.t = ys;
     r.bnpClamp();
     if (nsh > 0) r.bnpRShiftTo(nsh, r); // Denormalize remainder
-    if (ts < 0) this.ZERO.bnpSubTo(r, r);
+    if (ts < 0) BigInteger.ZERO.bnpSubTo(r, r);
   }
 
 
@@ -667,7 +673,7 @@ export class BigInteger {
 
   // (protected) this op (1<<n)
   bnpChangeBit(n, op): BigInteger {
-    var r = this.ONE.bnShiftLeft(n);
+    var r = BigInteger.ONE.bnShiftLeft(n);
     this.bnpBitwiseTo(r, op, r);
     return r;
   }
@@ -919,7 +925,7 @@ export class BigInteger {
 
 
   bnpMillerRabin(t: number): boolean {
-    var n1 = this.bnSubtract(this.ONE);
+    var n1 = this.bnSubtract(BigInteger.ONE);
     var k = n1.bnGetLowestSetBit();
     if (k <= 0) return false;
     var r = n1.bnShiftRight(k);
@@ -930,11 +936,11 @@ export class BigInteger {
       //Pick bases at random, instead of starting at 2
       a.bnpFromInt(this.lowprimes[Math.floor(Math.random() * this.lowprimes.length)]);
       var y = a.bnModPow(r, this);
-      if (y.compareTo(this.ONE) != 0 && y.compareTo(n1) != 0) {
+      if (y.compareTo(BigInteger.ONE) != 0 && y.compareTo(n1) != 0) {
         var j = 1;
         while (j++ < k && y.compareTo(n1) != 0) {
           y = y.modPowInt(2, this);
-          if (y.compareTo(this.ONE) == 0) return false;
+          if (y.compareTo(BigInteger.ONE) == 0) return false;
         }
         if (y.compareTo(n1) != 0) return false;
       }
@@ -972,12 +978,12 @@ export class BigInteger {
         this.bnpFromNumber(a, c);
         if (!this.bnTestBit(a - 1))
         // force MSB set
-          this.bnpBitwiseTo(this.ONE.bnShiftLeft(a - 1), this.op_or, this);
+          this.bnpBitwiseTo(BigInteger.ONE.bnShiftLeft(a - 1), this.op_or, this);
         if (this.bnpIsEven()) this.bnpDAddOffset(1, 0); // force odd
         while (!this.bnIsProbablePrime(b)) {
           this.bnpDAddOffset(2, 0);
           if (this.bnBitLength() > a)
-            this.bnpSubTo(this.ONE.bnShiftLeft(a - 1), this);
+            this.bnpSubTo(BigInteger.ONE.bnShiftLeft(a - 1), this);
         }
       }
     } else {
@@ -1137,7 +1143,7 @@ export class BigInteger {
     for (i = 0; i < y.t; ++i) r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
     r.s = 0;
     r.bnpClamp();
-    if (this.s != a.s) this.ZERO.bnpSubTo(r, r);
+    if (this.s != a.s) BigInteger.ZERO.bnpSubTo(r, r);
   }
 
   // (protected) r = this^2, r != this (HAC 14.16)
@@ -1165,7 +1171,7 @@ export class BigInteger {
   bnMod(a: BigInteger): BigInteger {
     var r = this.nbi();
     this.bnAbs().bnpDivRemTo(a, null, r);
-    if (this.s < 0 && r.bnCompareTo(this.ZERO) > 0) a.bnpSubTo(r, r);
+    if (this.s < 0 && r.bnCompareTo(BigInteger.ZERO) > 0) a.bnpSubTo(r, r);
     return r;
   }
 
@@ -1206,7 +1212,7 @@ export class BigInteger {
 
   // (protected) this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
   bnpExp(e, z) {
-    if (e > 0xffffffff || e < 1) return this.ONE;
+    if (e > 0xffffffff || e < 1) return BigInteger.ONE;
     var r = this.nbi(),
       r2 = this.nbi(),
       g = z.convert(this),
@@ -1274,7 +1280,7 @@ class Barrett {
     let bigInt: BigInteger = new BigInteger(null);
     this.r2 = bigInt.nbi();
     this.q3 = bigInt.nbi();
-    bigInt.ONE.bnpDLShiftTo(2 * m.t, this.r2);
+    BigInteger.ONE.bnpDLShiftTo(2 * m.t, this.r2);
     this.mu = this.r2.bnDivide(m);
     this.m = m;
   }
@@ -1343,7 +1349,7 @@ class Montgomery {
     var r = this.m.nbi();
     x.bnAbs().bnpDLShiftTo(this.m.t, r);
     r.bnpDivRemTo(this.m, null, r);
-    if (x.s < 0 && r.bnCompareTo(this.m.ZERO) > 0) this.m.bnpSubTo(r, r);
+    if (x.s < 0 && r.bnCompareTo(BigInteger.ZERO) > 0) this.m.bnpSubTo(r, r);
     return r;
   }
 

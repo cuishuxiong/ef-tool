@@ -1,16 +1,8 @@
 import { BigInteger } from '../JSBN'
-import {
-  generateEcparam,
-  leftPad,
-  hexToArray,
-  utf8ToHex,
-  getGlobalCurve,
-  generateKeyPairHex,
-  arrayToHex,
-  arrayToUtf8
-} from './Utils'
+import { Utils as _ } from './Utils'
 import { sm3 } from './SM3'
 import { encodeDer, decodeDer } from './ASN1'
+
 
 /**
  * @Author csx
@@ -18,22 +10,37 @@ import { encodeDer, decodeDer } from './ASN1'
  * @TODO Index
  */
 
-const {G, curve, n} = generateEcparam()
+
+const {G, curve, n} = _.generateEcparam()
 const C1C2C3 = 0
 
+
 export class SM2 {
-  genKeyPairHex(a?, b?, c?) {
-    return generateKeyPairHex(a, b, c)
+  generateKeyPairHex() {
+    return _.generateKeyPairHex();
+  }
+
+
+  compressPublicKeyHex(s: string) {
+    return _.compressPublicKeyHex(s);
+  }
+
+  comparePublicKeyHex(publicKey1: string, publicKey2: string): boolean {
+    return _.comparePublicKeyHex(publicKey1, publicKey2);
+  }
+
+  verifyPublicKey(publicKey: string): boolean {
+    return _.verifyPublicKey(publicKey);
   }
 
   /**
    * 加密
    */
   doEncrypt(msg, publicKey, cipherMode = 1) {
-    msg = typeof msg === 'string' ? hexToArray(utf8ToHex(msg)) : Array.prototype.slice.call(msg)
-    publicKey = getGlobalCurve().decodePointHex(publicKey) // 先将公钥转成点
+    msg = typeof msg === 'string' ? _.hexToArray(_.utf8ToHex(msg)) : Array.prototype.slice.call(msg)
+    publicKey = _.getGlobalCurve().decodePointHex(publicKey) // 先将公钥转成点
 
-    const keypair = generateKeyPairHex()
+    const keypair = _.generateKeyPairHex()
     const k = new BigInteger(keypair.privateKey, 16) // 随机数 k
 
     // c1 = k * G
@@ -42,11 +49,11 @@ export class SM2 {
 
     // (x2, y2) = k * publicKey
     const p = publicKey.multiply(k)
-    const x2 = hexToArray(leftPad(p.getX().toBigInteger().toRadix(16), 64))
-    const y2 = hexToArray(leftPad(p.getY().toBigInteger().toRadix(16), 64))
+    const x2 = _.hexToArray(_.leftPad(p.getX().toBigInteger().toRadix(16), 64))
+    const y2 = _.hexToArray(_.leftPad(p.getY().toBigInteger().toRadix(16), 64))
 
     // c3 = hash(x2 || msg || y2)
-    const c3 = arrayToHex(sm3([].concat(x2, msg, y2)))
+    const c3 = _.arrayToHex(sm3([].concat(x2, msg, y2)))
 
     let ct = 1
     let offset = 0
@@ -68,7 +75,7 @@ export class SM2 {
       // c2 = msg ^ t
       msg[i] ^= t[offset++] & 0xff
     }
-    const c2 = arrayToHex(msg)
+    const c2 = _.arrayToHex(msg)
 
     return cipherMode === C1C2C3 ? c1 + c2 + c3 : c1 + c3 + c2
   }
@@ -89,12 +96,12 @@ export class SM2 {
       c2 = encryptData.substr(128, encryptData.length - 128 - 64)
     }
 
-    const msg = hexToArray(c2)
-    const c1 = getGlobalCurve().decodePointHex('04' + encryptData.substr(0, 128))
+    const msg = _.hexToArray(c2)
+    const c1 = _.getGlobalCurve().decodePointHex('04' + encryptData.substr(0, 128))
 
     const p = c1.multiply(privateKey)
-    const x2 = hexToArray(leftPad(p.getX().toBigInteger().toRadix(16), 64))
-    const y2 = hexToArray(leftPad(p.getY().toBigInteger().toRadix(16), 64))
+    const x2 = _.hexToArray(_.leftPad(p.getX().toBigInteger().toRadix(16), 64))
+    const y2 = _.hexToArray(_.leftPad(p.getY().toBigInteger().toRadix(16), 64))
 
     let ct = 1
     let offset = 0
@@ -118,10 +125,10 @@ export class SM2 {
     }
 
     // c3 = hash(x2 || msg || y2)
-    const checkC3 = arrayToHex(sm3([].concat(x2, msg, y2)))
+    const checkC3 = _.arrayToHex(sm3([].concat(x2, msg, y2)))
 
     if (checkC3 === c3.toLowerCase()) {
-      return output === 'array' ? msg : arrayToUtf8(msg)
+      return output === 'array' ? msg : _.arrayToUtf8(msg)
     } else {
       return output === 'array' ? [] : ''
     }
@@ -133,7 +140,7 @@ export class SM2 {
   doSignature(msg, privateKey, {
     pointPool=[], der='', hash='', publicKey='', userId=''
   } = {}) {
-    let hashHex = typeof msg === 'string' ? utf8ToHex(msg) : arrayToHex(msg)
+    let hashHex = typeof msg === 'string' ? _.utf8ToHex(msg) : _.arrayToHex(msg)
 
     if (hash) {
       // sm3杂凑
@@ -161,22 +168,22 @@ export class SM2 {
 
         // r = (e + x1) mod n
         r = e.bnAdd(point.x1).bnMod(n)
-      } while (r.equals(e.ZERO) || r.add(k).equals(n))
+      } while (r.equals(new BigInteger(0)) || r.add(k).equals(n))
 
       // s = ((1 + dA)^-1 * (k - r * dA)) mod n
-      s = dA.bnAdd(e.ONE).bnModInverse(n).bnMultiply(k.subtract(r.multiply(dA))).bnMod(n)
-    } while (s.equals(e.ZERO))
+      s = dA.bnAdd(new BigInteger(0)).bnModInverse(n).bnMultiply(k.subtract(r.multiply(dA))).bnMod(n)
+    } while (s.equals(new BigInteger(0)))
 
     if (der) return encodeDer(r, s) // asn.1 der 编码
 
-    return leftPad(r.toString(16), 64) + leftPad(s.toString(16), 64)
+    return _.leftPad(r.toString(16), 64) + _.leftPad(s.toString(16), 64)
   }
 
   /**
    * 验签
    */
   doVerifySignature(msg, signHex, publicKey, {der='', hash='', userId=''} = {}) {
-    let hashHex = typeof msg === 'string' ? utf8ToHex(msg) : arrayToHex(msg)
+    let hashHex = typeof msg === 'string' ? _.utf8ToHex(msg) : _.arrayToHex(msg)
 
     if (hash) {
       // sm3杂凑
@@ -199,9 +206,9 @@ export class SM2 {
     const e = new BigInteger(hashHex, 16)
 
     // t = (r + s) mod n
-    const t = r.add(s).mod(n)
+    const t = r.bnAdd(s).mod(n)
 
-    if (t.equals(e.ZERO)) return false
+    if (t.equals(new BigInteger(0))) return false
 
     // x1y1 = s * G + t * PA
     const x1y1 = G.multiply(s).add(PA.multiply(t))
@@ -217,11 +224,11 @@ export class SM2 {
    */
   getHash(hashHex, publicKey, userId = '1234567812345678') {
     // z = hash(entl || userId || a || b || gx || gy || px || py)
-    userId = utf8ToHex(userId)
-    const a = leftPad(G.curve.a.toBigInteger().toRadix(16), 64)
-    const b = leftPad(G.curve.b.toBigInteger().toRadix(16), 64)
-    const gx = leftPad(G.getX().toBigInteger().toRadix(16), 64)
-    const gy = leftPad(G.getY().toBigInteger().toRadix(16), 64)
+    userId = _.utf8ToHex(userId)
+    const a = _.leftPad(G.curve.a.toBigInteger().toRadix(16), 64)
+    const b = _.leftPad(G.curve.b.toBigInteger().toRadix(16), 64)
+    const gx = _.leftPad(G.getX().toBigInteger().toRadix(16), 64)
+    const gy = _.leftPad(G.getY().toBigInteger().toRadix(16), 64)
     let px
     let py
     if (publicKey.length === 128) {
@@ -229,10 +236,10 @@ export class SM2 {
       py = publicKey.substr(64, 64)
     } else {
       const point = G.curve.decodePointHex(publicKey)
-      px = leftPad(point.getX().toBigInteger().toRadix(16), 64)
-      py = leftPad(point.getY().toBigInteger().toRadix(16), 64)
+      px = _.leftPad(point.getX().toBigInteger().toRadix(16), 64)
+      py = _.leftPad(point.getY().toBigInteger().toRadix(16), 64)
     }
-    const data = hexToArray(userId + a + b + gx + gy + px + py)
+    const data = _.hexToArray(userId + a + b + gx + gy + px + py)
 
     const entl = userId.length * 4
     data.unshift(entl & 0x00ff)
@@ -241,7 +248,7 @@ export class SM2 {
     const z = sm3(data)
 
     // e = hash(z || msg)
-    return arrayToHex(sm3(z.concat(hexToArray(hashHex))))
+    return _.arrayToHex(sm3(z.concat(_.hexToArray(hashHex))))
   }
 
   /**
@@ -249,8 +256,8 @@ export class SM2 {
    */
   getPublicKeyFromPrivateKey(privateKey) {
     const PA = G.multiply(new BigInteger(privateKey, 16))
-    const x = leftPad(PA.getX().toBigInteger().toString(16), 64)
-    const y = leftPad(PA.getY().toBigInteger().toString(16), 64)
+    const x = _.leftPad(PA.getX().toBigInteger().toString(16), 64)
+    const y = _.leftPad(PA.getY().toBigInteger().toString(16), 64)
     return '04' + x + y
   }
 
@@ -258,11 +265,11 @@ export class SM2 {
    * 获取椭圆曲线点
    */
   getPoint() {
-    const keypair = generateKeyPairHex()
+    const keypair = _.generateKeyPairHex()
     const PA = curve.decodePointHex(keypair.publicKey)
 
-    // keypair.k = new BigInteger(keypair.privateKey, 16)
-    // keypair.x1 = PA.getX().toBigInteger()
+    keypair.k = new BigInteger(keypair.privateKey, 16)
+    keypair.x1 = PA.getX().toBigInteger()
 
     return keypair
   }

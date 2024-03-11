@@ -26,6 +26,7 @@ import {
   ActionUtil,
   Cascade,
   CacheUtil,
+  SM2,
   SM4,
   SM3,
   pcaJSON,
@@ -133,11 +134,11 @@ struct Index {
     // })
     // console.log(hashData)
 
-    // let sm2 = new SM2();
+    let sm2 = new SM2();
 
-    // let keypair = sm2.genKeyPairHex()
+    let keypair = sm2.generateKeyPairHex()
 
-    // console.log(keypair.publicKey+"---"+keypair.privateKey)
+    console.log(keypair.publicKey+"---"+keypair.privateKey)
 
     // let base64 = BASE64.create();
     // let a = base64.toByteArray('测试BASE64')
