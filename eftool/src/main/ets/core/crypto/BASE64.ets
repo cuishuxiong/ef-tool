@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @Author csx
  * @DateTime 2024/1/17 14:00:01
@@ -161,16 +160,16 @@ export class BASE64 {
     if (extraBytes === 1) {
       tmp = uint8[len - 1]
       parts.push(
-        lookup[tmp >> 2] +
-        lookup[(tmp << 4) & 0x3F] +
+        this.lookup[tmp >> 2] +
+        this.lookup[(tmp << 4) & 0x3F] +
         '=='
       )
     } else if (extraBytes === 2) {
       tmp = (uint8[len - 2] << 8) + uint8[len - 1]
       parts.push(
-        lookup[tmp >> 10] +
-        lookup[(tmp >> 4) & 0x3F] +
-        lookup[(tmp << 2) & 0x3F] +
+        this.lookup[tmp >> 10] +
+        this.lookup[(tmp >> 4) & 0x3F] +
+        this.lookup[(tmp << 2) & 0x3F] +
         '='
       )
     }
