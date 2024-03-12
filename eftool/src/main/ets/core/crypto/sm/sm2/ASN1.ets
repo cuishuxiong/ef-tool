@@ -26,7 +26,7 @@ function bigintToValue(bigint) {
     let mask1 = new BigInteger(mask, 16)
 
     // 对绝对值取反，加1
-    h = mask1.bnXor(bigint).bnAdd(BigInteger.ONE)
+    h = mask1.bnXor(bigint).bnAdd(mask1.getONE())
     h = h.toString(16).replace(/^-/, '')
   }
   return h

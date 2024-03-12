@@ -44,7 +44,7 @@ export namespace Utils {
    */
   export function generateKeyPairHex(a?, b?, c?) {
     const random = a ? new BigInteger(a, b, c) : new BigInteger(n.bnBitLength(), rng)
-    const d = random.bnMod(n.bnSubtract(BigInteger.ONE)).bnAdd(BigInteger.ONE) // 随机数
+    const d = random.bnMod(n.bnSubtract(random.getONE())).bnAdd(random.getONE()) // 随机数
     const privateKey = leftPad(d.toString(), 64)
 
     const P = G.multiply(d) // P = dG，p 为公钥，d 为私钥
@@ -68,7 +68,7 @@ export namespace Utils {
     const y = new BigInteger(s.substr(len + 2, len), 16)
 
     let prefix = '03'
-    if (y.bnMod(new BigInteger('2')).bnEquals(BigInteger.ZERO)) prefix = '02'
+    if (y.bnMod(new BigInteger('2')).bnEquals(y.getZERO())) prefix = '02'
 
     return prefix + xHex
   }
