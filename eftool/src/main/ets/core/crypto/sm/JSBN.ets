@@ -7,7 +7,6 @@ export class BigInteger {
 
 
   // JavaScript engine analysis
-  private canary = 0xdeadbeefcafe;
   private BI_RM = '0123456789abcdefghijklmnopqrstuvwxyz';
   t: number;
   s: number;
@@ -204,7 +203,7 @@ export class BigInteger {
   }
 
   // (public) Constructor
-  constructor(a, b?, c?) {
+  constructor(a: number | string, b?: number | SecureRandom, c?: number) {
     if (a != null) {
       if ('number' == typeof a) this.bnpFromNumber(a, b, c);
       else if (b == null && 'string' != typeof a) this.bnpFromString(a, 256);
@@ -320,11 +319,11 @@ export class BigInteger {
       this.bnpDMultiply(Math.pow(b, j));
       this.bnpDAddOffset(w, 0);
     }
-    if (mi) this.getZERO().bnpSubTo(this, this);
+    if (mi) this.nbv(0).bnpSubTo(this, this);
   }
 
   // (protected) r = this - a
-  bnpSubTo(a, r) {
+  bnpSubTo(a, r: BigInteger) {
     var i = 0,
       c = 0,
       m = Math.min(a.t, this.t);
@@ -354,7 +353,7 @@ export class BigInteger {
     if (c < -1) r[i++] = this.DV + c;
     else if (c > 0) r[i++] = c;
     r.t = i;
-    r.clamp();
+    r.bnpClamp();
   }
 
   // (protected) set from string and radix
@@ -421,7 +420,7 @@ export class BigInteger {
     }
     // this.clamp();
     this.bnpClamp();
-    if (mi) this.getZERO().bnpSubTo(this, this);
+    if (mi) this.nbv(0).bnpSubTo(this, this);
   }
 
   bnXor(a) {
@@ -438,7 +437,7 @@ export class BigInteger {
 
   bnModInverse(m: BigInteger) {
     var ac = m.bnpIsEven();
-    if ((this.bnpIsEven() && ac) || m.bnSigNum() == 0) return this.getZERO();
+    if ((this.bnpIsEven() && ac) || m.bnSigNum() == 0) return this.nbv(0);
     var u = m.bnClone(),
       v = this.bnClone();
     var a = this.nbv(1),
@@ -478,7 +477,7 @@ export class BigInteger {
         d.bnpSubTo(b, d);
       }
     }
-    if (v.bnCompareTo(this.getONE()) != 0) return this.getZERO();
+    if (v.bnCompareTo(this.nbv(1)) != 0) return this.nbv(0);
     if (d.bnCompareTo(m) >= 0) return d.bnSubtract(m);
     if (d.bnSigNum() < 0) d.bnpAddTo(m, d);
     else return d;
@@ -489,7 +488,7 @@ export class BigInteger {
   // (public) -this
   bnNegate(): BigInteger {
     var r = this.nbi();
-    this.getZERO().bnpSubTo(this, r);
+    this.nbv(0).bnpSubTo(this, r);
     return r;
   }
 
@@ -531,7 +530,7 @@ export class BigInteger {
       r[r.t++] = 1;
       r.bnpSubTo(t, r);
     }
-    this.getONE().bnpDLShiftTo(ys, t);
+    this.nbv(1).bnpDLShiftTo(ys, t);
     t.bnpSubTo(y, y); // "negative" y so we can replace sub with am later
     while (y.t < ys) y[y.t++] = 0;
     while (--j >= 0) {
@@ -547,12 +546,12 @@ export class BigInteger {
     }
     if (q != null) {
       r.bnpDRShiftTo(ys, q);
-      if (ts != ms) this.getZERO().bnpSubTo(q, q);
+      if (ts != ms) this.nbv(0).bnpSubTo(q, q);
     }
     r.t = ys;
     r.bnpClamp();
     if (nsh > 0) r.bnpRShiftTo(nsh, r); // Denormalize remainder
-    if (ts < 0) this.getZERO().bnpSubTo(r, r);
+    if (ts < 0) this.nbv(0).bnpSubTo(r, r);
   }
 
 
@@ -681,7 +680,7 @@ export class BigInteger {
 
   // (protected) this op (1<<n)
   bnpChangeBit(n, op): BigInteger {
-    var r = this.getONE().bnShiftLeft(n);
+    var r = this.nbv(1).bnShiftLeft(n);
     this.bnpBitwiseTo(r, op, r);
     return r;
   }
@@ -933,7 +932,7 @@ export class BigInteger {
 
 
   bnpMillerRabin(t: number): boolean {
-    var n1 = this.bnSubtract(this.getONE());
+    var n1 = this.bnSubtract(this.nbv(1));
     var k = n1.bnGetLowestSetBit();
     if (k <= 0) return false;
     var r = n1.bnShiftRight(k);
@@ -944,11 +943,11 @@ export class BigInteger {
       //Pick bases at random, instead of starting at 2
       a.bnpFromInt(this.lowprimes[Math.floor(Math.random() * this.lowprimes.length)]);
       var y = a.bnModPow(r, this);
-      if (y.compareTo(this.getONE()) != 0 && y.compareTo(n1) != 0) {
+      if (y.compareTo(this.nbv(1)) != 0 && y.compareTo(n1) != 0) {
         var j = 1;
         while (j++ < k && y.compareTo(n1) != 0) {
           y = y.modPowInt(2, this);
-          if (y.compareTo(this.getONE()) == 0) return false;
+          if (y.compareTo(this.nbv(1)) == 0) return false;
         }
         if (y.compareTo(n1) != 0) return false;
       }
@@ -978,7 +977,7 @@ export class BigInteger {
 
 
   // (protected) alternate constructor
-  bnpFromNumber(a: number, b: SecureRandom, c?) {
+  bnpFromNumber(a: number, b: number | SecureRandom, c?: number) {
     if ('number' == typeof b) {
       // new BigInteger(int,int,RNG)
       if (a < 2) this.bnpFromInt(1);
@@ -986,12 +985,12 @@ export class BigInteger {
         this.bnpFromNumber(a, c);
         if (!this.bnTestBit(a - 1))
         // force MSB set
-          this.bnpBitwiseTo(this.getONE().bnShiftLeft(a - 1), this.op_or, this);
+          this.bnpBitwiseTo(this.nbv(1).bnShiftLeft(a - 1), this.op_or, this);
         if (this.bnpIsEven()) this.bnpDAddOffset(1, 0); // force odd
         while (!this.bnIsProbablePrime(b)) {
           this.bnpDAddOffset(2, 0);
           if (this.bnBitLength() > a)
-            this.bnpSubTo(this.getONE().bnShiftLeft(a - 1), this);
+            this.bnpSubTo(this.nbv(1).bnShiftLeft(a - 1), this);
         }
       }
     } else {
@@ -1151,7 +1150,7 @@ export class BigInteger {
     for (i = 0; i < y.t; ++i) r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
     r.s = 0;
     r.bnpClamp();
-    if (this.s != a.s) this.getZERO().bnpSubTo(r, r);
+    if (this.s != a.s) this.nbv(0).bnpSubTo(r, r);
   }
 
   // (protected) r = this^2, r != this (HAC 14.16)
@@ -1179,11 +1178,11 @@ export class BigInteger {
   bnMod(a: BigInteger): BigInteger {
     var r = this.nbi();
     this.bnAbs().bnpDivRemTo(a, null, r);
-    if (this.s < 0 && r.bnCompareTo(this.getZERO()) > 0) a.bnpSubTo(r, r);
+    if (this.s < 0 && r.bnCompareTo(this.nbv(0)) > 0) a.bnpSubTo(r, r);
     return r;
   }
 
-  bnEquals(a) {
+  bnEquals(a: BigInteger): boolean {
     return this.bnCompareTo(a) == 0;
   }
 
@@ -1220,7 +1219,7 @@ export class BigInteger {
 
   // (protected) this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
   bnpExp(e, z) {
-    if (e > 0xffffffff || e < 1) return this.getONE();
+    if (e > 0xffffffff || e < 1) return this.nbv(1);
     var r = this.nbi(),
       r2 = this.nbi(),
       g = z.convert(this),
@@ -1446,9 +1445,9 @@ class Arcfour {
 }
 
 export class SecureRandom {
-  private rng_state;
-  private rng_pool;
-  private rng_pptr;
+  private rng_state: Arcfour;
+  private rng_pool = [];
+  private rng_pptr = 0;
   private rng_psize = 256;
 
   rng_get_bytes(ba) {

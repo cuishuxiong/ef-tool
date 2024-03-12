@@ -100,8 +100,8 @@ export class SM2 {
     const c1 = _.getGlobalCurve().decodePointHex('04' + encryptData.substr(0, 128))
 
     const p = c1.multiply(privateKey)
-    const x2 = _.hexToArray(_.leftPad(p.getX().toBigInteger().toRadix(16), 64))
-    const y2 = _.hexToArray(_.leftPad(p.getY().toBigInteger().toRadix(16), 64))
+    const x2 = _.hexToArray(_.leftPad(p.getX().toBigInteger().bnpToRadix(16), 64))
+    const y2 = _.hexToArray(_.leftPad(p.getY().toBigInteger().bnpToRadix(16), 64))
 
     let ct = 1
     let offset = 0
@@ -225,10 +225,10 @@ export class SM2 {
   getHash(hashHex, publicKey, userId = '1234567812345678') {
     // z = hash(entl || userId || a || b || gx || gy || px || py)
     userId = _.utf8ToHex(userId)
-    const a = _.leftPad(G.curve.a.toBigInteger().toRadix(16), 64)
-    const b = _.leftPad(G.curve.b.toBigInteger().toRadix(16), 64)
-    const gx = _.leftPad(G.getX().toBigInteger().toRadix(16), 64)
-    const gy = _.leftPad(G.getY().toBigInteger().toRadix(16), 64)
+    const a = _.leftPad(G.curve.a.toBigInteger().bnpToRadix(16), 64)
+    const b = _.leftPad(G.curve.b.toBigInteger().bnpToRadix(16), 64)
+    const gx = _.leftPad(G.getX().toBigInteger().bnpToRadix(16), 64)
+    const gy = _.leftPad(G.getY().toBigInteger().bnpToRadix(16), 64)
     let px
     let py
     if (publicKey.length === 128) {
@@ -236,8 +236,8 @@ export class SM2 {
       py = publicKey.substr(64, 64)
     } else {
       const point = G.curve.decodePointHex(publicKey)
-      px = _.leftPad(point.getX().toBigInteger().toRadix(16), 64)
-      py = _.leftPad(point.getY().toBigInteger().toRadix(16), 64)
+      px = _.leftPad(point.getX().toBigInteger().bnpToRadix(16), 64)
+      py = _.leftPad(point.getY().toBigInteger().bnpToRadix(16), 64)
     }
     const data = _.hexToArray(userId + a + b + gx + gy + px + py)
 
@@ -256,8 +256,8 @@ export class SM2 {
    */
   getPublicKeyFromPrivateKey(privateKey) {
     const PA = G.multiply(new BigInteger(privateKey, 16))
-    const x = _.leftPad(PA.getX().toBigInteger().toString(16), 64)
-    const y = _.leftPad(PA.getY().toBigInteger().toString(16), 64)
+    const x = _.leftPad(PA.getX().toBigInteger().bnToString(16), 64)
+    const y = _.leftPad(PA.getY().toBigInteger().bnToString(16), 64)
     return '04' + x + y
   }
 

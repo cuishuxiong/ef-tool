@@ -48,8 +48,8 @@ export namespace Utils {
     const privateKey = leftPad(d.toString(), 64)
 
     const P = G.multiply(d) // P = dG，p 为公钥，d 为私钥
-    const Px = leftPad(P.getX().toBigInteger().toString(16), 64)
-    const Py = leftPad(P.getY().toBigInteger().toString(16), 64)
+    const Px = leftPad(P.getX().toBigInteger().bnToString(16), 64)
+    const Py = leftPad(P.getY().toBigInteger().bnToString(16), 64)
     const publicKey = '04' + Px + Py
 
     let k: BigInteger;
