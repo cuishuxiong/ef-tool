@@ -135,7 +135,7 @@ export class ECPointFp {
    */
   isInfinity(): boolean {
     if ((this.x === null) && (this.y === null)) return true
-    return this.z.bnEquals(new BigInteger(null).nbv(0)) && !this.y.toBigInteger().bnEquals(new BigInteger(null).nbv(0))
+    return this.z.bnEquals(this.THREE.nbv(0)) && !this.y.toBigInteger().bnEquals(this.THREE.nbv(0))
   }
 
   /**
@@ -184,8 +184,8 @@ export class ECPointFp {
     const w5 = y2.bnMultiply(z1).bnMod(q)
     const w6 = w4.bnSubtract(w5)
 
-    if (new BigInteger(null).nbv(0).bnEquals(w3)) {
-      if (new BigInteger(null).nbv(0).bnEquals(w6)) {
+    if (this.THREE.nbv(0).bnEquals(w3)) {
+      if (this.THREE.nbv(0).bnEquals(w6)) {
         return this.twice() // this == b，计算自加
       }
       return this.curve.infinity // this == -b，则返回无穷远点
@@ -253,7 +253,7 @@ export class ECPointFp {
     // 使用加减法
     const k3 = k.bnMultiply(this.THREE)
     const neg = this.negate()
-    let Q: ECPointFp;
+    let Q: ECPointFp = this;
 
     for (let i = k3.bnBitLength() - 2; i > 0; i--) {
       Q = this.twice()
@@ -323,7 +323,7 @@ export class ECCurveFp {
           .add(this.b)
           .toBigInteger()
           .bnModPow(
-            this.q.bnDivide(new BigInteger('4')).bnAdd(new BigInteger(null).nbv(1)), this.q
+            this.q.bnDivide(new BigInteger('4')).bnAdd(this.TWO.nbv(1)), this.q
           ))
       // 算出结果 2 进制最后 1 位不等于第 1 个字节减 2 则取反
         if (!y.toBigInteger().bnMod(this.TWO).bnEquals(new BigInteger(s.substr(0, 2), 16).bnSubtract(this.TWO))) {

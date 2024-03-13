@@ -16,8 +16,8 @@ const C1C2C3 = 0
 
 
 export class SM2 {
-  generateKeyPairHex() {
-    return _.generateKeyPairHex();
+  generateKeyPairHex(a?, b?, c?) {
+    return _.generateKeyPairHex(a, b, c);
   }
 
 

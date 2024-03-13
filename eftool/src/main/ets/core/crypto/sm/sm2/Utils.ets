@@ -44,8 +44,8 @@ export namespace Utils {
    */
   export function generateKeyPairHex(a?, b?, c?) {
     const random = a ? new BigInteger(a, b, c) : new BigInteger(n.bnBitLength(), rng)
-    const d = random.bnMod(n.bnSubtract(random.getONE())).bnAdd(random.getONE()) // 随机数
-    const privateKey = leftPad(d.toString(), 64)
+    const d = random.bnMod(n.bnSubtract(random.nbv(1))).bnAdd(random.nbv(1)) // 随机数
+    const privateKey = leftPad(d.bnToString(16), 64)
 
     const P = G.multiply(d) // P = dG，p 为公钥，d 为私钥
     const Px = leftPad(P.getX().toBigInteger().bnToString(16), 64)
@@ -101,7 +101,7 @@ export namespace Utils {
   /**
    * 补全16进制字符串
    */
-  export function leftPad(input, num) {
+  export function leftPad(input, num): string {
     if (input.length >= num) return input
     return (new Array(num - input.length + 1)).join('0') + input
   }

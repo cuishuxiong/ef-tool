@@ -29,7 +29,7 @@ import {
   SM2,
   SM4,
   SM3,
-  pcaJSON,
+  pcaJSON
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 import { sm3 } from '@yunkss/eftool/src/main/ets/core/crypto/sm/sm2/SM3';
@@ -136,9 +136,23 @@ struct Index {
 
     let sm2 = new SM2();
 
-    let keypair = sm2.generateKeyPairHex()
+    let {publicKey,privateKey} = sm2.generateKeyPairHex()
 
-    console.log(keypair.publicKey+"---"+keypair.privateKey)
+    console.log(publicKey + "---" + privateKey)
+
+    // 默认生成公钥 130 位太长，可以压缩公钥到 66 位
+    const compressedPublicKey = sm2.compressPublicKeyHex(publicKey) // compressedPublicKey 和 publicKey 等价
+    sm2.comparePublicKeyHex(publicKey, compressedPublicKey) // 判断公钥是否等价
+
+    // 自定义随机数，参数会直接透传给 jsbn 库的 BigInteger 构造器
+    // 注意：开发者使用自定义随机数，需要自行确保传入的随机数符合密码学安全
+    let keypair2 = sm2.generateKeyPairHex('123123123123123')
+    // let keypair3 = sm2.generateKeyPairHex(256, SecureRandom)
+
+    let verifyResult = sm2.verifyPublicKey(publicKey) // 验证公钥
+    verifyResult = sm2.verifyPublicKey(compressedPublicKey) // 验证公钥
+
+    sm2.doEncrypt('dsdsdsds', publicKey, 1)
 
     // let base64 = BASE64.create();
     // let a = base64.toByteArray('测试BASE64')

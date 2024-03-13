@@ -208,6 +208,13 @@ export class BigInteger {
       if ('number' == typeof a) this.bnpFromNumber(a, b, c);
       else if (b == null && 'string' != typeof a) this.bnpFromString(a, 256);
       else this.bnpFromString(a, b);
+      let rr, vv;
+      rr = '0'.charCodeAt(0);
+      for (vv = 0; vv <= 9; ++vv) this.BI_RC[rr++] = vv;
+      rr = 'a'.charCodeAt(0);
+      for (vv = 10; vv < 36; ++vv) this.BI_RC[rr++] = vv;
+      rr = 'A'.charCodeAt(0);
+      for (vv = 10; vv < 36; ++vv) this.BI_RC[rr++] = vv;
       if (!this.ZERO) {
         this.ZERO = this.nbv(0);
       }
@@ -247,12 +254,12 @@ export class BigInteger {
 
   // browsers slow down when dealing with 32-bit numbers.
   am3(i, x, w, j, c, n) {
-    var xl = x & 0x3fff,
+    let xl = x & 0x3fff,
       xh = x >> 14;
     while (--n >= 0) {
-      var l = this[i] & 0x3fff;
-      var h = this[i++] >> 14;
-      var m = xh * l + h * xl;
+      let l = this[i] & 0x3fff;
+      let h = this[i++] >> 14;
+      let m = xh * l + h * xl;
       l = xl * l + ((m & 0x3fff) << 14) + w[j] + c;
       c = (l >> 28) + (m >> 14) + xh * h;
       w[j++] = l & 0xfffffff;
@@ -296,13 +303,13 @@ export class BigInteger {
   bnpFromRadix(s, b) {
     this.bnpFromInt(0);
     if (b == null) b = 10;
-    var cs = this.bnpChunkSize(b);
-    var d = Math.pow(b, cs),
+    let cs = this.bnpChunkSize(b);
+    let d = Math.pow(b, cs),
       mi = false,
       j = 0,
       w = 0;
-    for (var i = 0; i < s.length; ++i) {
-      var x = this.intAt(s, i);
+    for (let i = 0; i < s.length; ++i) {
+      let x = this.intAt(s, i);
       if (x < 0) {
         if (s.charAt(i) == '-' && this.bnSigNum() == 0) mi = true;
         continue;
@@ -324,7 +331,7 @@ export class BigInteger {
 
   // (protected) r = this - a
   bnpSubTo(a, r: BigInteger) {
-    var i = 0,
+    let i = 0,
       c = 0,
       m = Math.min(a.t, this.t);
     while (i < m) {
@@ -360,7 +367,7 @@ export class BigInteger {
   bnpFromString(s, b) {
     // Auto-detect string notations
     if (!b && s.length >= 2 && s[0] === '0') {
-      var isDetected = true;
+      let isDetected = true;
       switch (s[1]) {
         case 'x': // Hexadecimal notation
           b = 16;
@@ -381,7 +388,7 @@ export class BigInteger {
       }
     }
 
-    var k;
+    let k;
     if (b == 16) k = 4;
     else if (b == 8) k = 3;
     else if (b == 256) k = 8;
@@ -396,11 +403,11 @@ export class BigInteger {
     }
     this.t = 0;
     this.s = 0;
-    var i = s.length,
+    let i = s.length,
       mi = false,
       sh = 0;
     while (--i >= 0) {
-      var x = k == 8 ? s[i] & 0xff : this.intAt(s, i);
+      let x = k == 8 ? s[i] & 0xff : this.intAt(s, i);
       if (x < 0) {
         if (s.charAt(i) == '-') mi = true;
         continue;
@@ -424,23 +431,23 @@ export class BigInteger {
   }
 
   bnXor(a) {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpBitwiseTo(a, this.op_xor, r);
     return r;
   }
 
   bnClone() {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpCopyTo(r);
     return r;
   }
 
   bnModInverse(m: BigInteger) {
-    var ac = m.bnpIsEven();
+    let ac = m.bnpIsEven();
     if ((this.bnpIsEven() && ac) || m.bnSigNum() == 0) return this.nbv(0);
-    var u = m.bnClone(),
+    let u = m.bnClone(),
       v = this.bnClone();
-    var a = this.nbv(1),
+    let a = this.nbv(1),
       b = this.nbv(0),
       c = this.nbv(0),
       d = this.nbv(1);
@@ -487,7 +494,7 @@ export class BigInteger {
 
   // (public) -this
   bnNegate(): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.nbv(0).bnpSubTo(this, r);
     return r;
   }
@@ -495,19 +502,19 @@ export class BigInteger {
   // (protected) divide this by m, quotient and remainder to q, r (HAC 14.20)
   // r != q, this != m.  q or r may be null.
   bnpDivRemTo(m: BigInteger, q: BigInteger, r: BigInteger) {
-    var pm = m.bnAbs();
+    let pm = m.bnAbs();
     if (pm.t <= 0) return;
-    var pt = this.bnAbs();
+    let pt = this.bnAbs();
     if (pt.t < pm.t) {
       if (q != null) q.bnpFromInt(0);
       if (r != null) this.bnpCopyTo(r);
       return;
     }
     if (r == null) r = this.nbi();
-    var y = this.nbi(),
+    let y = this.nbi(),
       ts = this.s,
       ms = m.s;
-    var nsh = this.DB - this.nbits(pm[pm.t - 1]); // normalize modulus
+    let nsh = this.DB - this.nbits(pm[pm.t - 1]); // normalize modulus
     if (nsh > 0) {
       pm.bnpDLShiftTo(nsh, y);
       pt.bnpDLShiftTo(nsh, r);
@@ -515,14 +522,14 @@ export class BigInteger {
       pm.bnpCopyTo(y);
       pt.bnpCopyTo(r);
     }
-    var ys = y.t;
-    var y0 = y[ys - 1];
+    let ys = y.t;
+    let y0 = y[ys - 1];
     if (y0 == 0) return;
-    var yt = y0 * (1 << this.F1) + (ys > 1 ? y[ys - 2] >> this.F2 : 0);
-    var d1 = this.FV / yt,
+    let yt = y0 * (1 << this.F1) + (ys > 1 ? y[ys - 2] >> this.F2 : 0);
+    let d1 = this.FV / yt,
       d2 = (1 << this.F1) / yt,
       e = 1 << this.F2;
-    var i = r.t,
+    let i = r.t,
       j = i - ys,
       t = q == null ? this.nbi() : q;
     y.bnpDLShiftTo(j, t);
@@ -535,7 +542,7 @@ export class BigInteger {
     while (y.t < ys) y[y.t++] = 0;
     while (--j >= 0) {
       // Estimate quotient digit
-      var qd =
+      let qd =
           r[--i] == y0 ? this.DM : Math.floor(r[i] * d1 + (r[i - 1] + e) * d2);
       if ((r[i] += y.am(0, qd, r, j, 0, ys)) < qd) {
         // Try it out
@@ -570,9 +577,9 @@ export class BigInteger {
   bnpToRadix(b) {
     if (b == null) b = 10;
     if (this.bnSigNum() == 0 || b < 2 || b > 36) return '0';
-    var cs = this.bnpChunkSize(b);
-    var a = Math.pow(b, cs);
-    var d = this.nbv(a),
+    let cs = this.bnpChunkSize(b);
+    let a = Math.pow(b, cs);
+    let d = this.nbv(a),
       y = this.nbi(),
       z = this.nbi(),
       r = '';
@@ -588,16 +595,16 @@ export class BigInteger {
   // (protected) r = this >> n
   bnpRShiftTo(n, r: BigInteger) {
     r.s = this.s;
-    var ds = Math.floor(n / this.DB);
+    let ds = Math.floor(n / this.DB);
     if (ds >= this.t) {
       r.t = 0;
       return;
     }
-    var bs = n % this.DB;
-    var cbs = this.DB - bs;
-    var bm = (1 << bs) - 1;
+    let bs = n % this.DB;
+    let cbs = this.DB - bs;
+    let bm = (1 << bs) - 1;
     r[0] = this[ds] >> bs;
-    for (var i = ds + 1; i < this.t; ++i) {
+    for (let i = ds + 1; i < this.t; ++i) {
       r[i - ds - 1] |= (this[i] & bm) << cbs;
       r[i - ds] = this[i] >> bs;
     }
@@ -607,7 +614,7 @@ export class BigInteger {
   }
 
   bnpBitwiseTo(a, op, r: BigInteger) {
-    var i,
+    let i,
       f,
       m = Math.min(a.t, this.t);
     for (i = 0; i < m; ++i) r[i] = op(this[i], a[i]);
@@ -626,7 +633,7 @@ export class BigInteger {
 
   // (public) this << n
   bnShiftLeft(n: number) {
-    var r = this.nbi();
+    let r = this.nbi();
     if (n < 0) this.bnpRShiftTo(-n, r);
     else this.bnpLShiftTo(n, r);
     return r;
@@ -635,19 +642,19 @@ export class BigInteger {
   // (public) return string representation in given radix
   bnToString(b): string {
     if (this.s < 0) return '-' + this.bnNegate().bnToString(b);
-    var k;
+    let k;
     if (b == 16) k = 4;
     else if (b == 8) k = 3;
     else if (b == 2) k = 1;
     else if (b == 32) k = 5;
     else if (b == 4) k = 2;
     else return this.bnpToRadix(b);
-    var km = (1 << k) - 1,
+    let km = (1 << k) - 1,
       d,
       m = false,
       r = '',
       i = this.t;
-    var p = this.DB - ((i * this.DB) % k);
+    let p = this.DB - ((i * this.DB) % k);
     if (i-- > 0) {
       if (p < this.DB && (d = this[i] >> p) > 0) {
         m = true;
@@ -673,14 +680,14 @@ export class BigInteger {
 
   // (public) true iff nth bit is set
   bnTestBit(n) {
-    var j = Math.floor(n / this.DB);
+    let j = Math.floor(n / this.DB);
     if (j >= this.t) return this.s != 0;
     return (this[j] & (1 << n % this.DB)) != 0;
   }
 
   // (protected) this op (1<<n)
   bnpChangeBit(n, op): BigInteger {
-    var r = this.nbv(1).bnShiftLeft(n);
+    let r = this.nbv(1).bnShiftLeft(n);
     this.bnpBitwiseTo(r, op, r);
     return r;
   }
@@ -714,7 +721,7 @@ export class BigInteger {
 
   // (protected) r = this + a
   bnpAddTo(a: BigInteger, r: BigInteger) {
-    var i = 0,
+    let i = 0,
       c = 0,
       m = Math.min(a.t, this.t);
     while (i < m) {
@@ -748,49 +755,49 @@ export class BigInteger {
 
   // (public) this + a
   bnAdd(a: BigInteger): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpAddTo(a, r);
     return r;
   }
 
   // (public) this - a
   bnSubtract(a: BigInteger): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpSubTo(a, r);
     return r;
   }
 
   // (public) this * a
   bnMultiply(a: BigInteger): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpMultiplyTo(a, r);
     return r;
   }
 
   // (public) this^2
   bnSquare(): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpSquareTo(r);
     return r;
   }
 
   // (public) this / a
   bnDivide(a: BigInteger): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpDivRemTo(a, r, null);
     return r;
   }
 
   // (public) this % a
   bnRemainder(a: BigInteger): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnpDivRemTo(a, null, r);
     return r;
   }
 
   // (public) [this/a,this%a]
   bnDivideAndRemainder(a: BigInteger): Array<BigInteger> {
-    var q = this.nbi(),
+    let q = this.nbi(),
       r = this.nbi();
     this.bnpDivRemTo(a, q, r);
     return new Array(q, r);
@@ -798,17 +805,17 @@ export class BigInteger {
 
   bnpModInt(n: number): number {
     if (n <= 0) return 0;
-    var d = this.DV % n,
+    let d = this.DV % n,
       r = this.s < 0 ? n - 1 : 0;
     if (this.t > 0)
       if (d == 0) r = this[0] % n;
-      else for (var i = this.t - 1; i >= 0; --i) r = (d * r + this[i]) % n;
+      else for (let i = this.t - 1; i >= 0; --i) r = (d * r + this[i]) % n;
     return r;
   }
 
   lbit(x): number {
     if (x == 0) return -1;
-    var r = 0;
+    let r = 0;
     if ((x & 0xffff) == 0) {
       x >>= 16;
       r += 16;
@@ -830,14 +837,14 @@ export class BigInteger {
   }
 
   bnGetLowestSetBit(): number {
-    for (var i = 0; i < this.t; ++i)
+    for (let i = 0; i < this.t; ++i)
       if (this[i] != 0) return i * this.DB + this.lbit(this[i]);
     if (this.s < 0) return this.t * this.DB;
     return -1;
   }
 
   bnShiftRight(n: number): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     if (n < 0) this.bnpLShiftTo(-n, r);
     else this.bnpRShiftTo(n, r);
     return r;
@@ -845,7 +852,7 @@ export class BigInteger {
 
   // (public) this^e % m (HAC 14.85)
   bnModPow(e: BigInteger, m: BigInteger) {
-    var i = e.bnBitLength(),
+    let i = e.bnBitLength(),
       k,
       r = this.nbv(1),
       z;
@@ -860,13 +867,13 @@ export class BigInteger {
     else z = new Montgomery(m);
 
     // precomputation
-    var g = new Array(),
+    let g = new Array(),
       n = 3,
       k1 = k - 1,
       km = (1 << k) - 1;
     g[1] = z.convert(this);
     if (k > 1) {
-      var g2 = this.nbi();
+      let g2 = this.nbi();
       z.sqrTo(g[1], g2);
       while (n <= km) {
         g[n] = this.nbi();
@@ -875,7 +882,7 @@ export class BigInteger {
       }
     }
 
-    var j = e.t - 1,
+    let j = e.t - 1,
       w,
       is1 = true,
       r2 = this.nbi(),
@@ -932,19 +939,19 @@ export class BigInteger {
 
 
   bnpMillerRabin(t: number): boolean {
-    var n1 = this.bnSubtract(this.nbv(1));
-    var k = n1.bnGetLowestSetBit();
+    let n1 = this.bnSubtract(this.nbv(1));
+    let k = n1.bnGetLowestSetBit();
     if (k <= 0) return false;
-    var r = n1.bnShiftRight(k);
+    let r = n1.bnShiftRight(k);
     t = (t + 1) >> 1;
     if (t > this.lowprimes.length) t = this.lowprimes.length;
-    var a = this.nbi();
-    for (var i = 0; i < t; ++i) {
+    let a = this.nbi();
+    for (let i = 0; i < t; ++i) {
       //Pick bases at random, instead of starting at 2
       a.bnpFromInt(this.lowprimes[Math.floor(Math.random() * this.lowprimes.length)]);
-      var y = a.bnModPow(r, this);
+      let y = a.bnModPow(r, this);
       if (y.compareTo(this.nbv(1)) != 0 && y.compareTo(n1) != 0) {
-        var j = 1;
+        let j = 1;
         while (j++ < k && y.compareTo(n1) != 0) {
           y = y.modPowInt(2, this);
           if (y.compareTo(this.nbv(1)) == 0) return false;
@@ -956,7 +963,7 @@ export class BigInteger {
   }
 
   bnIsProbablePrime(t) {
-    var i,
+    let i,
       x = this.bnAbs();
     if (x.t == 1 && x[0] <= this.lowprimes[this.lowprimes.length - 1]) {
       for (i = 0; i < this.lowprimes.length; ++i)
@@ -966,7 +973,7 @@ export class BigInteger {
     if (x.bnpIsEven()) return false;
     i = 1;
     while (i < this.lowprimes.length) {
-      var m = this.lowprimes[i],
+      let m = this.lowprimes[i],
         j = i + 1;
       while (j < this.lowprimes.length && m < this.lplim) m *= this.lowprimes[j++];
       m = x.bnpModInt(m);
@@ -995,7 +1002,7 @@ export class BigInteger {
       }
     } else {
       // new BigInteger(int,RNG)
-      var x = new Array(),
+      let x = new Array(),
         t = a & 7;
       x.length = (a >> 3) + 1;
       b.rng_get_bytes(x);
@@ -1011,13 +1018,13 @@ export class BigInteger {
   }
 
   intAt(s, i) {
-    var c = this.BI_RC[s.charCodeAt(i)];
+    let c = this.BI_RC[s.charCodeAt(i)];
     return c == null ? -1 : c;
   }
 
   // (protected) copy this to r
   bnpCopyTo(r) {
-    for (var i = this.t - 1; i >= 0; --i) r[i] = this[i];
+    for (let i = this.t - 1; i >= 0; --i) r[i] = this[i];
     r.t = this.t;
     r.s = this.s;
   }
@@ -1025,16 +1032,16 @@ export class BigInteger {
 
   // (protected) clamp off excess high words
   bnpClamp() {
-    var c = this.s & this.DM;
+    let c = this.s & this.DM;
     while (this.t > 0 && this[this.t - 1] == c) --this.t;
   }
 
 
   // (public) return + if this > a, - if this < a, 0 if equal
   bnCompareTo(a: BigInteger) {
-    var r = this.s - a.s;
+    let r = this.s - a.s;
     if (r != 0) return r;
-    var i = this.t;
+    let i = this.t;
     r = i - a.t;
     if (r != 0) return this.s < 0 ? -r : r;
     while (--i >= 0) if ((r = this[i] - a[i]) != 0) return r;
@@ -1043,7 +1050,7 @@ export class BigInteger {
 
   // returns bit length of the integer x
   nbits(x) {
-    var r = 1,
+    let r = 1,
       t;
     if ((t = x >>> 16) != 0) {
       x = t;
@@ -1069,7 +1076,7 @@ export class BigInteger {
   }
 
   // (public) return the number of bits in "this"
-  bnBitLength() {
+  bnBitLength(): number {
     if (this.t <= 0) return 0;
     return (
       this.DB * (this.t - 1) + this.nbits(this[this.t - 1] ^ (this.s & this.DM))
@@ -1078,7 +1085,7 @@ export class BigInteger {
 
   // (protected) r = this << n*DB
   bnpDLShiftTo(n, r) {
-    var i;
+    let i;
     for (i = this.t - 1; i >= 0; --i) r[i + n] = this[i];
     for (i = n - 1; i >= 0; --i) r[i] = 0;
     r.t = this.t + n;
@@ -1087,7 +1094,7 @@ export class BigInteger {
 
   // (protected) r = this >> n*DB
   bnpDRShiftTo(n, r) {
-    for (var i = n; i < this.t; ++i) r[i - n] = this[i];
+    for (let i = n; i < this.t; ++i) r[i - n] = this[i];
     r.t = Math.max(this.t - n, 0);
     r.s = this.s;
   }
@@ -1095,11 +1102,11 @@ export class BigInteger {
   // (protected) r = lower n words of "this * a", a.t <= n
   // "this" should be the larger one if appropriate.
   bnpMultiplyLowerTo(a: BigInteger, n: number, r: BigInteger) {
-    var i = Math.min(this.t + a.t, n);
+    let i = Math.min(this.t + a.t, n);
     r.s = 0; // assumes a,this >= 0
     r.t = i;
     while (i > 0) r[--i] = 0;
-    var j;
+    let j;
     for (j = r.t - this.t; i < j; ++i)
       r[i + this.t] = this.am(0, a[i], r, i, 0, this.t);
     for (j = Math.min(a.t, n); i < j; ++i) this.am(0, a[i], r, i, 0, n - i);
@@ -1110,7 +1117,7 @@ export class BigInteger {
   // "this" should be the larger one if appropriate.
   bnpMultiplyUpperTo(a: BigInteger, n: number, r: BigInteger) {
     --n;
-    var i = (r.t = this.t + a.t - n);
+    let i = (r.t = this.t + a.t - n);
     r.s = 0; // assumes a,this >= 0
     while (--i >= 0) r[i] = 0;
     for (i = Math.max(n - this.t, 0); i < a.t; ++i)
@@ -1121,10 +1128,10 @@ export class BigInteger {
 
   // (protected) r = this << n
   bnpLShiftTo(n, r: BigInteger) {
-    var bs = n % this.DB;
-    var cbs = this.DB - bs;
-    var bm = (1 << cbs) - 1;
-    var ds = Math.floor(n / this.DB),
+    let bs = n % this.DB;
+    let cbs = this.DB - bs;
+    let bm = (1 << cbs) - 1;
+    let ds = Math.floor(n / this.DB),
       c = (this.s << bs) & this.DM,
       i;
     for (i = this.t - 1; i >= 0; --i) {
@@ -1142,9 +1149,9 @@ export class BigInteger {
   // (protected) r = this * a, r != this,a (HAC 14.12)
   // "this" should be the larger one if appropriate.
   bnpMultiplyTo(a: BigInteger, r: BigInteger) {
-    var x = this.bnAbs(),
+    let x = this.bnAbs(),
       y = a.bnAbs();
-    var i = x.t;
+    let i = x.t;
     r.t = i + y.t;
     while (--i >= 0) r[i] = 0;
     for (i = 0; i < y.t; ++i) r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
@@ -1155,11 +1162,11 @@ export class BigInteger {
 
   // (protected) r = this^2, r != this (HAC 14.16)
   bnpSquareTo(r: BigInteger) {
-    var x = this.bnAbs();
-    var i = (r.t = 2 * x.t);
+    let x = this.bnAbs();
+    let i = (r.t = 2 * x.t);
     while (--i >= 0) r[i] = 0;
     for (i = 0; i < x.t - 1; ++i) {
-      var c = x.am(i, x[i], r, 2 * i, 0, 1);
+      let c = x.am(i, x[i], r, 2 * i, 0, 1);
       if (
         (r[i + x.t] += x.am(i + 1, 2 * x[i], r, 2 * i + 1, c, x.t - i - 1)) >=
         x.DV
@@ -1176,7 +1183,7 @@ export class BigInteger {
 
   // (public) this mod a
   bnMod(a: BigInteger): BigInteger {
-    var r = this.nbi();
+    let r = this.nbi();
     this.bnAbs().bnpDivRemTo(a, null, r);
     if (this.s < 0 && r.bnCompareTo(this.nbv(0)) > 0) a.bnpSubTo(r, r);
     return r;
@@ -1199,9 +1206,9 @@ export class BigInteger {
   // JS multiply "overflows" differently from C/C++, so care is needed here.
   bnpInvDigit() {
     if (this.t < 1) return 0;
-    var x = this[0];
+    let x = this[0];
     if ((x & 1) == 0) return 0;
-    var y = x & 3; // y == 1/x mod 2^2
+    let y = x & 3; // y == 1/x mod 2^2
     y = (y * (2 - (x & 0xf) * y)) & 0xf; // y == 1/x mod 2^4
     y = (y * (2 - (x & 0xff) * y)) & 0xff; // y == 1/x mod 2^8
     y = (y * (2 - (((x & 0xffff) * y) & 0xffff))) & 0xffff; // y == 1/x mod 2^16
@@ -1220,7 +1227,7 @@ export class BigInteger {
   // (protected) this^e, e < 2^32, doing sqr and mul with "r" (HAC 14.79)
   bnpExp(e, z) {
     if (e > 0xffffffff || e < 1) return this.nbv(1);
-    var r = this.nbi(),
+    let r = this.nbi(),
       r2 = this.nbi(),
       g = z.convert(this),
       i = this.nbits(e) - 1;
@@ -1229,7 +1236,7 @@ export class BigInteger {
       z.sqrTo(r, r2);
       if ((e & (1 << i)) > 0) z.mulTo(r2, g, r);
       else {
-        var t = r;
+        let t = r;
         r = r2;
         r2 = t;
       }
@@ -1239,7 +1246,7 @@ export class BigInteger {
 
   // (public) this^e % m, 0 <= e < 2^32
   bnModPowInt(e, m) {
-    var z;
+    let z;
     if (e < 256 || m.isEven()) z = new Classic(m);
     else z = new Montgomery(m);
     return this.bnpExp(e, z);
@@ -1296,7 +1303,7 @@ class Barrett {
     if (x.s < 0 || x.t > 2 * this.m.t) return x.bnMod(this.m);
     else if (x.bnCompareTo(this.m) < 0) return x;
     else {
-      var r = this.m.nbi();
+      let r = this.m.nbi();
       x.bnpCopyTo(r);
       this.barrettReduce(r);
       return r;
@@ -1353,7 +1360,7 @@ class Montgomery {
 
   // xR mod m
   montConvert(x: BigInteger) {
-    var r = this.m.nbi();
+    let r = this.m.nbi();
     x.bnAbs().bnpDLShiftTo(this.m.t, r);
     r.bnpDivRemTo(this.m, null, r);
     if (x.s < 0 && r.bnCompareTo(r.getZERO()) > 0) this.m.bnpSubTo(r, r);
@@ -1362,7 +1369,7 @@ class Montgomery {
 
   // x/R mod m
   montRevert(x: BigInteger): BigInteger {
-    var r = this.m.nbi();
+    let r = this.m.nbi();
     x.bnpCopyTo(r);
     this.montReduce(r);
     return r;
@@ -1374,10 +1381,10 @@ class Montgomery {
       x.t <= this.mt2 // pad x so am has enough room later
     )
       x[x.t++] = 0;
-    for (var i = 0; i < this.m.t; ++i) {
+    for (let i = 0; i < this.m.t; ++i) {
       // faster way of calculating u0 = x[i]*mp mod DV
-      var j = x[i] & 0x7fff;
-      var u0 =
+      let j = x[i] & 0x7fff;
+      let u0 =
         (j * this.mpl +
         (((j * this.mph + (x[i] >> 15) * this.mpl) & this.um) << 15)) &
         x.DM;
@@ -1420,7 +1427,7 @@ class Arcfour {
   }
 
   init(key) {
-    var i, j, t;
+    let i, j, t;
     for (i = 0; i < 256; ++i) this.S[i] = i;
     j = 0;
     for (i = 0; i < 256; ++i) {
@@ -1434,7 +1441,7 @@ class Arcfour {
   }
 
   next() {
-    var t;
+    let t;
     this.i = (this.i + 1) & 255;
     this.j = (this.j + this.S[this.i]) & 255;
     t = this.S[this.i];
@@ -1451,7 +1458,7 @@ export class SecureRandom {
   private rng_psize = 256;
 
   rng_get_bytes(ba) {
-    var i;
+    let i;
     for (i = 0; i < ba.length; ++i) ba[i] = this.rng_get_byte();
   }
 
