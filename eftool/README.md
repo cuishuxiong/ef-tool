@@ -1,10 +1,11 @@
 # <center>eftool</center>
 
+ <center>V1.1.0</center>
 -------------------------------------------------------------------------------
 
 ## 📚简介
 
-`efTool`是一个功能丰富且易用的**OpenHarmony/HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
+`efTool`是一个功能丰富且易用的`兼容API11`的**OpenHarmony/HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
 这些封装的工具涵盖了字符串、数字、集合、JSON等一系列操作，
 可以满足各种不同的开发需求。本人为Java开发,故封装思路借鉴Java的工具类Hutool，同时扩展了HarmonyOS的UI组件。
 
@@ -20,6 +21,11 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 - 我努力健全**中文**注释，为源码学习者提供良好地学习环境，争取做到人人都能看得懂。
 
 -------------------------------------------------------------------------------
+
+## 🛠️版本说明【重要】
+
+- 1.0.x版本系列兼容**API9**
+- 1.1.x版本系列兼容**API11**
 
 ## 🛠️包含组件
 
@@ -396,7 +402,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 ```
     let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
-    let res: OutDTO<Person> = OutDTO.OKByDataRow('成功过了~', p);
+    let res: OutDTO<Person> = OutDTO.OKByDataRow<Person>('成功过了~', p);
     console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataRow())
     //输出   成功过了~------true-----[object Object]
 ```
@@ -405,7 +411,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 ```
     let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
+    let res = OutDTO.OKByDataTable<Person>('成功过了11111~', pArr);
     console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
     //输出  成功过了11111~------true-----2
 ```
@@ -422,7 +428,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 ```
     let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
-    let res: OutDTO = OutDTO.ErrorByDataRow("只返回失败提示消息~", p);
+    let res: OutDTO = OutDTO.ErrorByDataRow<Person>("只返回失败提示消息~", p);
     console.error(res.getMsg() + "------" + res.getSuccess()+res.getDataRow())
     //输出  只返回失败提示消息~------false[object Object]
 ```
@@ -1118,7 +1124,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 * init 初始化第一个入参为应用名,第二个为域可不填
 
 ```
-    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ts的onWindowStageCreate方法中
+    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ets的onWindowStageCreate方法中
 ```
 
 * debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
@@ -1150,19 +1156,34 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 * save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
 
 ```
-    //存入对象类型,<>中的类型为必填
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    CacheUtil.save<Person>("csx", person);
-    //存入字符串类型
-    CacheUtil.save<string>("str", str);
+    //存入字符串<>中数据类型为必填
+    CacheUtil.save<string>("str", "测试存入字符串");
+    //存入对象T<>中数据类型为必填
+    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
+    CacheUtil.save<Person>("tetObj", person);
+    //存入对象集合<>中数据类型为必填
+    let arrP = Array<Person>();
+    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
+    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
+    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
+    CacheUtil.save<Array<Person>>("arrPerson", arrP);
 ```
 
 * get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
 
 ```
-    //获取指定key的数据<>中的类型为必填
-    let p = CacheUtil.get<Person>("csx");
-    let st = CacheUtil.get<string>("str");
+    //获取字符串<>中数据类型为必填
+    this.message = CacheUtil.get<string>("str");
+    //获取对象T<>中数据类型为必填
+    let p = CacheUtil.get<Person>("tetObj");
+    this.message = p.name + p.age + p.user.id;
+    //获取对象集合<>中数据类型为必填
+    let newStr: string = '';
+    let res = CacheUtil.get<Array<Person>>("arrPerson");
+    res.forEach(item => {
+      newStr += item.age + item.name + item.user.id + item.user.name;
+    })
+    this.message = newStr;
 ```
 
 ### 3.UI组件使用API

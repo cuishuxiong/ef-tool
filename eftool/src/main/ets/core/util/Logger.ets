@@ -1,14 +1,14 @@
 import hilog from '@ohos.hilog';
+
 /**
  * @Author csx
  * @DateTime 2023/12/29 20:10
  * @TODO Logger   日志工具类
  */
 export class Logger {
-  private static  domain: number;
+  private static domain: number;
   private static prefix: string;
   private static format: string = '%{public}s%{public}s';
-
 
   /**
    * 初始化Logger，只需传入应用名和域
@@ -16,8 +16,8 @@ export class Logger {
    * @param domain 域
    */
   static init(prefix: string = 'efTool', domain: number = 0xFF00) {
-    this.prefix = prefix;
-    this.domain = domain;
+    Logger.prefix = prefix;
+    Logger.domain = domain;
   }
 
 
@@ -26,7 +26,7 @@ export class Logger {
    * @param args 错误信息
    */
   static debug(...args: string[]): void {
-    hilog.debug(this.domain, this.prefix, this.format, args);
+    hilog.debug(Logger.domain, Logger.prefix, Logger.format, args);
   }
 
   /**
@@ -34,7 +34,7 @@ export class Logger {
    * @param args 错误信息
    */
   static info(...args: string[]): void {
-    hilog.info(this.domain, this.prefix, this.format, args);
+    hilog.info(Logger.domain, Logger.prefix, Logger.format, args);
   }
 
   /**
@@ -42,7 +42,7 @@ export class Logger {
    * @param args 错误信息
    */
   static warn(...args: string[]): void {
-    hilog.warn(this.domain, this.prefix, this.format, args);
+    hilog.warn(Logger.domain, Logger.prefix, Logger.format, args);
   }
 
   /**
@@ -50,6 +50,6 @@ export class Logger {
    * @param args 错误信息
    */
   static error(...args: string[]): void {
-    hilog.error(this.domain, this.prefix, this.format, args);
+    hilog.error(Logger.domain, Logger.prefix, Logger.format, args);
   }
 }

@@ -7,14 +7,12 @@ import { OutDTO } from '../base/OutDTO';
 import { RegexConst as Const } from '../const/RegexConst'
 
 export class PhoneUtil {
-
-
   /**
    * 验证是否为手机号码（中国）
    *
    * @param content 手机号码
    */
-  static isMobile(content: string): OutDTO {
+  static isMobile(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证手机号不能为空");
@@ -31,7 +29,7 @@ export class PhoneUtil {
    *
    * @param content 香港手机号码
    */
-  static isMobileHk(content: string): OutDTO {
+  static isMobileHk(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证手机号不能为空");
@@ -48,7 +46,7 @@ export class PhoneUtil {
    *
    * @param content 台湾手机号码
    */
-  static isMobileTw(content: string): OutDTO {
+  static isMobileTw(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证手机号不能为空");
@@ -65,7 +63,7 @@ export class PhoneUtil {
    *
    * @param content 澳门手机号码
    */
-  static isMobileMo(content: string): OutDTO {
+  static isMobileMo(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证手机号不能为空");
@@ -82,7 +80,7 @@ export class PhoneUtil {
    *
    * @param content 座机号码
    */
-  static isTel(content: string): OutDTO {
+  static isTel(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证座机号码不能为空");
@@ -99,7 +97,7 @@ export class PhoneUtil {
    *
    * @param content 手机号码
    */
-  static isTel400800(content: string): OutDTO {
+  static isTel400800(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证号码不能为空");
@@ -116,11 +114,11 @@ export class PhoneUtil {
    *
    * @param content 手机号码
    */
-  static isPhone(value: string): OutDTO {
+  static isPhone(value: string): OutDTO<string> {
     if (value == null || value == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证号码不能为空");
     }
-    return this.isMobile(value) || this.isTel(value) || this.isTel400800(value) || this.isMobileHk(value) || this.isMobileTw(value) || this.isMobileMo(value);
+    return PhoneUtil.isMobile(value) || PhoneUtil.isTel(value) || PhoneUtil.isTel400800(value) || PhoneUtil.isMobileHk(value) || PhoneUtil.isMobileTw(value) || PhoneUtil.isMobileMo(value);
   }
 }

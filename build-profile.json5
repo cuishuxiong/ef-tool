@@ -5,22 +5,31 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.cer",
-          "storePassword": "0000001B21484AFB43DE1D47241809092FC42F2DE00BDB908C192263292378E289AC748E3F3803CED18895",
+          "certpath": "/Users/csx/.ohos/config/csx_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.cer",
+          "storePassword": "0000001BCC562E1E825BD2C3D69010805E4FB89A1B8771EFB0D619C9314C153058531F59F05281CE003499",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B2E74F0749BAB660E28A8B338736A343167B4AF49E7DEB1AE7D96ED950BFCD2F501AB92AB21E01B",
-          "profile": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.p7b",
+          "keyPassword": "0000001B8439C27CD61DDED4581AC6D005E00054DA93E33E36CAF62B2766FC39E85BF98BD9E521E98643EA",
+          "profile": "/Users/csx/.ohos/config/csx_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\cui\\.ohos\\config\\auto_debug_ef-tool_com.yunkss.csx.tool_30086000716783967.p12"
+          "storeFile": "/Users/csx/.ohos/config/csx_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p12"
         }
       }
     ],
-    "compileSdkVersion": 9,
-    "compatibleSdkVersion": 9,
     "products": [
       {
         "name": "default",
         "signingConfig": "default",
+        "compileSdkVersion": "4.1.0(11)",
+        "compatibleSdkVersion": "4.1.0(11)",
+        "runtimeOS": "HarmonyOS",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
       }
     ]
   },

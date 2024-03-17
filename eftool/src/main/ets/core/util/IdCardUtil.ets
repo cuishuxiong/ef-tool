@@ -10,7 +10,6 @@ import { cityJSON } from '../const/CityConst'
 import { StringBuilder } from '../base/StringBuilder'
 
 export class IdCardUtil {
-
   /**
    * 中国公民身份证号码最小长度。
    */
@@ -27,33 +26,34 @@ export class IdCardUtil {
    * 省份代码表
    */
   private static PROVINCE_CODES: Map<String, String> = new Map<String, String>();
-
   /**
    * 城市代码表
    */
   private static CITY_CODES: Map<String, String> = new Map<String, String>();
-
   /**
    * 区域代码表
    */
   private static DISTRICT_CODES: Map<String, String> = new Map<String, String>();
 
-
   /**
    * 初始化数据
    */
-  private  static init(): void {
-    for (const province in cityJSON) {
+  private static init(): void {
+    for (let province of Object.entries(cityJSON)) {
       //设置省
-      IdCardUtil.PROVINCE_CODES.set(province.split('&')[1], province.split('&')[0]);
-      //设置城市
-      let cityList = cityJSON[province];
-      for (const city in cityList) {
-        IdCardUtil.CITY_CODES.set(city.split('&')[1], city.split('&')[0]);
-        //设置区
-        let districtList = cityList[city];
-        for (const district in districtList) {
-          IdCardUtil.DISTRICT_CODES.set(district.split('&')[1], district.split('&')[0]);
+      IdCardUtil.PROVINCE_CODES.set(province[0].split('&')[1], province[0].split('&')[0]);
+      if (province.length > 1) {
+        //设置城市
+        let cityList = province[1];
+        for (let city of Object.entries(cityList)) {
+          IdCardUtil.CITY_CODES.set(city[0].split('&')[1], city[0].split('&')[0]);
+          if (city.length > 1) {
+            //设置区
+            let districtList = city[1];
+            for (let district of Object.entries(districtList)) {
+              IdCardUtil.DISTRICT_CODES.set(district[0].split('&')[1], district[0].split('&')[0]);
+            }
+          }
         }
       }
     }
@@ -80,10 +80,10 @@ export class IdCardUtil {
    * @param idCard 待验证的身份证
    * @return 是否有效的18位身份证，忽略x的大小写
    */
-  static isValidCard18(idCard: string): OutDTO {
+  static isValidCard18(idCard: string): OutDTO<string> {
 
     if (IdCardUtil.PROVINCE_CODES.size == 0) {
-      this.init();
+      IdCardUtil.init();
     }
 
     if (IdCardUtil.CHINA_ID_MAX_LENGTH != idCard.length) {
@@ -109,7 +109,7 @@ export class IdCardUtil {
     }
 
     //校验生日
-    if (false == this.isBirthday(idCard.substring(6, 14))) {
+    if (false == IdCardUtil.isBirthday(idCard.substring(6, 14))) {
       return OutDTO.Error("生日格式不正确:" + idCard.substring(6, 14));
     }
 
@@ -117,7 +117,7 @@ export class IdCardUtil {
     let code17: string = idCard.substring(0, 17);
     if (RegUtil.isMatch(RegexConst.NUMBERS, code17)) {
       // 获取校验位
-      let val = this.getCheckCode18(code17);
+      let val = IdCardUtil.getCheckCode18(code17);
       // 第18位
       if (idCard.charAt(17).toLowerCase() === val) {
         return OutDTO.OK("身份证格式正确");
@@ -132,10 +132,10 @@ export class IdCardUtil {
    * @param idCard
    * @returns
    */
-  static isValidCard15(idCard: string): OutDTO {
+  static isValidCard15(idCard: string): OutDTO<string> {
 
     if (IdCardUtil.PROVINCE_CODES.size == 0) {
-      this.init();
+      IdCardUtil.init();
     }
 
     if (IdCardUtil.CHINA_ID_MIN_LENGTH != idCard.length) {
@@ -161,7 +161,7 @@ export class IdCardUtil {
     }
 
     //校验生日
-    if (false == this.isBirthday("19" + idCard.substring(6, 12))) {
+    if (false == IdCardUtil.isBirthday("19" + idCard.substring(6, 12))) {
       return OutDTO.Error("生日格式不正确:" + idCard.substring(6, 12));
     }
 
@@ -217,11 +217,14 @@ export class IdCardUtil {
    */
   static getProvinceCodeByIdCard(idCard: string): OutDTO<string> {
     if (IdCardUtil.PROVINCE_CODES.size == 0) {
-      this.init();
+      IdCardUtil.init();
     }
     let len = idCard.length;
     if (len == IdCardUtil.CHINA_ID_MIN_LENGTH || len == IdCardUtil.CHINA_ID_MAX_LENGTH) {
       let province = IdCardUtil.PROVINCE_CODES.get(idCard.substring(0, 2) + "0000");
+      if (!province) {
+        return OutDTO.Error("根据身份证号获取省份信息错误");
+      }
       return OutDTO.OKByDataRow(province.toString(), idCard.substring(0, 2) + "0000");
     } else {
       return OutDTO.Error("身份证长度不正确");
@@ -236,11 +239,14 @@ export class IdCardUtil {
    */
   static getCityCodeByIdCard(idCard: string): OutDTO<string> {
     if (IdCardUtil.PROVINCE_CODES.size == 0) {
-      this.init();
+      IdCardUtil.init();
     }
     let len = idCard.length;
     if (len == IdCardUtil.CHINA_ID_MIN_LENGTH || len == IdCardUtil.CHINA_ID_MAX_LENGTH) {
       let city = IdCardUtil.CITY_CODES.get(idCard.substring(0, 4) + "00");
+      if (!city) {
+        return OutDTO.Error("根据身份证号获取城市信息错误");
+      }
       return OutDTO.OKByDataRow(city.toString(), idCard.substring(0, 4) + "00");
     } else {
       return OutDTO.Error("身份证长度不正确");
@@ -256,11 +262,14 @@ export class IdCardUtil {
    */
   static getDistrictCodeByIdCard(idCard: string): OutDTO<string> {
     if (IdCardUtil.PROVINCE_CODES.size == 0) {
-      this.init();
+      IdCardUtil.init();
     }
     let len = idCard.length;
     if (len == IdCardUtil.CHINA_ID_MIN_LENGTH || len == IdCardUtil.CHINA_ID_MAX_LENGTH) {
       let district = IdCardUtil.DISTRICT_CODES.get(idCard.substring(0, 6));
+      if (!district) {
+        return OutDTO.Error("根据身份证号获取区域信息错误");
+      }
       return OutDTO.OKByDataRow(district.toString(), idCard.substring(0, 6));
     } else {
       return OutDTO.Error("身份证长度不正确");
@@ -277,7 +286,7 @@ export class IdCardUtil {
     const checkDigits: string[] = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
 
     if (!/^\d{17}$/.test(idCard)) {
-      throw OutDTO.Error("身份证号前17位格式不正确");
+      throw new Error("身份证号前17位格式不正确");
     }
 
     let sum: number = 0;
@@ -300,10 +309,9 @@ export class IdCardUtil {
     if (!match) {
       return false; // 不符合日期格式
     }
-    const [, yearStr, monthStr, dayStr] = match;
-    const year = parseInt(yearStr);
-    const month = parseInt(monthStr) - 1; // 月份从0开始，需减1
-    const day = parseInt(dayStr);
+    const year = parseInt(match[1]);
+    const month = parseInt(match[2]) - 1; // 月份从0开始，需减1
+    const day = parseInt(match[3]);
     const date = new Date(year, month, day); // 构造日期对象
     if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) {
       return false; // 日期不合法

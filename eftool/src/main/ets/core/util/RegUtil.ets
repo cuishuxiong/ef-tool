@@ -8,7 +8,6 @@ import { HashSet } from '../base/HashSet'
 import { OutDTO } from '../base/OutDTO'
 
 export class RegUtil {
-
   /**
    * 正则表达式匹配中文汉字
    */
@@ -17,12 +16,10 @@ export class RegUtil {
    * 正则表达式匹配中文字符串
    */
   private static RE_CHINESES: string = Const.CHINESES;
-
   /**
    * 正则中需要被转义的关键字
    */
   private static RE_KEYS: HashSet<string> = new HashSet<string>(['$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|']);
-
 
   /**
    * 给定内容是否匹配正则
@@ -30,7 +27,7 @@ export class RegUtil {
    * @param regex   正则
    * @param content 内容
    */
-  static isMatch(pattern: string, content: string): OutDTO {
+  static isMatch(pattern: string, content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供 null 的字符串为不匹配
       return OutDTO.Error("验证字符串不能为空");
@@ -47,7 +44,7 @@ export class RegUtil {
    *
    * @param content 邮箱字符串
    */
-  static isEmailMatch(content: string): OutDTO {
+  static isEmailMatch(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证邮箱不能为空");
@@ -64,7 +61,7 @@ export class RegUtil {
    *
    * @param content 手机号码
    */
-  static isMobileMatch(content: string): OutDTO {
+  static isMobileMatch(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证手机号不能为空");
@@ -81,7 +78,7 @@ export class RegUtil {
    *
    * @param content 身份证号
    */
-  static isIdCardMatch(content: string): OutDTO {
+  static isIdCardMatch(content: string): OutDTO<string> {
     if (content == null || content == '') {
       // 提供null的字符串为不匹配
       return OutDTO.Error("验证身份证号不能为空");

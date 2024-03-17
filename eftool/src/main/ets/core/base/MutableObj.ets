@@ -36,12 +36,12 @@ export class MutableObj<T> implements Mutable<T> {
     this.value = value;
   }
 
-  public equals(obj: object): boolean {
-    if (!(obj instanceof MutableObj)) {
-      return false;
-    }
-    return Object.is(this, obj) && Object.is(this.value, (obj as MutableObj<T>).get());
-  }
+  // public equals(obj: object): boolean {
+  //   if (!(obj instanceof MutableObj)) {
+  //     return false;
+  //   }
+  //   return Object.is(this, obj) && Object.is(this.value, (obj as MutableObj<T>).get());
+  // }
 
   public toString(): String {
     return this.value == null ? "null" : this.value.toString();

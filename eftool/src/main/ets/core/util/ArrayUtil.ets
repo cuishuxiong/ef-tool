@@ -6,7 +6,6 @@
 import { StrUtil } from './StrUtil'
 
 export class ArrayUtil {
-
   /**
    *集合为空时传入默认集合
    * @param array 判断的集合
@@ -122,36 +121,36 @@ export class ArrayUtil {
    * @param arr
    * @returns
    */
-  static clone<T>(arr: T[]): T[] {
-    return arr.map((item) => ArrayUtil.deepClone(item));
-  }
+  // static clone<T>(arr: T[]): T[] {
+  //   return arr.map((item) => ArrayUtil.deepClone(item));
+  // }
 
   /**
    * 深拷贝对象T
    * @param obj
    * @returns
    */
-  static deepClone<T extends any>(obj: T): T {
-    if (obj === null || typeof obj !== "object") {
-      return obj;
-    }
-
-    if (Array.isArray(obj)) {
-      return obj.map((item) => ArrayUtil.deepClone(item)) as any;
-    } else if (obj instanceof Date) {
-      return new Date(obj.getTime()) as any;
-    } else if (obj instanceof RegExp) {
-      return new RegExp(obj.source, obj.flags) as any;
-    } else {
-      const result: Record<string, any> = {};
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          result[key] = ArrayUtil.deepClone(obj[key]);
-        }
-      }
-      return result as T;
-    }
-  }
+  // static deepClone<T>(obj: T): T {
+  //   if (obj === null || typeof obj !== "object") {
+  //     return obj;
+  //   }
+  //
+  //   if (Array.isArray(obj)) {
+  //     return obj.map((item) => ArrayUtil.deepClone(item)) as T;
+  //   } else if (obj instanceof Date) {
+  //     return new Date(obj.getTime()) as any;
+  //   } else if (obj instanceof RegExp) {
+  //     return new RegExp(obj.source, obj.flags) as any;
+  //   } else {
+  //     const result: Record<string, any> = {};
+  //     for (const key in obj) {
+  //       if (obj.hasOwnProperty(key)) {
+  //         result[key] = ArrayUtil.deepClone(obj[key]);
+  //       }
+  //     }
+  //     return result as T;
+  //   }
+  // }
 
   /**
    * 通过传入的filter实现来过滤返回需要的元素内容
@@ -174,7 +173,9 @@ export class ArrayUtil {
    */
   static reverse<T>(array: T[], startIndexInclusive: number = 0, endIndexExclusive: number = array.length): T[] {
     for (let i = startIndexInclusive, j = endIndexExclusive - 1; i < j; i++, j--) {
-      [array[i], array[j]] = [array[j], array[i]];
+      let temp = array[j];
+      array[j] = array[i];
+      array[i] = temp;
     }
     return array;
   }
@@ -225,7 +226,7 @@ export class ArrayUtil {
    * @param override 是否覆盖模式，如果为{true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
    * @return 去重后的数组
    */
-  static distinct<T, K>(array: T[], uniqueGenerator: (item: T) => K, isOverride: boolean = false,
+  static distinct<T, K>(array: Array<T>, uniqueGenerator: (item: T) => K, isOverride: boolean = false,
   ): T[] {
     const resultMap: Map<K, T> = new Map<K, T>();
     for (const item of array) {
@@ -260,7 +261,7 @@ export class ArrayUtil {
    * @param arr 待处理的集合
    * @returns 处理后的集合
    */
-  static removeEmptyValues(arr: any[]): any[] {
+  static removeEmptyValues(arr: string[]): string[] {
     return arr.filter((value) => value !== null && value !== undefined && value !== '');
   }
 
@@ -269,8 +270,8 @@ export class ArrayUtil {
    * @param arrays  要检查的数组
    * @returns 返回一个新的联合数组
    */
-  static union<T>(...arrays: T[][]): T[] {
-    const result: T[] = [];
+  static union(...arrays: string[][]): string[] {
+    const result: string[] = [];
     for (const arr of arrays) {
       for (const item of arr) {
         if (!result.includes(item)) {
@@ -286,27 +287,27 @@ export class ArrayUtil {
    * @param arrays 要处理的数组
    * @returns 返回分组元素的新数组
    */
-  static zip<T extends any[]>(...arrays: [...T: any[]]): T[][] {
-    const maxLength = Math.max(...arrays.map(arr => arr.length));
-    const result: T[][] = [];
-    for (let i = 0; i < maxLength; i++) {
-      result[i] = arrays.map(arr => arr[i]);
-    }
-    return result;
-  }
+  // static zip<T>(...arrays: [...T: T[]]): T[][] {
+  //   const maxLength = Math.max(...arrays.map(arr => arr.length));
+  //   const result: T[][] = [];
+  //   for (let i = 0; i < maxLength; i++) {
+  //     result[i] = arrays.map(arr => arr[i]);
+  //   }
+  //   return result;
+  // }
 
   /**
    * 这个方法类似于zip除了它接收分组元素的数组，并且创建一个数组，分组元素到打包前的结构(返回数组的第一个元素包含所有的输入数组的第一元素，第一个元素包含了所有的输入数组的第二元素，依此类推)
    * @param array 要处理的分组元素数组
    * @returns 返回重组元素的新数组
    */
-  static unzip<T extends any[]>(array: T[][]): T[][] {
-    const maxLength = Math.max(...array.map(arr => arr.length));
-    const result: T[][] = [];
-    for (let i = 0; i < maxLength; i++) {
-      result[i] = array.map(arr => arr[i]);
-    }
-    return result;
-  }
+  // static unzip<T extends any[]>(array: T[][]): T[][] {
+  //   const maxLength = Math.max(...array.map(arr => arr.length));
+  //   const result: T[][] = [];
+  //   for (let i = 0; i < maxLength; i++) {
+  //     result[i] = array.map(arr => arr[i]);
+  //   }
+  //   return result;
+  // }
 }
 
