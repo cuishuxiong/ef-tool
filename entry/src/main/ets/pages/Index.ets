@@ -15,7 +15,11 @@ import {
   RegUtil,
   RegexConst,
   RandomUtil,
-  IdUtil
+  IdUtil,
+  AES,
+  SM4,
+  RSA,
+  SM2
 } from '@yunkss/eftool'
 
 
@@ -51,6 +55,7 @@ struct Index {
 
   aboutToAppear(): void {
     this.test();
+    // this.testCrypto();
   }
 
   cancel() {
@@ -59,6 +64,30 @@ struct Index {
 
   ok() {
     ToastUtil.showToast('点击了确定')
+  }
+
+  async testCrypto() {
+
+    let aes = await AES.generateAesKey();
+    this.message = aes.getDataRow();
+
+    let out = await AES.encode('测试加密字符串Test!', aes.getDataRow());
+
+    this.message = out.getDataRow();
+
+    let decode = await AES.decode(out.getDataRow(), aes.getDataRow());
+    this.message = decode.getDataRow();
+    // let sm4 = await SM4.generateSM4Key();
+    // this.message = sm4.getDataRow();
+
+    // let rsa = await RSA.generateRSAKey();
+    // this.message = rsa.getDataRow().publicKey;
+    // this.message = rsa.getDataRow().privateKey;
+
+    // let sm2 = await SM2.generateSM2Key();
+    // this.message = sm2.getDataRow().publicKey;
+    // this.message = sm2.getDataRow().privateKey;
+
   }
 
   test(): void {
@@ -173,7 +202,7 @@ struct Index {
           .fontWeight(FontWeight.Bold)
         Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:2000,bottom:10vp');
-          this.test()
+          this.testCrypto();
         })
         Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
           ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
@@ -255,7 +284,7 @@ struct Index {
           ActionUtil.showActionSheet({
             title: '弹框的标题',
             msg: '弹框的消息',
-            subtitle:'副标题',
+            subtitle: '副标题',
             alignment: DialogAlignment.Top,
             sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             clickCallBack: (data: string) => {

@@ -38,9 +38,13 @@ export { PageResult } from './src/main/ets/core/page/PageResult';
 
 // export { MD5 } from './src/main/ets/core/crypto/MD5';
 
-// export { RSA } from './src/main/ets/core/crypto/RSA';
+export { RSA } from './src/main/ets/core/crypto/RSA';
 
-// export { AES } from './src/main/ets/core/crypto/AES';
+export { AES } from './src/main/ets/core/crypto/AES';
+
+export { SM4 } from './src/main/ets/core/crypto/SM4';
+
+export { SM2 } from './src/main/ets/core/crypto/SM2';
 
 export { Logger } from './src/main/ets/core/util/Logger';
 
@@ -56,8 +60,4 @@ export { ActionUtil } from './src/main/ets/ui/prompt/ActionUtil';
 
 export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
 
-// export { SM2 } from './src/main/ets/core/crypto/sm/sm2/Index';
-
 // export { SM3 } from './src/main/ets/core/crypto/sm/sm3/Index';
-
-// export { SM4 } from './src/main/ets/core/crypto/sm/sm4/Index';
