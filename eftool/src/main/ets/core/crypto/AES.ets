@@ -85,15 +85,18 @@ export class AES {
     let cipher = crypto.createCipher('AES256|GCM|PKCS7');
     //初始化加密
     await cipher.init(mode, symKey, AES.gcmParams);
+    //封装加密所需数据
+    let encode = new util.TextEncoder();
+    let a = encode.encodeInto(str);
     //开始加密
-    let updateOutput = await cipher.update({ data: new Uint8Array(buffer.from(str, 'utf-8').buffer) });
+    let updateOutput = await cipher.update({ data: encode.encodeInto(str) });
     //拼接
     let finalOutput = await cipher.doFinal(null);
     if (finalOutput != null) {
       AES.gcmParams.authTag = finalOutput;
     }
     //转换字符串
-    let result = StrAndUintUtil.unitArray2String(finalOutput.data);
+    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
     //返回
     return OutDTO.OKByDataRow<string>('AES加密成功~', result);
   }
@@ -115,17 +118,8 @@ export class AES {
     //解密
     let updateOutput = await cipher.update({ data: StrAndUintUtil.stringToByteArray(str) });
     //判断是否完成
-    // let finalOutput = await cipher.doFinal(null);
-    // if (finalOutput == null) {
-    //
-    // }
-    let s = StrAndUintUtil.unitArray2String(updateOutput.data);
-
-
-
+    let finalOutput = await cipher.doFinal(null);
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    let decodeStr = decode.decodeWithStream(StrAndUintUtil.stringToUnit8Array(s));
-
-    return OutDTO.OKByDataRow('AES解密成功~', decodeStr);
+    return OutDTO.OKByDataRow('AES解密成功~', decode.decodeWithStream(updateOutput.data));
   }
 }
