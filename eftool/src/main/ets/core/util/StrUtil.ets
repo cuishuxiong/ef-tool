@@ -37,7 +37,7 @@ export class StrUtil {
   }
 
   /**
-   *判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
+   * 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
    * @param str
    * @returns
    */
@@ -46,7 +46,7 @@ export class StrUtil {
   }
 
   /**
-   *
+   * 判断传入的对象是否是空格
    * @param obj
    * @returns
    */
@@ -59,7 +59,7 @@ export class StrUtil {
   }
 
   /**
-   *
+   * 判断传入的对象是否是空
    * @param obj
    * @returns
    */

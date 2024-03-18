@@ -1,4 +1,22 @@
-import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUtil } from '@yunkss/eftool'
+import {
+  CacheUtil,
+  OutDTO,
+  Logger,
+  IdCardUtil,
+  ToastUtil,
+  ActionUtil,
+  DialogUtil,
+  ArrayUtil,
+  ObjectUtil,
+  PhoneUtil,
+  StrUtil,
+  DateUtil,
+  CharUtil,
+  RegUtil,
+  RegexConst,
+  RandomUtil,
+  IdUtil
+} from '@yunkss/eftool'
 
 
 class User {
@@ -67,7 +85,6 @@ struct Index {
       newStr += item.age + item.name + item.user.id + item.user.name;
     })
     this.message = newStr;
-
     //只需成功要提示
     Logger.error(OutDTO.OK('获取提示成功~').getMsg());
     //需要成功提示和单行数据-如更新
@@ -82,9 +99,70 @@ struct Index {
     //需要失败提示和详细单行数据
     let errDTO = OutDTO.ErrorByDataRow<Person>('获取数据失败~', p);
     Logger.error("结果:" + errDTO.getSuccess() + "---" + errDTO.getMsg(), JSON.stringify(errDTO.getDataRow()));
+    //身份证校验
+    Logger.error(IdCardUtil.isValidCard18("120102199001015965").getMsg(), '------------------');
+    this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
+    Logger.error(IdCardUtil.isValidCard15("420106840901234").getMsg(), '0000000000000000')
+    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    n.forEach(item => {
+      console.error(item);
+    })
 
-    let o = IdCardUtil.isValidCard18('142303199507290633');
-    Logger.error(o.getMsg(), o.getSuccess() + "");
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+
+    console.error(PhoneUtil.isPhone("17111114114").getMsg())
+
+    console.error(StrUtil.hasBlank("", "232323") + "")
+
+    console.error(StrUtil.isEmpty(' ') + "")
+
+    console.error(StrUtil.isNotBlank('222') + "")
+
+    console.error(StrUtil.trim([" 你好 ", " hi", "hello "]).join("----"))
+
+    const obj: Record<string, string> = { 'key': 'this is value' } // key的值类型为 string | undefined
+    const test = StrUtil.asString(obj)
+
+    const a = StrUtil.isBlankIfStr(obj);
+
+    this.message = DateUtil.parse("2023-01-01") + "";
+
+    console.error(DateUtil.formatDate("2023/1/1", 'yyyy-MM-dd HH:mm:ss'))
+
+    console.error(DateUtil.format(new Date, 'HH:mm:ss'))
+
+    if (CharUtil.isBlankChar(0xFEFF)) {
+      this.message = "111"
+    } else {
+      this.message = "222"
+    }
+
+    let res1 = RegUtil.isMatch(RegexConst.EMAIL, '111111');
+    console.error(res1.getSuccess() + "---" + res1.getMsg());
+
+    let res2 = RegUtil.isEmailMatch('13191191111@163.com');
+    console.error(res2.getSuccess() + "---" + res2.getMsg());
+
+    this.message = RegUtil.isIdCardMatch('111111111111111111').getMsg();
+
+    this.message = RegUtil.isEmailMatch('13191191111').getMsg();
+    let str: string[] = ["1", ""];
+    if (ArrayUtil.strValIsNotEmpty(str)) {
+      this.message = "不是空的";
+    } else {
+      this.message = "是空的"
+    }
+    if (ArrayUtil.isEmpty(str)) {
+      this.message = "是空的";
+    } else {
+      this.message = "不是空的"
+    }
+
+
+    ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
+      this.message += item + "、";
+    })
+    this.message = IdUtil.randomUUID();
   }
 
   build() {
@@ -109,6 +187,13 @@ struct Index {
             cancelCallBack: this.cancel
           });
         })
+        Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+          DialogUtil.showDialog({
+            msg: '这是一个弹框提示',
+            okCallBack: this.test   //调用方法无需小括号()
+          });
+        })
+
         Button("action").margin({ bottom: '10vp' }).onClick(() => {
           ActionUtil.showActionMenu({
             title: '修改后的标题', btn: [
@@ -160,6 +245,18 @@ struct Index {
         })
         Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
           ActionUtil.showActionSheet({
+            sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            clickCallBack: (data: string) => {
+              ToastUtil.showToast(data);
+            }
+          });
+        })
+        Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
+          ActionUtil.showActionSheet({
+            title: '弹框的标题',
+            msg: '弹框的消息',
+            subtitle:'副标题',
+            alignment: DialogAlignment.Top,
             sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             clickCallBack: (data: string) => {
               ToastUtil.showToast(data);

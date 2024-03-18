@@ -28,6 +28,15 @@ export class ActionUtil {
       ToastUtil.showToast('菜单按钮数量必须大于1,且小于6!');
       return;
     }
+    if (!options.title) {
+      options.title = Const.ACTION_TITLE;
+    }
+    if (options.isModal == undefined) {
+      options.isModal = true;
+    }
+    if (options.showInSubWindow == undefined) {
+      options.showInSubWindow = false;
+    }
     let resBtn: [Button, Button?, Button?, Button?, Button?, Button?] = [{
       text: options.btn[0].text,
       color: options.btn[0].color
@@ -70,6 +79,15 @@ export class ActionUtil {
   static showMenu(options: ActionBtnsOptions) {
     if (!options) {
       options = new ActionBtnsOptions();
+    }
+    if (!options.title) {
+      options.title = Const.ACTION_TITLE;
+    }
+    if (options.isModal == undefined) {
+      options.isModal = true;
+    }
+    if (options.showInSubWindow == undefined) {
+      options.showInSubWindow = false;
     }
     const btns: [Button, Button?, Button?, Button?, Button?, Button?] = [
       { text: options.btn[0], color: Const.ALERT_OK_BG_COLOR }
@@ -127,7 +145,7 @@ export class ActionUtil {
       options.maskRect = { x: 0, y: 0, width: '100%', height: '100%' };
     }
     if (options.autoCancel == undefined) {
-      options.autoCancel = true;
+      options.autoCancel = false;
     }
     if (options.isModal == undefined) {
       options.isModal = true;
@@ -197,7 +215,7 @@ class SheetOption {
  * 简易版action入参对象
  */
 class ActionBtnsOptions {
-  title?: ResourceStr = Const.ACTION_TITLE;
+  title?: ResourceStr;
   btn: Array<string> = new Array();
   clickCallBack: (data: string) => void = () => {
   };
@@ -209,10 +227,10 @@ class ActionBtnsOptions {
  * actionMenu入参实体
  */
 class ActionOptions {
-  title?: ResourceStr = Const.ACTION_TITLE;
+  title?: ResourceStr;
   btn: Array<Buttons> = new Array();
-  showInSubWindow?: boolean = false;
-  isModal?: boolean = true;
+  showInSubWindow?: boolean;
+  isModal?: boolean;
 }
 
 /**

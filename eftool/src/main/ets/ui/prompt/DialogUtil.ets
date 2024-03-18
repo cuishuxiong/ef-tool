@@ -93,13 +93,17 @@ export class DialogUtil {
 
   /**
    * 弹出一个警告提示框
-   * @param msg  警告消息
    * @param options
    * {
+   * msg:警告消息,
    * title:提示标题默认为(警告提示),
+   * subtitle:副标题,
    * autoCancel:点击遮罩是否自动关闭默认为(false),
    * alignment:弹框对齐方式默认为(底部Bottom),
-   * gridCount:宽度所占用栅格数默认为10,buttons:按钮
+   * gridCount:宽度所占用栅格数默认为10,
+   * buttons:按钮,
+   * offset:弹窗相对alignment所在位置的偏移量,
+   * maskRect:弹窗遮蔽层区域
    * }
    * @Param buttons:AlertDialogBtn 弹框按钮类只允许有两个第一个为确认按按,第二个为取消按钮
    * @Param AlertDialogBtn
@@ -139,7 +143,7 @@ export class DialogUtil {
       options.maskRect = { x: 0, y: 0, width: '100%', height: '100%' };
     }
     if (options.autoCancel == undefined) {
-      options.autoCancel = true;
+      options.autoCancel = false;
     }
     if (!options.offset) {
       options.offset = options.alignment == DialogAlignment.Bottom || options.alignment == DialogAlignment.BottomEnd || options.alignment == DialogAlignment.BottomStart ? {
