@@ -1,6 +1,5 @@
 import crypto from '@ohos.security.cryptoFramework';
 import { OutDTO } from '../base/OutDTO';
-import { StringBuilder } from '../base/StringBuilder';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { util } from '@kit.ArkTS';
 import { RandomUtil } from '../util/RandomUtil';
@@ -11,6 +10,7 @@ import { RandomUtil } from '../util/RandomUtil';
  * @TODO SM4
  */
 export class SM4 {
+
   /**
    * 生成SM4的对称密钥
    * @returns SM4密钥
@@ -130,7 +130,7 @@ export class SM4 {
     //解密
     let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    return OutDTO.OKByDataRow('AES解密成功~', decode.decodeWithStream(updateOutput.data));
+    return OutDTO.OKByDataRow('SM4-ECB解密成功~', decode.decodeWithStream(updateOutput.data));
   }
 
   /**
