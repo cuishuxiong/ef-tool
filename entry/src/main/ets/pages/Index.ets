@@ -20,7 +20,8 @@ import {
   SM4,
   RSA,
   SM2,
-  DES
+  DES,
+  CryptoUtil
 } from '@yunkss/eftool'
 
 
@@ -69,110 +70,68 @@ struct Index {
 
   async testCrypto() {
 
+    //获取iv
+    let iv = await CryptoUtil.generateIV();
+
+    //AES
     // let aes = await AES.generateAesKey();
     // this.message = aes.getDataRow();
-
-    // let out = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
-
-    // this.message = out.getDataRow();
-
-    // let decode = await AES.decodeGCM(out.getDataRow(), aes.getDataRow());
-    // this.message = decode.getDataRow();
-
-    // let iv = await AES.generateIV();
-
-    // let encode = await AES.encodeCBC('测试CBC加密字符串Test!',aes.getDataRow(),iv.getDataRow());
-
+    // let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
+    // this.message = encodeGCM.getDataRow();
+    // let decodeGCM = await AES.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
+    // this.message = decodeGCM.getDataRow();
+    // let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
     // this.message = encode.getDataRow();
-
-    // let decode = await AES.decodeCBC(encode.getDataRow(),aes.getDataRow(),iv.getDataRow());
-
+    // let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
     // this.message = decode.getDataRow();
 
+    //SM4
     // let sm4 = await SM4.generateSM4Key();
-
     // this.message = sm4.getDataRow();
+    // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    // this.message = encodeECB.getDataRow();
+    // let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    // this.message = decodeECB.getDataRow();
+    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    // this.message = encodeCBC.getDataRow();
+    // let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    // this.message = decodeCBC.getDataRow();
 
-    // let encode = await SM4.encodeECB('测试SM4加密字符串Test!',sm4.getDataRow());
-
-    // this.message = encode.getDataRow();
-
-    // let decode =  await SM4.decodeECB(encode.getDataRow(),sm4.getDataRow());
-
-    // this.message = decode.getDataRow();
-
-    // let iv = await SM4.generateIV();
-
-    // let encode = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!',sm4.getDataRow(),iv.getDataRow());
-
-    // this.message = encode.getDataRow();
-
-    // let decode = await SM4.decodeCBC(encode.getDataRow(),sm4.getDataRow(),iv.getDataRow());
-
-    // this.message = decode.getDataRow();
-
+    //3DES
     // let des = await DES.generate3DESKey();
-
     // this.message = des.getDataRow();
+    // let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
+    // this.message = encodeECB.getDataRow();
+    // let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
+    // this.message = decodeECB.getDataRow();
+    // let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
+    // this.message = encodeCBC.getDataRow();
+    // let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
+    // this.message = decodeCBC.getDataRow();
 
-    // let encode = await DES.encodeECB('测试3DES-ECB加密字符串Test!',des.getDataRow());
-
-    // this.message = encode.getDataRow();
-
-    // let decode =  await DES.decodeECB(encode.getDataRow(),des.getDataRow());
-
-    // this.message = decode.getDataRow();
-
-    // let iv = await DES.generateIV();
-
-    // let encode = await DES.encodeCBC('测试3DES-CBC加密字符串Test!',des.getDataRow(),iv.getDataRow());
-
-    // this.message = encode.getDataRow();
-
-    // let decode = await DES.decodeCBC(encode.getDataRow(),des.getDataRow(),iv.getDataRow());
-
-    // this.message = decode.getDataRow();
-
+    //RSA
     // let rsa = await RSA.generateRSAKey();
-
     // this.message = rsa.getDataRow().publicKey;
-
     // let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~',rsa.getDataRow().publicKey);
-
     // this.message = encode.getDataRow();
-
     // let decode = await RSA.decodePKCS1(encode.getDataRow(),rsa.getDataRow().privateKey);
-
     // this.message = decode.getDataRow();
-
     // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~',rsa.getDataRow().privateKey);
-
     // this.message = sign.getDataRow();
-
     // let verify = await RSA.verifyPKCS1(sign.getDataRow(),'这个是RSA的验签字符串~~',rsa.getDataRow().publicKey);
-
     // this.message = verify.getMsg();
 
-    let sm2 = await SM2.generateSM2Key();
-
-    this.message = sm2.getDataRow().publicKey;
-
-    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
-
-    this.message = encode.getDataRow();
-
-    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
-
-    this.message = decode.getDataRow();
-
-    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
-
-    this.message = sign.getDataRow();
-
-    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
-
-    this.message = verify.getMsg();
-
+    //SM2
+    // let sm2 = await SM2.generateSM2Key();
+    // this.message = sm2.getDataRow().publicKey;
+    // let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    // this.message = encode.getDataRow();
+    // let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    // this.message = decode.getDataRow();
+    // let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
+    // this.message = sign.getDataRow();
+    // let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+    // this.message = verify.getMsg();
 
   }
 

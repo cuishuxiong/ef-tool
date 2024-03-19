@@ -3,6 +3,7 @@ import { OutDTO } from '../base/OutDTO';
 import { util } from '@kit.ArkTS';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { RandomUtil } from '../util/RandomUtil';
+import { CryptoUtil } from '../util/CryptoUtil';
 
 
 /**
@@ -43,54 +44,13 @@ export class AES {
   }
 
   /**
-   * 根据传入的iv字符串转换iv对象
-   * @param ivStr
-   * @returns
-   */
-  private static genIvParamsSpec(ivStr: string): crypto.IvParamsSpec {
-    let ivBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(ivStr) };
-    let ivParamsSpec: crypto.IvParamsSpec = {
-      algName: "IvParamsSpec",
-      iv: ivBlob
-    };
-    return ivParamsSpec;
-  }
-
-  /**
-   * 生成CBC模式的iv
-   * @returns iv字符串
-   */
-  static generateIV(): OutDTO<string> {
-    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16));
-  }
-
-
-  /**
    * 生成AES的对称密钥
    * @returns AES密钥
    */
   static async generateAesKey(): Promise<OutDTO<string>> {
-    // 创建对称密钥生成器
-    let symKeyGenerator = crypto.createSymKeyGenerator('AES256');
-    // 通过非对称密钥生成器，随机生成非对称密钥
-    let promiseSymKey = await symKeyGenerator.generateSymKey();
-    //转换成可以读懂的字符串
-    let key = StrAndUintUtil.unitArray2String(promiseSymKey.getEncoded().data);
-    // 获取对称密钥的二进制数据
-    return OutDTO.OKByDataRow<string>('生成AES密钥成功~', key);
+    return CryptoUtil.generateSymKey('AES256');
   }
 
-  /**
-   * 将字符串AESKey转换为symKey对象
-   * @param aesKey字符串key
-   * @returns
-   */
-  static async convertKeyFromStr(aesKey: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(aesKey) };
-    let aesGenerator = crypto.createSymKeyGenerator('AES256');
-    let symKey = await aesGenerator.convertKey(symKeyBlob);
-    return symKey;
-  }
 
   /**
    * 加密-GCM模式
@@ -100,7 +60,7 @@ export class AES {
    */
   static async encodeGCM(str: string, aesKey: string): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await AES.convertKeyFromStr(aesKey);
+    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
@@ -132,13 +92,13 @@ export class AES {
    */
   static async encodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await AES.convertKeyFromStr(aesKey);
+    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
     let cipher = crypto.createCipher('AES256|CBC|PKCS7');
     //初始化加密
-    await cipher.init(mode, symKey, AES.genIvParamsSpec(iv));
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
@@ -156,7 +116,7 @@ export class AES {
    */
   static async decodeGCM(str: string, aesKey: string): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await await AES.convertKeyFromStr(aesKey);
+    let symKey = await await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
@@ -180,13 +140,13 @@ export class AES {
    */
   static async decodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await await AES.convertKeyFromStr(aesKey);
+    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
     let cipher = crypto.createCipher('AES256|CBC|PKCS7');
     //初始化解密
-    await cipher.init(mode, symKey, AES.genIvParamsSpec(iv));
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
     //解密
     let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });

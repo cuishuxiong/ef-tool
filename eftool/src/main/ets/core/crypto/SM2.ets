@@ -2,6 +2,7 @@ import { OutDTO } from '../base/OutDTO';
 import crypto from '@ohos.security.cryptoFramework';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { util } from '@kit.ArkTS';
+import { CryptoKey, CryptoUtil } from '../util/CryptoUtil';
 
 /**
  * @Author csx
@@ -13,40 +14,10 @@ export class SM2 {
    * 生成SM2的非对称密钥
    * @returns SM2密钥{publicKey:公钥,privateKey:私钥}
    */
-  static async generateSM2Key(): Promise<OutDTO<SM2Key>> {
-    // 创建非对称密钥生成器
-    let rsaGenerator = crypto.createAsyKeyGenerator('SM2_256');
-    // 通过非对称密钥生成器，随机生成非对称密钥
-    let promiseKeyPair = await rsaGenerator.generateKeyPair();
-    // 转换成可以读懂的私钥字符串
-    let pubKey = StrAndUintUtil.unitArray2String(promiseKeyPair.pubKey.getEncoded().data);
-    let priKey = StrAndUintUtil.unitArray2String(promiseKeyPair.priKey.getEncoded().data);
-    return OutDTO.OKByDataRow<SM2Key>('生成SM2公私钥成功~', new SM2Key(pubKey, priKey));
+  static async generateSM2Key(): Promise<OutDTO<CryptoKey>> {
+    return CryptoUtil.generateCryptoKey('SM2_256');
   }
 
-  /**
-   * 将字符串pubKey转换为symKey对象
-   * @param publicKey字符串key
-   * @returns
-   */
-  static async convertPubKeyFromStr(publicKey: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(publicKey) };
-    let aesGenerator = crypto.createAsyKeyGenerator('SM2_256');
-    let symKey = await aesGenerator.convertKey(symKeyBlob, null);
-    return symKey;
-  }
-
-  /**
-   * 将字符串priKey转换为symKey对象
-   * @param privateKey字符串key
-   * @returns
-   */
-  static async convertPriKeyFromStr(privateKey: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(privateKey) };
-    let aesGenerator = crypto.createAsyKeyGenerator('SM2_256');
-    let symKey = await aesGenerator.convertKey(null, symKeyBlob);
-    return symKey;
-  }
 
   /**
    * 加密
@@ -55,7 +26,7 @@ export class SM2 {
    */
   static async encode(str: string, pubKey: string): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await SM2.convertPubKeyFromStr(pubKey);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, 'SM2_256');
     //生成加密器
     let encoder = crypto.createCipher("SM2_256|SM3");
     //初始化加密环境
@@ -76,7 +47,7 @@ export class SM2 {
    */
   static async decode(str: string, priKey: string): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await SM2.convertPriKeyFromStr(priKey);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, 'SM2_256');
     //生成解密器
     let encoder = crypto.createCipher("SM2_256|SM3");
     //初始化解密环境
@@ -95,7 +66,7 @@ export class SM2 {
    */
   static async sign(str: string, priKey: string): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await SM2.convertPriKeyFromStr(priKey);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, 'SM2_256');
     //创建签名器
     let signer = crypto.createSign("SM2_256|SM3");
     //初始化签名器
@@ -118,7 +89,7 @@ export class SM2 {
    */
   static async verify(signStr: string, verifyStr: string, pubKey: string): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await SM2.convertPubKeyFromStr(pubKey);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, 'SM2_256');
     //验签器
     let verifyer = crypto.createVerify("SM2_256|SM3");
     //初始化验签器
@@ -135,26 +106,5 @@ export class SM2 {
     } else {
       return OutDTO.Error("验签失败,签名不正确");
     }
-  }
-
-}
-
-
-/**
- * RSA密钥对象
- */
-class SM2Key {
-  /**
-   * 公钥
-   */
-  publicKey: string;
-  /**
-   * 私钥
-   */
-  privateKey: string;
-
-  constructor(pubKey: string, priKey: string) {
-    this.publicKey = pubKey;
-    this.privateKey = priKey;
   }
 }

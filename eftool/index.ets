@@ -48,6 +48,8 @@ export { SM2 } from './src/main/ets/core/crypto/SM2';
 
 export { DES } from './src/main/ets/core/crypto/DES';
 
+export { CryptoUtil } from './src/main/ets/core/util/CryptoUtil';
+
 export { Logger } from './src/main/ets/core/util/Logger';
 
 export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';

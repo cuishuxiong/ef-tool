@@ -2,6 +2,7 @@ import { OutDTO } from '../base/OutDTO';
 import crypto from '@ohos.security.cryptoFramework';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { util } from '@kit.ArkTS';
+import { CryptoKey, CryptoUtil } from '../util/CryptoUtil';
 
 /**
  * @Author csx
@@ -14,39 +15,8 @@ export class RSA {
    * 生成RSA的非对称密钥
    * @returns RSA密钥{publicKey:公钥,privateKey:私钥}
    */
-  static async generateRSAKey(): Promise<OutDTO<RSAKey>> {
-    // 创建非对称密钥生成器
-    let rsaGenerator = crypto.createAsyKeyGenerator('RSA1024');
-    // 通过非对称密钥生成器，随机生成非对称密钥
-    let promiseKeyPair = await rsaGenerator.generateKeyPair();
-    // 转换成可以读懂的公私钥字符串
-    let pubKey = StrAndUintUtil.unitArray2String(promiseKeyPair.pubKey.getEncoded().data);
-    let priKey = StrAndUintUtil.unitArray2String(promiseKeyPair.priKey.getEncoded().data);
-    return OutDTO.OKByDataRow<RSAKey>('生成RSA公私钥成功~', new RSAKey(pubKey, priKey));
-  }
-
-  /**
-   * 将字符串pubKey转换为symKey对象
-   * @param publicKey字符串key
-   * @returns
-   */
-  static async convertPubKeyFromStr(publicKey: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(publicKey) };
-    let aesGenerator = crypto.createAsyKeyGenerator('RSA1024');
-    let symKey = await aesGenerator.convertKey(symKeyBlob, null);
-    return symKey;
-  }
-
-  /**
-   * 将字符串priKey转换为symKey对象
-   * @param privateKey字符串key
-   * @returns
-   */
-  static async convertPriKeyFromStr(privateKey: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(privateKey) };
-    let aesGenerator = crypto.createAsyKeyGenerator('RSA1024');
-    let symKey = await aesGenerator.convertKey(null, symKeyBlob);
-    return symKey;
+  static async generateRSAKey(): Promise<OutDTO<CryptoKey>> {
+    return CryptoUtil.generateCryptoKey('RSA1024');
   }
 
   /**
@@ -56,7 +26,7 @@ export class RSA {
    */
   static async encodePKCS1(str: string, pubKey: string): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await RSA.convertPubKeyFromStr(pubKey);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, 'RSA1024');
     //生成加密器
     let encoder = crypto.createCipher("RSA1024|PKCS1");
     //初始化加密环境
@@ -77,7 +47,7 @@ export class RSA {
    */
   static async decodePKCS1(str: string, priKey: string): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await RSA.convertPriKeyFromStr(priKey);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, 'RSA1024');
     //生成解密器
     let encoder = crypto.createCipher("RSA1024|PKCS1");
     //初始化解密环境
@@ -96,7 +66,7 @@ export class RSA {
    */
   static async signPKCS1(str: string, priKey: string): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await RSA.convertPriKeyFromStr(priKey);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, 'RSA1024');
     //创建签名器
     let signer = crypto.createSign("RSA1024|PKCS1|SHA256");
     //初始化签名器
@@ -119,7 +89,7 @@ export class RSA {
    */
   static async verifyPKCS1(signStr: string, verifyStr: string, pubKey: string): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await RSA.convertPubKeyFromStr(pubKey);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, 'RSA1024');
     //验签器
     let verifyer = crypto.createVerify("RSA1024|PKCS1|SHA256");
     //初始化验签器
@@ -136,24 +106,5 @@ export class RSA {
     } else {
       return OutDTO.Error("验签失败,签名不正确");
     }
-  }
-}
-
-/**
- * RSA密钥对象
- */
-class RSAKey {
-  /**
-   * 公钥
-   */
-  publicKey: string;
-  /**
-   * 私钥
-   */
-  privateKey: string;
-
-  constructor(pubKey: string, priKey: string) {
-    this.publicKey = pubKey;
-    this.privateKey = priKey;
   }
 }

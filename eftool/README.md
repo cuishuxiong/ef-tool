@@ -1,9 +1,8 @@
 # <center>eftool</center>
 
-# <center>V1.1.0(API11)</center>   
+# <center>V1.1.1(API11)</center>
 
 --------------------------------------------------------------------------------
-
 
 ## 📚简介
 
@@ -35,23 +34,28 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 1.基础类组件
 
-| 模块         | 介绍              |
-|------------|-----------------|
-| IdCardUtil | 提供对身份证校验系列方法    |
-| IdUtil     | 提供生成ID的一系列方法    |
-| ArrayUtil  | 提供对集合的一些常用的方法   |
-| DateUtil   | 提供对日期的一系列封装     |
-| ObjectUtil | 提供对于对象的系列操作方法   |
-| RandomUtil | 提供随机数的系列方法      |
-| RegUtil    | 提供对于常用正则表达式的方法  |
-| StrUtil    | 提供对于字符串的操作方法    |
-| PhoneUtil  | 提供常用的手机座机等判断    |
-| OutDTO     | 提供常用的返回实体对象     |
-| CharUtil   | 提供常用的字符操作       |
-| CacheUtil  | 提缓存数据并且提取数据操作   |
-| Logger     | 提供常用的打印日志的方法    |
-| RegexConst | 提供常用的正则表达式常量    |
-| DateConst  | 提供常用的日期格式化表达式常量 |
+| 模块         | 介绍                                   |
+|------------|--------------------------------------|
+| IdCardUtil | 提供对身份证校验系列方法                         |
+| RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| DES        | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
+| SM2        | 提供SM2生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM4        | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| IdUtil     | 提供生成ID的一系列方法                         |
+| ArrayUtil  | 提供对集合的一些常用的方法                        |
+| DateUtil   | 提供对日期的一系列封装                          |
+| ObjectUtil | 提供对于对象的系列操作方法                        |
+| RandomUtil | 提供随机数的系列方法                           |
+| RegUtil    | 提供对于常用正则表达式的方法                       |
+| StrUtil    | 提供对于字符串的操作方法                         |
+| PhoneUtil  | 提供常用的手机座机等判断                         |
+| OutDTO     | 提供常用的返回实体对象                          |
+| CharUtil   | 提供常用的字符操作                            |
+| CacheUtil  | 提缓存数据并且提取数据操作                        |
+| Logger     | 提供常用的打印日志的方法                         |
+| RegexConst | 提供常用的正则表达式常量                         |
+| DateConst  | 提供常用的日期格式化表达式常量                      |
 
 ### 2.UI类组件
 
@@ -149,7 +153,165 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出 true--142303--汾阳市
 ```
 
-#### 2.IdUtil的方法
+#### 2.RSA的方法【返回结果均为OutDTO对象】
+
+* generateRsaKey 生成RSA的非对称密钥
+
+```
+    const keyPair = await RSA.generateRsaKey();
+    console.error("generateRsaKey结果:" + keyPair.getSuccess() + "---" + keyPair.getMsg()
+    + "\n" + "公钥:" + keyPair.getDataRow().publicKey + "私钥:" + keyPair.getDataRow().privateKey)
+```
+
+* encode 加密
+
+```
+    const encode = await RSA.encode('this is csx RSA!', keyPair.getDataRow().publicKey);
+    console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decode = await RSA.decode(encode.getDataRow(), keyPair.getDataRow().privateKey);
+    console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
+```
+
+* sign 签名
+
+```
+    const sign = await RSA.sign('this is csx RSA', keyPair.getDataRow().privateKey);
+    console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
+```
+
+* verify 验签
+
+```
+    const result = await RSA.verify(sign.getDataRow(), 'this is csx RSA', keyPair.getDataRow().publicKey);
+    console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
+```
+
+#### 3.AES的方法【返回结果均为OutDTO对象】
+
+* generateAesKey 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
+
+```
+    const key = await  AES.convertKey('abcdefgabcdefg12');
+    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
+```
+
+* encode 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 4.DES的方法【返回结果均为OutDTO对象】
+
+* generateAesKey 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
+
+```
+    const key = await  AES.convertKey('abcdefgabcdefg12');
+    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
+```
+
+* encode 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 5.SM2的方法【返回结果均为OutDTO对象】
+
+* generateAesKey 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
+
+```
+    const key = await  AES.convertKey('abcdefgabcdefg12');
+    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
+```
+
+* encode 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 6.SM4的方法【返回结果均为OutDTO对象】
+
+* generateAesKey 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
+
+```
+    const key = await  AES.convertKey('abcdefgabcdefg12');
+    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
+```
+
+* encode 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decode 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 7.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -179,7 +341,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-#### 3.OutDTO的方法
+#### 8.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -253,7 +415,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * setDataTable 设置多行数据
 
-#### 4.ArrayUtil的方法
+#### 9.ArrayUtil的方法
 
 * append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
@@ -403,7 +565,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  不是空的
 ```
 
-#### 5.DateUtil的方法
+#### 10.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -444,7 +606,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     console.log(diff + ""); //输出 70
 ```
 
-#### 6.RegUtil的方法
+#### 11.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -478,7 +640,74 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  false---身份证号格式不正确,请检查
 ```
 
-#### 7.StrUtil的方法
+#### 12.Logger的方法
+
+* init 初始化第一个入参为应用名,第二个为域可不填
+
+```
+    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ets的onWindowStageCreate方法中
+```
+
+* debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
+
+```
+    Logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* info info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】黄色
+
+```
+    Logger.info("info错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* warn warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 白色
+
+```
+    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* error error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 红色
+
+```
+    Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
+```
+
+#### 13.CacheUtil的方法
+
+* save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
+
+```
+    //存入字符串<>中数据类型为必填
+    CacheUtil.save<string>("str", "测试存入字符串");
+    //存入对象T<>中数据类型为必填
+    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
+    CacheUtil.save<Person>("tetObj", person);
+    //存入对象集合<>中数据类型为必填
+    let arrP = Array<Person>();
+    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
+    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
+    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
+    CacheUtil.save<Array<Person>>("arrPerson", arrP);
+```
+
+* get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
+
+```
+    //获取字符串<>中数据类型为必填
+    this.message = CacheUtil.get<string>("str");
+    //获取对象T<>中数据类型为必填
+    let p = CacheUtil.get<Person>("tetObj");
+    this.message = p.name + p.age + p.user.id;
+    //获取对象集合<>中数据类型为必填
+    let newStr: string = '';
+    let res = CacheUtil.get<Array<Person>>("arrPerson");
+    res.forEach(item => {
+      newStr += item.age + item.name + item.user.id + item.user.name;
+    })
+    this.message = newStr;
+```
+
+#### 14.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
@@ -605,7 +834,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
-#### 8.RandomUtil的方法
+#### 15.RandomUtil的方法
 
 * randomBoolean 随机生成一个布尔值
 
@@ -642,7 +871,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  54
 ```
 
-#### 9.ObjectUtil的方法
+#### 16.ObjectUtil的方法
 
 * equal 判断两个传入的数值或者是字符串是否相等
 
@@ -658,7 +887,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出 false
 ```
 
-#### 10.PhoneUtil的方法
+#### 17.PhoneUtil的方法
 
 * isMobile 验证是否为手机号码（中国）
 
@@ -709,7 +938,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     // 输出 手机号为中国号码
 ```
 
-#### 11.CharUtil的方法
+#### 18.CharUtil的方法
 
 * isEmoji 判断是否为emoji表情符
 
@@ -723,73 +952,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
     console.error(CharUtil.isAscii("你")+"")
     // 输出 false
-```
-
-#### 12.Logger的方法
-
-* init 初始化第一个入参为应用名,第二个为域可不填
-
-```
-    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ets的onWindowStageCreate方法中
-```
-
-* debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
-
-```
-    Logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
-```
-
-* info info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】黄色
-
-```
-    Logger.info("info错误原因为:", 'xxxxxxxxxxxx')
-```
-
-* warn warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 白色
-
-```
-    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
-```
-
-* error error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 红色
-
-```
-    Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
-```
-
-#### 13.CacheUtil的方法
-
-* save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
-
-```
-    //存入字符串<>中数据类型为必填
-    CacheUtil.save<string>("str", "测试存入字符串");
-    //存入对象T<>中数据类型为必填
-    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
-    CacheUtil.save<Person>("tetObj", person);
-    //存入对象集合<>中数据类型为必填
-    let arrP = Array<Person>();
-    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
-    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
-    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
-    CacheUtil.save<Array<Person>>("arrPerson", arrP);
-```
-
-* get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
-
-```
-    //获取字符串<>中数据类型为必填
-    this.message = CacheUtil.get<string>("str");
-    //获取对象T<>中数据类型为必填
-    let p = CacheUtil.get<Person>("tetObj");
-    this.message = p.name + p.age + p.user.id;
-    //获取对象集合<>中数据类型为必填
-    let newStr: string = '';
-    let res = CacheUtil.get<Array<Person>>("arrPerson");
-    res.forEach(item => {
-      newStr += item.age + item.name + item.user.id + item.user.name;
-    })
-    this.message = newStr;
 ```
 
 ### 3.UI组件使用API

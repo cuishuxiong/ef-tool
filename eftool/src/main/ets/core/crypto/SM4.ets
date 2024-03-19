@@ -2,7 +2,7 @@ import crypto from '@ohos.security.cryptoFramework';
 import { OutDTO } from '../base/OutDTO';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { util } from '@kit.ArkTS';
-import { RandomUtil } from '../util/RandomUtil';
+import { CryptoUtil } from '../util/CryptoUtil';
 
 /**
  * @Author csx
@@ -10,56 +10,14 @@ import { RandomUtil } from '../util/RandomUtil';
  * @TODO SM4
  */
 export class SM4 {
-
   /**
    * 生成SM4的对称密钥
    * @returns SM4密钥
    */
   static async generateSM4Key(): Promise<OutDTO<string>> {
-    // 创建对称密钥生成器
-    let symKeyGenerator = crypto.createSymKeyGenerator('SM4_128');
-    // 通过非对称密钥生成器，随机生成非对称密钥
-    let promiseSymKey = await symKeyGenerator.generateSymKey();
-    //转换成可以读懂的字符串
-    let key = StrAndUintUtil.unitArray2String(promiseSymKey.getEncoded().data);
-    // 获取对称密钥的二进制数据
-    return OutDTO.OKByDataRow<string>('生成SM4密钥成功~', key);
+    return CryptoUtil.generateSymKey('SM4_128');
   }
 
-  /**
-   * 根据传入的iv字符串转换iv对象
-   * @param ivStr
-   * @returns
-   */
-  private static genIvParamsSpec(ivStr: string): crypto.IvParamsSpec {
-    let ivBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(ivStr) };
-    let ivParamsSpec: crypto.IvParamsSpec = {
-      algName: "IvParamsSpec",
-      iv: ivBlob
-    };
-    return ivParamsSpec;
-  }
-
-  /**
-   * 生成CBC模式的iv
-   * @returns iv字符串
-   */
-  static generateIV(): OutDTO<string> {
-    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16));
-  }
-
-
-  /**
-   * 将字符串SM4Key转换为symKey对象
-   * @param sm4Key字符串key
-   * @returns
-   */
-  static async convertKeyFromStr(sm4Key: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(sm4Key) };
-    let aesGenerator = crypto.createSymKeyGenerator('SM4_128');
-    let symKey = await aesGenerator.convertKey(symKeyBlob);
-    return symKey;
-  }
 
   /**
    * 加密-ECB模式
@@ -69,7 +27,7 @@ export class SM4 {
    */
   static async encodeECB(str: string, sm4Key: string): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await SM4.convertKeyFromStr(sm4Key);
+    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, 'SM4_128');
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
@@ -95,13 +53,13 @@ export class SM4 {
    */
   static async encodeCBC(str: string, sm4Key: string, iv: string): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await SM4.convertKeyFromStr(sm4Key);
+    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, 'SM4_128');
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
     let cipher = crypto.createCipher('SM4_128|CBC|PKCS7');
     //初始化加密
-    await cipher.init(mode, symKey, SM4.genIvParamsSpec(iv));
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
@@ -120,7 +78,7 @@ export class SM4 {
    */
   static async decodeECB(str: string, sm4Key: string): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await await SM4.convertKeyFromStr(sm4Key);
+    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, 'SM4_128');
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
@@ -142,17 +100,16 @@ export class SM4 {
    */
   static async decodeCBC(str: string, sm4Key: string, iv: string): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await await SM4.convertKeyFromStr(sm4Key);
+    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, 'SM4_128');
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
     let cipher = crypto.createCipher('SM4_128|CBC|PKCS7');
     //初始化解密
-    await cipher.init(mode, symKey, SM4.genIvParamsSpec(iv));
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
     //解密
     let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     return OutDTO.OKByDataRow('SM4-CBC解密成功~', decode.decodeWithStream(updateOutput.data));
   }
-
 }
