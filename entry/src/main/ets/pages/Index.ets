@@ -111,9 +111,9 @@ struct Index {
 
     // this.message = decode.getDataRow();
 
-    let des = await DES.generate3DESKey();
+    // let des = await DES.generate3DESKey();
 
-    this.message = des.getDataRow();
+    // this.message = des.getDataRow();
 
     // let encode = await DES.encodeECB('测试3DES-ECB加密字符串Test!',des.getDataRow());
 
@@ -123,15 +123,55 @@ struct Index {
 
     // this.message = decode.getDataRow();
 
-    let iv = await DES.generateIV();
+    // let iv = await DES.generateIV();
 
-    let encode = await DES.encodeCBC('测试3DES-CBC加密字符串Test!',des.getDataRow(),iv.getDataRow());
+    // let encode = await DES.encodeCBC('测试3DES-CBC加密字符串Test!',des.getDataRow(),iv.getDataRow());
+
+    // this.message = encode.getDataRow();
+
+    // let decode = await DES.decodeCBC(encode.getDataRow(),des.getDataRow(),iv.getDataRow());
+
+    // this.message = decode.getDataRow();
+
+    // let rsa = await RSA.generateRSAKey();
+
+    // this.message = rsa.getDataRow().publicKey;
+
+    // let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~',rsa.getDataRow().publicKey);
+
+    // this.message = encode.getDataRow();
+
+    // let decode = await RSA.decodePKCS1(encode.getDataRow(),rsa.getDataRow().privateKey);
+
+    // this.message = decode.getDataRow();
+
+    // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~',rsa.getDataRow().privateKey);
+
+    // this.message = sign.getDataRow();
+
+    // let verify = await RSA.verifyPKCS1(sign.getDataRow(),'这个是RSA的验签字符串~~',rsa.getDataRow().publicKey);
+
+    // this.message = verify.getMsg();
+
+    let sm2 = await SM2.generateSM2Key();
+
+    this.message = sm2.getDataRow().publicKey;
+
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
 
     this.message = encode.getDataRow();
 
-    let decode = await DES.decodeCBC(encode.getDataRow(),des.getDataRow(),iv.getDataRow());
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
 
     this.message = decode.getDataRow();
+
+    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
+
+    this.message = sign.getDataRow();
+
+    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+
+    this.message = verify.getMsg();
 
 
   }
