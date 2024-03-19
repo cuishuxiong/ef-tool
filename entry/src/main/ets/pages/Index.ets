@@ -68,25 +68,48 @@ struct Index {
 
   async testCrypto() {
 
-    let aes = await AES.generateAesKey();
-    this.message = aes.getDataRow();
+    // let aes = await AES.generateAesKey();
+    // this.message = aes.getDataRow();
 
-    let out = await AES.encode('测试加密字符串Test!', aes.getDataRow());
+    // let out = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
 
-    this.message = out.getDataRow();
+    // this.message = out.getDataRow();
 
-    let decode = await AES.decode(out.getDataRow(), aes.getDataRow());
+    // let decode = await AES.decodeGCM(out.getDataRow(), aes.getDataRow());
+    // this.message = decode.getDataRow();
+
+    // let iv = await AES.generateIV();
+
+    // let encode = await AES.encodeCBC('测试CBC加密字符串Test!',aes.getDataRow(),iv.getDataRow());
+
+    // this.message = encode.getDataRow();
+
+    // let decode = await AES.decodeCBC(encode.getDataRow(),aes.getDataRow(),iv.getDataRow());
+
+    // this.message = decode.getDataRow();
+
+    let sm4 = await SM4.generateSM4Key();
+
+    this.message = sm4.getDataRow();
+
+    // let encode = await SM4.encodeECB('测试SM4加密字符串Test!',sm4.getDataRow());
+
+    // this.message = encode.getDataRow();
+
+    // let decode =  await SM4.decodeECB(encode.getDataRow(),sm4.getDataRow());
+
+    // this.message = decode.getDataRow();
+
+    let iv = await SM4.generateIV();
+
+    let encode = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!',sm4.getDataRow(),iv.getDataRow());
+
+    this.message = encode.getDataRow();
+
+    let decode = await SM4.decodeCBC(encode.getDataRow(),sm4.getDataRow(),iv.getDataRow());
+
     this.message = decode.getDataRow();
-    // let sm4 = await SM4.generateSM4Key();
-    // this.message = sm4.getDataRow();
 
-    // let rsa = await RSA.generateRSAKey();
-    // this.message = rsa.getDataRow().publicKey;
-    // this.message = rsa.getDataRow().privateKey;
-
-    // let sm2 = await SM2.generateSM2Key();
-    // this.message = sm2.getDataRow().publicKey;
-    // this.message = sm2.getDataRow().privateKey;
 
   }
 
