@@ -1,8 +1,7 @@
 import crypto from '@ohos.security.cryptoFramework';
 import { OutDTO } from '../base/OutDTO';
-import { RandomUtil } from './RandomUtil';
 import { StrAndUintUtil } from './StrAndUintUtil';
-import { util } from '@kit.ArkTS';
+import { buffer, util } from '@kit.ArkTS';
 
 /**
  * @Author csx
@@ -195,6 +194,123 @@ export class CryptoUtil {
     let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     return OutDTO.OKByDataRow(symAlgName + '-ECB解密成功~', decode.decodeWithStream(updateOutput.data));
+  }
+
+  /**
+   * 非对称加密
+   * @param encodeStr  待加密的字符串
+   * @param pubKey  给定秘钥规格公钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   */
+  static async encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //将公钥转换
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName);
+    //生成加密器
+    let encoder = crypto.createCipher(symEncryptName);
+    //初始化加密环境
+    await encoder.init(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
+    //封装加密所需数据
+    let encode = new util.TextEncoder();
+    //开始加密
+    let updateOutput = await encoder.doFinal({ data: encode.encodeInto(str) });
+    //转换字符串
+    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    return OutDTO.OKByDataRow(symAlgName + '加密成功~', result);
+  }
+
+  /**
+   * 非对称解密
+   * @param decodeStr  待解密的字符串
+   * @param priKey    给定秘钥规格私钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   */
+  static async decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //将私钥转换
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName);
+    //生成解密器
+    let encoder = crypto.createCipher(symEncryptName);
+    //初始化解密环境
+    await encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
+    //封装加密所需数据
+    let updateOutput = await encoder.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
+    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    return OutDTO.OKByDataRow(symAlgName + '解密成功~', decode.decodeWithStream(updateOutput.data));
+  }
+
+  /**
+   * 签名
+   * @param str  需要签名的字符串
+   * @param priKey  给定秘钥规格私钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   * @returns OutDTO<string> 签名对象
+   */
+  static async sign(str: string, priKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //将私钥转换
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName);
+    //创建签名器
+    let signer = crypto.createSign(symEncryptName);
+    //初始化签名器
+    await signer.init(priPair.priKey);
+    let encode = new util.TextEncoder();
+    //签名的字符串
+    let input: crypto.DataBlob = { data: encode.encodeInto(str) };
+    await signer.update(input);
+    let sign = await signer.sign(input);
+    let signStr = StrAndUintUtil.unitArray2String(sign.data);
+    return OutDTO.OKByDataRow(symAlgName + '签名成功~', signStr);
+  }
+
+  /**
+   * 验签
+   * @param signStr  已签名的字符串
+   * @param verifyStr  需要验签的字符串
+   * @param pubKey  给定秘钥规格公钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   * @returns 验签结果OutDTO对象,其中Msg为验签结果
+   */
+  static async verify(signStr: string, verifyStr: string, pubKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //将公钥转换
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName);
+    //验签器
+    let verifyer = crypto.createVerify(symEncryptName);
+    //初始化验签器
+    await verifyer.init(pubPair.pubKey);
+    let encode = new util.TextEncoder();
+    //验签的字符串
+    let verify: crypto.DataBlob = { data: encode.encodeInto(verifyStr) };
+    await verifyer.update(verify);
+    let sign: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(signStr) };
+    let result = await verifyer.verify(verify, sign);
+    if (result) {
+      return OutDTO.OK("验签成功,签名正确");
+    } else {
+      return OutDTO.Error("验签失败,签名不正确");
+    }
+  }
+
+  /**
+   * 摘要
+   * @param str 带摘要的字符串
+   * @param symAlgName 秘钥规格
+   * @returns 摘要后的字符串
+   */
+  static async digest(str: string, symAlgName: string): Promise<OutDTO<string>> {
+    //摘要对象
+    let md = crypto.createMd(symAlgName);
+    //字符串转换的字节流对象
+    let messageData = new Uint8Array(buffer.from(str, 'utf-8').buffer);
+    let updateLength = 200; // 默认以200字节为单位进行分段update
+    for (let i = 0; i < messageData.length; i += updateLength) {
+      let updateMessage = messageData.subarray(i, i + updateLength);
+      let updateMessageBlob: crypto.DataBlob = { data: updateMessage };
+      await md.update(updateMessageBlob);
+    }
+    let mdOutput = await md.digest();
+    return OutDTO.OKByDataRow<string>(symAlgName + '摘要数据成功！', StrAndUintUtil.unitArray2String(mdOutput.data));
   }
 }
 

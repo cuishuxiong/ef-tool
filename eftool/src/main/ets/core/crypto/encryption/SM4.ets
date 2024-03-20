@@ -1,8 +1,8 @@
 import crypto from '@ohos.security.cryptoFramework';
-import { OutDTO } from '../base/OutDTO';
-import { StrAndUintUtil } from '../util/StrAndUintUtil';
+import { OutDTO } from '../../base/OutDTO';
+import { StrAndUintUtil } from '../../util/StrAndUintUtil';
 import { util } from '@kit.ArkTS';
-import { CryptoUtil } from '../util/CryptoUtil';
+import { CryptoUtil } from '../../util/CryptoUtil';
 
 /**
  * @Author csx

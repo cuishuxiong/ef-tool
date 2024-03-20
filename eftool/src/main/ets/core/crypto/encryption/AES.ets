@@ -1,9 +1,9 @@
 import crypto from '@ohos.security.cryptoFramework';
-import { OutDTO } from '../base/OutDTO';
+import { OutDTO } from '../../base/OutDTO';
 import { util } from '@kit.ArkTS';
-import { StrAndUintUtil } from '../util/StrAndUintUtil';
-import { RandomUtil } from '../util/RandomUtil';
-import { CryptoUtil } from '../util/CryptoUtil';
+import { StrAndUintUtil } from '../../util/StrAndUintUtil';
+import { RandomUtil } from '../../util/RandomUtil';
+import { CryptoUtil } from '../../util/CryptoUtil';
 
 
 /**

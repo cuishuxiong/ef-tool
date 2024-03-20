@@ -34,19 +34,29 @@ export { PhoneUtil } from './src/main/ets/core/util/PhoneUtil';
 
 export { PageResult } from './src/main/ets/core/page/PageResult';
 
-// export { BASE64 } from './src/main/ets/core/crypto/BASE64';
+export { RSA } from './src/main/ets/core/crypto/encryption/RSA';
 
-// export { MD5 } from './src/main/ets/core/crypto/MD5';
+export { AES } from './src/main/ets/core/crypto/encryption/AES';
 
-export { RSA } from './src/main/ets/core/crypto/RSA';
+export { SM2 } from './src/main/ets/core/crypto/encryption/SM2';
 
-export { AES } from './src/main/ets/core/crypto/AES';
+export { SM3 } from './src/main/ets/core/crypto/encryption/SM3';
 
-export { SM4 } from './src/main/ets/core/crypto/SM4';
+export { SM4 } from './src/main/ets/core/crypto/encryption/SM4';
 
-export { SM2 } from './src/main/ets/core/crypto/SM2';
+export { DES } from './src/main/ets/core/crypto/encryption/DES';
 
-export { DES } from './src/main/ets/core/crypto/DES';
+export { ECDSA } from './src/main/ets/core/crypto/encryption/ECDSA';
+
+export { SHA } from './src/main/ets/core/crypto/encryption/SHA';
+
+export { MD5 } from './src/main/ets/core/crypto/encryption/MD5';
+
+export { ECDH } from './src/main/ets/core/crypto/keyAgree/ECDH';
+
+export { X25519 } from './src/main/ets/core/crypto/keyAgree/X25519';
+
+export { CryptoUtil } from './src/main/ets/core/util/CryptoUtil';
 
 export { Logger } from './src/main/ets/core/util/Logger';
 
@@ -61,5 +71,3 @@ export { ActionUtil } from './src/main/ets/ui/prompt/ActionUtil';
 // export { pcaJSON } from './src/main/ets/core/const/CityConst';
 
 export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
-
-// export { SM3 } from './src/main/ets/core/crypto/sm/sm3/Index';

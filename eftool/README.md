@@ -41,7 +41,13 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
 | DES        | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
 | SM2        | 提供SM2生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM3        | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
 | SM4        | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SHA        | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
+| ECDSA      | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
+| ECDH       | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
+| X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
 | IdUtil     | 提供生成ID的一系列方法                         |
 | ArrayUtil  | 提供对集合的一些常用的方法                        |
 | DateUtil   | 提供对日期的一系列封装                          |
@@ -333,6 +339,29 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 
 * decodeECB 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 7.ECDSA的方法【返回结果均为OutDTO对象】
+
+* generateSM4Key 生成AES的对称密钥
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* sign 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* verify 解密
 
 ```
     const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());

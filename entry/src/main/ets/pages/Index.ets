@@ -20,9 +20,16 @@ import {
   SM4,
   RSA,
   SM2,
-  DES
+  DES,
+  ECDSA,
+  ECDH,
+  CryptoUtil,
+  X25519,
+  SM3,
+  MD5,
+  SHA
 } from '@yunkss/eftool'
-
+import crypto from '@ohos.security.cryptoFramework';
 
 class User {
   id: string;
@@ -70,7 +77,58 @@ struct Index {
   async testCrypto() {
 
     //获取iv
-    let iv = await RandomUtil.generateIV();
+    // let iv = await RandomUtil.generateIV();
+
+    //ECDSA
+    // let ecdsa = await ECDSA.generateECDSAKey();
+    // this.message = ecdsa.getDataRow().publicKey;
+    // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
+    // this.message = sign.getDataRow();
+    // let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+    // this.message = verify.getMsg();
+
+    //ecdh-传入256位字符串公私钥
+    // let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
+    //ecdh-传入字节流公私钥
+    // 创建非对称密钥生成器
+    // let rsaGenerator = crypto.createAsyKeyGenerator('ECC256');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    // let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    // let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    // let priKey = promiseKeyPair.priKey.getEncoded().data;
+    //获取到贡献密钥
+    // let symKey = await ECDH.ecdh(pubKey, priKey);
+    //可以进行对称加密
+    // let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = encode.getDataRow();
+    //对称解密
+    // let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = decode.getDataRow();
+
+    // let rsaGenerator = crypto.createAsyKeyGenerator('X25519');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    // let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    // let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    // let priKey = promiseKeyPair.priKey.getEncoded().data;
+    //生成x25519公私钥
+    // let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
+    // let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    // let x25519 = await X25519.x25519(pubKey, priKey);
+    // this.message = x25519.getDataRow();
+    //可以进行对称加密
+    // let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = encode.getDataRow();
+    //对称解密
+    // let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = decode.getDataRow();
+
+    // let sm3 = await SM3.digest('使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~');
+    // this.message = sm3.getDataRow();
+
+    // let md5 = await MD5.digest('使用MD5进行摘要~~~');
+    // this.message = md5.getDataRow();
 
     //AES
     // let aes = await AES.generateAesKey();
@@ -85,16 +143,16 @@ struct Index {
     // this.message = decode.getDataRow();
 
     //SM4
-    let sm4 = await SM4.generateSM4Key();
-    this.message = sm4.getDataRow();
-    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
-    this.message = encodeECB.getDataRow();
-    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
-    this.message = decodeECB.getDataRow();
-    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
-    this.message = encodeCBC.getDataRow();
-    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
-    this.message = decodeCBC.getDataRow();
+    // let sm4 = await SM4.generateSM4Key();
+    // this.message = sm4.getDataRow();
+    // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    // this.message = encodeECB.getDataRow();
+    // let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    // this.message = decodeECB.getDataRow();
+    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    // this.message = encodeCBC.getDataRow();
+    // let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    // this.message = decodeCBC.getDataRow();
 
     //3DES
     // let des = await DES.generate3DESKey();
@@ -131,6 +189,12 @@ struct Index {
     // this.message = sign.getDataRow();
     // let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
     // this.message = verify.getMsg();
+
+    // let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
+    // this.message = hmac1.getDataRow();
+
+    // let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    // this.message = hmac2.getDataRow();
 
   }
 
