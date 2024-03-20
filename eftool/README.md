@@ -155,7 +155,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 2.RSA的方法【返回结果均为OutDTO对象】
 
-* generateRsaKey 生成RSA的非对称密钥
+* generateRSAKey 生成RSA的非对称密钥
 
 ```
     const keyPair = await RSA.generateRsaKey();
@@ -163,28 +163,28 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     + "\n" + "公钥:" + keyPair.getDataRow().publicKey + "私钥:" + keyPair.getDataRow().privateKey)
 ```
 
-* encode 加密
+* encodePKCS1 加密
 
 ```
     const encode = await RSA.encode('this is csx RSA!', keyPair.getDataRow().publicKey);
     console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
 ```
 
-* decode 解密
+* decodePKCS1 解密
 
 ```
     const decode = await RSA.decode(encode.getDataRow(), keyPair.getDataRow().privateKey);
     console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
 ```
 
-* sign 签名
+* signPKCS1 签名
 
 ```
     const sign = await RSA.sign('this is csx RSA', keyPair.getDataRow().privateKey);
     console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
 ```
 
-* verify 验签
+* verifyPKCS1 验签
 
 ```
     const result = await RSA.verify(sign.getDataRow(), 'this is csx RSA', keyPair.getDataRow().publicKey);
@@ -193,58 +193,72 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 3.AES的方法【返回结果均为OutDTO对象】
 
-* generateAesKey 生成AES的对称密钥
+* generateAESKey 生成AES的对称密钥
 
 ```
     const keyPair = await  AES.generateAesKey("AES128");
     console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
 ```
 
-* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
-
-```
-    const key = await  AES.convertKey('abcdefgabcdefg12');
-    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
-```
-
-* encode 加密
+* encodeGCM 加密
 
 ```
     const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
     console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
 ```
 
-* decode 解密
+* decodeGCM 解密
 
 ```
     const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
     console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
 ```
 
-#### 4.DES的方法【返回结果均为OutDTO对象】
-
-* generateAesKey 生成AES的对称密钥
-
-```
-    const keyPair = await  AES.generateAesKey("AES128");
-    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
-```
-
-* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
-
-```
-    const key = await  AES.convertKey('abcdefgabcdefg12');
-    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
-```
-
-* encode 加密
+* encodeCBC 加密
 
 ```
     const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
     console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
 ```
 
-* decode 解密
+* decodeCBC 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 4.3DES的方法【返回结果均为OutDTO对象】
+
+* generate3DESKey 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* encodeCBC 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decodeCBC 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+* encodeECB 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decodeECB 解密
 
 ```
     const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
@@ -253,18 +267,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 5.SM2的方法【返回结果均为OutDTO对象】
 
-* generateAesKey 生成AES的对称密钥
+* generateSM2Key 生成AES的对称密钥
 
 ```
     const keyPair = await  AES.generateAesKey("AES128");
     console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
-```
-
-* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
-
-```
-    const key = await  AES.convertKey('abcdefgabcdefg12');
-    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
 ```
 
 * encode 加密
@@ -281,30 +288,51 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
 ```
 
-#### 6.SM4的方法【返回结果均为OutDTO对象】
-
-* generateAesKey 生成AES的对称密钥
-
-```
-    const keyPair = await  AES.generateAesKey("AES128");
-    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
-```
-
-* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
-
-```
-    const key = await  AES.convertKey('abcdefgabcdefg12');
-    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
-```
-
-* encode 加密
+* sign 加密
 
 ```
     const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
     console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
 ```
 
-* decode 解密
+* verify 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+#### 6.SM4的方法【返回结果均为OutDTO对象】
+
+* generateSM4Key 生成AES的对称密钥
+
+```
+    const keyPair = await  AES.generateAesKey("AES128");
+    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
+```
+
+* encodeCBC 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decodeCBC 解密
+
+```
+    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
+    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
+```
+
+* encodeECB 加密
+
+```
+    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
+    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
+```
+
+* decodeECB 解密
 
 ```
     const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());

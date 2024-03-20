@@ -4,11 +4,11 @@
 
 ### 🐣新特性(API11)
 
-* AES兼容API11,并新增gcm,cbc等加解密方法
-* 3DES新增ecb,cbc等加解密方法
+* AES兼容API11,并新增GCM,CBC等加解密方法
+* 3DES新增ECB,CBC等加解密方法
 * RSA新增PKCS1方式的加解密，签名和验签等方法
 * SM2新增加解密，签名和验签等方法
-* SM4新增ecb,cbc等加解密方法
+* SM4新增ECB,CBC等加解密方法
 
 ## [v1.1.0] 2024-03
 

@@ -47,7 +47,7 @@ export class AES {
    * 生成AES的对称密钥
    * @returns AES密钥
    */
-  static async generateAesKey(): Promise<OutDTO<string>> {
+  static async generateAESKey(): Promise<OutDTO<string>> {
     return CryptoUtil.generateSymKey('AES256');
   }
 
