@@ -2,6 +2,7 @@ import crypto from '@ohos.security.cryptoFramework';
 import { OutDTO } from '../base/OutDTO';
 import { RandomUtil } from './RandomUtil';
 import { StrAndUintUtil } from './StrAndUintUtil';
+import { util } from '@kit.ArkTS';
 
 /**
  * @Author csx
@@ -63,14 +64,6 @@ export class CryptoUtil {
   }
 
   /**
-   * 生成CBC模式的iv
-   * @returns iv字符串
-   */
-  static generateIV(): OutDTO<string> {
-    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16));
-  }
-
-  /**
    * 生成对称密钥
    * @param symAlgName 秘钥规格
    * @returns 指定秘钥规格的对称密钥
@@ -100,6 +93,108 @@ export class CryptoUtil {
     let pubKey = StrAndUintUtil.unitArray2String(promiseKeyPair.pubKey.getEncoded().data);
     let priKey = StrAndUintUtil.unitArray2String(promiseKeyPair.priKey.getEncoded().data);
     return OutDTO.OKByDataRow<CryptoKey>('生成' + symAlgName + '公私钥成功~', new CryptoKey(pubKey, priKey));
+  }
+
+  /**
+   * 加密-CBC模式
+   * @param str  待加密的字符串
+   * @param key   给定秘钥规格密钥
+   * @param iv   iv偏移量字符串
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   * @returns
+   */
+  static async encodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //转换key
+    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName);
+    // 初始化加解密操作环境
+    let mode = crypto.CryptoMode.ENCRYPT_MODE;
+    //创建加密器
+    let cipher = crypto.createCipher(symEncryptName);
+    //初始化加密
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
+    //封装加密所需数据
+    let encode = new util.TextEncoder();
+    //开始加密
+    let updateOutput = await cipher.doFinal({ data: encode.encodeInto(str) });
+    //转换字符串
+    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    //返回
+    return OutDTO.OKByDataRow<string>(symAlgName + '-CBC加密成功~', result);
+  }
+
+  /**
+   * 加密-ECB模式
+   * @param str  待加密的字符串
+   * @param key   给定秘钥规格密钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   * @returns
+   */
+  static async encodeECB(str: string, key: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //转换key
+    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName);
+    // 初始化加解密操作环境
+    let mode = crypto.CryptoMode.ENCRYPT_MODE;
+    //创建加密器
+    let cipher = crypto.createCipher(symEncryptName);
+    //初始化加密
+    await cipher.init(mode, symKey, null);
+    //封装加密所需数据
+    let encode = new util.TextEncoder();
+    //开始加密
+    let updateOutput = await cipher.doFinal({ data: encode.encodeInto(str) });
+    //转换字符串
+    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    //返回
+    return OutDTO.OKByDataRow<string>(symAlgName + '-ECB加密成功~', result);
+  }
+
+  /**
+   * 解密-CBC模式
+   * @param str  加密的字符串
+   * @param aesKey 给定秘钥规格密钥
+   * @param iv  iv偏移量字符串
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   * @returns
+   */
+  static async decodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //转换密钥
+    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName);
+    // 初始化加解密操作环境:开始解密
+    let mode = crypto.CryptoMode.DECRYPT_MODE;
+    //创建解密器
+    let cipher = crypto.createCipher(symEncryptName);
+    //初始化解密
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
+    //解密
+    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
+    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    return OutDTO.OKByDataRow(symAlgName + '-CBC解密成功~', decode.decodeWithStream(updateOutput.data));
+  }
+
+
+  /**
+   * 解密-ECB模式
+   * @param str  加密的字符串
+   * @param key  给定秘钥规格密钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   */
+  static async decodeECB(str: string, sm4Key: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //转换密钥
+    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, symAlgName);
+    // 初始化加解密操作环境:开始解密
+    let mode = crypto.CryptoMode.DECRYPT_MODE;
+    //创建解密器
+    let cipher = crypto.createCipher(symEncryptName);
+    //初始化解密
+    await cipher.init(mode, symKey, null);
+    //解密
+    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
+    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    return OutDTO.OKByDataRow(symAlgName + '-ECB解密成功~', decode.decodeWithStream(updateOutput.data));
   }
 }
 

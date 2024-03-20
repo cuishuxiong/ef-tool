@@ -20,8 +20,7 @@ import {
   SM4,
   RSA,
   SM2,
-  DES,
-  CryptoUtil
+  DES
 } from '@yunkss/eftool'
 
 
@@ -71,7 +70,7 @@ struct Index {
   async testCrypto() {
 
     //获取iv
-    let iv = await CryptoUtil.generateIV();
+    let iv = await RandomUtil.generateIV();
 
     //AES
     // let aes = await AES.generateAesKey();
@@ -86,16 +85,16 @@ struct Index {
     // this.message = decode.getDataRow();
 
     //SM4
-    // let sm4 = await SM4.generateSM4Key();
-    // this.message = sm4.getDataRow();
-    // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
-    // this.message = encodeECB.getDataRow();
-    // let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
-    // this.message = decodeECB.getDataRow();
-    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
-    // this.message = encodeCBC.getDataRow();
-    // let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
-    // this.message = decodeCBC.getDataRow();
+    let sm4 = await SM4.generateSM4Key();
+    this.message = sm4.getDataRow();
+    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    this.message = encodeECB.getDataRow();
+    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    this.message = decodeECB.getDataRow();
+    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
 
     //3DES
     // let des = await DES.generate3DESKey();

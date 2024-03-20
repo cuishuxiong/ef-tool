@@ -51,7 +51,6 @@ export class AES {
     return CryptoUtil.generateSymKey('AES256');
   }
 
-
   /**
    * 加密-GCM模式
    * @param str  待加密的字符串
@@ -91,22 +90,7 @@ export class AES {
    * @returns
    */
   static async encodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
-    //转换key
-    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
-    // 初始化加解密操作环境
-    let mode = crypto.CryptoMode.ENCRYPT_MODE;
-    //创建加密器
-    let cipher = crypto.createCipher('AES256|CBC|PKCS7');
-    //初始化加密
-    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
-    //封装加密所需数据
-    let encode = new util.TextEncoder();
-    //开始加密
-    let updateOutput = await cipher.doFinal({ data: encode.encodeInto(str) });
-    //转换字符串
-    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
-    //返回
-    return OutDTO.OKByDataRow<string>('AES-CMC加密成功~', result);
+    return CryptoUtil.encodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7');
   }
 
   /**
@@ -139,17 +123,6 @@ export class AES {
    * @returns
    */
   static async decodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
-    //转换密钥
-    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
-    // 初始化加解密操作环境:开始解密
-    let mode = crypto.CryptoMode.DECRYPT_MODE;
-    //创建解密器
-    let cipher = crypto.createCipher('AES256|CBC|PKCS7');
-    //初始化解密
-    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
-    //解密
-    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
-    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    return OutDTO.OKByDataRow('AES-CBC解密成功~', decode.decodeWithStream(updateOutput.data));
+    return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7');
   }
 }

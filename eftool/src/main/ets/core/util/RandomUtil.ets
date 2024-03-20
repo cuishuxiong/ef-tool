@@ -3,6 +3,7 @@
  * @DateTime 2023/12/29 20:08
  * @TODO RandomUtil  随机数工具类
  */
+import { OutDTO } from '../base/OutDTO';
 import { StrAndUintUtil } from './StrAndUintUtil';
 
 export class RandomUtil {
@@ -83,6 +84,14 @@ export class RandomUtil {
       randArray.push(Math.floor(Math.random() * 256));
     }
     return new Uint8Array(randArray);
+  }
+
+  /**
+   * 生成CBC模式的iv
+   * @returns iv字符串
+   */
+  static generateIV(): OutDTO<string> {
+    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16));
   }
 
 }
