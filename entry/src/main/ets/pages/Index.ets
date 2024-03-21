@@ -124,14 +124,14 @@ struct Index {
     // let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
     // this.message = decode.getDataRow();
 
-    // let sm3 = await SM3.digest('使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~使用SM3进行摘要数据~~~');
+    // let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
     // this.message = sm3.getDataRow();
 
     // let md5 = await MD5.digest('使用MD5进行摘要~~~');
     // this.message = md5.getDataRow();
 
     //AES
-    // let aes = await AES.generateAesKey();
+    // let aes = await AES.generateAESKey();
     // this.message = aes.getDataRow();
     // let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
     // this.message = encodeGCM.getDataRow();
@@ -169,13 +169,13 @@ struct Index {
     //RSA
     // let rsa = await RSA.generateRSAKey();
     // this.message = rsa.getDataRow().publicKey;
-    // let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~',rsa.getDataRow().publicKey);
+    // let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
     // this.message = encode.getDataRow();
-    // let decode = await RSA.decodePKCS1(encode.getDataRow(),rsa.getDataRow().privateKey);
+    // let decode = await RSA.decodePKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
     // this.message = decode.getDataRow();
-    // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~',rsa.getDataRow().privateKey);
+    // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
     // this.message = sign.getDataRow();
-    // let verify = await RSA.verifyPKCS1(sign.getDataRow(),'这个是RSA的验签字符串~~',rsa.getDataRow().publicKey);
+    // let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
     // this.message = verify.getMsg();
 
     //SM2
@@ -195,6 +195,9 @@ struct Index {
 
     // let hmac2 = await SHA.hmac('这个是SHA的HMAC');
     // this.message = hmac2.getDataRow();
+
+    // let digest = await SHA.digest('这个是SHA的摘要方法~~');
+    // this.message = digest.getDataRow();
 
   }
 

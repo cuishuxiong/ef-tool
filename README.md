@@ -1,9 +1,8 @@
 # <center>eftool</center>
 
-# <center>V1.1.0(API11)</center>
+# <center>V1.1.1(API11)</center>
 
 --------------------------------------------------------------------------------
-
 
 ## 📚简介
 
@@ -35,23 +34,34 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 1.基础类组件
 
-| 模块         | 介绍              |
-|------------|-----------------|
-| IdCardUtil | 提供对身份证校验系列方法    |
-| IdUtil     | 提供生成ID的一系列方法    |
-| ArrayUtil  | 提供对集合的一些常用的方法   |
-| DateUtil   | 提供对日期的一系列封装     |
-| ObjectUtil | 提供对于对象的系列操作方法   |
-| RandomUtil | 提供随机数的系列方法      |
-| RegUtil    | 提供对于常用正则表达式的方法  |
-| StrUtil    | 提供对于字符串的操作方法    |
-| PhoneUtil  | 提供常用的手机座机等判断    |
-| OutDTO     | 提供常用的返回实体对象     |
-| CharUtil   | 提供常用的字符操作       |
-| CacheUtil  | 提缓存数据并且提取数据操作   |
-| Logger     | 提供常用的打印日志的方法    |
-| RegexConst | 提供常用的正则表达式常量    |
-| DateConst  | 提供常用的日期格式化表达式常量 |
+| 模块         | 介绍                                   |
+|------------|--------------------------------------|
+| IdCardUtil | 提供对身份证校验系列方法                         |
+| RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| DES        | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
+| SM2        | 提供SM2生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM3        | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| SM4        | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SHA        | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
+| ECDSA      | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
+| ECDH       | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
+| X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
+| IdUtil     | 提供生成ID的一系列方法                         |
+| ArrayUtil  | 提供对集合的一些常用的方法                        |
+| DateUtil   | 提供对日期的一系列封装                          |
+| ObjectUtil | 提供对于对象的系列操作方法                        |
+| RandomUtil | 提供随机数的系列方法                           |
+| RegUtil    | 提供对于常用正则表达式的方法                       |
+| StrUtil    | 提供对于字符串的操作方法                         |
+| PhoneUtil  | 提供常用的手机座机等判断                         |
+| OutDTO     | 提供常用的返回实体对象                          |
+| CharUtil   | 提供常用的字符操作                            |
+| CacheUtil  | 提缓存数据并且提取数据操作                        |
+| Logger     | 提供常用的打印日志的方法                         |
+| RegexConst | 提供常用的正则表达式常量                         |
+| DateConst  | 提供常用的日期格式化表达式常量                      |
 
 ### 2.UI类组件
 
@@ -149,7 +159,394 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出 true--142303--汾阳市
 ```
 
-#### 2.IdUtil的方法
+#### 2.RSA的方法【返回结果均为OutDTO对象】
+
+* generateRSAKey 生成RSA的非对称密钥
+
+```
+    const rsa = await RSA.generateRSAKey();
+    console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
+    + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
+```
+
+* encodePKCS1 加密
+
+```
+    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decodePKCS1 解密
+
+```
+    let decode = await RSA.decodePKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* signPKCS1 签名
+
+```
+    let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verifyPKCS1 验签
+
+```
+    let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+#### 3.AES的方法【返回结果均为OutDTO对象】
+
+* generateAESKey 生成AES的对称密钥
+
+```
+    const aes = await  AES.generateAESKey();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* encodeGCM 加密-GCM模式
+
+```
+    let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
+    this.message = encodeGCM.getDataRow();
+```
+
+* decodeGCM 解密-GCM模式
+
+```
+    let decodeGCM = await AES.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
+    this.message = decodeGCM.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
+    this.message = decode.getDataRow();
+```
+
+#### 4.3DES的方法【返回结果均为OutDTO对象】
+
+* generate3DESKey 生成3DES的对称密钥
+
+```
+    let des = await DES.generate3DESKey();
+    console.error("是否成功:" + des.getSuccess() + "消息===:" + des.getMsg() + "密钥======:", des.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+#### 5.SM2的方法【返回结果均为OutDTO对象】
+
+* generateSM2Key 生成SM2的非对称密钥
+
+```
+    let sm2 = await SM2.generateSM2Key();
+    console.error("generateSM2Key:" + sm2.getSuccess() + "---" + sm2.getMsg()
+    + "\n" + "公钥:" + sm2.getDataRow().publicKey + "私钥:" + sm2.getDataRow().privateKey)
+```
+
+* encode 加密
+
+```
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decode 解密
+
+```
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* sign 签名
+
+```
+    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+#### 6.SM3的方法【返回结果均为OutDTO对象】
+
+* digest SM3摘要
+
+```
+    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
+    this.message = sm3.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
+    this.message = hmac1.getDataRow();
+```
+
+#### 7.SM4的方法【返回结果均为OutDTO对象】
+
+
+* generateSM4Key 生成SM4的对称密钥
+
+```
+    let sm4 = await SM4.generateSM4Key();
+    console.error("是否成功:" + sm4.getSuccess() + "消息===:" + sm4.getMsg() + "密钥======:", sm4.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+#### 8.SHA的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    let digest = await SHA.digest('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA1 SHA1摘要
+
+```
+    let digest = await SHA.digestSHA1('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA224 SHA224摘要
+
+```
+    let digest = await SHA.digestSHA224('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA384 SHA384摘要
+
+```
+    let digest = await SHA.digestSHA384('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA512 SHA512摘要
+
+```
+    let digest = await SHA.digestSHA512('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    this.message = hmac2.getDataRow();
+```
+
+#### 9.MD5的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    let md5 = await MD5.digest('使用MD5进行摘要~~~');
+    this.message = md5.getDataRow();
+```
+
+#### 10.ECDSA的方法【返回结果均为OutDTO对象】
+
+* generateECDSAKey 生成ECDSA的非对称密钥
+
+```
+    let ecdsa = await ECDSA.generateECDSAKey();
+    console.error("generateECDSAKey:" + ecdsa.getSuccess() + "---" + ecdsa.getMsg()
+    + "\n" + "公钥:" + ecdsa.getDataRow().publicKey + "私钥:" + ecdsa.getDataRow().privateKey)
+```
+
+* sign 签名
+
+```
+    let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+#### 11.ECDH的方法【返回结果均为OutDTO对象】
+
+* ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let ecdsa = await ECDSA.generateECDSAKey();
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+    
+```
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    // 创建非对称密钥生成器
+    let rsaGenerator = crypto.createAsyKeyGenerator('ECC256');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    //获取到贡献密钥
+    let symKey = await ECDH.ecdh(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+#### 12.X25519的方法【返回结果均为OutDTO对象】
+
+* x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    this.message = x25519.getDataRow();
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    let rsaGenerator = crypto.createAsyKeyGenerator('X25519');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    let x25519 = await X25519.x25519(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+#### 13.CacheUtil的方法
+
+* save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
+
+```
+    //存入字符串<>中数据类型为必填
+    CacheUtil.save<string>("str", "测试存入字符串");
+    //存入对象T<>中数据类型为必填
+    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
+    CacheUtil.save<Person>("tetObj", person);
+    //存入对象集合<>中数据类型为必填
+    let arrP = Array<Person>();
+    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
+    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
+    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
+    CacheUtil.save<Array<Person>>("arrPerson", arrP);
+```
+
+* get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
+
+```
+    //获取字符串<>中数据类型为必填
+    this.message = CacheUtil.get<string>("str");
+    //获取对象T<>中数据类型为必填
+    let p = CacheUtil.get<Person>("tetObj");
+    this.message = p.name + p.age + p.user.id;
+    //获取对象集合<>中数据类型为必填
+    let newStr: string = '';
+    let res = CacheUtil.get<Array<Person>>("arrPerson");
+    res.forEach(item => {
+      newStr += item.age + item.name + item.user.id + item.user.name;
+    })
+    this.message = newStr;
+```
+
+#### 14.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -179,7 +576,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-#### 3.OutDTO的方法
+#### 15.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -253,7 +650,272 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * setDataTable 设置多行数据
 
-#### 4.ArrayUtil的方法
+#### 16.ObjectUtil的方法
+
+* equal 判断两个传入的数值或者是字符串是否相等
+
+```
+    console.error(ObjectUtil.equal("1", "1") + "")
+    //输出 true
+```
+
+* notEqual 判断两个传入的数值或者是字符串是否不相等
+
+```
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+    //输出 false
+```
+
+#### 17.PhoneUtil的方法
+
+* isMobile 验证是否为手机号码（中国）
+
+```
+    console.error(PhoneUtil.isMobile("17111114114").getMsg())
+    // 输出 手机号为中国号码
+```
+
+* isMobileHk 验证是否为手机号码（香港）
+
+```
+    console.error(PhoneUtil.isMobileHk("111111").getMsg())
+    // 输出 手机号非中国香港号码,请检查
+```
+
+* isMobileTw 验证是否为手机号码（台湾）
+
+```
+    console.error(PhoneUtil.isMobileTw("17111114114").getMsg())
+    // 输出 手机号非中国台湾号码,请检查
+```
+
+* isMobileMo 验证是否为手机号码（澳门）
+
+```
+    console.error(PhoneUtil.isMobileMo("17111114114").getMsg())
+    // 输出 手机号非中国澳门号码,请检查
+```
+
+* isTel 验证是否为座机号码（中国）
+
+```
+    console.error(PhoneUtil.isTel("17111114114").getMsg())
+    // 输出 号码非中国座机,请检查
+```
+
+* isTel400800 验证是否为座机号码（中国）+ 400 + 800
+
+```
+    console.error(PhoneUtil.isTel400800("17111114114").getMsg())
+    // 输出 号码非400800格式的座机,请检查
+```
+
+* isPhone 验证是否为座机号码+手机号码+ 400 + 800电话 + 手机号号码（香港）
+
+```
+    console.error(PhoneUtil.isPhone("17111114114").getMsg())
+    // 输出 手机号为中国号码
+```
+
+#### 18.CharUtil的方法
+
+* isEmoji 判断是否为emoji表情符
+
+```
+    console.error(CharUtil.isEmoji(38)+"")
+    // 输出 true
+```
+
+* isAscii 判断字符是否为ascii码
+
+```
+    console.error(CharUtil.isAscii("你")+"")
+    // 输出 false
+```
+
+#### 19.StrUtil的方法
+
+* isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
+
+```
+    console.error(StrUtil.isBlank(' ')+"")
+    //输出  true
+```
+
+* asString 将传入的值转换为字符串类型
+
+```
+    const obj:Record<string,string> = {'key': 'this is value'} // key的值类型为 string | undefined
+    const test = StrUtil.asString(obj)
+```
+
+* isBlankIfStr 判断传入的对象是否是空格
+
+```
+    const a = StrUtil.isBlankIfStr(obj);
+```
+
+* isEmptyIfStr 判断传入的对象是否是空
+
+```
+    const a = StrUtil.isEmptyIfStr(obj);
+```
+
+* isNotBlank 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
+
+```
+    console.error(StrUtil.isNotBlank('222')+"")
+    //输出  true
+```
+
+* trim 去除传入集合的每个值的前后空格
+
+```
+    console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
+    //输出 你好----hi----hello
+```
+
+* hasBlank 判断传入的字符串中是否包含有空值,只要有一个则返回true,否则false
+
+```
+    console.error(StrUtil.hasBlank("","232323")+"")
+    //输出  true
+```
+
+* isEmpty 判断传入的字符串是否为空,空白符判断为非空
+
+```
+    console.error(StrUtil.isEmpty(' ')+"")
+    //输出  false
+```
+
+* camelCase 将字符串转换为驼峰
+
+```
+    console.error(StrUtil.camelCase("Foo Bar"))  //输出 fooBar
+    console.error(StrUtil.camelCase("--foo-bar--"))  //输出 fooBar
+    console.error(StrUtil.camelCase("__FOO_BAR__"))  //输出 fooBar
+```
+
+* capitalize 转换字符串首字母为大写，剩下为小写
+
+```
+     console.error(StrUtil.capitalize("FooBar"))  //输出  Foobar
+```
+
+* endsWith 检查字符串是否以给定的字符串结尾
+
+```
+    console.error(StrUtil.endsWith('abc', 'b', 2) + "")  //输出  true
+```
+
+* repeat 重复 N 次给定字符串
+
+```
+    console.error(StrUtil.repeat("*", 5))  //输出  *****
+```
+
+* replace 替换字符串中匹配的正则为给定的字符串
+
+```
+    const str = 'Hello, World';
+    console.log(StrUtil.replace(str, 'Hello', 'Hi')); // 输出：'Hi, World'
+    console.log(StrUtil.replace(str, /world/i, 'Universe')); // 输出：'Hello, Universe'
+    console.log(StrUtil.replace(str, /[aeiou]/ig, 'X')); // 输出：'HXllX, WXXld'
+```
+
+* startsWith 检查字符串是否以给定的字符串卡头
+
+```
+    const str = 'Hello, World';
+    console.log(StrUtil.startsWith(str, 'Hello') + ""); // 输出：true
+    console.log(StrUtil.startsWith(str, 'World') + ""); // 输出：false
+    console.log(StrUtil.startsWith(str, 'Hello', 7) + ""); // 输出：false
+    console.log(StrUtil.startsWith(str, 'World', 7) + ""); // 输出：true
+```
+
+* toLower 转换整个字符串的字符为小写
+
+```
+    console.error(StrUtil.toLower('--Foo-Bar--')); //--foo-bar--
+```
+
+* toUpper 转换整个字符串的字符为大写
+
+```
+    console.error(StrUtil.toUpper('--Foo-Bar--')); //--FOO-BAR--
+```
+
+* truncate 截断字符串，如果字符串超出了限定的最大值。 被截断的字符串后面会以 omission 代替，omission 默认是 "..."
+
+```
+    const str = 'Hello, World';
+    console.log(StrUtil.truncate(str)); // 输出：'Hello, World'
+    console.log(StrUtil.truncate(str, { length: 5 })); // 输出：'Hello...'
+    console.log(StrUtil.truncate(str, { length: 10, omission: '***' })); // 输出：'Hello, Wo***'
+    console.log(StrUtil.truncate(str, { separator: ',' })); // 输出：'Hello, World'
+
+    const longStr = 'This is a very long string that needs to be truncated';
+    console.log(StrUtil.truncate(longStr, { length: 10 })); // 输出：'This is a ....'
+    console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
+```
+
+#### 20.RandomUtil的方法
+
+* randomStrBySize 根据传入的大小生成随机字符串
+
+```
+    RandomUtil.randomStrBySize(16);
+```
+
+* randomUnitBySize 根据传入的大小生成随机Uint8Array字节流
+
+```
+    RandomUtil.randomUnitBySize(16);
+```
+
+* generateIV 生成CBC模式的iv
+
+```
+    let iv = await RandomUtil.generateIV();
+```
+
+* randomBoolean 随机生成一个布尔值
+
+```
+    console.error(RandomUtil.randomBoolean()+"")
+    //输出  true/false
+```
+
+* randomChinese 随机生成一个汉字
+
+```
+    console.error(RandomUtil.randomChinese())
+    //输出  趐
+```
+
+* randomNumber 获得指定范围内的随机数,包含最小值，不包含最大值
+
+```
+    console.error(RandomUtil.randomNumber(1000,10000)+"")
+    //输出  3184
+```
+
+* randomInt 获得随机数number值
+
+```
+    console.error(RandomUtil.randomInt()+"")
+    //输出  842905298955385
+```
+
+* randomLimit 获得指定范围内的随机数 [0,limit) 不包括limit
+
+```
+    console.error(RandomUtil.randomLimit(100)+"")
+    //输出  54
+```
+
+#### 21.ArrayUtil的方法
 
 * append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
@@ -403,7 +1065,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  不是空的
 ```
 
-#### 5.DateUtil的方法
+#### 22.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -444,7 +1106,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     console.log(diff + ""); //输出 70
 ```
 
-#### 6.RegUtil的方法
+#### 23.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -478,254 +1140,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  false---身份证号格式不正确,请检查
 ```
 
-#### 7.StrUtil的方法
-
-* isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
-
-```
-    console.error(StrUtil.isBlank(' ')+"")
-    //输出  true
-```
-
-* asString 将传入的值转换为字符串类型
-
-```
-    const obj:Record<string,string> = {'key': 'this is value'} // key的值类型为 string | undefined
-    const test = StrUtil.asString(obj)
-```
-
-* isBlankIfStr 判断传入的对象是否是空格
-
-```
-    const a = StrUtil.isBlankIfStr(obj);
-```
-
-* isEmptyIfStr 判断传入的对象是否是空
-
-```
-    const a = StrUtil.isEmptyIfStr(obj);
-```
-
-* isNotBlank 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
-
-```
-    console.error(StrUtil.isNotBlank('222')+"")
-    //输出  true
-```
-
-* trim 去除传入集合的每个值的前后空格
-
-```
-    console.error(StrUtil.trim([" 你好 "," hi","hello "]).join("----"))
-    //输出 你好----hi----hello
-```
-
-* hasBlank 判断传入的字符串中是否包含有空值,只要有一个则返回true,否则false
-
-```
-    console.error(StrUtil.hasBlank("","232323")+"")
-    //输出  true
-```
-
-* isEmpty 判断传入的字符串是否为空,空白符判断为非空
-
-```
-    console.error(StrUtil.isEmpty(' ')+"")
-    //输出  false
-```
-
-* camelCase 将字符串转换为驼峰
-
-```
-    console.error(StrUtil.camelCase("Foo Bar"))  //输出 fooBar
-    console.error(StrUtil.camelCase("--foo-bar--"))  //输出 fooBar
-    console.error(StrUtil.camelCase("__FOO_BAR__"))  //输出 fooBar
-```
-
-* capitalize 转换字符串首字母为大写，剩下为小写
-
-```
-     console.error(StrUtil.capitalize("FooBar"))  //输出  Foobar
-```
-
-* endsWith 检查字符串是否以给定的字符串结尾
-
-```
-    console.error(StrUtil.endsWith('abc', 'b', 2) + "")  //输出  true
-```
-
-* repeat 重复 N 次给定字符串
-
-```
-    console.error(StrUtil.repeat("*", 5))  //输出  *****
-```
-
-* replace 替换字符串中匹配的正则为给定的字符串
-
-```
-    const str = 'Hello, World';
-    console.log(StrUtil.replace(str, 'Hello', 'Hi')); // 输出：'Hi, World'
-    console.log(StrUtil.replace(str, /world/i, 'Universe')); // 输出：'Hello, Universe'
-    console.log(StrUtil.replace(str, /[aeiou]/ig, 'X')); // 输出：'HXllX, WXXld'
-```
-
-* startsWith 检查字符串是否以给定的字符串卡头
-
-```
-    const str = 'Hello, World';
-    console.log(StrUtil.startsWith(str, 'Hello') + ""); // 输出：true
-    console.log(StrUtil.startsWith(str, 'World') + ""); // 输出：false
-    console.log(StrUtil.startsWith(str, 'Hello', 7) + ""); // 输出：false
-    console.log(StrUtil.startsWith(str, 'World', 7) + ""); // 输出：true
-```
-
-* toLower 转换整个字符串的字符为小写
-
-```
-    console.error(StrUtil.toLower('--Foo-Bar--')); //--foo-bar--
-```
-
-* toUpper 转换整个字符串的字符为大写
-
-```
-    console.error(StrUtil.toUpper('--Foo-Bar--')); //--FOO-BAR--
-```
-
-* truncate 截断字符串，如果字符串超出了限定的最大值。 被截断的字符串后面会以 omission 代替，omission 默认是 "..."
-
-```
-    const str = 'Hello, World';
-    console.log(StrUtil.truncate(str)); // 输出：'Hello, World'
-    console.log(StrUtil.truncate(str, { length: 5 })); // 输出：'Hello...'
-    console.log(StrUtil.truncate(str, { length: 10, omission: '***' })); // 输出：'Hello, Wo***'
-    console.log(StrUtil.truncate(str, { separator: ',' })); // 输出：'Hello, World'
-
-    const longStr = 'This is a very long string that needs to be truncated';
-    console.log(StrUtil.truncate(longStr, { length: 10 })); // 输出：'This is a ....'
-    console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
-```
-
-#### 8.RandomUtil的方法
-
-* randomBoolean 随机生成一个布尔值
-
-```
-    console.error(RandomUtil.randomBoolean()+"")
-    //输出  true/false
-```
-
-* randomChinese 随机生成一个汉字
-
-```
-    console.error(RandomUtil.randomChinese())
-    //输出  趐
-```
-
-* randomNumber 获得指定范围内的随机数,包含最小值，不包含最大值
-
-```
-    console.error(RandomUtil.randomNumber(1000,10000)+"")
-    //输出  3184
-```
-
-* randomInt 获得随机数number值
-
-```
-    console.error(RandomUtil.randomInt()+"")
-    //输出  842905298955385
-```
-
-* randomLimit 获得指定范围内的随机数 [0,limit) 不包括limit
-
-```
-    console.error(RandomUtil.randomLimit(100)+"")
-    //输出  54
-```
-
-#### 9.ObjectUtil的方法
-
-* equal 判断两个传入的数值或者是字符串是否相等
-
-```
-    console.error(ObjectUtil.equal("1", "1") + "")
-    //输出 true
-```
-
-* notEqual 判断两个传入的数值或者是字符串是否不相等
-
-```
-    console.error(ObjectUtil.notEqual("1", "1") + "")
-    //输出 false
-```
-
-#### 10.PhoneUtil的方法
-
-* isMobile 验证是否为手机号码（中国）
-
-```
-    console.error(PhoneUtil.isMobile("17111114114").getMsg())
-    // 输出 手机号为中国号码
-```
-
-* isMobileHk 验证是否为手机号码（香港）
-
-```
-    console.error(PhoneUtil.isMobileHk("111111").getMsg())
-    // 输出 手机号非中国香港号码,请检查
-```
-
-* isMobileTw 验证是否为手机号码（台湾）
-
-```
-    console.error(PhoneUtil.isMobileTw("17111114114").getMsg())
-    // 输出 手机号非中国台湾号码,请检查
-```
-
-* isMobileMo 验证是否为手机号码（澳门）
-
-```
-    console.error(PhoneUtil.isMobileMo("17111114114").getMsg())
-    // 输出 手机号非中国澳门号码,请检查
-```
-
-* isTel 验证是否为座机号码（中国）
-
-```
-    console.error(PhoneUtil.isTel("17111114114").getMsg())
-    // 输出 号码非中国座机,请检查
-```
-
-* isTel400800 验证是否为座机号码（中国）+ 400 + 800
-
-```
-    console.error(PhoneUtil.isTel400800("17111114114").getMsg())
-    // 输出 号码非400800格式的座机,请检查
-```
-
-* isPhone 验证是否为座机号码+手机号码+ 400 + 800电话 + 手机号号码（香港）
-
-```
-    console.error(PhoneUtil.isPhone("17111114114").getMsg())
-    // 输出 手机号为中国号码
-```
-
-#### 11.CharUtil的方法
-
-* isEmoji 判断是否为emoji表情符
-
-```
-    console.error(CharUtil.isEmoji(38)+"")
-    // 输出 true
-```
-
-* isAscii 判断字符是否为ascii码
-
-```
-    console.error(CharUtil.isAscii("你")+"")
-    // 输出 false
-```
-
-#### 12.Logger的方法
+#### 24.Logger的方法
 
 * init 初始化第一个入参为应用名,第二个为域可不填
 
@@ -755,41 +1170,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
-```
-
-#### 13.CacheUtil的方法
-
-* save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
-
-```
-    //存入字符串<>中数据类型为必填
-    CacheUtil.save<string>("str", "测试存入字符串");
-    //存入对象T<>中数据类型为必填
-    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
-    CacheUtil.save<Person>("tetObj", person);
-    //存入对象集合<>中数据类型为必填
-    let arrP = Array<Person>();
-    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
-    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
-    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
-    CacheUtil.save<Array<Person>>("arrPerson", arrP);
-```
-
-* get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
-
-```
-    //获取字符串<>中数据类型为必填
-    this.message = CacheUtil.get<string>("str");
-    //获取对象T<>中数据类型为必填
-    let p = CacheUtil.get<Person>("tetObj");
-    this.message = p.name + p.age + p.user.id;
-    //获取对象集合<>中数据类型为必填
-    let newStr: string = '';
-    let res = CacheUtil.get<Array<Person>>("arrPerson");
-    res.forEach(item => {
-      newStr += item.age + item.name + item.user.id + item.user.name;
-    })
-    this.message = newStr;
 ```
 
 ### 3.UI组件使用API
