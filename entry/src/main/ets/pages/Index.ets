@@ -27,7 +27,8 @@ import {
   X25519,
   SM3,
   MD5,
-  SHA
+  SHA,
+  LoadingUtil
 } from '@yunkss/eftool'
 import crypto from '@ohos.security.cryptoFramework';
 
@@ -403,6 +404,15 @@ struct Index {
             }
           });
         })
+
+        Button("显示全局loading").margin({ bottom: '10vp' }).onClick(() => {
+          let loading = new LoadingUtil();
+          loading.show();
+          // setTimeout(() => {
+          //   loading.close();
+          // }, 3000);
+        })
+
       }
       .width('100%')
       .height('100%')
