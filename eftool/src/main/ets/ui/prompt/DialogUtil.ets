@@ -1,6 +1,7 @@
 import promptAction from '@ohos.promptAction'
 
 import { UiConst as Const } from '../../core/const/UiConst'
+import { Button } from '@system.prompt';
 
 /**
  * @Author csx
@@ -54,6 +55,17 @@ export class DialogUtil {
         dy: 20
       } : { dx: 0, dy: 0 };
     }
+    let dialogBtn = new Array<Button>();
+    dialogBtn.push({
+      text: options.okText,
+      color: Const.DIALOG_OK_COLOR
+    });
+    if (options.cancelText && options.cancelCallBack) {
+      dialogBtn.push({
+        text: options.cancelText,
+        color: Const.DIALOG_CANCEL_COLOR
+      })
+    }
     //创建弹框
     let dialogResult = promptAction.showDialog({
       title: options.title,
@@ -62,16 +74,7 @@ export class DialogUtil {
       maskRect: options.maskRect,
       isModal: options.isModal,
       offset: options.offset,
-      buttons: [
-        {
-          text: options.okText,
-          color: Const.DIALOG_OK_COLOR
-        },
-        {
-          text: options.cancelText,
-          color: Const.DIALOG_CANCEL_COLOR
-        }
-      ]
+      buttons: dialogBtn
     });
     //处理结果
     dialogResult.then((data) => {
@@ -233,8 +236,8 @@ export class DialogUtil {
 class DialogOptions {
   title?: ResourceStr;
   msg: ResourceStr = '';
-  okText?: ResourceStr;
-  cancelText?: ResourceStr;
+  okText?: string;
+  cancelText?: string;
   alignment?: DialogAlignment;
   maskRect?: Rectangle;
   isModal?: boolean;

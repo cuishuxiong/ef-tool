@@ -18,7 +18,7 @@ export struct LoadingUtil {
     }),
     autoCancel: false,
     alignment: this.options.alignment != undefined ? this.options.alignment : DialogAlignment.Center,
-    offset: this.options.offset != undefined  ? this.options.offset : this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd || this.options.alignment == DialogAlignment.BottomStart ? {
+    offset: this.options.offset != undefined ? this.options.offset : this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd || this.options.alignment == DialogAlignment.BottomStart ? {
       dx: 0,
       dy: -20
     } : this.options.alignment == DialogAlignment.Top || this.options.alignment == DialogAlignment.TopStart || this.options.alignment == DialogAlignment.TopEnd ? {
@@ -31,7 +31,7 @@ export struct LoadingUtil {
     maskColor: UiConst.DIALOG_CANCEL_COLOR,
     openAnimation: { duration: 500, tempo: 0.7, curve: Curve.EaseInOut },
     closeAnimation: { duration: 500, tempo: 0.7, curve: Curve.FastOutLinearIn },
-    showInSubWindow: this.options.showInSubWindow,
+    showInSubWindow: this.options.showInSubWindow != undefined ? this.options.showInSubWindow : false,
     isModal: true
   })
 
@@ -49,10 +49,16 @@ export struct LoadingUtil {
     }
   }
 
+  /**
+   * 打开全局加载模态框
+   */
   show() {
     this.dialogControllerProgress.open();
   }
 
+  /**
+   * 关闭全局加载模态框
+   */
   close() {
     this.dialogControllerProgress.close();
   }
@@ -67,13 +73,23 @@ export struct LoadingUtil {
  */
 class LoadOptions {
   /**
-   *是否允许点击遮障层退出
+   * 弹窗在竖直方向上的对齐方式
    */
   public alignment?: DialogAlignment;
+  /**
+   * 弹窗相对alignment所在位置的偏移量
+   */
   public offset?: Offset;
+  /**
+   * 是否显示在主窗口之外
+   */
   public showInSubWindow?: boolean;
-  public isModal?: boolean;
+  /**
+   * 加载内容
+   */
   public content?: ResourceStr;
+  /**
+   * 是否显示
+   */
   public show?: boolean;
-
 }

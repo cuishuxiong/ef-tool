@@ -28,6 +28,7 @@ import {
   SM3,
   MD5,
   SHA,
+  JSONUtil,
   LoadingUtil
 } from '@yunkss/eftool'
 import crypto from '@ohos.security.cryptoFramework';
@@ -208,6 +209,11 @@ struct Index {
     CacheUtil.save<string>("str", "测试存入字符串");
     //存入对象T
     let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
+
+    // let str1 = JSONUtil.toJSONString(person);
+
+    // Logger.error(str1,"11111111111")
+
     CacheUtil.save<Person>("tetObj", person);
     //存入对象集合
     let arrP = Array<Person>();
@@ -329,13 +335,20 @@ struct Index {
             cancelCallBack: this.cancel
           });
         })
-        Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+        Button("dialog一个按钮").margin({ bottom: '10vp' }).onClick(() => {
           DialogUtil.showDialog({
-            msg: '这是一个弹框提示',
+            msg: '不写cancelCallBack则显示一个按钮',
             okCallBack: this.test   //调用方法无需小括号()
           });
         })
-
+        Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+          DialogUtil.showDialog({
+            msg: '这是一个弹框提示',
+            okText: '同意',
+            okCallBack: this.test, //调用方法无需小括号()
+            cancelCallBack: this.cancel
+          });
+        })
         Button("action").margin({ bottom: '10vp' }).onClick(() => {
           ActionUtil.showActionMenu({
             title: '修改后的标题', btn: [
@@ -406,8 +419,10 @@ struct Index {
           });
         })
 
-        LoadingUtil({ options: { show: this.showLoading} });
-        Button("显示全局loading").margin({ bottom: '10vp' }).onClick(() => {
+        LoadingUtil({
+          options: { show: this.showLoading, alignment: DialogAlignment.Top, content: '更改了加载提示...' }
+        });
+        Button("显示loading").margin({ bottom: '10vp' }).onClick(() => {
           this.showLoading = true;
           setTimeout(() => {
             this.showLoading = false;

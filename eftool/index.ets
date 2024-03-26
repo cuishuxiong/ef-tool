@@ -16,7 +16,7 @@ export { StrUtil } from './src/main/ets/core/util/StrUtil';
 
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
 
-// export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
+export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
 
 export { RegexConst } from './src/main/ets/core/const/RegexConst';
 

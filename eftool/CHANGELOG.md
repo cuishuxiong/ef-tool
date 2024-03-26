@@ -1,5 +1,17 @@
 # Changelog
 
+## [v1.1.2] 2024-03
+
+### 🐣新特性(API11)
+
+* 新增全局加载工具类LoadingUtil
+* 新增省市级联Cascade工具类
+* 新增数据转换JSONUtil
+
+### 🐞Bug修复
+
+* 优化DialogUtil支持单个按钮[Issues-I9B8VP](https://gitee.com/yunkss/ef-tool/issues/I9B8VP)
+
 ## [v1.1.1] 2024-03
 
 ### 🐣新特性(API11)
