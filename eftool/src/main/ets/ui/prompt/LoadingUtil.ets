@@ -6,30 +6,48 @@
 import { LoadingDialog } from '@kit.ArkUI'
 import { UiConst } from '../../core/const/UiConst';
 
-
-export class LoadingUtil {
-  options: LoadOptions = new LoadOptions();
+@Component
+export struct LoadingUtil {
+  @Prop @Watch("change") options: LoadOptions = new LoadOptions();
   /**
    * 自定义loading
    */
   private dialogControllerProgress: CustomDialogController = new CustomDialogController({
     builder: LoadingDialog({
-      content: this.options.content,
+      content: this.options.content
     }),
-    autoCancel: this.options.autoCancel,
-    alignment: this.options.alignment,
-    offset: this.options.offset,
+    autoCancel: false,
+    alignment: this.options.alignment != undefined ? this.options.alignment : DialogAlignment.Center,
+    offset: this.options.offset != undefined  ? this.options.offset : this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd || this.options.alignment == DialogAlignment.BottomStart ? {
+      dx: 0,
+      dy: -20
+    } : this.options.alignment == DialogAlignment.Top || this.options.alignment == DialogAlignment.TopStart || this.options.alignment == DialogAlignment.TopEnd ? {
+      dx: 0,
+      dy: 50
+    } : { dx: 0, dy: 0 },
     customStyle: true,
-    gridCount: this.options.gridCount,
-    maskRect: this.options.maskRect,
-    maskColor: this.options.maskColor,
-    openAnimation: this.options.openAnimation,
-    closeAnimation: this.options.closeAnimation,
+    gridCount: 10,
+    maskRect: { x: 0, y: 0, width: '100%', height: '100%' },
+    maskColor: UiConst.DIALOG_CANCEL_COLOR,
+    openAnimation: { duration: 500, tempo: 0.7, curve: Curve.EaseInOut },
+    closeAnimation: { duration: 500, tempo: 0.7, curve: Curve.FastOutLinearIn },
     showInSubWindow: this.options.showInSubWindow,
-    backgroundColor: this.options.backgroundColor,
-    cornerRadius: this.options.cornerRadius,
-    isModal: this.options.isModal
+    isModal: true
   })
+
+  change() {
+    if (!this.options.content) {
+      this.options.content = '正在拼命加载中,请稍后...';
+    }
+    if (this.options.alignment == undefined) {
+      this.options.alignment = DialogAlignment.Center;
+    }
+    if (this.options.show) {
+      this.show();
+    } else {
+      this.close()
+    }
+  }
 
   show() {
     this.dialogControllerProgress.open();
@@ -37,6 +55,10 @@ export class LoadingUtil {
 
   close() {
     this.dialogControllerProgress.close();
+  }
+
+  build() {
+    Row()
   }
 }
 
@@ -47,39 +69,11 @@ class LoadOptions {
   /**
    *是否允许点击遮障层退出
    */
-  public autoCancel: boolean;
-  public alignment: DialogAlignment;
-  public offset: Offset;
-  public gridCount: number;
-  public maskRect: Rectangle;
-  public maskColor: ResourceColor;
-  public openAnimation: AnimateParam;
-  public closeAnimation: AnimateParam;
-  public showInSubWindow: boolean;
-  public backgroundColor: ResourceColor;
-  public cornerRadius: BorderRadiuses | Dimension;
-  public isModal: boolean;
-  public content: ResourceStr;
+  public alignment?: DialogAlignment;
+  public offset?: Offset;
+  public showInSubWindow?: boolean;
+  public isModal?: boolean;
+  public content?: ResourceStr;
+  public show?: boolean;
 
-  constructor() {
-    this.autoCancel = false;
-    this.alignment = DialogAlignment.Center;
-    this.offset = this.alignment == DialogAlignment.Bottom || this.alignment == DialogAlignment.BottomEnd || this.alignment == DialogAlignment.BottomStart ? {
-      dx: 0,
-      dy: -20
-    } : this.alignment == DialogAlignment.Top || this.alignment == DialogAlignment.TopStart || this.alignment == DialogAlignment.TopEnd ? {
-      dx: 0,
-      dy: 20
-    } : { dx: 0, dy: 0 };
-    this.gridCount = 10;
-    this.maskRect = { x: 0, y: 0, width: '100%', height: '100%' };
-    this.maskColor = UiConst.DIALOG_CANCEL_COLOR
-    this.openAnimation = { duration: 500, tempo: 0.7, curve: Curve.FastOutSlowIn };
-    this.closeAnimation = { duration: 500, tempo: 0.7, curve: Curve.FastOutLinearIn };
-    this.showInSubWindow = false;
-    this.backgroundColor = UiConst.DIALOG_OK_COLOR;
-    this.cornerRadius = { topLeft: '24vp', topRight: '24vp', bottomLeft: '24vp', bottomRight: '24vp' };
-    this.isModal = true;
-    this.content = '正在加载中,请稍等...';
-  }
 }

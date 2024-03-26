@@ -61,6 +61,7 @@ class Person {
 @Component
 struct Index {
   @State message: string = 'Hello World';
+  @State showLoading: boolean = false;
 
   aboutToAppear(): void {
     this.test();
@@ -405,12 +406,12 @@ struct Index {
           });
         })
 
+        LoadingUtil({ options: { show: this.showLoading} });
         Button("显示全局loading").margin({ bottom: '10vp' }).onClick(() => {
-          let loading = new LoadingUtil();
-          loading.show();
-          // setTimeout(() => {
-          //   loading.close();
-          // }, 3000);
+          this.showLoading = true;
+          setTimeout(() => {
+            this.showLoading = false;
+          }, 3000);
         })
 
       }
