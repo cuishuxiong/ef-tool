@@ -68,6 +68,14 @@ export { ActionUtil } from './src/main/ets/ui/prompt/ActionUtil';
 
 export { LoadingUtil } from './src/main/ets/ui/prompt/LoadingUtil';
 
+export { TipsUtil } from './src/main/ets/ui/prompt/TipsUtil';
+
+export { ConfirmUtil } from './src/main/ets/ui/prompt/ConfirmUtil';
+
+export { AlertUtil } from './src/main/ets/ui/prompt/AlertUtil';
+
+export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
+
 // export { Cascade } from './src/main/ets/ui/select/Cascade';
 
 // export { pcaJSON } from './src/main/ets/core/const/CityConst';

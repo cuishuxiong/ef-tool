@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.1.3] 2024-03
+
+### 🐣新特性(API11)
+
+* 新增提示工具类TipsUtil
+* 新增选择弹出框工具类SelectUtil
+* 新增信息提示弹出框工具类ConfirmUtil
+* 新增操作确认弹出框工具类AlertUtil
+
 ## [v1.1.2] 2024-03
 
 ### 🐣新特性(API11)

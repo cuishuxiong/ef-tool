@@ -174,7 +174,7 @@ export class DialogUtil {
       defaultButtons.push({
         value: Const.DIALOG_CANCEL,
         fontColor: Const.ALERT_CANCEL_COLOR,
-        backgroundColor: Const.ALERT_CANCEL_BG_COLOR,
+        backgroundColor: Const.DIALOG_CANCEL_COLOR,
         enabled: true,
         defaultFocus: false,
         style: DialogButtonStyle.DEFAULT
@@ -191,7 +191,7 @@ export class DialogUtil {
       secondBtn = {
         value: Const.DIALOG_CANCEL,
         fontColor: Const.ALERT_CANCEL_COLOR,
-        backgroundColor: Const.ALERT_CANCEL_BG_COLOR,
+        backgroundColor: Const.DIALOG_CANCEL_COLOR,
         enabled: true,
         defaultFocus: false,
         style: DialogButtonStyle.DEFAULT
@@ -219,7 +219,7 @@ export class DialogUtil {
       secondaryButton: {
         value: !secondBtn.value ? Const.DIALOG_CANCEL : secondBtn.value,
         fontColor: !secondBtn.fontColor ? Const.ALERT_CANCEL_COLOR : secondBtn.fontColor,
-        backgroundColor: !secondBtn.backgroundColor ? Const.ALERT_CANCEL_BG_COLOR : secondBtn.backgroundColor,
+        backgroundColor: !secondBtn.backgroundColor ? Const.DIALOG_CANCEL_COLOR : secondBtn.backgroundColor,
         action: secondBtn.callBack,
         enabled: !secondBtn.enabled ? true : secondBtn.enabled,
         defaultFocus: !secondBtn.defaultFocus ? false : secondBtn.defaultFocus,
