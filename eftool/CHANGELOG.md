@@ -5,8 +5,6 @@
 ### 🐣新特性(API11)
 
 * 新增全局加载工具类LoadingUtil
-* 新增省市级联Cascade工具类
-* 新增数据转换JSONUtil
 
 ### 🐞Bug修复
 

@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.1(API11)</center>
+# <center>V1.1.2(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -65,11 +65,12 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.UI类组件
 
-| 模块         | 介绍            |
-|------------|---------------|
-| ToastUtil  | 提供对文本提示的一系列方法 |
-| DialogUtil | 提供对弹出框的一系列方法  |
-| ActionUtil | 提供对操作菜单的一系列方法 |
+| 模块          | 介绍            |
+|-------------|---------------|
+| ToastUtil   | 提供对文本提示的一系列方法 |
+| DialogUtil  | 提供对弹出框的一系列方法  |
+| ActionUtil  | 提供对操作菜单的一系列方法 |
+| LoadingUtil | 提供全局加载工具类     |
 
 ## 📦安装
 
@@ -220,14 +221,14 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeGCM.getDataRow();
 ```
 
-* encodeCBC 加密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
     let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
     this.message = encode.getDataRow();
 ```
 
-* decodeCBC 解密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
     let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
@@ -257,14 +258,14 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeECB.getDataRow();
 ```
 
-* encodeCBC 加密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
     let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
     this.message = encodeCBC.getDataRow();
 ```
 
-* decodeCBC 解密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
     let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
@@ -327,7 +328,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 7.SM4的方法【返回结果均为OutDTO对象】
 
-
 * generateSM4Key 生成SM4的对称密钥
 
 ```
@@ -349,14 +349,14 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeECB.getDataRow();
 ```
 
-* encodeCBC 加密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
     let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
     this.message = encodeCBC.getDataRow();
 ```
 
-* decodeCBC 解密-CBC模式  需要传入iv偏移量字符串(IV生成详见RandomUtil)
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
     let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
@@ -457,6 +457,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
     
 ```
+
 ```
     //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
     // 创建非对称密钥生成器
@@ -1207,22 +1208,31 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
      isModal:弹窗是否为模态窗口,
      offset:弹窗相对alignment所在位置的偏移量,
      okCallBack:确定按钮事件,
-     cancelCallBack:取消按钮事件
+     cancelCallBack:取消按钮事件,不传入cancelCallBack则显示一个按钮
     }
-    //使用默认参数
-    DialogUtil.showDialog({
-      msg: '这是一个弹框提示',
-      okCallBack: this.test   //调用方法无需小括号()
-    });
-    //使用自定义参数
-    DialogUtil.showDialog({
-      title: '修改',
-      okText: 'ok',
-      cancelText: 'cancel',
-      msg: '这是一个弹框提示',
-      okCallBack: this.ok,    //调用方法无需小括号()
-      cancelCallBack: this.cancel       //调用方法无需小括号()
-    });
+    Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
+     DialogUtil.showDialog({
+        msg: '这是一个弹框提示~~~~',
+        okCallBack: this.ok,
+        okText: '揍你',
+        cancelText: '去吧',
+        cancelCallBack: this.cancel
+      });
+    })
+    Button("dialog一个按钮").margin({ bottom: '10vp' }).onClick(() => {
+      DialogUtil.showDialog({
+        msg: '不写cancelCallBack则显示一个按钮',
+        okCallBack: this.test   //调用方法无需小括号()
+      });
+    })
+    Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+      DialogUtil.showDialog({
+        msg: '这是一个弹框提示',
+        okText: '同意',
+        okCallBack: this.test, //调用方法无需小括号()
+        cancelCallBack: this.cancel
+      });
+    })
 ```
 
 * showAlertDialog 弹出一个警告提示框
@@ -1374,6 +1384,56 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
         clickCallBack: (data: string) => {
           ToastUtil.showToast(data);
         } });
+    })
+```
+
+#### 4.LoadingUtil的方法
+
+* 入参介绍
+
+```
+    LoadOptions 全局加载入参实体
+    options:{
+        show:是否显示默认false,
+        content:加载提示内容默认正在拼命加载中,请稍后...,
+        showInSubWindow:是否显示在主窗口之外默认false,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showLoading: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    LoadingUtil({
+       options: { show: this.showLoading, alignment: DialogAlignment.Top, content: '更改了加载提示...' }
+    });
+```
+
+* show 显示加载框
+
+```
+    在需要显示的地方更改变量值,如发起一个axios请求时
+    this.showLoading = true;
+```
+
+* close 关闭加载框
+
+```
+    在需要关闭的地方更改变量值,如axios请求成功返回结果时
+    this.showLoading = false;
+```
+
+* 演示
+
+```
+    Button("显示全局loading").margin({ bottom: '10vp' }).onClick(() => {
+       this.showLoading = true;
+       setTimeout(() => {
+         this.showLoading = false;
+       }, 3000);
     })
 ```
 
