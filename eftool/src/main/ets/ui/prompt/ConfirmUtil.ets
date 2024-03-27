@@ -104,10 +104,6 @@ class ConfirmOptions {
    */
   public checkTips?: ResourceStr;
   /**
-   * 是否显示在主窗口之外
-   */
-  public isChecked?: boolean;
-  /**
    * 按钮字符串数组
    */
   public btnList?: Array<string>;

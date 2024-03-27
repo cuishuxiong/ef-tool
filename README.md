@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.2(API11)</center>
+# <center>V1.1.3(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -71,6 +71,10 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | DialogUtil  | 提供对弹出框的一系列方法  |
 | ActionUtil  | 提供对操作菜单的一系列方法 |
 | LoadingUtil | 提供全局加载工具类     |
+| TipsUtil    | 提供提示弹出工具类     |
+| SelectUtil  | 提供选择弹出工具类     |
+| ConfirmUtil | 提供信息确认弹出工具类   |
+| AlertUtil   | 提供操作确认弹出工具类   |
 
 ## 📦安装
 
@@ -1434,6 +1438,251 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
        setTimeout(() => {
          this.showLoading = false;
        }, 3000);
+    })
+```
+
+#### 5.TipsUtil的方法
+
+* 入参介绍
+
+```
+    TipsOptions 提示框入参实体
+    options:{
+        show:是否显示默认false,
+        title:提示框标题默认温馨提示,
+        content:提示框内容,
+        checkTips:checkbox的提示内容默认不再提醒,
+        btnList:按钮字符串数组默认['同意','取消']
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showTips: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    TipsUtil({
+      options: {
+        show: this.showTips,
+        content: '请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        clickCallBack: (index, isChecked) => {
+          ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+          this.showTips = false;
+        }
+      }
+    });
+    clickCallBack中的两个入参
+    1.index为点击按钮的下标,0为点击第一个按钮,1为点击第二个按钮
+    2.isChecked为checkbox是否选中,选中为true
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showTips = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index, isChecked) => {
+       this.showTips = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Tips").margin({ bottom: '10vp' }).onClick(() => {
+      this.showTips = true;
+    })
+```
+
+#### 6.SelectUtil的方法
+
+* 入参介绍
+
+```
+    SelectOptions 选择框入参实体
+    options:{
+        show:是否显示默认false,
+        title:选择弹出框标题,
+        content:选择弹出框内容,
+        btnTxt:按钮字符串,
+        ctxList:选项内容数组
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showSelect: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    SelectUtil({
+      options: {
+        show: this.showSelect,
+        ctxList: ['苹果', '香蕉', '梨', '哈密瓜'],
+        clickCallBack: (selectData) => {
+          ToastUtil.showToast('选择了' + selectData);
+          this.showSelect = false;
+        }
+      }
+    })
+    clickCallBack中的入参
+    1.selectData为点击选择的内容项
+```
+
+* 显示选中框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showSelect = true;
+```
+
+* 关闭选择框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (selectData) => {
+       this.showSelect = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Select").margin({ bottom: '10vp' }).onClick(() => {
+      this.showSelect = true;
+    })
+```
+
+#### 7.ConfirmUtil的方法
+
+* 入参介绍
+
+```
+    ConfirmOptions 信息确认框入参实体
+    options:{
+        show:是否显示默认false,
+        title:提示框标题默认操作确认,
+        content:提示框内容,
+        checkTips:checkbox的提示内容默认禁止后不再提醒,
+        btnList:按钮字符串数组默认['禁止','允许']
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showConfirm: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    ConfirmUtil({
+      options: {
+        show: this.showConfirm,
+        title: '这个是提示',
+        content: '确认要禁止定位权限么?',
+        clickCallBack: (index, isChecked) => {
+          ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+          this.showConfirm = false;
+        }
+      }
+    })
+    clickCallBack中的两个入参
+    1.index为点击按钮的下标,0为点击第一个按钮,1为点击第二个按钮
+    2.isChecked为checkbox是否选中,选中为true
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showConfirm = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index, isChecked) => {
+       this.showConfirm = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Conform").margin({ bottom: '10vp' }).onClick(() => {
+      this.showConfirm = true;
+    })
+```
+
+#### 8.AlertUtil的方法
+
+* 入参介绍
+
+```
+    AlertOptions 操作确认框入参实体
+    options:{
+        show:是否显示默认false,
+        content:提示框内容,
+        btnList:按钮字符串数组默认['确认','取消']
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showAlert: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    AlertUtil({
+      options: {
+        show: this.showAlert,
+        content: '这是一个警告弹出框',
+        clickCallBack: (index) => {
+          ToastUtil.showToast(index === 0 ? '点击了第一个按钮' : '点击了第二个按钮');
+          this.showAlert = false;
+        }
+      }
+    })
+    clickCallBack中的入参
+    1.index为点击按钮的下标,0为点击第一个按钮,1为点击第二个按钮
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showAlert = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index) => {
+       this.showAlert = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Alert").margin({ bottom: '10vp' }).onClick(() => {
+      this.index = true;
     })
 ```
 
