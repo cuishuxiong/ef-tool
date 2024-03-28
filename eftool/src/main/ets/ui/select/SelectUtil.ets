@@ -5,7 +5,6 @@
  */
 import { SelectDialog } from '@kit.ArkUI';
 import { UiConst } from '../../core/const/UiConst';
-import { ToastUtil } from '../prompt/ToastUtil';
 
 @Component
 export struct SelectUtil {
@@ -17,15 +16,15 @@ export struct SelectUtil {
    */
   private dialogControllerProgress: CustomDialogController = new CustomDialogController({
     builder: SelectDialog({
-      title: this.options.title != undefined ? this.options.title : '',
+      title: this.options.title != undefined ? this.options.title : '请选择',
       content: this.options.content != undefined ? this.options.content : '',
       selectedIndex: this.radioIndex,
       confirm: {
-        value: this.options.btnTxt != undefined ? this.options.btnTxt : '确定',
+        value: this.options.btnTxt != undefined ? this.options.btnTxt : '取消',
         background: UiConst.DIALOG_OK_COLOR,
         fontColor: UiConst.ALERT_OK_COLOR,
         action: () => {
-          this.options.clickCallBack(this.options.ctxList[this.radioIndex]);
+          this.options.clickCallBack("");
         }
       },
       radioContent: this.radioList
@@ -50,16 +49,14 @@ export struct SelectUtil {
   })
 
   change() {
-    if (!this.options.title) {
-      this.options.title = '温馨提示';
-    }
     if (this.options.ctxList) {
+      this.radioList = new Array();
       this.options.ctxList.forEach((item) => {
         this.radioList.push({
           title: item,
-          icon: $r("app.media.dian"),
           action: () => {
             this.radioIndex = this.options.ctxList.indexOf(item);
+            this.options.clickCallBack(this.options.ctxList[this.radioIndex]);
           }
         })
       })

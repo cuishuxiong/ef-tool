@@ -1529,11 +1529,14 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     SelectUtil({
       options: {
         show: this.showSelect,
-        ctxList: ['苹果', '香蕉', '梨', '哈密瓜'],
-        clickCallBack: (selectData) => {
-          ToastUtil.showToast('选择了' + selectData);
-          this.showSelect = false;
-        }
+         ctxList: ['苹果', '香蕉', '梨', '哈密瓜','凤梨','西瓜','火龙果','伊丽莎白'],
+         clickCallBack: (selectData) => {
+           //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
+           if (selectData) {
+             ToastUtil.showToast('选择了' + selectData);
+           }
+           this.showSelect = false;
+         }
       }
     })
     clickCallBack中的入参
@@ -1552,6 +1555,10 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
     在回调成功事件中关闭
     clickCallBack: (selectData) => {
+       //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
+       if (selectData) {
+         ToastUtil.showToast('选择了' + selectData);
+       }
        this.showSelect = false;
     }
 ```

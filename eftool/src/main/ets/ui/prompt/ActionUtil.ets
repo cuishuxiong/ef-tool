@@ -1,6 +1,6 @@
 import promptAction from '@ohos.promptAction'
 
-import { UiConst as Const, UiConst } from '../../core/const/UiConst'
+import { UiConst as Const } from '../../core/const/UiConst'
 import { Button } from '@system.prompt';
 import { ToastUtil } from './ToastUtil';
 
