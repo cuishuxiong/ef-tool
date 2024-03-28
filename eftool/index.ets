@@ -78,6 +78,10 @@ export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
 
 export { ExceptionUtil } from './src/main/ets/ui/prompt/ExceptionUtil';
 
+export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
+
+// export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
+
 // export { Cascade } from './src/main/ets/ui/select/Cascade';
 
 // export { pcaJSON } from './src/main/ets/core/const/CityConst';

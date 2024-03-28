@@ -33,7 +33,8 @@ import {
   ConfirmUtil,
   AlertUtil,
   SelectUtil,
-  ExceptionUtil
+  ExceptionUtil,
+  DownloadUtil
 } from '@yunkss/eftool'
 
 class User {
@@ -329,6 +330,7 @@ struct Index {
           Text(this.message)
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
+          DownloadUtil({})
           Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:2000,bottom:10vp');
             this.testCrypto();
@@ -476,15 +478,6 @@ struct Index {
               }
             }
           })
-          ExceptionUtil({
-            options: {
-              show: this.showException,
-              clickCallBack: (index) => {
-                ToastUtil.showToast("点击了" + index);
-                this.showException = false;
-              }
-            }
-          })
           Button("显示loading").margin({ bottom: '10vp' }).onClick(() => {
             this.showLoading = true;
             setTimeout(() => {
@@ -510,6 +503,17 @@ struct Index {
         .width('100%')
       }
       .scrollable(ScrollDirection.Vertical)
+
+      ExceptionUtil({
+        options: {
+          show: this.showException,
+          clickCallBack: (index) => {
+            //index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+            ToastUtil.showToast("点击了" + index);
+            this.showException = false;
+          }
+        }
+      })
     }
     .width('100%')
     .height('100%')

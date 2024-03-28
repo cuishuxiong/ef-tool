@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.1.4] 2024-04
+
+### 🐣新特性(API11)
+
+* 新增异常工具类ExceptionUtil
+* 新增下载按钮工具栏DownloadUtil
+* 新增沉浸式导航工具栏ImmersionUtil
+* 新增日历滑块工具类DatePickerUtil
+
+### 🐞Bug修复
+
+* JSONUtil兼容API11
+* Cascade兼容API11
+* 优化所有加解密的调用方式为同步(尝试)
+
 ## [v1.1.3] 2024-03
 
 ### 🐣新特性(API11)

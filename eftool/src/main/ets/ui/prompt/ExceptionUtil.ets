@@ -7,17 +7,16 @@ import { ExceptionPrompt, MarginType } from '@ohos.arkui.advanced.ExceptionPromp
 
 @Component
 export struct ExceptionUtil {
-
   @Prop options: PromOptions = new PromOptions();
 
   build() {
     Column() {
       ExceptionPrompt({
         options: {
-          tip: this.options.content!=undefined?this.options.content:'连接服务器异常,请重试!',
+          tip: this.options.content != undefined ? this.options.content : '连接服务器异常,请重试!',
           icon: $r("app.media.error"),
           marginType: MarginType.FIT_MARGIN,
-          actionText: this.options.actionText!=undefined?this.options.actionText:'再次请求',
+          actionText: this.options.actionText != undefined ? this.options.actionText : '重试',
           marginTop: '40vp',
           isShown: this.options.show
         },
