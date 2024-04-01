@@ -35,9 +35,7 @@ function txtColor(selected: boolean) {
  */
 @Extend(Text)
 function cityTxtColor() {
-  .height(UiConst.NUMBER_25)
   .fontSize(UiConst.FONT_16)
-  .lineHeight(UiConst.NUMBER_25)
   .textAlign(TextAlign.Start)
   .padding({ top: UiConst.NUMBER_3, bottom: UiConst.NUMBER_3 })
   .backgroundColor("#f7f8fa")
@@ -111,7 +109,7 @@ export struct Cascade {
    * @param cityCode 市code
    * @returns
    */
-  private getAreaData(prevCode: string, cityCode: string): Array<City>  {
+  private getAreaData(prevCode: string, cityCode: string): Array<City> {
     return ((this.provinceList.filter((pro: City) => pro.code == prevCode)
       .pop() as City).children.filter((city: City) => city.code == cityCode).pop() as City).children;
   }
@@ -148,9 +146,13 @@ export struct Cascade {
       Column() {
         Row() {
           Text('请选择地区').fontWeight('bold').fontSize(UiConst.FONT_16)
-          Image($r("app.media.close")).width(UiConst.VP_15).height(UiConst.VP_15).onClick(() => {
-            this.reset()
-          })
+          Image($r("app.media.close"))
+            .width(UiConst.VP_15)
+            .height(UiConst.VP_15)
+            .margin({ right: UiConst.NUMBER_5 })
+            .onClick(() => {
+              this.reset()
+            })
         }
         .width('100%')
         .padding({
@@ -249,8 +251,8 @@ export struct Cascade {
               .justifyContent(FlexAlign.SpaceBetween)
               .alignItems(VerticalAlign.Center)
               .padding({ right: UiConst.NUMBER_10 })
-              .margin({top:UiConst.NUMBER_5,bottom:UiConst.NUMBER_5})
             }
+            .margin({ top: UiConst.NUMBER_5, bottom: UiConst.NUMBER_5 })
             .onClick(() => {
               //点击赋值选中的数据
               if (this.selectIndex === 0) {
@@ -291,19 +293,22 @@ export struct Cascade {
         .listDirection(Axis.Vertical) // 排列方向
         .edgeEffect(EdgeEffect.None)
         .width('100%')
-        .height(500)
         .scrollBar(BarState.Auto)
+        .scrollBarWidth(UiConst.NUMBER_3)
+        .scrollBarColor(UiConst.PRIMARY_COLOR)
+        .padding({ bottom: UiConst.NUMBER_10 })
       }
       .height('100%')
       .width("100%")
       .alignItems(VerticalAlign.Top)
-      .margin({ top: UiConst.NUMBER_5, left: UiConst.NUMBER_20, bottom: UiConst.NUMBER_5 })
+      .padding({ left: UiConst.NUMBER_10 })
     }
-    .type(PanelType.Temporary)
-    .mode(PanelMode.Full)
+    .type(PanelType.CUSTOM)
     .dragBar(false)
-    .fullHeight(700)
+    .height(PanelHeight.WRAP_CONTENT)
+    .customHeight(600)
     .backgroundColor("#f7f8fa")
+    .backgroundMask(UiConst.DIALOG_CANCEL_COLOR)
     .position({ x: 0, y: 0 })
   }
 }

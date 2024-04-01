@@ -335,7 +335,6 @@ struct Index {
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           DownloadUtil({})
-          Cascade({ show: $show, callCity: $callCity }).zIndex(999)
           Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
             this.show = !this.show;
           })
@@ -512,6 +511,7 @@ struct Index {
       }
       .scrollable(ScrollDirection.Vertical)
 
+      Cascade({ show: $show, callCity: $callCity }).zIndex(999)
       ExceptionUtil({
         options: {
           show: this.showException,

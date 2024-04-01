@@ -82,6 +82,8 @@ export class UiConst {
   static readonly NUMBER_20: number = 20;
   static readonly VP_20: string = '20vp';
   static readonly NUMBER_25: number = 25;
+  static readonly VP_35: string = '35vp';
+  static readonly NUMBER_30: number = 30;
   static readonly VP_25: string = '25vp';
   static readonly NUMBER_45: number = 45;
   static readonly VP_45: string = '45vp';

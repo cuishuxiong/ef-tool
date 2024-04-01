@@ -5,9 +5,6 @@
 ### 🐣新特性(API11)
 
 * 新增异常工具类ExceptionUtil
-* 新增下载按钮工具栏DownloadUtil
-* 新增沉浸式导航工具栏ImmersionUtil
-* 新增日历滑块工具类DatePickerUtil
 
 ### 🐞Bug修复
 
