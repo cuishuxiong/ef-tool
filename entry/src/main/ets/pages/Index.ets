@@ -34,7 +34,8 @@ import {
   AlertUtil,
   SelectUtil,
   ExceptionUtil,
-  DownloadUtil
+  DownloadUtil,
+  Cascade
 } from '@yunkss/eftool'
 
 class User {
@@ -73,6 +74,8 @@ struct Index {
   @State showSelect: boolean = false;
   @State showException: boolean = false;
   scroller: Scroller = new Scroller()
+  @State show: boolean = false
+  @State callCity: string = ''
 
   aboutToAppear(): void {
     this.test();
@@ -327,10 +330,15 @@ struct Index {
     Stack({ alignContent: Alignment.TopStart }) {
       Scroll(this.scroller) {
         Column() {
+          Text(this.callCity)
           Text(this.message)
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           DownloadUtil({})
+          Cascade({ show: $show, callCity: $callCity }).zIndex(999)
+          Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
+            this.show = !this.show;
+          })
           Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:2000,bottom:10vp');
             this.testCrypto();
