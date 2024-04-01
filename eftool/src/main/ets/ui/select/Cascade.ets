@@ -25,7 +25,7 @@ function cascadeUnderLine(selected: boolean) {
  */
 @Extend(Text)
 function txtColor(selected: boolean) {
-  .fontSize(UiConst.FONT_14)
+  .fontSize(UiConst.FONT_16)
   .fontColor(selected ? "#969799" : "#000")
   .fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
 }
@@ -149,7 +149,6 @@ export struct Cascade {
           Image($r("app.media.close"))
             .width(UiConst.VP_15)
             .height(UiConst.VP_15)
-            .margin({ right: UiConst.NUMBER_5 })
             .onClick(() => {
               this.reset()
             })
@@ -157,8 +156,8 @@ export struct Cascade {
         .width('100%')
         .padding({
           top: UiConst.NUMBER_15,
-          left: UiConst.NUMBER_15,
-          right: UiConst.NUMBER_15,
+          left: UiConst.NUMBER_20,
+          right: UiConst.NUMBER_25,
           bottom: UiConst.NUMBER_10
         })
         .alignItems(VerticalAlign.Center)
@@ -196,6 +195,7 @@ export struct Cascade {
             }
           }.margin({ right: UiConst.NUMBER_20 })
         }
+        //区
         if (this.showArea) {
           //区域
           Column() {
@@ -213,7 +213,7 @@ export struct Cascade {
         }
       }
       .width("100%")
-      .margin({ top: UiConst.NUMBER_10, left: UiConst.NUMBER_20 })
+      .margin({ top: UiConst.NUMBER_10, left: UiConst.VP_35 })
       .justifyContent(FlexAlign.Start)
       .alignItems(VerticalAlign.Center)
 
@@ -250,7 +250,7 @@ export struct Cascade {
               .width("100%")
               .justifyContent(FlexAlign.SpaceBetween)
               .alignItems(VerticalAlign.Center)
-              .padding({ right: UiConst.NUMBER_10 })
+              .padding({ right: UiConst.NUMBER_20 })
             }
             .margin({ top: UiConst.NUMBER_5, bottom: UiConst.NUMBER_5 })
             .onClick(() => {
@@ -301,7 +301,7 @@ export struct Cascade {
       .height('100%')
       .width("100%")
       .alignItems(VerticalAlign.Top)
-      .padding({ left: UiConst.NUMBER_10 })
+      .padding({ left: UiConst.NUMBER_20 })
     }
     .type(PanelType.CUSTOM)
     .dragBar(false)
