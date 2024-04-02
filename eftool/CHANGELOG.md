@@ -11,18 +11,6 @@
 * JSONUtil兼容API11[issuesI9CC7N](https://gitee.com/yunkss/ef-tool/issues/I9CC7N)
 * Cascade兼容API11
 
-
-## [v1.0.10] 2024-04
-
-### 🐣新特性(API9)
-
-* 新增CacheUtil全局缓存
-
-### 🐞Bug修复
-
-* 优化JSONUtil嵌套类为Array时返回错误[issuesI99DVI](https://gitee.com/yunkss/ef-tool/issues/I99DVI)
-
-
 ## [v1.1.3] 2024-03
 
 ### 🐣新特性(API11)
