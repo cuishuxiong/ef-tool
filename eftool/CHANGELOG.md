@@ -1,16 +1,5 @@
 # Changelog
 
-## [v1.1.4] 2024-04
-
-### 🐣新特性(API11)
-
-* 新增异常工具类ExceptionUtil
-
-### 🐞Bug修复
-
-* JSONUtil兼容API11[issuesI9CC7N](https://gitee.com/yunkss/ef-tool/issues/I9CC7N)
-* Cascade兼容API11
-
 ## [v1.0.10] 2024-04
 
 ### 🐣新特性(API9)
