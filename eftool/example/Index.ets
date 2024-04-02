@@ -26,10 +26,10 @@ import {
   ActionUtil,
   Cascade,
   CacheUtil,
+  SM2,
   SM4,
   SM3,
-  SM2,
-  pcaJSON,
+  pcaJSON
 } from '@yunkss/eftool'
 import util from '@ohos.util';
 import { sm3 } from '@yunkss/eftool/src/main/ets/core/crypto/sm/sm2/SM3';
@@ -38,13 +38,17 @@ class Person {
   name: string;
   age: number;
   birth: Date;
+  sex: boolean;
   user: User;
+  list: Array<User>;
 
-  constructor(name: string, age: number, birth: Date, user: User) {
+  constructor(name: string, age: number, sex: boolean, birth: Date, user: User, list: Array<User>) {
     this.birth = birth;
     this.name = name;
     this.age = age;
+    this.sex = sex;
     this.user = user;
+    this.list = list;
   }
 }
 
@@ -97,6 +101,29 @@ struct Index {
 
   test() {
 
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+
+    Logger.error(str1, "11111111111")
+
+
+
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+
+    Logger.debug(p.name, p.user.name + p.list[0].name);
+
+
+    let listStr = JSONUtil.toJSONString(userList);
+
+    let uList = JSONUtil.parseArray<User>(listStr);
+    uList.forEach(item => {
+      Logger.error(item.id, item.name);
+    })
+
     // const msg = 'hello world! 我是 xxxx.' // 可以为 utf8 串或字节数组
     // const key = SM4.generateKey().hexString;
 
@@ -136,9 +163,23 @@ struct Index {
 
     // let sm2 = new SM2();
 
-    // let keypair = sm2.generateKeyPairHex()
+    // let {publicKey,privateKey} = sm2.generateKeyPairHex()
 
-    // console.log(keypair.publicKey+"---"+keypair.privateKey)
+    // console.log(publicKey + "---" + privateKey)
+
+    // 默认生成公钥 130 位太长，可以压缩公钥到 66 位
+    // const compressedPublicKey = sm2.compressPublicKeyHex(publicKey) // compressedPublicKey 和 publicKey 等价
+    // sm2.comparePublicKeyHex(publicKey, compressedPublicKey) // 判断公钥是否等价
+
+    // 自定义随机数，参数会直接透传给 jsbn 库的 BigInteger 构造器
+    // 注意：开发者使用自定义随机数，需要自行确保传入的随机数符合密码学安全
+    // let keypair2 = sm2.generateKeyPairHex('123123123123123')
+    // let keypair3 = sm2.generateKeyPairHex(256, SecureRandom)
+
+    // let verifyResult = sm2.verifyPublicKey(publicKey) // 验证公钥
+    // verifyResult = sm2.verifyPublicKey(compressedPublicKey) // 验证公钥
+    //
+    // sm2.doEncrypt('dsdsdsds', publicKey, 1)
 
     // let base64 = BASE64.create();
     // let a = base64.toByteArray('测试BASE64')
@@ -430,7 +471,20 @@ struct Index {
 
 
     // let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    // let str = JSONUtil.toJSONString(person);
+    // CacheUtil.save<Person>("csx", person);
+
+    // let p = CacheUtil.get<Person>("csx");
+    // let str = JSONUtil.toJSONString(p);
+
+    // Logger.error(str);
+
+    // CacheUtil.save<string>("str", str);
+
+    // let st = CacheUtil.get<string>("str");
+
+    // let a = CacheUtil.get<string>("xxx");
+
+    // Logger.error(a);
 
 
     // let p = JSONUtil.parseObject<Person>(str, 'yyyy/MM/dd HH:mm:ss')
@@ -456,9 +510,9 @@ struct Index {
     // pArr.forEach(item => {
     //   console.error(item.name + "---" + item.birth);
     // })
-    let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
-    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
+    // let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    // let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
+    // console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
     // // this.message += result.getMsg() + "\n";
     // result.getDataTable().forEach(item => {
     //   this.message += item.name + "\n";

@@ -101,6 +101,7 @@ export class JSONUtil {
         result[key[0]] = parseValue(value);
       }
     }
+    // @ts-ignore
     return result as T;
   }
 
