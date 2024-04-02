@@ -1,14 +1,15 @@
 # Changelog
 
 
-## [v1.0.10] 2024-03
+## [v1.0.10] 2024-04
 
 ### 🐣新特性
 
 * 新增CacheUtil全局缓存
-* 新增国密SM2[迁移和优化sm-crypto](https://gitee.com/yunkss/ef-tool/issues/I93V9W)
-* 新增WsUtil,方便websocket操作
-* 新增AuthUtil,封装Hap获取授权相关操作
+
+### 🐞Bug修复
+
+* 优化JSONUtil嵌套类为Array时返回错误[issuesI99DVI](https://gitee.com/yunkss/ef-tool/issues/I99DVI)
 
 ## [v1.0.9] 2024-03
 
