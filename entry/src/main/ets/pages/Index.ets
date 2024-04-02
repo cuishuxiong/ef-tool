@@ -37,7 +37,8 @@ import {
   ExceptionUtil,
 // DownloadUtil,
   Cascade,
-  DateConst
+  DateConst,
+  AuthUtil
 } from '@yunkss/eftool'
 
 class User {
@@ -87,6 +88,17 @@ struct Index {
   aboutToAppear(): void {
     this.test();
     // this.testCrypto();
+  }
+
+  async dingWei() {
+    let result = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+    if (!result) {
+      AuthUtil.reqPermissionsFromUser('ohos.permission.APPROXIMATELY_LOCATION', (index: number) => {
+        ToastUtil.showToast(index == 1 ? '授权成功' : '用户取消授权~');
+      })
+    } else {
+      ToastUtil.showToast('用户已授权~');
+    }
   }
 
   cancel() {
@@ -388,6 +400,9 @@ struct Index {
           })
           Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
             this.show = !this.show;
+          })
+          Button("校验是否授予权限").margin({ bottom: '10vp' }).onClick(() => {
+            this.dingWei();
           })
           Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });

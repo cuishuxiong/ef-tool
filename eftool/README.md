@@ -63,6 +63,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | Logger     | 提供常用的打印日志的方法                         |
 | RegexConst | 提供常用的正则表达式常量                         |
 | DateConst  | 提供常用的日期格式化表达式常量                      |
+| AuthUtil   | 提供判断授权拉起授权的系列方法                      |
 
 ### 2.UI类组件
 
@@ -1256,6 +1257,31 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
     console.error(ObjectUtil.notEqual("1", "1") + "")
     //输出 false
+```
+
+#### 26.AuthUtil的方法
+
+* checkPermissions 校验是否已授权 【异步方法】
+
+```
+    //单次校验一个权限,入参为需要校验的权限
+    let result = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+    if (!result) {
+     //此处可调用拉起授权方法
+     ToastUtil.showToast('用户未授权~');
+    } else {
+      ToastUtil.showToast('用户已授权~');
+    }
+```
+
+* reqPermissionsFromUser 拉起用户授权 【异步方法】
+
+```
+     //拉起用户单个权限授权操作,第一个参数为需要授予的权限,第二个参数为用户授权回调
+     AuthUtil.reqPermissionsFromUser('ohos.permission.APPROXIMATELY_LOCATION', (index: number) => {
+        //用户同意授权index为1,用户拒绝授权index为-1,根据结果进行业务操作
+        ToastUtil.showToast(index == 1 ? '授权成功' : '用户取消授权~');
+     })
 ```
 
 ### 3.UI组件使用API

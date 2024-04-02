@@ -6,6 +6,7 @@
 
 * 新增RSA支持pem文件内容转换为加解密字符串[issuesI9DDMM](https://gitee.com/yunkss/ef-tool/issues/I9DDMM)
 * 新增沉浸式导航工具类ImmersionUtil
+* 新增权限以及授权工具类AuthUtil
 
 ## [v1.1.4] 2024-04
 

@@ -33,6 +33,18 @@
           }
         ]
       }
+    ],
+    "requestPermissions": [
+      {
+        "name": 'ohos.permission.APPROXIMATELY_LOCATION',
+        "reason": "$string:EntryAbility_label",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+          "when": "always"
+        }
+      }
     ]
   }
 }

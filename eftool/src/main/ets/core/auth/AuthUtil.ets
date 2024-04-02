@@ -4,13 +4,81 @@
  * @TODO AuthUtil  权限相关工具类
  */
 import abilityAccessCtrl, { Permissions } from '@ohos.abilityAccessCtrl';
-import UIAbility from '@ohos.app.ability.UIAbility';
+import { bundleManager, common } from '@kit.AbilityKit';
+import { BusinessError } from '@kit.BasicServicesKit';
+import { ToastUtil } from '../../ui/prompt/ToastUtil';
 
 export class AuthUtil {
-  static async applyPermission(context: UIAbility, list: Array<Permissions>) {
-    let atManager = abilityAccessCtrl.createAtManager();
-    let result = await  atManager.requestPermissionsFromUser(context.context, list);
-    console.info("data permissions:" + result.permissions);
-    console.info("data authResults:" + result.authResults);
+  /**
+   * 检查是否授权
+   * @param permission 待检查权限
+   * @returns 授权状态
+   */
+  private static async checkAccessToken(permission: Permissions): Promise<abilityAccessCtrl.GrantStatus> {
+    let atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
+    let grantStatus: abilityAccessCtrl.GrantStatus = abilityAccessCtrl.GrantStatus.PERMISSION_DENIED;
+
+    // 获取应用程序的accessTokenID
+    let tokenId: number = 0;
+    try {
+      let bundleInfo: bundleManager.BundleInfo = await bundleManager.getBundleInfoForSelf(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION);
+      let appInfo: bundleManager.ApplicationInfo = bundleInfo.appInfo;
+      tokenId = appInfo.accessTokenId;
+    } catch (error) {
+      const err: BusinessError = error as BusinessError;
+      ToastUtil.showToast('获取应用绑定包信息失败:原因为:' + err.message);
+    }
+
+    // 校验应用是否被授予权限
+    try {
+      grantStatus = await atManager.checkAccessToken(tokenId, permission);
+    } catch (error) {
+      const err: BusinessError = error as BusinessError;
+      ToastUtil.showToast('校验授权信息失败:原因为:' + err.message);
+    }
+
+    return grantStatus;
+  }
+
+  /**
+   * 判断是否授权
+   * @param permissions  待判断的权限
+   * @returns 已授权true,未授权false
+   */
+  static async checkPermissions(permissions: Permissions): Promise<boolean> {
+    //判断是否授权
+    let grantStatus: abilityAccessCtrl.GrantStatus = await AuthUtil.checkAccessToken(permissions);
+    if (grantStatus === abilityAccessCtrl.GrantStatus.PERMISSION_GRANTED) {
+      //已经授权
+      return true;
+    } else {
+      //未授权
+      return false;
+    }
+  }
+
+  /**
+   * 发起授权
+   * @param permissions  需要授权的权限
+   * @param callBack  授权成功后的回调
+   * @returns
+   */
+  static async reqPermissionsFromUser(permissions: Permissions, callBack: (index: number) => void): Promise<void> {
+    let atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
+    // requestPermissionsFromUser会判断权限的授权状态来决定是否唤起弹窗
+    let request = await atManager.requestPermissionsFromUser(getContext() as common.UIAbilityContext, [permissions]);
+    let grantStatus: Array<number> = request.authResults;
+    let length: number = grantStatus.length;
+    for (let i = 0; i < length; i++) {
+      if (grantStatus[i] === 0) {
+        // 用户授权，可以继续访问目标操作
+        callBack(1);
+      } else {
+        callBack(-1);
+        // 用户拒绝授权，提示用户必须授权才能访问当前页面的功能，并引导用户到系统设置中打开相应的权限
+        return;
+      }
+    }
+
   }
 }

@@ -37,7 +37,8 @@ import {
   ExceptionUtil,
 // DownloadUtil,
   Cascade,
-  DateConst
+  DateConst,
+  AuthUtil
 } from '@yunkss/eftool'
 
 class User {
@@ -82,10 +83,22 @@ struct Index {
   scroller: Scroller = new Scroller()
   @State show: boolean = false
   @State callCity: string = ''
+  bottomRectHeight: string = AppStorage.get<number>('bottomHeight') + 'px';
 
   aboutToAppear(): void {
     this.test();
     // this.testCrypto();
+  }
+
+  async dingWei() {
+    let result = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+    if (!result) {
+      AuthUtil.reqPermissionsFromUser('ohos.permission.APPROXIMATELY_LOCATION', (index: number) => {
+        ToastUtil.showToast(index == 1 ? '授权成功' : '用户取消授权~');
+      })
+    } else {
+      ToastUtil.showToast('用户已授权~');
+    }
   }
 
   cancel() {
@@ -104,6 +117,7 @@ struct Index {
     //ECDSA
     // let ecdsa = await ECDSA.generateECDSAKey();
     // this.message = ecdsa.getDataRow().publicKey;
+    // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
     // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
     // this.message = sign.getDataRow();
     // let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
@@ -191,10 +205,33 @@ struct Index {
     //RSA
     // let rsa = await RSA.generateRSAKey();
     // this.message = rsa.getDataRow().publicKey;
-    // let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
-    // this.message = encode.getDataRow();
-    // let decode = await RSA.decodePKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
-    // this.message = decode.getDataRow();
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhoZDHUVp7y2zw7T7SQYDiUQCn
+                  ImnsKogqWOF3hBfaBr8xK/7I/PfbLcPV/MrWKPi2uaiXkhmITX+24ZWVBInxELBa
+                  4kccFJeZReMRmu7rKZgkVzU6JKyfaH8zMxipEBh0TyS6JVHHjPd4eezzzVDHc59O
+                  fYyzs3kM3Z6oczwTDwIDAQAB
+                  -----END PUBLIC KEY-----`);
+    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', pubKey);
+    this.message = encode.getDataRow();
+    let priKey = RSA.pemToStrKey(`-----BEGIN PRIVATE KEY-----
+                MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAOGhkMdRWnvLbPDt
+                PtJBgOJRAKciaewqiCpY4XeEF9oGvzEr/sj899stw9X8ytYo+La5qJeSGYhNf7bh
+                lZUEifEQsFriRxwUl5lF4xGa7uspmCRXNTokrJ9ofzMzGKkQGHRPJLolUceM93h5
+                7PPNUMdzn059jLOzeQzdnqhzPBMPAgMBAAECgYEAjJjm5Kz3G0kJ25+ak94pd91N
+                8Nfq9TUToH++D4GKc1vc68EkhQ3NTRDZhZB+vLDPOt26BqkNq/fO66DqWu93HEra
+                jBE4pZzCxmVmLanuimxiA45Td1DalL0mmd9ab2cusqwXo6LDs3mSU/t7gSBRUCnt
+                kv4MBZMgIDA92QSadHECQQD1HZKBIbWQtZ4nDxgaP1MOQC7dKmXlIkCsDbuwaZhj
+                RM8/+iqBBtgSkviwOCDWNiFcpzf+nUM1+ba9OE9iTOqTAkEA66Z/ifnKVCNbHiW8
+                i6E2K/2NcJH4qsxRrIMs+eyxqC/yEjkxol26OVmemxu22Fjkx/xIOKg6zFJRstXy
+                i6P3FQJBAKZ7xINCwxCb2uSKowNI2X/HZk0/u9+qqSRzW3TR8/gQx3eb0fy7Ck1r
+                V9BQ/zSfpX9J8IVWiU0C4/SXZ4vL1FMCQQCPaQh9I7NqeQne0wBnyXh6VRhaxbsb
+                1rRt1Hbusol73ZHoXT5Dnd7TQCMyKi+ggpjYzEP3lwoRhpeJyoKNUP/xAkB+//w9
+                SyKHWOZOCLj47/1/7YZGzKv/Ttb4NVFtqDPl2QtbXqDcP8d5ZI4p37rJIq1XZ0sT
+                l2UgKQV+KZkPdL1n
+                -----END PRIVATE KEY-----
+                `)
+    let decode = await RSA.decodePKCS1(encode.getDataRow(), priKey);
+    this.message = decode.getDataRow();
     // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
     // this.message = sign.getDataRow();
     // let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
@@ -224,6 +261,7 @@ struct Index {
   }
 
   test(): void {
+    this.message = this.bottomRectHeight;
     //存入字符串
     // CacheUtil.save<string>("str", "测试存入字符串");
     //存入对象T
@@ -232,11 +270,11 @@ struct Index {
     userList.push(new User('7844', '测试用户2'));
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
 
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let str1 = JSONUtil.toJSONString(person, DateConst.YMD_HLINE_HMS);
 
     Logger.error(str1, "11111111111")
 
-    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1, DateConst.YMD_HLINE_HMS);
 
     Logger.debug(p.name, p.user.name + p.list[0].name);
 
@@ -355,12 +393,16 @@ struct Index {
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           // DownloadUtil({})
+
+          Button("默认toast").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+            ToastUtil.showToast('duration:2000,bottom:10vp');
+            this.testCrypto();
+          })
           Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
             this.show = !this.show;
           })
-          Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
-            ToastUtil.showToast('duration:2000,bottom:10vp');
-            this.testCrypto();
+          Button("校验是否授予权限").margin({ bottom: '10vp' }).onClick(() => {
+            this.dingWei();
           })
           Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
@@ -544,6 +586,7 @@ struct Index {
       })
     }
     .width('100%')
-    .height('100%')
+
+    // .margin({ bottom: this.bottomRectHeight })
   }
 }

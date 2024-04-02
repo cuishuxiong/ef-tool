@@ -86,4 +86,6 @@ export { Cascade } from './src/main/ets/ui/select/Cascade';
 
 export { ImmersionUtil } from './src/main/ets/ui/base/ImmersionUtil';
 
+export { AuthUtil } from './src/main/ets/core/auth/AuthUtil';
+
 export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
