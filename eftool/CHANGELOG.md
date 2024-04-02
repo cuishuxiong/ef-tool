@@ -8,7 +8,7 @@
 
 ### 🐞Bug修复
 
-* JSONUtil兼容API11
+* JSONUtil兼容API11[issuesI9CC7N](https://gitee.com/yunkss/ef-tool/issues/I9CC7N)
 * Cascade兼容API11
 
 
