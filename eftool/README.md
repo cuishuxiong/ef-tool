@@ -1740,7 +1740,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     })
 ```
 
-### 9.ExceptionUtil的方法
+#### 9.ExceptionUtil的方法
 
 * 入参介绍
 
