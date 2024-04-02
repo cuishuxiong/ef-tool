@@ -98,4 +98,15 @@ export class DateUtil {
   private static padZero(num: number): string {
     return num.toString().padStart(2, "0");
   }
+
+  /**
+   * 判断传入字符串是否是日期字符串
+   * @param value 待验证的字符串
+   * @returns
+   */
+  public static isDate(value: string): boolean {
+    //需要循环常量中的时间格式看看是否符合，符合极为日期类型
+    const dateTimeRegex = /^(?:(?:\d{4}(?:\/|-)\d{1,2}(?:\/|-)\d{1,2})|(?:\d{1,2}:\d{1,2}(:\d{1,2})?))(\s(?:\d{1,2}:\d{1,2}:\d{1,2}))?$/;
+    return dateTimeRegex.test(value);
+  }
 }

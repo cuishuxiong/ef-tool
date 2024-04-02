@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.3(API11)</center>
+# <center>V1.1.4(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | 模块         | 介绍                                   |
 |------------|--------------------------------------|
 | IdCardUtil | 提供对身份证校验系列方法                         |
+| JSONUtil   | 提供对于JSON对象集合跟JSON字符串的系列转换方法          |
 | RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
 | AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
 | DES        | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
@@ -65,16 +66,18 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.UI类组件
 
-| 模块          | 介绍            |
-|-------------|---------------|
-| ToastUtil   | 提供对文本提示的一系列方法 |
-| DialogUtil  | 提供对弹出框的一系列方法  |
-| ActionUtil  | 提供对操作菜单的一系列方法 |
-| LoadingUtil | 提供全局加载工具类     |
-| TipsUtil    | 提供提示弹出工具类     |
-| SelectUtil  | 提供选择弹出工具类     |
-| ConfirmUtil | 提供信息确认弹出工具类   |
-| AlertUtil   | 提供操作确认弹出工具类   |
+| 模块            | 介绍            |
+|---------------|---------------|
+| ToastUtil     | 提供对文本提示的一系列方法 |
+| DialogUtil    | 提供对弹出框的一系列方法  |
+| ActionUtil    | 提供对操作菜单的一系列方法 |
+| LoadingUtil   | 提供全局加载工具类     |
+| TipsUtil      | 提供提示弹出工具类     |
+| SelectUtil    | 提供选择弹出工具类     |
+| ConfirmUtil   | 提供信息确认弹出工具类   |
+| AlertUtil     | 提供操作确认弹出工具类   |
+| ExceptionUtil | 提供省市区级联选择组件   |
+| Cascade       | 提供省市区级联选择组件   |
 
 ## 📦安装
 
@@ -164,7 +167,51 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出 true--142303--汾阳市
 ```
 
-#### 2.RSA的方法【返回结果均为OutDTO对象】
+#### 2.JSONUtil的方法
+
+* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
+    JSONUtil.parse(str);
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+     let listStr = JSONUtil.toJSONString(userList);
+     let uList = JSONUtil.parseArray<User>(listStr);
+     uList.forEach(item => {
+       Logger.error(item.id, item.name);
+     })
+```
+
+#### 3.RSA的方法【返回结果均为OutDTO对象】
 
 * generateRSAKey 生成RSA的非对称密钥
 
@@ -202,7 +249,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-#### 3.AES的方法【返回结果均为OutDTO对象】
+#### 4.AES的方法【返回结果均为OutDTO对象】
 
 * generateAESKey 生成AES的对称密钥
 
@@ -239,7 +286,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 4.3DES的方法【返回结果均为OutDTO对象】
+#### 5.3DES的方法【返回结果均为OutDTO对象】
 
 * generate3DESKey 生成3DES的对称密钥
 
@@ -276,7 +323,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-#### 5.SM2的方法【返回结果均为OutDTO对象】
+#### 6.SM2的方法【返回结果均为OutDTO对象】
 
 * generateSM2Key 生成SM2的非对称密钥
 
@@ -314,7 +361,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-#### 6.SM3的方法【返回结果均为OutDTO对象】
+#### 7.SM3的方法【返回结果均为OutDTO对象】
 
 * digest SM3摘要
 
@@ -330,7 +377,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac1.getDataRow();
 ```
 
-#### 7.SM4的方法【返回结果均为OutDTO对象】
+#### 8.SM4的方法【返回结果均为OutDTO对象】
 
 * generateSM4Key 生成SM4的对称密钥
 
@@ -367,7 +414,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-#### 8.SHA的方法【返回结果均为OutDTO对象】
+#### 9.SHA的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -411,7 +458,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac2.getDataRow();
 ```
 
-#### 9.MD5的方法【返回结果均为OutDTO对象】
+#### 10.MD5的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -420,7 +467,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = md5.getDataRow();
 ```
 
-#### 10.ECDSA的方法【返回结果均为OutDTO对象】
+#### 11.ECDSA的方法【返回结果均为OutDTO对象】
 
 * generateECDSAKey 生成ECDSA的非对称密钥
 
@@ -444,7 +491,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-#### 11.ECDH的方法【返回结果均为OutDTO对象】
+#### 12.ECDH的方法【返回结果均为OutDTO对象】
 
 * ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -481,7 +528,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 12.X25519的方法【返回结果均为OutDTO对象】
+#### 13.X25519的方法【返回结果均为OutDTO对象】
 
 * x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -516,7 +563,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 13.CacheUtil的方法
+#### 14.CacheUtil的方法
 
 * save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
 
@@ -551,7 +598,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = newStr;
 ```
 
-#### 14.IdUtil的方法
+#### 15.IdUtil的方法
 
 * simpleUUID 生成32为UUID不带-
 
@@ -581,7 +628,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //输出  600cddfb-1e88-4798-8987-bfb703be76ff
 ```
 
-#### 15.OutDTO的方法
+#### 16.OutDTO的方法
 
 * 该对象有四个私有成员变量
 
@@ -654,22 +701,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * getDataTable 获取多行数据
 
 * setDataTable 设置多行数据
-
-#### 16.ObjectUtil的方法
-
-* equal 判断两个传入的数值或者是字符串是否相等
-
-```
-    console.error(ObjectUtil.equal("1", "1") + "")
-    //输出 true
-```
-
-* notEqual 判断两个传入的数值或者是字符串是否不相等
-
-```
-    console.error(ObjectUtil.notEqual("1", "1") + "")
-    //输出 false
-```
 
 #### 17.PhoneUtil的方法
 
@@ -1175,6 +1206,22 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
+```
+
+#### 25.ObjectUtil的方法
+
+* equal 判断两个传入的数值或者是字符串是否相等
+
+```
+    console.error(ObjectUtil.equal("1", "1") + "")
+    //输出 true
+```
+
+* notEqual 判断两个传入的数值或者是字符串是否不相等
+
+```
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+    //输出 false
 ```
 
 ### 3.UI组件使用API
@@ -1692,6 +1739,80 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       this.index = true;
     })
 ```
+
+### 9.ExceptionUtil的方法
+
+* 入参介绍
+
+```
+    PromOptions 异常提示框入参实体
+    options:{
+        show:是否显示默认false,
+        content:提示框内容,
+        actionText:指定当前异常提示的右侧图标按钮的文字,
+        clickCallBack:点击弹框按钮回调函数
+    }
+```
+
+* 初始化
+
+```
+    @State showException: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    ExceptionUtil({
+      options: {
+        show: this.showException,
+        clickCallBack: (index) => {
+          //index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+          ToastUtil.showToast("点击了" + index);
+          this.showException = false;
+        }
+      }
+    })
+    clickCallBack中的入参
+    1.index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如网络异常
+    this.showException = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index) => {
+       this.showException = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Exception").margin({ bottom: '10vp' }).onClick(() => {
+      this.showException = true;
+    })
+```
+
+#### 10.Cascade省市区级联
+
+```
+  入参  
+  show  是否显示级联框(TRUE显示FALSE关闭)  
+  callCity 反回选择的省市区数据
+  //使用demo
+  Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
+      this.show = !this.show;
+  })
+  Cascade({ show: $show, callCity: $callCity })
+  //$callCity为调用页面传入给子组件的用于接收返回的值
+```
+
+- 效果图  
+  [![cascade1.th.jpg](https://z4a.net/images/2024/02/21/cascade1.th.jpg)](https://z4a.net/image/jPZx5r)
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 

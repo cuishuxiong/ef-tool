@@ -16,7 +16,7 @@ export { StrUtil } from './src/main/ets/core/util/StrUtil';
 
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
 
-// export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
+export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
 
 export { RegexConst } from './src/main/ets/core/const/RegexConst';
 
@@ -78,7 +78,7 @@ export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
 
 export { ExceptionUtil } from './src/main/ets/ui/prompt/ExceptionUtil';
 
-export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
+// export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
 

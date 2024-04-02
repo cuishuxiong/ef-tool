@@ -27,9 +27,18 @@ import {
   X25519,
   SM3,
   MD5,
-  SHA
+  SHA,
+  LoadingUtil,
+  TipsUtil,
+  ConfirmUtil,
+  AlertUtil,
+  SelectUtil,
+  JSONUtil,
+  ExceptionUtil,
+// DownloadUtil,
+  Cascade,
+  DateConst
 } from '@yunkss/eftool'
-import crypto from '@ohos.security.cryptoFramework';
 
 class User {
   id: string;
@@ -45,13 +54,17 @@ class Person {
   name: string;
   age: number;
   birth: Date;
+  sex: boolean;
   user: User;
+  list: Array<User>;
 
-  constructor(name: string, age: number, birth: Date, user: User) {
+  constructor(name: string, age: number, sex: boolean, birth: Date, user: User, list: Array<User>) {
     this.birth = birth;
     this.name = name;
     this.age = age;
+    this.sex = sex;
     this.user = user;
+    this.list = list;
   }
 }
 
@@ -60,6 +73,15 @@ class Person {
 @Component
 struct Index {
   @State message: string = 'Hello World';
+  @State showLoading: boolean = false;
+  @State showTips: boolean = false;
+  @State showConfirm: boolean = false;
+  @State showAlert: boolean = false;
+  @State showSelect: boolean = false;
+  @State showException: boolean = false;
+  scroller: Scroller = new Scroller()
+  @State show: boolean = false
+  @State callCity: string = ''
 
   aboutToAppear(): void {
     this.test();
@@ -203,210 +225,325 @@ struct Index {
 
   test(): void {
     //存入字符串
-    CacheUtil.save<string>("str", "测试存入字符串");
+    // CacheUtil.save<string>("str", "测试存入字符串");
     //存入对象T
-    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
-    CacheUtil.save<Person>("tetObj", person);
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+
+    Logger.error(str1, "11111111111")
+
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+
+    Logger.debug(p.name, p.user.name + p.list[0].name);
+
+    let listStr = JSONUtil.toJSONString(userList);
+
+    let uList = JSONUtil.parseArray<User>(listStr);
+    uList.forEach(item => {
+      Logger.error(item.id, item.name);
+    })
+
+    // CacheUtil.save<Person>("tetObj", person);
     //存入对象集合
-    let arrP = Array<Person>();
-    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
-    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
-    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
-    CacheUtil.save<Array<Person>>("arrPerson", arrP);
+    // let arrP = Array<Person>();
+    // arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
+    // arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
+    // arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
+    // CacheUtil.save<Array<Person>>("arrPerson", arrP);
     //获取字符串
-    this.message = CacheUtil.get<string>("str");
+    // this.message = CacheUtil.get<string>("str");
     //获取对象T
-    let p = CacheUtil.get<Person>("tetObj");
-    this.message = p.name + p.age + p.user.id;
+    // let p = CacheUtil.get<Person>("tetObj");
+    // this.message = p.name + p.age + p.user.id;
     //获取对象集合
-    let newStr: string = '';
-    let res = CacheUtil.get<Array<Person>>("arrPerson");
-    res.forEach(item => {
-      newStr += item.age + item.name + item.user.id + item.user.name;
-    })
-    this.message = newStr;
+    // let newStr: string = '';
+    // let res = CacheUtil.get<Array<Person>>("arrPerson");
+    // res.forEach(item => {
+    //   newStr += item.age + item.name + item.user.id + item.user.name;
+    // })
+    // this.message = newStr;
     //只需成功要提示
-    Logger.error(OutDTO.OK('获取提示成功~').getMsg());
+    // Logger.error(OutDTO.OK('获取提示成功~').getMsg());
     //需要成功提示和单行数据-如更新
-    let dto = OutDTO.OKByDataRow<Person>('获取当数据成功~', p);
-    Logger.error(dto.getMsg(), dto.getDataRow().name)
+    // let dto = OutDTO.OKByDataRow<Person>('获取当数据成功~', p);
+    // Logger.error(dto.getMsg(), dto.getDataRow().name)
     //需要成功提示和对象集合-如查询列表
-    let outDTO = OutDTO.OKByDataTable<Person>('获取对象集合成功~', arrP);
-    Logger.error(outDTO.getMsg(), JSON.stringify(outDTO.getDataTable()));
+    // let outDTO = OutDTO.OKByDataTable<Person>('获取对象集合成功~', arrP);
+    // Logger.error(outDTO.getMsg(), JSON.stringify(outDTO.getDataTable()));
     //只需要失败提示
-    let err = OutDTO.Error('获取数据失败~');
-    Logger.error("结果:" + err.getSuccess(), err.getMsg())
+    // let err = OutDTO.Error('获取数据失败~');
+    // Logger.error("结果:" + err.getSuccess(), err.getMsg())
     //需要失败提示和详细单行数据
-    let errDTO = OutDTO.ErrorByDataRow<Person>('获取数据失败~', p);
-    Logger.error("结果:" + errDTO.getSuccess() + "---" + errDTO.getMsg(), JSON.stringify(errDTO.getDataRow()));
+    // let errDTO = OutDTO.ErrorByDataRow<Person>('获取数据失败~', p);
+    // Logger.error("结果:" + errDTO.getSuccess() + "---" + errDTO.getMsg(), JSON.stringify(errDTO.getDataRow()));
     //身份证校验
-    Logger.error(IdCardUtil.isValidCard18("120102199001015965").getMsg(), '------------------');
-    this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
-    Logger.error(IdCardUtil.isValidCard15("420106840901234").getMsg(), '0000000000000000')
-    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
-    n.forEach(item => {
-      console.error(item);
-    })
+    // Logger.error(IdCardUtil.isValidCard18("120102199001015965").getMsg(), '------------------');
+    // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
+    // Logger.error(IdCardUtil.isValidCard15("420106840901234").getMsg(), '0000000000000000')
+    // let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    // n.forEach(item => {
+    //   console.error(item);
+    // })
 
-    console.error(ObjectUtil.notEqual("1", "1") + "")
+    // console.error(ObjectUtil.notEqual("1", "1") + "")
 
-    console.error(PhoneUtil.isPhone("17111114114").getMsg())
+    // console.error(PhoneUtil.isPhone("17111114114").getMsg())
 
-    console.error(StrUtil.hasBlank("", "232323") + "")
+    // console.error(StrUtil.hasBlank("", "232323") + "")
 
-    console.error(StrUtil.isEmpty(' ') + "")
+    // console.error(StrUtil.isEmpty(' ') + "")
 
-    console.error(StrUtil.isNotBlank('222') + "")
+    // console.error(StrUtil.isNotBlank('222') + "")
 
-    console.error(StrUtil.trim([" 你好 ", " hi", "hello "]).join("----"))
+    // console.error(StrUtil.trim([" 你好 ", " hi", "hello "]).join("----"))
 
-    const obj: Record<string, string> = { 'key': 'this is value' } // key的值类型为 string | undefined
-    const test = StrUtil.asString(obj)
+    // const obj: Record<string, string> = { 'key': 'this is value' } // key的值类型为 string | undefined
+    // const test = StrUtil.asString(obj)
 
-    const a = StrUtil.isBlankIfStr(obj);
+    // const a = StrUtil.isBlankIfStr(obj);
 
-    this.message = DateUtil.parse("2023-01-01") + "";
+    // this.message = DateUtil.parse("2023-01-01") + "";
 
-    console.error(DateUtil.formatDate("2023/1/1", 'yyyy-MM-dd HH:mm:ss'))
+    // console.error(DateUtil.formatDate("2023/1/1", 'yyyy-MM-dd HH:mm:ss'))
 
-    console.error(DateUtil.format(new Date, 'HH:mm:ss'))
+    // console.error(DateUtil.format(new Date, 'HH:mm:ss'))
 
-    if (CharUtil.isBlankChar(0xFEFF)) {
-      this.message = "111"
-    } else {
-      this.message = "222"
-    }
+    // if (CharUtil.isBlankChar(0xFEFF)) {
+    //   this.message = "111"
+    // } else {
+    //   this.message = "222"
+    // }
 
-    let res1 = RegUtil.isMatch(RegexConst.EMAIL, '111111');
-    console.error(res1.getSuccess() + "---" + res1.getMsg());
+    // let res1 = RegUtil.isMatch(RegexConst.EMAIL, '111111');
+    // console.error(res1.getSuccess() + "---" + res1.getMsg());
 
-    let res2 = RegUtil.isEmailMatch('13191191111@163.com');
-    console.error(res2.getSuccess() + "---" + res2.getMsg());
+    // let res2 = RegUtil.isEmailMatch('13191191111@163.com');
+    // console.error(res2.getSuccess() + "---" + res2.getMsg());
 
-    this.message = RegUtil.isIdCardMatch('111111111111111111').getMsg();
+    // this.message = RegUtil.isIdCardMatch('111111111111111111').getMsg();
 
-    this.message = RegUtil.isEmailMatch('13191191111').getMsg();
-    let str: string[] = ["1", ""];
-    if (ArrayUtil.strValIsNotEmpty(str)) {
-      this.message = "不是空的";
-    } else {
-      this.message = "是空的"
-    }
-    if (ArrayUtil.isEmpty(str)) {
-      this.message = "是空的";
-    } else {
-      this.message = "不是空的"
-    }
+    // this.message = RegUtil.isEmailMatch('13191191111').getMsg();
+    // let str: string[] = ["1", ""];
+    // if (ArrayUtil.strValIsNotEmpty(str)) {
+    //   this.message = "不是空的";
+    // } else {
+    //   this.message = "是空的"
+    // }
+    // if (ArrayUtil.isEmpty(str)) {
+    //   this.message = "是空的";
+    // } else {
+    //   this.message = "不是空的"
+    // }
 
 
-    ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
-      this.message += item + "、";
-    })
-    this.message = IdUtil.randomUUID();
+    // ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
+    //   this.message += item + "、";
+    // })
+    // this.message = IdUtil.randomUUID();
   }
 
   build() {
-    Row() {
-      Column() {
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-        Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
-          ToastUtil.showToast('duration:2000,bottom:10vp');
-          this.testCrypto();
-        })
-        Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
-          ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
-        })
-        Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
-          DialogUtil.showDialog({
-            msg: '这是一个弹框提示~~~~',
-            okCallBack: this.ok,
-            okText: '揍你',
-            cancelText: '去吧',
-            cancelCallBack: this.cancel
-          });
-        })
-        Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
-          DialogUtil.showDialog({
-            msg: '这是一个弹框提示',
-            okCallBack: this.test   //调用方法无需小括号()
-          });
-        })
+    Stack({ alignContent: Alignment.TopStart }) {
+      Scroll(this.scroller) {
+        Column() {
+          Text(this.callCity)
+          Text(this.message)
+            .fontSize(50)
+            .fontWeight(FontWeight.Bold)
+          // DownloadUtil({})
+          Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
+            this.show = !this.show;
+          })
+          Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
+            ToastUtil.showToast('duration:2000,bottom:10vp');
+            this.testCrypto();
+          })
+          Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
+            ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
+          })
+          Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
+            DialogUtil.showDialog({
+              msg: '这是一个弹框提示~~~~',
+              okCallBack: this.ok,
+              okText: '揍你',
+              cancelText: '去吧',
+              cancelCallBack: this.cancel
+            });
+          })
+          Button("dialog一个按钮").margin({ bottom: '10vp' }).onClick(() => {
+            DialogUtil.showDialog({
+              msg: '不写cancelCallBack则显示一个按钮',
+              okCallBack: this.test   //调用方法无需小括号()
+            });
+          })
+          Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+            DialogUtil.showDialog({
+              msg: '这是一个弹框提示',
+              okText: '同意',
+              okCallBack: this.test, //调用方法无需小括号()
+              cancelCallBack: this.cancel
+            });
+          })
+          Button("action").margin({ bottom: '10vp' }).onClick(() => {
+            ActionUtil.showActionMenu({
+              title: '修改后的标题', btn: [
+                { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
+                { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
+              ]
+            });
+          })
+          Button("action默认标题").margin({ bottom: '10vp' }).onClick(() => {
+            ActionUtil.showActionMenu({
+              btn: [
+                { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
+                { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
+              ]
+            });
+          })
+          Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
+            ActionUtil.showMenu({
+              btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
+                ToastUtil.showToast(data);
+              }
+            })
+          })
+          Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
+            ActionUtil.showMenu({
+              title: '修改了菜单标题', btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
+                ToastUtil.showToast(data);
+              }
+            })
+          })
+          Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
+            DialogUtil.showAlertDialog({
+              msg: "这个是一个，默认警告弹框",
+              buttons: [
+                { callBack: this.ok }
+              ]
+            });
+          })
+          Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
+            DialogUtil.showAlertDialog({
+              msg: "这个是一个警告弹框",
+              title: '标题',
+              alignment: DialogAlignment.Top,
+              buttons: [
+                { callBack: this.ok, style: DialogButtonStyle.HIGHLIGHT },
+                { callBack: this.cancel }
+              ]
+            });
+          })
+          Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
+            ActionUtil.showActionSheet({
+              sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+              clickCallBack: (data: string) => {
+                ToastUtil.showToast(data);
+              }
+            });
+          })
+          Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
+            ActionUtil.showActionSheet({
+              title: '弹框的标题',
+              msg: '弹框的消息',
+              subtitle: '副标题',
+              alignment: DialogAlignment.Top,
+              sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+              clickCallBack: (data: string) => {
+                ToastUtil.showToast(data);
+              }
+            });
+          })
 
-        Button("action").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showActionMenu({
-            title: '修改后的标题', btn: [
-              { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
-              { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
-            ]
+          LoadingUtil({
+            options: { show: this.showLoading, alignment: DialogAlignment.Top, content: '更改了加载提示...' }
           });
-        })
-        Button("action默认标题").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showActionMenu({
-            btn: [
-              { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
-              { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
-            ]
+          TipsUtil({
+            options: {
+              show: this.showTips,
+              content: '请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+              clickCallBack: (index, isChecked) => {
+                ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+                this.showTips = false;
+              }
+            }
           });
-        })
-        Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showMenu({
-            btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
-              ToastUtil.showToast(data);
+          ConfirmUtil({
+            options: {
+              show: this.showConfirm,
+              title: '这个是提示',
+              content: '确认要禁止定位权限么?',
+              clickCallBack: (index, isChecked) => {
+                ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+                this.showConfirm = false;
+              }
             }
           })
-        })
-        Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showMenu({
-            title: '修改了菜单标题', btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
-              ToastUtil.showToast(data);
+          AlertUtil({
+            options: {
+              show: this.showAlert,
+              content: '这是一个警告弹出框',
+              clickCallBack: (index) => {
+                ToastUtil.showToast(index === 0 ? '点击了第一个按钮' : '点击了第二个按钮');
+                this.showAlert = false;
+              }
             }
           })
-        })
-        Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
-          DialogUtil.showAlertDialog({
-            msg: "这个是一个，默认警告弹框",
-            buttons: [
-              { callBack: this.ok }
-            ]
-          });
-        })
-        Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
-          DialogUtil.showAlertDialog({
-            msg: "这个是一个警告弹框",
-            title: '标题',
-            alignment: DialogAlignment.Top,
-            buttons: [
-              { callBack: this.ok, style: DialogButtonStyle.HIGHLIGHT },
-              { callBack: this.cancel }
-            ]
-          });
-        })
-        Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showActionSheet({
-            sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-            clickCallBack: (data: string) => {
-              ToastUtil.showToast(data);
+          SelectUtil({
+            options: {
+              show: this.showSelect,
+              ctxList: ['苹果', '香蕉', '梨', '哈密瓜', '凤梨', '西瓜', '火龙果', '伊丽莎白'],
+              clickCallBack: (selectData) => {
+                //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
+                if (selectData) {
+                  ToastUtil.showToast('选择了' + selectData);
+                }
+                this.showSelect = false;
+              }
             }
-          });
-        })
-        Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
-          ActionUtil.showActionSheet({
-            title: '弹框的标题',
-            msg: '弹框的消息',
-            subtitle: '副标题',
-            alignment: DialogAlignment.Top,
-            sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-            clickCallBack: (data: string) => {
-              ToastUtil.showToast(data);
-            }
-          });
-        })
+          })
+          Button("显示loading").margin({ bottom: '10vp' }).onClick(() => {
+            this.showLoading = true;
+            setTimeout(() => {
+              this.showLoading = false;
+            }, 3000);
+          })
+          Button("显示Tips").margin({ bottom: '10vp' }).onClick(() => {
+            this.showTips = true;
+          })
+          Button("显示Conform").margin({ bottom: '10vp' }).onClick(() => {
+            this.showConfirm = true;
+          })
+          Button("显示Alert").margin({ bottom: '10vp' }).onClick(() => {
+            this.showAlert = true;
+          })
+          Button("显示Select").margin({ bottom: '10vp' }).onClick(() => {
+            this.showSelect = true;
+          })
+          Button("显示Exception").margin({ bottom: '10vp' }).onClick(() => {
+            this.showException = true;
+          })
+        }
+        .width('100%')
       }
-      .width('100%')
-      .height('100%')
+      .scrollable(ScrollDirection.Vertical)
+
+      Cascade({ show: $show, callCity: $callCity }).zIndex(999)
+      ExceptionUtil({
+        options: {
+          show: this.showException,
+          clickCallBack: (index) => {
+            //index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+            ToastUtil.showToast("点击了" + index);
+            this.showException = false;
+          }
+        }
+      })
     }
+    .width('100%')
     .height('100%')
   }
 }
