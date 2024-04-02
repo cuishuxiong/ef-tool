@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.5] 2024-04
+
+### 🐣新特性(API11)
+
+* 新增RSA支持pem文件内容转换为加解密字符串[issuesI9DDMM](https://gitee.com/yunkss/ef-tool/issues/I9DDMM)
+
 ## [v1.1.4] 2024-04
 
 ### 🐣新特性(API11)

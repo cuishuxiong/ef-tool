@@ -1,5 +1,7 @@
 import { OutDTO } from '../../base/OutDTO';
 import { CryptoKey, CryptoUtil } from '../../util/CryptoUtil';
+import { buffer, util } from '@kit.ArkTS';
+import { StrAndUintUtil } from '../../util/StrAndUintUtil';
 
 /**
  * @Author csx
@@ -23,6 +25,27 @@ export class RSA {
    */
   static async encodePKCS1(str: string, pubKey: string): Promise<OutDTO<string>> {
     return CryptoUtil.encodeAsym(str, pubKey, 'RSA1024', 'RSA1024|PKCS1');
+  }
+
+  /**
+   * 将pem文件中的数据转换成公钥字符串目前只支持1024字节
+   * @param pemData pem数据以-----BEGIN开头,以-----END结尾
+   * @returns
+   */
+  static pemToStrKey(pemData: string): string {
+    // 移除PEM格式的头部和尾部，获取Base64编码的数据
+    const base64Data = pemData.replace(/-----BEGIN .*?-----|-----END .*?-----|\s/g, '');
+    // 将Base64编码的数据解码为Buffer
+    let base64 = new util.Base64Helper();
+    let options = util.Type.BASIC;
+    if (/\r\n/.test(base64Data)) {
+      options = util.Type.MIME;
+    }
+    //转码
+    let arr = base64.decodeSync(base64Data, options);
+    //返回字符串
+    let result = StrAndUintUtil.unitArray2String(arr);
+    return result;
   }
 
   /**
