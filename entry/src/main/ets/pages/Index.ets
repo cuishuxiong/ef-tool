@@ -82,6 +82,7 @@ struct Index {
   scroller: Scroller = new Scroller()
   @State show: boolean = false
   @State callCity: string = ''
+  bottomRectHeight: string = AppStorage.get<number>('bottomHeight') + 'px';
 
   aboutToAppear(): void {
     this.test();
@@ -248,6 +249,7 @@ struct Index {
   }
 
   test(): void {
+    this.message = this.bottomRectHeight;
     //存入字符串
     // CacheUtil.save<string>("str", "测试存入字符串");
     //存入对象T
@@ -569,6 +571,7 @@ struct Index {
       })
     }
     .width('100%')
-    .height('100%')
+
+    // .margin({ bottom: this.bottomRectHeight })
   }
 }

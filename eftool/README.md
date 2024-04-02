@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.4(API11)</center>
+# <center>V1.1.5(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -78,6 +78,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | AlertUtil     | 提供操作确认弹出工具类   |
 | ExceptionUtil | 提供省市区级联选择组件   |
 | Cascade       | 提供省市区级联选择组件   |
+| ImmersionUtil | 提供沉浸式导航设置     |
 
 ## 📦安装
 
@@ -281,7 +282,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let decode = await RSA.decodePKCS1(encode.getDataRow(), priKey);
     this.message = decode.getDataRow();
 ```
-
 
 #### 4.AES的方法【返回结果均为OutDTO对象】
 
@@ -1847,6 +1847,51 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 - 效果图  
   [![cascade1.th.jpg](https://z4a.net/images/2024/02/21/cascade1.th.jpg)](https://z4a.net/image/jPZx5r)
+
+#### 11.ImmersionUtil沉浸式导航工具类
+
+* 初始化
+
+```
+  在EntryAbility中的onWindowStageCreate中进行初始化和设置
+  onWindowStageCreate(windowStage: window.WindowStage): void {
+    //1.初始化
+    let imm = new ImmersionUtil();
+    windowStage.loadContent('pages/Index', (err, data) => {
+      //2.调用沉浸式设置方法
+      imm.immersiveWindow(windowStage);
+      if (err.code) {
+        hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+        return;
+      }
+      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+    });
+  }
+```
+
+* immersiveWindow 设置
+
+```
+   //参数详解
+   {
+    windowStage:窗口对象,
+    isLayoutFullScreen:是否开启全屏显示,默认true,
+    hiddenBar:是否隐藏底部导航,默认false,当为true时页面无需避让,
+    color:窗口背景颜色,默认值为白色
+   }
+```
+
+* 示例
+
+```
+  //本示例主要讲解hiddenBar为false时避让区设置
+  //在初始化时已经向AppStorage中存入了变量bottomHeight,作为避让高度
+  //在需要避让的页面中获取存入的值设置bottom即可
+  //获取存入的应用变量
+  bottomRectHeight: string = AppStorage.get<number>('bottomHeight') + 'px';
+  //设置给对应的外层容器组件即可
+  .margin({ bottom: this.bottomRectHeight })
+```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 
