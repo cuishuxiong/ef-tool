@@ -39,7 +39,7 @@ import {
   Cascade,
   DateConst,
   AuthUtil,
-  // WindowUtil
+  WindowUtil
 } from '@yunkss/eftool'
 
 class User {
@@ -102,9 +102,9 @@ struct Index {
   }
 
   async openWin() {
-    // await WindowUtil.createWindow({
-    //   contentRouter: 'pages/Welcome'
-    // })
+    await WindowUtil.createWindow({
+      contentRouter: 'pages/Welcome'
+    })
   }
 
   cancel() {
@@ -404,9 +404,9 @@ struct Index {
             ToastUtil.showToast('duration:2000,bottom:10vp');
             this.testCrypto();
           })
-          // Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
-          //   this.openWin();
-          // })
+          Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+            this.openWin();
+          })
           Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
             this.show = !this.show;
           })

@@ -3,15 +3,20 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-export const entryName: string = 'Welcome';
+import { WindowUtil } from '@yunkss/eftool'
 
-@Entry({ routeName: entryName })
+@Entry
 @Component
-export struct Welcome {
+struct Welcome {
   build() {
-    Row() {
-      Text('弹窗内容')
+    Column() {
+      Text('弹窗内容').fontColor('#ff4400')
+      Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
+        WindowUtil.closeWindow();
+      })
     }
+    .align(Alignment.Center)
+    .borderRadius(10)
     .width('100%')
     .height('100%')
   }
