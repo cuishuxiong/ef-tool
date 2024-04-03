@@ -33,7 +33,7 @@ export class WindowUtil {
       options.windowType = window.WindowType.TYPE_DIALOG;
     }
     if (!options.bgColor) {
-      options.bgColor = '#88606266';
+      options.bgColor = '#33606266';
     }
     try {
       //创建窗口
@@ -45,17 +45,11 @@ export class WindowUtil {
       //将窗口缓存
       WindowUtil.cacheWindow = windowClass;
       await windowClass.setUIContent(options.contentRouter);
-      //获取屏幕四大校
+      //获取屏幕四大角
       let d = display.getDefaultDisplaySync();
-      //获取主窗体的安全区
-      let area = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM);
-      // 调整子窗口大小，需剔除状态栏和导航栏高度，否则显示内容不居中
-      let height = d.height - area.topRect.height - area.bottomRect.height;
       //设置窗口大小
-      await windowClass.resize(d.width / 1.5, height / 1.5);
-      //将窗口居中
-      await windowClass.moveWindowTo(d.width / 6, height / 6);
-      // 设置窗口北京颜色
+      await windowClass.resize(d.width, d.height);
+      // 设置窗口背景颜色
       windowClass.setWindowBackgroundColor(options.bgColor);
       //显示窗口
       await windowClass.showWindow();

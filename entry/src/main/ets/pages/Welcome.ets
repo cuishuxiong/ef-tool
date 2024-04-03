@@ -15,9 +15,12 @@ struct Welcome {
         WindowUtil.closeWindow();
       })
     }
+    .backgroundColor("#fff")
     .align(Alignment.Center)
-    .borderRadius(10)
     .width('100%')
-    .height('100%')
+    .borderRadius(10)
+    .margin({ top: 80 })
+    .padding({ top: 20, bottom: 20 })
+
   }
 }
