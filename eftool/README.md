@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.5(API11)</center>
+# <center>V1.1.6(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -80,6 +80,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | ExceptionUtil | 提供省市区级联选择组件   |
 | Cascade       | 提供省市区级联选择组件   |
 | ImmersionUtil | 提供沉浸式导航设置     |
+| WindowUtil    | 提供窗口的创建关闭等功能  |
 
 ## 📦安装
 
@@ -1917,6 +1918,55 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   bottomRectHeight: string = AppStorage.get<number>('bottomHeight') + 'px';
   //设置给对应的外层容器组件即可
   .margin({ bottom: this.bottomRectHeight })
+```
+
+#### 12.WindowUtil窗口工具类
+
+* 入参介绍
+```
+    WinOptions 窗口工具入参实体
+    options:{
+        name:窗口名称默认eftool,
+        windowType:窗口类型默认TYPE_DIALOG,
+        contentRouter:窗口要显示的路由如:pages/Welcome需要在main_pages.json中声明,
+        bgColor:窗口背景颜色默认#33606266,
+        callBack:窗口创建回调函数
+    }
+```
+
+* createWindow  创建window
+
+```
+  在需要弹出窗口的页面创建弹出方法
+  async openWin() {
+    await WindowUtil.createWindow({
+      contentRouter: 'pages/Welcome',
+      callBack:()=>{
+          //此处如果创建完窗口有业务需求则自定义
+        ToastUtil.showToast('窗口已创建~');
+      }
+    })
+  }
+```
+
+* closeWindow 关闭window
+
+```
+   //在需要关闭弹窗的时候调用，如在弹窗内处理完需求后关闭
+   WindowUtil.closeWindow();
+```
+
+* 示例
+
+```
+  Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+    this.openWin();
+  })
+  
+  //Welcome页面
+  Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
+    WindowUtil.closeWindow();
+  })
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐

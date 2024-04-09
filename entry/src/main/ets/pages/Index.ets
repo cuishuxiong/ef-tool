@@ -103,7 +103,11 @@ struct Index {
 
   async openWin() {
     await WindowUtil.createWindow({
-      contentRouter: 'pages/Welcome'
+      contentRouter: 'pages/Welcome',
+      callBack:()=>{
+          //此处如果创建完窗口有业务需求则自定义
+        ToastUtil.showToast('窗口已创建~');
+      }
     })
   }
 
@@ -280,16 +284,16 @@ struct Index {
 
     Logger.error(str1, "11111111111")
 
-    let p = JSONUtil.parseObject<Person>(str1, DateConst.YMD_HLINE_HMS);
+    // let p = JSONUtil.parseObject<Person>(str1, DateConst.YMD_HLINE_HMS);
 
-    Logger.debug(p.name, p.user.name + p.list[0].name);
+    // Logger.debug(p.name, p.user.name + p.list[0].name);
 
-    let listStr = JSONUtil.toJSONString(userList);
+    // let listStr = JSONUtil.toJSONString(userList);
 
-    let uList = JSONUtil.parseArray<User>(listStr);
-    uList.forEach(item => {
-      Logger.error(item.id, item.name);
-    })
+    // let uList = JSONUtil.parseArray<User>(listStr);
+    // uList.forEach(item => {
+    //   Logger.error(item.id, item.name);
+    // })
 
     // CacheUtil.save<Person>("tetObj", person);
     //存入对象集合

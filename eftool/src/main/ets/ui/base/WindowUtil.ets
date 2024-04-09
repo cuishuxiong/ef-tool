@@ -5,12 +5,9 @@
  */
 import { display, window } from '@kit.ArkUI';
 import { common } from '@kit.AbilityKit';
-import { UiConst } from '../../core/const/UiConst';
 import { ToastUtil } from '../prompt/ToastUtil';
 
 export class WindowUtil {
-  //https://developer.huawei.com/consumer/cn/doc/harmonyos-references/js-apis-window-0000001820880785
-
   /**
    * 缓存窗体,关闭时需要
    */
@@ -22,7 +19,6 @@ export class WindowUtil {
    * @returns
    */
   static async createWindow(options: WinOptions): Promise<void> {
-
     if (!options) {
       options = new WinOptions();
     }
@@ -73,9 +69,24 @@ export class WindowUtil {
  * 窗口入参对象
  */
 class WinOptions {
+  /**
+   * 窗口名称 默认eftool
+   */
   name?: string;
+  /**
+   * 窗口类型 默认TYPE_DIALOG
+   */
   windowType?: window.WindowType;
+  /**
+   *窗口要显示的路由  如:pages/Welcome需要在main_pages.json中声明
+   */
   contentRouter: string = '';
+  /**
+   * 窗口背景颜色,默认#33606266
+   */
   bgColor?: string;
+  /**
+   * 窗口创建回调函数
+   */
   callBack?: () => void;
 }

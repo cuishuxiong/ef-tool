@@ -1,5 +1,12 @@
 # Changelog
 
+## [v1.1.6] 2024-04
+
+### 🐣新特性(API11)
+
+* 优化LogUtil同时记录到文件[issuesI9EQCO](https://gitee.com/yunkss/ef-tool/issues/I9EQCO)
+* 新增窗口工具类WindowUtil
+
 ## [v1.1.5] 2024-04
 
 ### 🐣新特性(API11)

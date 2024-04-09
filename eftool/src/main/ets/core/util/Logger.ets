@@ -1,5 +1,7 @@
 import { hilog } from '@kit.PerformanceAnalysisKit';
-
+import { common } from '@kit.AbilityKit';
+import { ToastUtil } from '../../ui/prompt/ToastUtil';
+import fs from '@ohos.file.fs';
 /**
  * @Author csx
  * @DateTime 2023/12/29 20:10
@@ -15,9 +17,27 @@ export class Logger {
    * @param prefix 应用名
    * @param domain 域
    */
-  static init(prefix: string = 'efTool', domain: number = 0xFF00) {
+  static init(prefix: string = 'efTool',ctx:common.Context, domain: number = 0xFF00) {
     Logger.prefix = prefix;
     Logger.domain = domain;
+    //此处从1.1.6版本增加将日志写入文件
+    // let context = getContext() as common.UIAbilityContext;
+    // let tempDir = context.tempDir;
+    // 获取应用文件路径
+    if (ctx) {
+      let logPath= ctx.filesDir+'/logs';
+      let stat = fs.statSync(logPath);
+      if (stat.isDirectory()) {
+
+      }
+
+    }
+
+
+    // fs.mkdirSync('./logs/');
+    // let filePath = tempDir + prefix + '.log';
+    // ToastUtil.showToast(filePath);
+
   }
 
 
