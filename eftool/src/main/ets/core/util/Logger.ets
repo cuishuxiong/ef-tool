@@ -26,10 +26,10 @@ export class Logger {
     // 获取应用文件路径
     if (ctx) {
       let logPath= ctx.filesDir+'/logs';
-      let stat = fs.statSync(logPath);
-      if (stat.isDirectory()) {
-
-      }
+      // let stat = fs.statSync(logPath);
+      // if (stat.isDirectory()) {
+      //
+      // }
 
     }
 

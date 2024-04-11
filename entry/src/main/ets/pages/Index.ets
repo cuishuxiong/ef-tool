@@ -39,7 +39,8 @@ import {
   Cascade,
   DateConst,
   AuthUtil,
-  WindowUtil
+  WindowUtil,
+  NotificationUtil
 } from '@yunkss/eftool'
 
 class User {
@@ -101,11 +102,27 @@ struct Index {
     }
   }
 
+  async notice() {
+    await NotificationUtil.authorizeNotification((index: number) => {
+      ToastUtil.showToast(index > 0 ? '已经授予通知权限' : '用户禁止授权,请用户在设置中操作');
+    });
+
+  }
+
+  async pushBasic() {
+    await NotificationUtil.publishBasic({
+      text: '推送通知内容',
+      callBack:()=>{
+        ToastUtil.showToast('通知推送成功')
+      }
+    })
+  }
+
   async openWin() {
     await WindowUtil.createWindow({
       contentRouter: 'pages/Welcome',
-      callBack:()=>{
-          //此处如果创建完窗口有业务需求则自定义
+      callBack: () => {
+        //此处如果创建完窗口有业务需求则自定义
         ToastUtil.showToast('窗口已创建~');
       }
     })
@@ -416,6 +433,12 @@ struct Index {
           })
           Button("校验是否授予权限").margin({ bottom: '10vp' }).onClick(() => {
             this.dingWei();
+          })
+          Button("校验是否授予通知权限").margin({ bottom: '10vp' }).onClick(() => {
+            this.notice();
+          })
+          Button("推送文本通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushBasic();
           })
           Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });

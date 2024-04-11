@@ -15,25 +15,22 @@ export class NotificationUtil {
    * 校验是否已授权通知服务
    * @returns
    */
-  static async authorizeNotification(): Promise<Boolean> {
+  static async authorizeNotification(callBack: (index: number) => void): Promise<void> {
     //判断用户是否授权通知服务
     let isAuth = await notificationManager.isNotificationEnabled();
     //true为授权
     if (!isAuth) {
       //未授权，尝试拉起授权
-      await notificationManager.requestEnableNotification(getContext() as common.UIAbilityContext)
-        .catch((err: Base.BusinessError) => {
-          if (1600004 == err.code) {
-            isAuth = false;
-            ToastUtil.showToast('用户取消通知授权!');
-          } else {
-            isAuth = false;
-            ToastUtil.showToast('获取通知授权失败,原因为:' + err.message);
-          }
-        });
-      isAuth = true;
+      notificationManager.requestEnableNotification(getContext() as common.UIAbilityContext, (err: Base.BusinessError) => {
+        if (err) {
+          callBack(-1);
+        } else {
+          callBack(1);
+        }
+      })
+    } else {
+      callBack(1);
     }
-    return isAuth;
   }
 
   /**
@@ -47,9 +44,6 @@ export class NotificationUtil {
     }
     if (!options.id) {
       options.id = RandomUtil.randomInt();
-    }
-    if (!options.title) {
-      options.title = '';
     }
     if (options.isOngoing == undefined) {
       options.isOngoing = false;
@@ -74,8 +68,9 @@ export class NotificationUtil {
     }
     //获取小图标
     let ctx = getContext() as common.UIAbilityContext;
-    let imgStr = await ctx.resourceManager.getMediaContent($r("app.media.tips"));
-    let small = await image.createImageSource(imgStr).createPixelMap();
+    let imgArr = ctx.resourceManager.getMediaContentSync($r("app.media.tips"));
+    let opts: image.InitializationOptions = { editable: true, pixelFormat: 3, size: { height: 4, width: 6 } }
+    let small = await image.CreateIncrementalSource(imgArr).createPixelMap(opts);
     //通知Request对象
     let notificationRequest: notificationManager.NotificationRequest = {
       id: options.id,
@@ -92,13 +87,16 @@ export class NotificationUtil {
       autoDeletedTime: options.autoDeletedTime,
       isStopwatch: options.isStopwatch,
       label: options.label,
-      smallIcon: small,
+      // smallIcon: small,
       badgeNumber: 1
     };
     //发送通知
-    await notificationManager.publish(notificationRequest);
-    //执行回调
-    options.callBack;
+    notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
+      if (!err && options.callBack) {
+        //执行回调
+        options.callBack();
+      }
+    });
   }
 }
 

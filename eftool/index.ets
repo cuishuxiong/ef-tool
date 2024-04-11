@@ -78,6 +78,8 @@ export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
 
 export { ExceptionUtil } from './src/main/ets/ui/prompt/ExceptionUtil';
 
+export { NotificationUtil } from './src/main/ets/ui/base/NotificationUtil';
+
 // export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
