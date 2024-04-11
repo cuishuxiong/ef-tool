@@ -42,6 +42,7 @@ import {
   WindowUtil,
   NotificationUtil
 } from '@yunkss/eftool'
+import { notificationManager } from '@kit.NotificationKit';
 
 class User {
   id: string;
@@ -111,9 +112,16 @@ struct Index {
 
   async pushBasic() {
     await NotificationUtil.publishBasic({
-      text: '推送通知内容',
-      callBack:()=>{
-        ToastUtil.showToast('通知推送成功')
+      text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到',
+      additionalText: '这个是additionalText',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+        // setTimeout(() => {
+        //   NotificationUtil.cancelNotice(noticeId, () => {
+        //     ToastUtil.showToast('取消推送成功~');
+        //   })
+        // }, 3000);
       }
     })
   }

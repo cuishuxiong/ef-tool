@@ -1,9 +1,8 @@
 import notificationManager from '@ohos.notificationManager';
 import Base from '@ohos.base';
-import { common } from '@kit.AbilityKit';
-import { ToastUtil } from '../prompt/ToastUtil';
+import { common, wantAgent } from '@kit.AbilityKit';
 import { RandomUtil } from '../../core/util/RandomUtil';
-import { image } from '@kit.ImageKit';
+import { ToastUtil } from '../prompt/ToastUtil';
 
 /**
  * @Author csx
@@ -31,6 +30,34 @@ export class NotificationUtil {
     } else {
       callBack(1);
     }
+  }
+
+  /**
+   * 创建一个可拉起Ability的Want
+   * @returns
+   */
+  private static createWantAgent(noticeId: number): wantAgent.WantAgentInfo {
+    //获取当前上下文对象
+    let ctx = getContext() as common.UIAbilityContext;
+    let wantAgentInfo: wantAgent.WantAgentInfo = {
+      wants: [
+        {
+          deviceId: '',
+          bundleName: ctx.abilityInfo.bundleName,
+          abilityName: ctx.abilityInfo.name,
+          action: '',
+          entities: [],
+          uri: '',
+          parameters: {
+            'eftoolNotice': noticeId
+          }
+        }
+      ],
+      actionType: wantAgent.OperationType.START_ABILITY,
+      requestCode: RandomUtil.randomInt(),
+      actionFlags: [wantAgent.WantAgentFlags.CONSTANT_FLAG]
+    };
+    return wantAgentInfo;
   }
 
   /**
@@ -66,11 +93,10 @@ export class NotificationUtil {
     if (!options.additionalText) {
       options.additionalText = '';
     }
-    //获取小图标
-    let ctx = getContext() as common.UIAbilityContext;
-    let imgArr = ctx.resourceManager.getMediaContentSync($r("app.media.tips"));
-    let opts: image.InitializationOptions = { editable: true, pixelFormat: 3, size: { height: 4, width: 6 } }
-    let small = await image.CreateIncrementalSource(imgArr).createPixelMap(opts);
+    //创建wantAgentInfo
+    let wantAgentInfo = NotificationUtil.createWantAgent(options.id);
+    //创建wantAgent
+    let wantAgentObj = await wantAgent.getWantAgent(wantAgentInfo);
     //通知Request对象
     let notificationRequest: notificationManager.NotificationRequest = {
       id: options.id,
@@ -87,14 +113,34 @@ export class NotificationUtil {
       autoDeletedTime: options.autoDeletedTime,
       isStopwatch: options.isStopwatch,
       label: options.label,
-      // smallIcon: small,
-      badgeNumber: 1
+      badgeNumber: 1,
+      wantAgent: wantAgentObj
     };
     //发送通知
     notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
       if (!err && options.callBack) {
-        //执行回调
-        options.callBack();
+        if (options.id) {
+          //执行回调
+          options.callBack(options.id);
+        }
+      }
+    });
+  }
+
+  /**
+   * 取消通知
+   * @param noticeId 通知id
+   * @param callBack  回调函数
+   * @returns
+   */
+  static cancelNotice(noticeId: number, callBack?: () => void): void {
+    notificationManager.cancel(noticeId, (err: Base.BusinessError) => {
+      if (err) {
+        ToastUtil.showToast('取消通知出错,原因为:' + err.message);
+      } else {
+        if (callBack) {
+          callBack();
+        }
       }
     });
   }
@@ -143,5 +189,5 @@ class NoticeOptions {
   /**
    * 业务回调函数
    */
-  callBack?: () => void;
+  callBack?: (noticeId: number) => void;
 }
