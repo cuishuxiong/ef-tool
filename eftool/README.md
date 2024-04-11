@@ -67,20 +67,21 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.UI类组件
 
-| 模块            | 介绍            |
-|---------------|---------------|
-| ToastUtil     | 提供对文本提示的一系列方法 |
-| DialogUtil    | 提供对弹出框的一系列方法  |
-| ActionUtil    | 提供对操作菜单的一系列方法 |
-| LoadingUtil   | 提供全局加载工具类     |
-| TipsUtil      | 提供提示弹出工具类     |
-| SelectUtil    | 提供选择弹出工具类     |
-| ConfirmUtil   | 提供信息确认弹出工具类   |
-| AlertUtil     | 提供操作确认弹出工具类   |
-| ExceptionUtil | 提供省市区级联选择组件   |
-| Cascade       | 提供省市区级联选择组件   |
-| ImmersionUtil | 提供沉浸式导航设置     |
-| WindowUtil    | 提供窗口的创建关闭等功能  |
+| 模块               | 介绍            |
+|------------------|---------------|
+| ToastUtil        | 提供对文本提示的一系列方法 |
+| DialogUtil       | 提供对弹出框的一系列方法  |
+| ActionUtil       | 提供对操作菜单的一系列方法 |
+| LoadingUtil      | 提供全局加载工具类     |
+| TipsUtil         | 提供提示弹出工具类     |
+| SelectUtil       | 提供选择弹出工具类     |
+| ConfirmUtil      | 提供信息确认弹出工具类   |
+| AlertUtil        | 提供操作确认弹出工具类   |
+| ExceptionUtil    | 提供省市区级联选择组件   |
+| Cascade          | 提供省市区级联选择组件   |
+| ImmersionUtil    | 提供沉浸式导航设置     |
+| WindowUtil       | 提供窗口的创建关闭等功能  |
+| NotificationUtil | 提供发送,删除通知d等功能 |
 
 ## 📦安装
 
@@ -1923,6 +1924,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 #### 12.WindowUtil窗口工具类
 
 * 入参介绍
+
 ```
     WinOptions 窗口工具入参实体
     options:{
@@ -1934,7 +1936,57 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     }
 ```
 
-* createWindow  创建window
+* createWindow 创建window
+
+```
+  在需要弹出窗口的页面创建弹出方法
+  async openWin() {
+    await WindowUtil.createWindow({
+      contentRouter: 'pages/Welcome',
+      callBack:()=>{
+          //此处如果创建完窗口有业务需求则自定义
+        ToastUtil.showToast('窗口已创建~');
+      }
+    })
+  }
+```
+
+* closeWindow 关闭window
+
+```
+   //在需要关闭弹窗的时候调用，如在弹窗内处理完需求后关闭
+   WindowUtil.closeWindow();
+```
+
+* 示例
+
+```
+  Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+    this.openWin();
+  })
+  
+  //Welcome页面
+  Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
+    WindowUtil.closeWindow();
+  })
+```
+
+#### 13.NotificationUtil通知工具类
+
+* 入参介绍
+
+```
+    WinOptions 窗口工具入参实体
+    options:{
+        name:窗口名称默认eftool,
+        windowType:窗口类型默认TYPE_DIALOG,
+        contentRouter:窗口要显示的路由如:pages/Welcome需要在main_pages.json中声明,
+        bgColor:窗口背景颜色默认#33606266,
+        callBack:窗口创建回调函数
+    }
+```
+
+* createWindow 创建window
 
 ```
   在需要弹出窗口的页面创建弹出方法

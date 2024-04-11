@@ -117,11 +117,43 @@ struct Index {
       additionalText: '这个是additionalText',
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
-        // setTimeout(() => {
-        //   NotificationUtil.cancelNotice(noticeId, () => {
-        //     ToastUtil.showToast('取消推送成功~');
-        //   })
-        // }, 3000);
+      }
+    })
+  }
+
+  async pushLong() {
+    await NotificationUtil.publishLongText({
+      text: '推送长文本内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到11111111111',
+      longText: '展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差',
+      expandedTitle: '展开的副标题',
+      briefText: '这个是概要',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+      }
+    })
+  }
+
+  async pushMulti() {
+    await NotificationUtil.publishMultiLine({
+      text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到',
+      additionalText: '这个是additionalText',
+      expandedTitle: '多文本的展开',
+      briefText: '多文本的概要',
+      longText: '第一行的内容,第二行的内容,第三行的内容,第四行的内容,第无行的内容',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+      }
+    })
+  }
+
+  async pushPicture() {
+    await NotificationUtil.publishPicture({
+      text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
       }
     })
   }
@@ -447,6 +479,19 @@ struct Index {
           })
           Button("推送文本通知").margin({ bottom: '10vp' }).onClick(() => {
             this.pushBasic();
+          })
+          Button("推送长文本通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushLong();
+          })
+          Button("推送多文本通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushMulti();
+          })
+          Button("推送图片通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushPicture();
+          })
+          Button("清除通知角标/通知").margin({ bottom: '10vp' }).onClick(() => {
+            NotificationUtil.clearBadge();
+            NotificationUtil.clearNotice();
           })
           Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });

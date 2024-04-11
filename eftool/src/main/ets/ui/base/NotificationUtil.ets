@@ -3,6 +3,8 @@ import Base from '@ohos.base';
 import { common, wantAgent } from '@kit.AbilityKit';
 import { RandomUtil } from '../../core/util/RandomUtil';
 import { ToastUtil } from '../prompt/ToastUtil';
+import { image } from '@kit.ImageKit';
+import { buffer, util } from '@kit.ArkTS';
 
 /**
  * @Author csx
@@ -12,6 +14,7 @@ import { ToastUtil } from '../prompt/ToastUtil';
 export class NotificationUtil {
   /**
    * 校验是否已授权通知服务
+   * @param callBack  回调函数
    * @returns
    */
   static async authorizeNotification(callBack: (index: number) => void): Promise<void> {
@@ -44,8 +47,9 @@ export class NotificationUtil {
         {
           deviceId: '',
           bundleName: ctx.abilityInfo.bundleName,
+          moduleName: ctx.abilityInfo.moduleName,
           abilityName: ctx.abilityInfo.name,
-          action: '',
+          action: 'click_notice',
           entities: [],
           uri: '',
           parameters: {
@@ -53,8 +57,8 @@ export class NotificationUtil {
           }
         }
       ],
-      actionType: wantAgent.OperationType.START_ABILITY,
-      requestCode: RandomUtil.randomInt(),
+      actionType: wantAgent.OperationType.START_ABILITY | wantAgent.OperationType.SEND_COMMON_EVENT,
+      requestCode: 0,
       actionFlags: [wantAgent.WantAgentFlags.CONSTANT_FLAG]
     };
     return wantAgentInfo;
@@ -70,22 +74,16 @@ export class NotificationUtil {
       options = new NoticeOptions();
     }
     if (!options.id) {
-      options.id = RandomUtil.randomInt();
+      options.id = RandomUtil.randomNumber(10000, 100000);
     }
     if (options.isOngoing == undefined) {
-      options.isOngoing = false;
-    }
-    if (options.tapDismissed == undefined) {
-      options.tapDismissed = false;
-    }
-    if (!options.autoDeletedTime) {
-      options.autoDeletedTime = -1;
+      options.isOngoing = true;
     }
     if (options.isStopwatch == undefined) {
       options.isStopwatch = true;
     }
     if (!options.label) {
-      options.label = '标题';
+      options.label = 'eftool';
     }
     if (!options.title) {
       options.title = 'eftool的通知';
@@ -109,12 +107,12 @@ export class NotificationUtil {
         }
       },
       isOngoing: options.isOngoing,
-      tapDismissed: options.tapDismissed,
-      autoDeletedTime: options.autoDeletedTime,
       isStopwatch: options.isStopwatch,
       label: options.label,
-      badgeNumber: 1,
-      wantAgent: wantAgentObj
+      isFloatingIcon: true,
+      // badgeNumber: 1,
+      // wantAgent: wantAgentObj,
+      actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
     };
     //发送通知
     notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
@@ -125,6 +123,247 @@ export class NotificationUtil {
         }
       }
     });
+  }
+
+  /**
+   * 推送多文本通知
+   * @param options  通知实体
+   * @returns
+   */
+  static async publishMultiLine(options: NoticeOptions): Promise<void> {
+    if (!options) {
+      options = new NoticeOptions();
+    }
+    if (!options.id) {
+      options.id = RandomUtil.randomNumber(100001, 200000);
+    }
+    if (options.isOngoing == undefined) {
+      options.isOngoing = true;
+    }
+    if (options.isStopwatch == undefined) {
+      options.isStopwatch = true;
+    }
+    if (!options.label) {
+      options.label = 'eftool';
+    }
+    if (!options.title) {
+      options.title = 'eftool的通知';
+    }
+    if (!options.additionalText) {
+      options.additionalText = '';
+    }
+    if (!options.briefText) {
+      options.briefText = '默认概要内容';
+    }
+    if (!options.longText) {
+      options.longText = '默认长文本内容';
+    }
+    if (!options.expandedTitle) {
+      options.expandedTitle = '默认展开标题';
+    }
+    //创建wantAgentInfo
+    let wantAgentInfo = NotificationUtil.createWantAgent(options.id);
+    //创建wantAgent
+    let wantAgentObj = await wantAgent.getWantAgent(wantAgentInfo);
+    //通知Request对象
+    let notificationRequest: notificationManager.NotificationRequest = {
+      id: options.id,
+      content: {
+        notificationContentType: notificationManager.ContentType.NOTIFICATION_CONTENT_MULTILINE,
+        multiLine: {
+          title: options.title,
+          text: options.text,
+          additionalText: options.additionalText,
+          briefText: options.briefText,
+          longTitle: options.expandedTitle,
+          lines: options.longText.split(',')
+        }
+      },
+      isOngoing: options.isOngoing,
+      isStopwatch: options.isStopwatch,
+      label: options.label,
+      isFloatingIcon: true,
+      // badgeNumber: 1,
+      // wantAgent: wantAgentObj,
+      actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+    };
+    //发送通知
+    notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
+      if (!err && options.callBack) {
+        if (options.id) {
+          //执行回调
+          options.callBack(options.id);
+        }
+      }
+    });
+  }
+
+  /**
+   * 推送长文本通知
+   * @param options  通知实体
+   * @returns
+   */
+  static async publishLongText(options: NoticeOptions): Promise<void> {
+    if (!options) {
+      options = new NoticeOptions();
+    }
+    if (!options.id) {
+      options.id = RandomUtil.randomNumber(200001, 300000);
+    }
+    if (options.isOngoing == undefined) {
+      options.isOngoing = true;
+    }
+    if (options.isStopwatch == undefined) {
+      options.isStopwatch = true;
+    }
+    if (!options.label) {
+      options.label = 'eftool';
+    }
+    if (!options.title) {
+      options.title = 'eftool的通知';
+    }
+    if (!options.additionalText) {
+      options.additionalText = '';
+    }
+    if (!options.briefText) {
+      options.briefText = '默认概要内容';
+    }
+    if (!options.longText) {
+      options.longText = '默认长文本内容';
+    }
+    if (!options.expandedTitle) {
+      options.expandedTitle = '默认展开标题';
+    }
+
+    //创建wantAgentInfo
+    let wantAgentInfo = NotificationUtil.createWantAgent(options.id);
+    //创建wantAgent
+    let wantAgentObj = await wantAgent.getWantAgent(wantAgentInfo);
+    //通知Request对象
+    let notificationRequest: notificationManager.NotificationRequest = {
+      id: options.id,
+      content: {
+        notificationContentType: notificationManager.ContentType.NOTIFICATION_CONTENT_LONG_TEXT,
+        longText: {
+          title: options.title,
+          text: options.text,
+          additionalText: options.additionalText,
+          longText: options.longText,
+          briefText: options.briefText,
+          expandedTitle: options.expandedTitle
+        }
+      },
+      isOngoing: options.isOngoing,
+      isStopwatch: options.isStopwatch,
+      label: options.label,
+      isFloatingIcon: true,
+      // badgeNumber: 1,
+      // wantAgent: wantAgentObj,
+      actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+    };
+    //发送通知
+    notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
+      if (!err && options.callBack) {
+        if (options.id) {
+          //执行回调
+          options.callBack(options.id);
+        }
+      }
+    });
+  }
+
+  /**
+   * 推送带有图片的通知
+   * @param options  通知实体
+   * @returns
+   */
+  static async publishPicture(options: NoticeOptions): Promise<void> {
+    if (!options) {
+      options = new NoticeOptions();
+    }
+    if (!options.id) {
+      options.id = RandomUtil.randomNumber(400001, 500000);
+    }
+    if (options.isOngoing == undefined) {
+      options.isOngoing = true;
+    }
+    if (options.isStopwatch == undefined) {
+      options.isStopwatch = true;
+    }
+    if (!options.label) {
+      options.label = 'eftool';
+    }
+    if (!options.title) {
+      options.title = 'eftool的通知';
+    }
+    if (!options.additionalText) {
+      options.additionalText = '';
+    }
+    if (!options.briefText) {
+      options.briefText = '默认概要内容';
+    }
+    if (!options.expandedTitle) {
+      options.expandedTitle = '默认展开标题';
+    }
+
+
+    if (options.picture) {
+      if (typeof options.picture === 'string') {
+
+      } else {
+
+      }
+    } else {
+      // options.picture = 'iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABU0lEQVR4nNWQP0gCYRiHf69aTZEtRRToFERBTjeftLVUVKDbuRtUe4S0V5C7bgoV2dIW3XyTQRE0GRRRS0VTf/TtPc0D7zy9AyF64ON73uXh/T5Cj/mbICvz23KBjLOMXB0hOR05ndtNjH0+FUTx2D+aXDjfLIq64hqcWWG1yjA3U9GKHiRkro5IRxvaBqdXWavVkBN1JRBA6vqQ8rDhCP5udiHaFdk0bt/UEZxaZjOmwhv6zTHF5bYgORYxjcMf73gR9czAIIbLeXoVrdMS9PPcJkHbs/9RMHfC4dt77Dw8Iy2jZ8ZHkJ2cwFZqqfGPVjBb5HUG9kR9I5GNdIL2RU1vcFBgVaaS6JAcP7yBsbiWbDzbCtr5MiJlAs+KOmDQZZ9yFxN14BpkIxqrMpdAHJHRwoyFQBoplbKMDlyDTb6NqAbUVNQJ6CGlkkcHugb90vPgDwgIchXaG2qmAAAAAElFTkSuQmCC';
+      // let base64 = new util.Base64Helper();
+      //转码
+      // let imgArr = base64.decodeSync(options.picture, util.Type.BASIC);
+      // let buf = buffer.from(imgArr).buffer;
+      // let picture: image.PixelMap = await image.CreateIncrementalSource(buf).createPixelMap();
+
+      let ctx = getContext() as common.UIAbilityContext;
+
+      let p = await image.createImageSource(ctx.resourceManager.getMediaContentSync($r("app.media.tips")).buffer)
+        .createPixelMap();
+
+      //创建wantAgentInfo
+      let wantAgentInfo = NotificationUtil.createWantAgent(options.id);
+      //创建wantAgent
+      let wantAgentObj = await wantAgent.getWantAgent(wantAgentInfo);
+      //通知Request对象
+      let notificationRequest: notificationManager.NotificationRequest = {
+        id: options.id,
+        content: {
+          notificationContentType: notificationManager.ContentType.NOTIFICATION_CONTENT_PICTURE,
+          picture: {
+            title: options.title,
+            text: options.text,
+            additionalText: options.additionalText,
+            briefText: options.briefText,
+            expandedTitle: options.expandedTitle,
+            picture: p
+          }
+        },
+        isOngoing: options.isOngoing,
+        isStopwatch: options.isStopwatch,
+        label: options.label,
+        // isFloatingIcon: true,
+        // badgeNumber: 1,
+        // wantAgent: wantAgentObj,
+        actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+      };
+      //发送通知
+      notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
+        if (!err && options.callBack) {
+          if (options.id) {
+            //执行回调
+            options.callBack(options.id);
+          }
+        }
+      });
+    }
+
+
   }
 
   /**
@@ -144,6 +383,20 @@ export class NotificationUtil {
       }
     });
   }
+
+  /**
+   * 重置角标
+   */
+  static async clearBadge() {
+    await notificationManager.setBadgeNumber(0);
+  }
+
+  /**
+   * 清理所所有通知
+   */
+  static async clearNotice() {
+    await notificationManager.cancelAll();
+  }
 }
 
 /**
@@ -158,14 +411,6 @@ class NoticeOptions {
    *是否进行时通知
    */
   isOngoing?: boolean;
-  /**
-   *通知是否自动清除
-   */
-  tapDismissed?: boolean;
-  /**
-   *自动清除的时间
-   */
-  autoDeletedTime?: number;
   /**
    *是否显示已用时间
    */
@@ -190,4 +435,20 @@ class NoticeOptions {
    * 业务回调函数
    */
   callBack?: (noticeId: number) => void;
+  /**
+   *通知的长文本/多行的文本用英文逗号分割
+   */
+  longText?: string;
+  /**
+   *  通知概要内容
+   */
+  briefText?: string;
+  /**
+   *  通知展开时的标题
+   */
+  expandedTitle?: string;
+  /**
+   * 图片的base64字符串
+   */
+  picture?: string | image.PixelMap
 }

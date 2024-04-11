@@ -4,8 +4,9 @@
 
 ### 🐣新特性(API11)
 
-* 优化LogUtil同时记录到文件[issuesI9EQCO](https://gitee.com/yunkss/ef-tool/issues/I9EQCO)
+[//]: # ( * 优化LogUtil同时记录到文件[issuesI9EQCO]&#40;https://gitee.com/yunkss/ef-tool/issues/I9EQCO&#41;)
 * 新增窗口工具类WindowUtil
+* 新增通知管理类NotificationUtil
 
 ## [v1.1.5] 2024-04
 
