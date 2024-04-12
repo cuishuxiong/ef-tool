@@ -3,7 +3,7 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-import { WindowUtil } from '@yunkss/eftool'
+import { MapUtil, WindowUtil } from '@yunkss/eftool'
 
 @Entry
 @Component
@@ -14,6 +14,7 @@ struct Welcome {
       Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
         WindowUtil.closeWindow();
       })
+      MapUtil()
     }
     .backgroundColor("#fff")
     .align(Alignment.Center)
