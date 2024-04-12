@@ -43,6 +43,8 @@ import {
   NotificationUtil
 } from '@yunkss/eftool'
 import { notificationManager } from '@kit.NotificationKit';
+import { image } from '@kit.ImageKit';
+import { common } from '@kit.AbilityKit';
 
 class User {
   id: string;
@@ -115,6 +117,9 @@ struct Index {
       text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
       title: '抢票时间到',
       additionalText: '这个是additionalText',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '普通通知',
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }
@@ -128,6 +133,9 @@ struct Index {
       longText: '展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差',
       expandedTitle: '展开的副标题',
       briefText: '这个是概要',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '长文本通知',
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }
@@ -142,16 +150,33 @@ struct Index {
       expandedTitle: '多文本的展开',
       briefText: '多文本的概要',
       longText: '第一行的内容,第二行的内容,第三行的内容,第四行的内容,第无行的内容',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '普通通知',
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }
     })
   }
 
+  async cancelN() {
+
+    NotificationUtil.cancelNotice(10011, () => {
+      ToastUtil.showToast('取消通知成功~');
+    });
+  }
+
   async pushPicture() {
     await NotificationUtil.publishPicture({
-      text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+      text: '222222',
       title: '抢票时间到',
+      expandedTitle: '多文本的展开',
+      briefText: '多文本的概要',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '图片通知',
+      picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+        .buffer).createPixelMap(),
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }

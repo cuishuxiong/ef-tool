@@ -1,10 +1,9 @@
 import notificationManager from '@ohos.notificationManager';
 import Base from '@ohos.base';
-import { common, wantAgent } from '@kit.AbilityKit';
+import { common, Want, wantAgent } from '@kit.AbilityKit';
 import { RandomUtil } from '../../core/util/RandomUtil';
 import { ToastUtil } from '../prompt/ToastUtil';
 import { image } from '@kit.ImageKit';
-import { buffer, util } from '@kit.ArkTS';
 
 /**
  * @Author csx
@@ -86,7 +85,7 @@ export class NotificationUtil {
       options.label = 'eftool';
     }
     if (!options.title) {
-      options.title = 'eftool的通知';
+      options.title = '来自eftool通知';
     }
     if (!options.additionalText) {
       options.additionalText = '';
@@ -110,9 +109,10 @@ export class NotificationUtil {
       isStopwatch: options.isStopwatch,
       label: options.label,
       isFloatingIcon: true,
-      // badgeNumber: 1,
-      // wantAgent: wantAgentObj,
-      actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+      badgeNumber: 1,
+      wantAgent: wantAgentObj,
+      removalWantAgent: wantAgentObj
+      // actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
     };
     //发送通知
     notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
@@ -156,7 +156,7 @@ export class NotificationUtil {
       options.briefText = '默认概要内容';
     }
     if (!options.longText) {
-      options.longText = '默认长文本内容';
+      options.longText = '默认多文本内容';
     }
     if (!options.expandedTitle) {
       options.expandedTitle = '默认展开标题';
@@ -183,9 +183,10 @@ export class NotificationUtil {
       isStopwatch: options.isStopwatch,
       label: options.label,
       isFloatingIcon: true,
-      // badgeNumber: 1,
-      // wantAgent: wantAgentObj,
-      actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+      badgeNumber: 1,
+      wantAgent: wantAgentObj,
+      removalWantAgent: wantAgentObj
+      // actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
     };
     //发送通知
     notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
@@ -257,9 +258,10 @@ export class NotificationUtil {
       isStopwatch: options.isStopwatch,
       label: options.label,
       isFloatingIcon: true,
-      // badgeNumber: 1,
-      // wantAgent: wantAgentObj,
-      actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+      badgeNumber: 1,
+      wantAgent: wantAgentObj,
+      removalWantAgent: wantAgentObj
+      // actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
     };
     //发送通知
     notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
@@ -282,7 +284,7 @@ export class NotificationUtil {
       options = new NoticeOptions();
     }
     if (!options.id) {
-      options.id = RandomUtil.randomNumber(400001, 500000);
+      options.id = RandomUtil.randomNumber(300001, 400000);
     }
     if (options.isOngoing == undefined) {
       options.isOngoing = true;
@@ -305,65 +307,48 @@ export class NotificationUtil {
     if (!options.expandedTitle) {
       options.expandedTitle = '默认展开标题';
     }
-
-
-    if (options.picture) {
-      if (typeof options.picture === 'string') {
-
-      } else {
-
-      }
-    } else {
-      // options.picture = 'iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABU0lEQVR4nNWQP0gCYRiHf69aTZEtRRToFERBTjeftLVUVKDbuRtUe4S0V5C7bgoV2dIW3XyTQRE0GRRRS0VTf/TtPc0D7zy9AyF64ON73uXh/T5Cj/mbICvz23KBjLOMXB0hOR05ndtNjH0+FUTx2D+aXDjfLIq64hqcWWG1yjA3U9GKHiRkro5IRxvaBqdXWavVkBN1JRBA6vqQ8rDhCP5udiHaFdk0bt/UEZxaZjOmwhv6zTHF5bYgORYxjcMf73gR9czAIIbLeXoVrdMS9PPcJkHbs/9RMHfC4dt77Dw8Iy2jZ8ZHkJ2cwFZqqfGPVjBb5HUG9kR9I5GNdIL2RU1vcFBgVaaS6JAcP7yBsbiWbDzbCtr5MiJlAs+KOmDQZZ9yFxN14BpkIxqrMpdAHJHRwoyFQBoplbKMDlyDTb6NqAbUVNQJ6CGlkkcHugb90vPgDwgIchXaG2qmAAAAAElFTkSuQmCC';
-      // let base64 = new util.Base64Helper();
-      //转码
-      // let imgArr = base64.decodeSync(options.picture, util.Type.BASIC);
-      // let buf = buffer.from(imgArr).buffer;
-      // let picture: image.PixelMap = await image.CreateIncrementalSource(buf).createPixelMap();
-
+    if (!options.picture) {
       let ctx = getContext() as common.UIAbilityContext;
-
-      let p = await image.createImageSource(ctx.resourceManager.getMediaContentSync($r("app.media.tips")).buffer)
+      options.picture = await image.createImageSource(ctx.resourceManager.getMediaContentSync($r("app.media.notice"))
+        .buffer)
         .createPixelMap();
-
-      //创建wantAgentInfo
-      let wantAgentInfo = NotificationUtil.createWantAgent(options.id);
-      //创建wantAgent
-      let wantAgentObj = await wantAgent.getWantAgent(wantAgentInfo);
-      //通知Request对象
-      let notificationRequest: notificationManager.NotificationRequest = {
-        id: options.id,
-        content: {
-          notificationContentType: notificationManager.ContentType.NOTIFICATION_CONTENT_PICTURE,
-          picture: {
-            title: options.title,
-            text: options.text,
-            additionalText: options.additionalText,
-            briefText: options.briefText,
-            expandedTitle: options.expandedTitle,
-            picture: p
-          }
-        },
-        isOngoing: options.isOngoing,
-        isStopwatch: options.isStopwatch,
-        label: options.label,
-        // isFloatingIcon: true,
-        // badgeNumber: 1,
-        // wantAgent: wantAgentObj,
-        actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
-      };
-      //发送通知
-      notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
-        if (!err && options.callBack) {
-          if (options.id) {
-            //执行回调
-            options.callBack(options.id);
-          }
-        }
-      });
     }
-
-
+    //创建wantAgentInfo
+    let wantAgentInfo = NotificationUtil.createWantAgent(options.id);
+    //创建wantAgent
+    let wantAgentObj = await wantAgent.getWantAgent(wantAgentInfo);
+    //通知Request对象
+    let notificationRequest: notificationManager.NotificationRequest = {
+      id: options.id,
+      content: {
+        notificationContentType: notificationManager.ContentType.NOTIFICATION_CONTENT_PICTURE,
+        picture: {
+          title: options.title,
+          text: options.text,
+          additionalText: options.additionalText,
+          briefText: options.briefText,
+          expandedTitle: options.expandedTitle,
+          picture: options.picture as image.PixelMap
+        }
+      },
+      isOngoing: options.isOngoing,
+      isStopwatch: options.isStopwatch,
+      label: options.label,
+      isFloatingIcon: true,
+      badgeNumber: 1,
+      wantAgent: wantAgentObj,
+      removalWantAgent: wantAgentObj
+      // actionButtons: [{ title: '查看', wantAgent: wantAgentObj }]
+    };
+    //发送通知
+    notificationManager.publish(notificationRequest, (err: Base.BusinessError) => {
+      if (!err && options.callBack) {
+        if (options.id) {
+          //执行回调
+          options.callBack(options.id);
+        }
+      }
+    });
   }
 
   /**
@@ -397,6 +382,20 @@ export class NotificationUtil {
   static async clearNotice() {
     await notificationManager.cancelAll();
   }
+
+  /**
+   * 读取或清除通知后重置角标
+   * @param want
+   */
+  static readOrRemoveNotice(want: Want) {
+    //获取从通知进入的参数
+    if (want.parameters && want.parameters["eftoolNotice"]) {
+      //设置角标
+      notificationManager.getActiveNotificationCount().then(num => {
+        notificationManager.setBadgeNumber(num);
+      })
+    }
+  }
 }
 
 /**
@@ -428,7 +427,7 @@ class NoticeOptions {
    */
   text: string = '';
   /**
-   *通知附加内容，是对通知内容的补充
+   *通知附加内容
    */
   additionalText?: string;
   /**
@@ -448,7 +447,7 @@ class NoticeOptions {
    */
   expandedTitle?: string;
   /**
-   * 图片的base64字符串
+   * 图片
    */
-  picture?: string | image.PixelMap
+  picture?: image.PixelMap
 }

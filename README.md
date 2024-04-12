@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.5(API11)</center>
+# <center>V1.1.6(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -67,19 +67,21 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.UI类组件
 
-| 模块            | 介绍            |
-|---------------|---------------|
-| ToastUtil     | 提供对文本提示的一系列方法 |
-| DialogUtil    | 提供对弹出框的一系列方法  |
-| ActionUtil    | 提供对操作菜单的一系列方法 |
-| LoadingUtil   | 提供全局加载工具类     |
-| TipsUtil      | 提供提示弹出工具类     |
-| SelectUtil    | 提供选择弹出工具类     |
-| ConfirmUtil   | 提供信息确认弹出工具类   |
-| AlertUtil     | 提供操作确认弹出工具类   |
-| ExceptionUtil | 提供省市区级联选择组件   |
-| Cascade       | 提供省市区级联选择组件   |
-| ImmersionUtil | 提供沉浸式导航设置     |
+| 模块               | 介绍            |
+|------------------|---------------|
+| ToastUtil        | 提供对文本提示的一系列方法 |
+| DialogUtil       | 提供对弹出框的一系列方法  |
+| ActionUtil       | 提供对操作菜单的一系列方法 |
+| LoadingUtil      | 提供全局加载工具类     |
+| TipsUtil         | 提供提示弹出工具类     |
+| SelectUtil       | 提供选择弹出工具类     |
+| ConfirmUtil      | 提供信息确认弹出工具类   |
+| AlertUtil        | 提供操作确认弹出工具类   |
+| ExceptionUtil    | 提供省市区级联选择组件   |
+| Cascade          | 提供省市区级联选择组件   |
+| ImmersionUtil    | 提供沉浸式导航设置     |
+| WindowUtil       | 提供窗口的创建关闭等功能  |
+| NotificationUtil | 提供发送,删除通知d等功能 |
 
 ## 📦安装
 
@@ -1917,6 +1919,204 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   bottomRectHeight: string = AppStorage.get<number>('bottomHeight') + 'px';
   //设置给对应的外层容器组件即可
   .margin({ bottom: this.bottomRectHeight })
+```
+
+#### 12.WindowUtil窗口工具类
+
+* 入参介绍
+
+```
+    WinOptions 窗口工具入参实体
+    options:{
+        name:窗口名称默认eftool,
+        windowType:窗口类型默认TYPE_DIALOG,
+        contentRouter:窗口要显示的路由如:pages/Welcome需要在main_pages.json中声明,
+        bgColor:窗口背景颜色默认#33606266,
+        callBack:窗口创建回调函数
+    }
+```
+
+* createWindow 创建window
+
+```
+  在需要弹出窗口的页面创建弹出方法
+  async openWin() {
+    await WindowUtil.createWindow({
+      contentRouter: 'pages/Welcome',
+      callBack:()=>{
+          //此处如果创建完窗口有业务需求则自定义
+        ToastUtil.showToast('窗口已创建~');
+      }
+    })
+  }
+```
+
+* closeWindow 关闭window
+
+```
+   //在需要关闭弹窗的时候调用，如在弹窗内处理完需求后关闭
+   WindowUtil.closeWindow();
+```
+
+* 示例
+
+```
+  Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+    this.openWin();
+  })
+  
+  //Welcome页面
+  Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
+    WindowUtil.closeWindow();
+  })
+```
+
+#### 13.NotificationUtil通知工具类
+
+* 入参介绍
+
+```
+    NoticeOptions 通知入参实体类
+    options:{
+        id:通知ID默认生成,
+        isOngoing:是否进行时通知默认true,
+        isStopwatch:是否显示已用时间默认true,
+        label:通知标签默认eftool,
+        title:通知标题默认来自eftool通知,
+        text:通知内容,
+        additionalText:通知附加内容默认'',
+        longText:通知的长文本/多行的文本用英文逗号分割(多行文本时记得用逗号分隔),
+        briefText:通知概要内容默认概要内容,
+        expandedTitle:通知展开时的标题默认展开标题,
+        picture:图片,
+        callBack:业务回调函数
+    }
+```
+
+* authorizeNotification 校验是否已授权通知服务
+
+```
+  在需要发送通知的业务中调用  index为-1表示禁止，1表示已授权
+  await NotificationUtil.authorizeNotification((index: number) => {
+    ToastUtil.showToast(index > 0 ? '已经授予通知权限' : '用户禁止授权,请用户在设置中操作');
+  });
+```
+
+* publishBasic 推送普通文本通知
+
+```
+   //在需要推送普通通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,text为必填,其余均有默认值
+   await NotificationUtil.publishBasic({
+     text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+     title: '抢票时间到',
+     additionalText: '这个是additionalText',
+     isOngoing:true,
+     isStopwatch:true,
+     label:'普通通知',
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* publishMultiLine 推送多文本通知
+
+```
+   //在需要推送多文本通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,longText为必填,其余均有默认值用英文逗号分隔
+   await NotificationUtil.publishMultiLine({
+     text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+     title: '抢票时间到',
+     additionalText: '这个是additionalText',
+     expandedTitle: '多文本的展开',
+     briefText: '多文本的概要',
+     longText: '第一行的内容,第二行的内容,第三行的内容,第四行的内容,第无行的内容',
+     isOngoing:true,
+     isStopwatch:true,
+     label:'普通通知',
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* publishLongText 推送长文本通知
+
+```
+   //在需要推送长文本通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,longText为必填,其余均有默认值
+   await NotificationUtil.publishLongText({
+     text: '推送长文本内容！！！！！！！！！！！！！！！！！！！！',
+     title: '抢票时间到11111111111',
+     longText: '展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差',
+     expandedTitle: '展开的副标题',
+     briefText: '这个是概要',
+     isOngoing:true,
+     isStopwatch:true,
+     label:'长文本通知',
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* publishPicture 推送带有图片的通知(暂时未见到图片通知,不知是否为BUG)
+
+```
+   //在需要推送长文本通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,均有默认值
+   await NotificationUtil.publishPicture({
+     text: '222222',
+     title: '抢票时间到',
+     expandedTitle: '多文本的展开',
+     briefText: '多文本的概要',
+     isOngoing: true,
+     isStopwatch: true,
+     label: '图片通知',
+     picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+       .buffer).createPixelMap(),
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* readOrRemoveNotice 读取或清除通知后重置角标
+
+```
+   NotificationUtil.readOrRemoveNotice(want);
+```
+
+* cancelNotice 取消通知
+
+```
+   //在需要取消的时候调用，传入通知id
+   NotificationUtil.cancelNotice(10011, () => {
+     ToastUtil.showToast('取消通知成功~');
+   });
+```
+
+* clearBadge 重置角标
+
+```
+   NotificationUtil.clearBadge();
+```
+
+* clearNotice 清理所所有通知
+
+```
+   NotificationUtil.clearNotice();
+```
+
+* 当点击通知时默认调起当前Ability,清除时也需要重新设置应用角标
+
+```
+  //角标更新需要在UIAbility的onNewWant中处理,默认的为EntryAbility页面中
+  /**
+   * 监听通知传入的want
+   * @param want
+   * @param launchParam
+   */
+  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    NotificationUtil.readOrRemoveNotice(want);
+  }
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐

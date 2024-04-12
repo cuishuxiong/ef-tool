@@ -1,7 +1,7 @@
-import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { AbilityConstant, UIAbility, Want, wantAgent } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { Logger } from '@yunkss/eftool'
+import { Logger, NotificationUtil } from '@yunkss/eftool'
 import { ImmersionUtil } from '@yunkss/eftool'
 
 export default class EntryAbility extends UIAbility {
@@ -14,7 +14,7 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
-    Logger.init('API11TeTest',this.context);
+    Logger.init('API11TeTest', this.context);
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
@@ -29,6 +29,15 @@ export default class EntryAbility extends UIAbility {
       }
       hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
     });
+  }
+
+  /**
+   * 监听通知传入的want
+   * @param want
+   * @param launchParam
+   */
+  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    NotificationUtil.readOrRemoveNotice(want);
   }
 
   onWindowStageDestroy(): void {
