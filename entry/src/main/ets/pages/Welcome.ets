@@ -3,7 +3,7 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-import { MapUtil, WindowUtil } from '@yunkss/eftool'
+import { LocationUtil, MapUtil, WindowUtil } from '@yunkss/eftool'
 
 @Entry
 @Component
@@ -14,7 +14,9 @@ struct Welcome {
       Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
         WindowUtil.closeWindow();
       })
-      MapUtil()
+      Button('定位').margin({ top: 20 }).onClick(() => {
+        LocationUtil.startLocation();
+      })
     }
     .backgroundColor("#fff")
     .align(Alignment.Center)

@@ -79,6 +79,5 @@ export class AuthUtil {
         return;
       }
     }
-
   }
 }
