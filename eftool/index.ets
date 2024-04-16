@@ -82,6 +82,8 @@ export { NotificationUtil } from './src/main/ets/ui/base/NotificationUtil';
 
 export { LocationUtil } from './src/main/ets/ui/base/LocationUtil';
 
+export {efAxios} from  './src/main/ets/core/axios/AxiosUtil';
+
 // export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';

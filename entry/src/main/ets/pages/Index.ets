@@ -41,7 +41,8 @@ import {
   AuthUtil,
   WindowUtil,
   NotificationUtil,
-  LocationUtil
+  LocationUtil,
+  efAxios
 } from '@yunkss/eftool'
 import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
