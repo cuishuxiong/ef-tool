@@ -40,7 +40,8 @@ import {
   DateConst,
   AuthUtil,
   WindowUtil,
-  NotificationUtil
+  NotificationUtil,
+  LocationUtil
 } from '@yunkss/eftool'
 import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
@@ -199,6 +200,28 @@ struct Index {
 
   ok() {
     ToastUtil.showToast('点击了确定')
+  }
+
+  async geoLocation() {
+    let result = await LocationUtil.getGeoLocation();
+    this.message = result.getDataRow();
+  }
+
+  async add2location() {
+    let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
+    this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+  }
+
+  async geoConvert() {
+    let result = await LocationUtil.geoConvert(40.102248232795134, 116.54190501929297);
+    if (result.placeName) {
+      this.message = result.placeName;
+    }
+  }
+
+  async getCountryCode() {
+    let res = await LocationUtil.getCountryCode();
+    this.message = res.getDataRow();
   }
 
   async testCrypto() {
@@ -517,6 +540,18 @@ struct Index {
           Button("清除通知角标/通知").margin({ bottom: '10vp' }).onClick(() => {
             NotificationUtil.clearBadge();
             NotificationUtil.clearNotice();
+          })
+          Button('获取当前定位').margin({ bottom: '10vp' }).onClick(() => {
+            this.geoLocation();
+          })
+          Button('根据经纬度获取Location信息').margin({ bottom: '10vp' }).onClick(() => {
+            this.geoConvert();
+          })
+          Button('根据地理位置获取定位信息').margin({ bottom: '10vp' }).onClick(() => {
+            this.add2location();
+          })
+          Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
+            this.getCountryCode();
           })
           Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });

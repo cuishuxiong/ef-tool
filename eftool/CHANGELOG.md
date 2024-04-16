@@ -1,10 +1,16 @@
 # Changelog
 
+## [v1.1.7] 2024-04
+
+### 🐣新特性(API11)
+
+* 新增位置工具类LocationUtil,包含方法getGeoLocation,address2Location等
+* 优化AuthUtil新增批量获取权限reqPermissions,reqPermissionsList方法等
+
 ## [v1.1.6] 2024-04
 
 ### 🐣新特性(API11)
 
-[//]: # ( * 优化LogUtil同时记录到文件[issuesI9EQCO]&#40;https://gitee.com/yunkss/ef-tool/issues/I9EQCO&#41;)
 * 新增窗口工具类WindowUtil
 * 新增通知管理类NotificationUtil
 

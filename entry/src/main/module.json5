@@ -44,6 +44,16 @@
           ],
           "when": "always"
         }
+      },
+      {
+        "name": 'ohos.permission.LOCATION',
+        "reason": "$string:EntryAbility_label",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+          "when": "always"
+        }
       }
     ]
   }

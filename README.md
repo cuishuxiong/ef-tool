@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.6(API11)</center>
+# <center>V1.1.7(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -81,7 +81,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | Cascade          | 提供省市区级联选择组件   |
 | ImmersionUtil    | 提供沉浸式导航设置     |
 | WindowUtil       | 提供窗口的创建关闭等功能  |
-| NotificationUtil | 提供发送,删除通知d等功能 |
+| NotificationUtil | 提供发送,删除通知等功能  |
+| LocationUtil     | 提供获取定位,逆编码等功能 |
 
 ## 📦安装
 
@@ -1276,7 +1277,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     }
 ```
 
-* reqPermissionsFromUser 拉起用户授权 【异步方法】
+* reqPermissionsFromUser 拉起单个用户授权 【异步方法】 有callBack
 
 ```
      //拉起用户单个权限授权操作,第一个参数为需要授予的权限,第二个参数为用户授权回调
@@ -1284,6 +1285,29 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
         //用户同意授权index为1,用户拒绝授权index为-1,根据结果进行业务操作
         ToastUtil.showToast(index == 1 ? '授权成功' : '用户取消授权~');
      })
+```
+
+* reqPermissions 拉起单个用户授权 【异步方法】 无callBack
+
+```
+     //拉起用户单个权限授权操作,用户同意授权code为1,用户拒绝授权code为-1,根据结果进行业务操作
+     let code = await AuthUtil.reqPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+     if (code<0) {
+       //授权失败
+       return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+     }
+```
+
+* reqPermissionsList 拉起组合用户授权 【异步方法】 无callBack
+
+```
+     //拉起组合用户授权操作,入参为需要授权的权限集合
+     let code = await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
+     //code为true表示权限集合均被授权,为false表示有权限未被授权
+     if (!code) {
+       //授权失败
+       return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+     }
 ```
 
 ### 3.UI组件使用API
@@ -2117,6 +2141,80 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     NotificationUtil.readOrRemoveNotice(want);
   }
+```
+
+#### 14.LocationUtil位置工具类
+
+* getGeoLocation 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限) 【返回OutDTO对象】
+
+```
+  //注意APPROXIMATELY_LOCATION和LOCATION权限需要配置到项目的module.json5文件的requestPermissions中
+  //需要获取用户当前定位的中文位置信息时调用,返回格式如北京市海淀区xxx街道xxxx号
+  let result = await LocationUtil.getGeoLocation();
+  this.message = result.getDataRow();
+```
+
+* address2Location 地理逆编码,将地理描述转换为具体坐标-无需申请定位权限 【返回OutDTO对象】
+
+```
+   //已有详细地址需要编码为坐标信息时调用
+   let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
+   this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+```
+
+* geoConvert 地理逆编码,转换为中文-无需申请定位权限
+
+```
+   //已知经纬度，需要获取中文地理位置描述时调用
+   let result = await LocationUtil.geoConvert(40.102248232795134, 116.54190501929297);
+   if (result.placeName) {
+     this.message = result.placeName;
+   }
+```
+
+* getCountryCode 获取当前的国家码-无需申请定位权限 【返回OutDTO对象】
+
+```
+   //在需要获取当前国家编码时调用
+   let res = await LocationUtil.getCountryCode();
+   this.message = res.getDataRow();
+```
+
+* 示例
+
+```
+  //方法
+  async geoLocation() {
+    let result = await LocationUtil.getGeoLocation();
+    this.message = result.getDataRow();
+  }
+  async add2location() {
+    let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
+    this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+  }
+  async geoConvert() {
+    let result = await LocationUtil.geoConvert(40.102248232795134, 116.54190501929297);
+    if (result.placeName) {
+      this.message = result.placeName;
+    }
+  }
+  async getCountryCode() {
+    let res = await LocationUtil.getCountryCode();
+    this.message = res.getDataRow();
+  }
+  //UI
+  Button('获取当前定位').margin({ bottom: '10vp' }).onClick(() => {
+    this.geoLocation();
+  })
+  Button('根据经纬度获取Location信息').margin({ bottom: '10vp' }).onClick(() => {
+    this.geoConvert();
+  })
+  Button('根据地理位置获取定位信息').margin({ bottom: '10vp' }).onClick(() => {
+    this.add2location();
+  })
+  Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
+    this.getCountryCode();
+  })
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐

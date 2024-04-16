@@ -38,8 +38,14 @@ import {
 // DownloadUtil,
   Cascade,
   DateConst,
-  AuthUtil
+  AuthUtil,
+  WindowUtil,
+  NotificationUtil,
+  LocationUtil
 } from '@yunkss/eftool'
+import { notificationManager } from '@kit.NotificationKit';
+import { image } from '@kit.ImageKit';
+import { common } from '@kit.AbilityKit';
 
 class User {
   id: string;
@@ -68,7 +74,6 @@ class Person {
     this.list = list;
   }
 }
-
 
 @Entry
 @Component
@@ -101,12 +106,122 @@ struct Index {
     }
   }
 
+  async notice() {
+    await NotificationUtil.authorizeNotification((index: number) => {
+      ToastUtil.showToast(index > 0 ? '已经授予通知权限' : '用户禁止授权,请用户在设置中操作');
+    });
+
+  }
+
+  async pushBasic() {
+    await NotificationUtil.publishBasic({
+      text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到',
+      additionalText: '这个是additionalText',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '普通通知',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+      }
+    })
+  }
+
+  async pushLong() {
+    await NotificationUtil.publishLongText({
+      text: '推送长文本内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到11111111111',
+      longText: '展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差',
+      expandedTitle: '展开的副标题',
+      briefText: '这个是概要',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '长文本通知',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+      }
+    })
+  }
+
+  async pushMulti() {
+    await NotificationUtil.publishMultiLine({
+      text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+      title: '抢票时间到',
+      additionalText: '这个是additionalText',
+      expandedTitle: '多文本的展开',
+      briefText: '多文本的概要',
+      longText: '第一行的内容,第二行的内容,第三行的内容,第四行的内容,第无行的内容',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '普通通知',
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+      }
+    })
+  }
+
+  async cancelN() {
+
+    NotificationUtil.cancelNotice(10011, () => {
+      ToastUtil.showToast('取消通知成功~');
+    });
+  }
+
+  async pushPicture() {
+    await NotificationUtil.publishPicture({
+      text: '222222',
+      title: '抢票时间到',
+      expandedTitle: '多文本的展开',
+      briefText: '多文本的概要',
+      isOngoing: true,
+      isStopwatch: true,
+      label: '图片通知',
+      picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+        .buffer).createPixelMap(),
+      callBack: (noticeId: number) => {
+        ToastUtil.showToast('通知推送成功:' + noticeId);
+      }
+    })
+  }
+
+  async openWin() {
+    await WindowUtil.createWindow({
+      contentRouter: 'pages/Welcome',
+      callBack: () => {
+        //此处如果创建完窗口有业务需求则自定义
+        ToastUtil.showToast('窗口已创建~');
+      }
+    })
+  }
+
   cancel() {
     ToastUtil.showToast('点击了取消')
   }
 
   ok() {
     ToastUtil.showToast('点击了确定')
+  }
+
+  async geoLocation() {
+    let result = await LocationUtil.getGeoLocation();
+    this.message = result.getDataRow();
+  }
+
+  async add2location() {
+    let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
+    this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+  }
+
+  async geoConvert() {
+    let result = await LocationUtil.geoConvert(40.102248232795134, 116.54190501929297);
+    if (result.placeName) {
+      this.message = result.placeName;
+    }
+  }
+
+  async getCountryCode() {
+    let res = await LocationUtil.getCountryCode();
+    this.message = res.getDataRow();
   }
 
   async testCrypto() {
@@ -274,16 +389,16 @@ struct Index {
 
     Logger.error(str1, "11111111111")
 
-    let p = JSONUtil.parseObject<Person>(str1, DateConst.YMD_HLINE_HMS);
+    // let p = JSONUtil.parseObject<Person>(str1, DateConst.YMD_HLINE_HMS);
 
-    Logger.debug(p.name, p.user.name + p.list[0].name);
+    // Logger.debug(p.name, p.user.name + p.list[0].name);
 
-    let listStr = JSONUtil.toJSONString(userList);
+    // let listStr = JSONUtil.toJSONString(userList);
 
-    let uList = JSONUtil.parseArray<User>(listStr);
-    uList.forEach(item => {
-      Logger.error(item.id, item.name);
-    })
+    // let uList = JSONUtil.parseArray<User>(listStr);
+    // uList.forEach(item => {
+    //   Logger.error(item.id, item.name);
+    // })
 
     // CacheUtil.save<Person>("tetObj", person);
     //存入对象集合
@@ -398,11 +513,45 @@ struct Index {
             ToastUtil.showToast('duration:2000,bottom:10vp');
             this.testCrypto();
           })
+          Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+            this.openWin();
+          })
           Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
             this.show = !this.show;
           })
           Button("校验是否授予权限").margin({ bottom: '10vp' }).onClick(() => {
             this.dingWei();
+          })
+          Button("校验是否授予通知权限").margin({ bottom: '10vp' }).onClick(() => {
+            this.notice();
+          })
+          Button("推送文本通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushBasic();
+          })
+          Button("推送长文本通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushLong();
+          })
+          Button("推送多文本通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushMulti();
+          })
+          Button("推送图片通知").margin({ bottom: '10vp' }).onClick(() => {
+            this.pushPicture();
+          })
+          Button("清除通知角标/通知").margin({ bottom: '10vp' }).onClick(() => {
+            NotificationUtil.clearBadge();
+            NotificationUtil.clearNotice();
+          })
+          Button('获取当前定位').margin({ bottom: '10vp' }).onClick(() => {
+            this.geoLocation();
+          })
+          Button('根据经纬度获取Location信息').margin({ bottom: '10vp' }).onClick(() => {
+            this.geoConvert();
+          })
+          Button('根据地理位置获取定位信息').margin({ bottom: '10vp' }).onClick(() => {
+            this.add2location();
+          })
+          Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
+            this.getCountryCode();
           })
           Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
@@ -570,6 +719,7 @@ struct Index {
           })
         }
         .width('100%')
+        .padding({ top: 20 })
       }
       .scrollable(ScrollDirection.Vertical)
 

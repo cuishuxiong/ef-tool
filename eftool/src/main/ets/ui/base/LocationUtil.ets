@@ -11,9 +11,10 @@ import { ToastUtil } from '../prompt/ToastUtil';
  */
 export class LocationUtil {
   /**
-   * 当前定位方法
+   * 获取当前精准定位定位-需要APPROXIMATELY_LOCATION和LOCATION权限
+   * @returns geoLocationManager.Location 对象
    */
-  private static locationChange = async () => {
+  private static async getCurrentLocation(): Promise<geoLocationManager.Location> {
     //解析定位
     let current = await geoLocationManager.getCurrentLocation({
       scenario: geoLocationManager.LocationRequestScenario.DAILY_LIFE_SERVICE,
@@ -23,30 +24,57 @@ export class LocationUtil {
     return current;
   }
 
-  static async startLocation() {
-    if (!await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION')) {
-      await AuthUtil.reqPermissionsFromUser('ohos.permission.APPROXIMATELY_LOCATION', (index) => {
-        if (index > 0) {
-          //授权成功
-          LocationUtil.locationChange().then(position => {
-            LocationUtil.geoConvert(position.latitude, position.longitude).then(geoAdd => {
-              ToastUtil.showToast('地理位置为:' + geoAdd.placeName);
-            });
-          });
-        }
-      })
+  /**
+   * 获取用户当前定位-逆编码后(会申请APPROXIMATELY_LOCATION和LOCATION权限)
+   * @returns 返回当前位置中文描述
+   */
+  static async getGeoLocation(): Promise<OutDTO<string>> {
+    let isAuth = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION') && await AuthUtil.checkPermissions('ohos.permission.LOCATION');
+    if (!isAuth) {
+      //获取用户授权
+      let code = await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
+      if (!code) {
+        //授权失败
+        return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+      }
+    }
+    //授权成功获取当前定位
+    let current = await LocationUtil.getCurrentLocation();
+    //逆编码定位
+    let result = await LocationUtil.geoConvert(current.latitude, current.longitude);
+    if (result.placeName) {
+      return OutDTO.OKByDataRow<string>('获取当前位置成功~', result.placeName);
+    }
+    return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '未获取到定位信息~');
+  }
+
+  /**
+   * 地理逆编码,将地理描述转换为具体坐标-无需申请定位权限
+   * @param locationName  地理位置中文描述
+   * @returns 编码后location对象
+   */
+  static async address2Location(locationName: string): Promise<OutDTO<geoLocationManager.GeoAddress>> {
+    //校验是否逆编码可用
+    let isAvailable = geoLocationManager.isGeocoderAvailable();
+    if (isAvailable) {
+      let geocodeRequest: geoLocationManager.GeoCodeRequest = {
+        description: locationName,
+        maxItems: 1,
+        locale: 'zh'
+      };
+      let result = await geoLocationManager.getAddressesFromLocationName(geocodeRequest);
+      if (result) {
+        return OutDTO.OKByDataRow<geoLocationManager.GeoAddress>('根据位置描述获取位置信息成功~', result[0]);
+      } else {
+        return OutDTO.OKByDataRow('根据位置描述获取位置信息失败~', {} as geoLocationManager.GeoAddress);
+      }
     } else {
-      //授权成功
-      LocationUtil.locationChange().then(position => {
-        LocationUtil.geoConvert(position.latitude, position.longitude).then(geoAdd => {
-          ToastUtil.showToast('地理位置为:' + geoAdd.placeName);
-        });
-      });
+      return OutDTO.OKByDataRow('地理编码服务异常~', {} as geoLocationManager.GeoAddress);
     }
   }
 
   /**
-   * 地理逆编码,转换为中文
+   * 地理逆编码,转换为中文-无需申请定位权限
    * @param latitude  维度
    * @param longitude 经度
    * @returns 逆编码后对象
@@ -72,5 +100,18 @@ export class LocationUtil {
       ToastUtil.showToast('地理编码服务异常~');
       return {} as geoLocationManager.GeoAddress;
     }
+  }
+
+  /**
+   * 获取当前的国家码-无需申请定位权限
+   * @returns 返回当前位置中文描述
+   */
+  static async getCountryCode(): Promise<OutDTO<string>> {
+    //获取当前的国家码
+    let result = await geoLocationManager.getCountryCode();
+    if (result.country) {
+      return OutDTO.OKByDataRow<string>('获取当前国家码成功~', result.country);
+    }
+    return OutDTO.ErrorByDataRow<string>('获取当前国家码失败~', '未获取到获取当前国家码信息~');
   }
 }
