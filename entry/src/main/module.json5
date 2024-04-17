@@ -54,6 +54,16 @@
           ],
           "when": "always"
         }
+      },
+      {
+        "name": 'ohos.permission.INTERNET',
+        "reason": "$string:EntryAbility_label",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+          "when": "always"
+        }
       }
     ]
   }

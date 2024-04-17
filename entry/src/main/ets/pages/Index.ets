@@ -42,15 +42,17 @@ import {
   WindowUtil,
   NotificationUtil,
   LocationUtil,
-  efAxios
+  efAxios,
+  efAxiosParams
 } from '@yunkss/eftool'
 import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
+import { AxiosResponse } from '@ohos/axios';
 
 class User {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
 
   constructor(id: string, name: string) {
     this.name = name;
@@ -112,6 +114,14 @@ struct Index {
       ToastUtil.showToast(index > 0 ? '已经授予通知权限' : '用户禁止授权,请用户在设置中操作');
     });
 
+  }
+
+  async sendRequest() {
+    efAxiosParams.baseURL = 'https://ggzy.hainan.gov.cn';
+    const result: AxiosResponse<User> = await efAxios.post<User, AxiosResponse<User>, User>('/EpointWebBuilder/rest/frontAppNotNeedLoginActionCustom/getJyxxList', new User('', '测试name入参'));
+    if (result.status == 200) {
+      ToastUtil.showToast(JSONUtil.toJSONString(result.data));
+    }
   }
 
   async pushBasic() {
@@ -509,8 +519,10 @@ struct Index {
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           // DownloadUtil({})
-
-          Button("默认toast").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+          Button("发送post请求").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+            this.sendRequest();
+          })
+          Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:2000,bottom:10vp');
             this.testCrypto();
           })

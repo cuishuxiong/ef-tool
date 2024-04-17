@@ -6,7 +6,9 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@yunkss/eftool": "file:../eftool"
-  }
+    "@yunkss/eftool": "file:../eftool",
+    "@ohos/axios": "^2.2.0"
+  },
+  "devDependencies": {},
+  "dynamicDependencies": {}
 }
-
