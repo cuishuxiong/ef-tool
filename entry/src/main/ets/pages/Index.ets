@@ -43,7 +43,8 @@ import {
   NotificationUtil,
   LocationUtil,
   efAxios,
-  efAxiosParams
+  efAxiosParams,
+  efClientApi
 } from '@yunkss/eftool'
 import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
@@ -57,6 +58,18 @@ class User {
   constructor(id: string, name: string) {
     this.name = name;
     this.id = id;
+  }
+}
+
+class UserQuery extends User {
+  constructor(id: string, name: string) {
+    super(id, name);
+  }
+}
+
+class UserDTO extends User {
+  constructor(id: string, name: string) {
+    super(id, name);
   }
 }
 
@@ -118,10 +131,15 @@ struct Index {
 
   async sendRequest() {
     efAxiosParams.baseURL = 'https://ggzy.hainan.gov.cn';
-    const result: AxiosResponse<User> = await efAxios.post<User, AxiosResponse<User>, User>('/EpointWebBuilder/rest/frontAppNotNeedLoginActionCustom/getJyxxList', new User('', '测试name入参'));
-    if (result.status == 200) {
-      ToastUtil.showToast(JSONUtil.toJSONString(result.data));
+    efAxiosParams.sm2PubKey = (await SM2.generateSM2Key()).getDataRow().publicKey;
+
+    const result = await efClientApi.post<UserQuery, UserDTO>('/EpointWebBuilder/rest/frontAppNotNeedLoginActionCustom/getJyxxList', new UserQuery('', '测试name入参'));
+    if (result) {
+      ToastUtil.showToast(JSONUtil.toJSONString(result));
     }
+    // if (result.getSuccess()) {
+    //   ToastUtil.showToast(JSONUtil.toJSONString(result.getDataRow()));
+    // }
   }
 
   async pushBasic() {
