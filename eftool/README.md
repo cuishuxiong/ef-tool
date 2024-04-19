@@ -442,6 +442,20 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
+* encodeECB 加密-ECB模式
+
+```
+    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
 #### 5.3DES的方法【返回结果均为OutDTO对象】
 
 * generate3DESKey 生成3DES的对称密钥
@@ -1431,8 +1445,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ### 3.网络相关类组件使用API
 
 > #### 前言
-> 
-> 
+>
+>
 
 #### 1.ToastUtil的方法
 
@@ -1450,7 +1464,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   ToastUtil.showToast('提示信息');//使用默认参数
   ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });//修改参数
 ```
-
 
 ### 4.UI组件使用API
 

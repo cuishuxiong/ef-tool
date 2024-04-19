@@ -39,16 +39,14 @@ export class DynamicUtil {
     //创建密钥生成器
     let eccGen = crypto.createAsyKeyGenerator(symAlgName);
     // 外部传入的公私钥对A
-    let keyPairA = await eccGen.convertKey({ data: pubKeyArray }, { data: priKeyArray });
+    let keyPairA = await eccGen.convertKey({ data: pubKeyArray }, null);
     // 内部生成的公私钥对B
-    let keyPairB = await eccGen.generateKeyPair();
+    let keyPairB = await eccGen.convertKey(null, { data: priKeyArray });
     let eccKeyAgreement = crypto.createKeyAgreement(symAlgName);
     // 使用A的公钥和B的私钥进行密钥协商
     let secret1 = await eccKeyAgreement.generateSecret(keyPairB.priKey, keyPairA.pubKey);
-    // 使用A的私钥和B的公钥进行密钥协商
-    let secret2 = await eccKeyAgreement.generateSecret(keyPairA.priKey, keyPairB.pubKey);
     // 两种协商的结果应当一致
-    if (secret1.data.toString() == secret2.data.toString()) {
+    if (secret1.data) {
       return OutDTO.OKByDataRow<string>('生成共享密钥成功', StrAndUintUtil.unitArray2String(secret1.data));
     } else {
       return OutDTO.ErrorByDataRow<string>('生成共享密钥失败', '动态协商交换结果不相等,请检查公私钥是否正确！');

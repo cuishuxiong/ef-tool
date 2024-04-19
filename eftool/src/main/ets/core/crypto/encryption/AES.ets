@@ -94,6 +94,16 @@ export class AES {
   }
 
   /**
+   * 加密-ECB模式
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @returns
+   */
+  static async encodeECB(str: string, aesKey: string): Promise<OutDTO<string>> {
+    return CryptoUtil.encodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7');
+  }
+
+  /**
    * 解密-GCM模式
    * @param str  加密的字符串
    * @param aesKey  AES密钥
@@ -124,5 +134,15 @@ export class AES {
    */
   static async decodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
     return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7');
+  }
+
+  /**
+   * 解密-ECB模式
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @returns
+   */
+  static async decodeECB(str: string, aesKey: string): Promise<OutDTO<string>> {
+    return CryptoUtil.decodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7');
   }
 }

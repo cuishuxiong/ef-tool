@@ -14,6 +14,8 @@
 
 * 优化RSA支持2048位密钥生成、加解密以及签名验签[issuesI9HH01](https://gitee.com/yunkss/ef-tool/issues/I9HH01)
 * 优化RSA支持1024/2048位分段加解密[issuesI9H74A](https://gitee.com/yunkss/ef-tool/issues/I9H74A)
+* 优化ECDH动态协商
+* 优化AES新增ECB加密模式
 
 ## [v1.1.7] 2024-04
 

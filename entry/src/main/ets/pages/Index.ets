@@ -50,6 +50,8 @@ import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
 import { AxiosResponse } from '@ohos/axios';
+import { cryptoFramework } from '@kit.CryptoArchitectureKit';
+import { StrAndUintUtil } from '@yunkss/eftool/src/main/ets/core/util/StrAndUintUtil';
 
 class User {
   id?: string;
@@ -411,6 +413,30 @@ struct Index {
     // this.message = sign.getDataRow();
     // let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
     // this.message = verify.getMsg();
+
+    // let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+    //             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
+    //             +dMBCtoRb/SSY00ujBMsNPFdERxaizxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9
+    //             Wk2nVLpPRtZNjwJgNRB4pYKf+RmLn35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dv
+    //             xqVheO+S6IOLiN6XGbkNZM2VBNtmAhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7Cs
+    //             JE+Go5tb3BZjUYiF8fJ5ZKYCATkK4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S8
+    //             0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
+    //             4QIDAQAB
+    //             -----END PUBLIC KEY-----`);
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
+                    /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
+                    -----END PUBLIC KEY-----`);
+    let ecdas = await ECDSA.generateECDSAKey();
+    let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
+    let aesKey = res.getDataRow();
+
+    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+
+    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+
 
     //SM2
     // let sm2 = await SM2.generateSM2Key();
