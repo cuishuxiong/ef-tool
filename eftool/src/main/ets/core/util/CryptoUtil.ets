@@ -173,7 +173,6 @@ export class CryptoUtil {
     return OutDTO.OKByDataRow(symAlgName + '-CBC解密成功~', decode.decodeWithStream(updateOutput.data));
   }
 
-
   /**
    * 解密-ECB模式
    * @param str  加密的字符串
@@ -217,6 +216,80 @@ export class CryptoUtil {
     //转换字符串
     let result = StrAndUintUtil.unitArray2String(updateOutput.data);
     return OutDTO.OKByDataRow(symAlgName + '加密成功~', result);
+  }
+
+  /**
+   * 非对称分段加密
+   * @param encodeStr  待加密的字符串
+   * @param pubKey  给定秘钥规格公钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   */
+  static async encodeAsymSegment(str: string, pubKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //将公钥转换
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName);
+    //生成加密器
+    let encoder = crypto.createCipher(symEncryptName);
+    //初始化加密环境
+    await encoder.init(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
+    //封装加密所需数据
+    let encode = new util.TextEncoder();
+    //定义分段字节
+    let strSplitLen = symAlgName.indexOf('2048') >= 0 ? 128 : 64;
+    //待分段加密的数据
+    let strArray = encode.encodeInto(str);
+    //分段后的待加密数据
+    let cipherText = new Uint8Array();
+    //执行循环分段加密
+    for (let i = 0; i < strArray.length; i += strSplitLen) {
+      //截取64位数据
+      let updateMessage = strArray.subarray(i, i + strSplitLen);
+      let updateMessageBlob: crypto.DataBlob = { data: updateMessage };
+      // 将原文按64字符进行拆分，循环调用doFinal进行加密，使用1024bit密钥时，每次加密生成128字节长度的密文
+      let updateOutput = await encoder.doFinal(updateMessageBlob);
+      let mergeText = new Uint8Array(cipherText.length + updateOutput.data.length);
+      mergeText.set(cipherText);
+      mergeText.set(updateOutput.data, cipherText.length);
+      cipherText = mergeText;
+    }
+    //转换字符串
+    let result = StrAndUintUtil.unitArray2String(cipherText);
+    return OutDTO.OKByDataRow(symAlgName + '分段加密成功~', result);
+  }
+
+  /**
+   * 非对称分段解密
+   * @param decodeStr  待解密的字符串
+   * @param priKey    给定秘钥规格私钥
+   * @param symAlgName 秘钥规格
+   * @param symEncryptName  加密规格
+   */
+  static async decodeAsymSegment(str: string, priKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+    //将私钥转换
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName);
+    //生成解密器
+    let encoder = crypto.createCipher(symEncryptName);
+    //定义分段字节
+    let strSplitLen = symAlgName.indexOf('2048') >= 0 ? 256 : 128;
+    //初始化解密环境
+    await encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
+    //分段加密后的数据
+    let decryptText = new Uint8Array();
+    //待解密的数据
+    let strArray = StrAndUintUtil.stringToByteArray(str);
+    //开始循环解密
+    for (let i = 0; i < strArray.length; i += strSplitLen) {
+      let updateMessage = strArray.subarray(i, i + strSplitLen);
+      let updateMessageBlob: crypto.DataBlob = { data: updateMessage };
+      // 将密文按128字节进行拆分解密，得到原文后进行拼接
+      let updateOutput = await encoder.doFinal(updateMessageBlob);
+      let mergeText = new Uint8Array(decryptText.length + updateOutput.data.length);
+      mergeText.set(decryptText);
+      mergeText.set(updateOutput.data, decryptText.length);
+      decryptText = mergeText;
+    }
+    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    return OutDTO.OKByDataRow(symAlgName + '分段解密成功~', decode.decodeWithStream(decryptText));
   }
 
   /**

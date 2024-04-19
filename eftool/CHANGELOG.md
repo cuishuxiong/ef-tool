@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.1.8] 2024-04
+
+### 🐣新特性(API11)
+
+* 二次封装Axios
+* 封装axios统一请求和响应
+* 封装统一整体传输加解密(SM2,SM3,SM4混合)
+* 封装axios根据关键字传输时加解密
+* 封装axios统一上传和下载
+
+### 🐞功能优化
+
+* 优化RSA支持2048位密钥生成、加解密以及签名验签[issuesI9HH01](https://gitee.com/yunkss/ef-tool/issues/I9HH01)
+* 优化RSA支持1024/2048位分段加解密[issuesI9H74A](https://gitee.com/yunkss/ef-tool/issues/I9H74A)
+
 ## [v1.1.7] 2024-04
 
 ### 🐣新特性(API11)

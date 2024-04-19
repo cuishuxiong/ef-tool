@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.7(API11)</center>
+# <center>V1.1.8(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -65,7 +65,15 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | DateConst  | 提供常用的日期格式化表达式常量                      |
 | AuthUtil   | 提供判断授权拉起授权的系列方法                      |
 
-### 2.UI类组件
+### 2.网络相关类组件
+
+| 模块            | 介绍                             |
+|---------------|--------------------------------|
+| efAxiosParams | 提供eftool封装axios请求所需的参数         |
+| efAxios       | 二次封装axios的产物,提供统一加解密,统一请求响应拦截等 |
+| efClientApi   | 提供针对于统一post,get等请求封装,包含上传下载    |
+
+### 3.UI类组件
 
 | 模块               | 介绍            |
 |------------------|---------------|
@@ -218,7 +226,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 3.RSA的方法【返回结果均为OutDTO对象】
 
-* generateRSAKey 生成RSA的非对称密钥
+* generateRSAKey 生成1024位RSA的非对称密钥
 
 ```
     const rsa = await RSA.generateRSAKey();
@@ -226,37 +234,102 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
 ```
 
-* encodePKCS1 加密
+* generate2048RSAKey 生成2048位RSA的非对称密钥
+
+```
+    const rsa = await RSA.generate2048RSAKey();
+    console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
+    + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
+```
+
+* encodePKCS1 1024位加密
 
 ```
     let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
     this.message = encode.getDataRow();
 ```
 
-* decodePKCS1 解密
+* encodePKCS1Segment 1024位分段加密
+
+```
+    let encode = await RSA.encodePKCS1Segment('测试RSA-PKCS1分段加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encode2048PKCS1 2048位加密
+
+```
+    let encode = await RSA.encode2048PKCS1('测试RSA-PKCS12048位加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encode2048PKCS1Segment 2048位分段加密
+
+```
+    let encode = await RSA.encode2048PKCS1Segment('测试RSA-PKCS12048位分段加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decodePKCS1 1024位解密
 
 ```
     let decode = await RSA.decodePKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
     this.message = decode.getDataRow();
 ```
 
-* signPKCS1 签名
+* decodePKCS1Segment 1024位分段解密
+
+```
+    let decode = await RSA.decodePKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decode2048PKCS1 2048位解密
+
+```
+    let decode = await RSA.decode2048PKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decode2048PKCS1Segment 2048位分段解密
+
+```
+    let decode = await RSA.decode2048PKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* signPKCS1 1024位签名
 
 ```
     let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
     this.message = sign.getDataRow();
 ```
 
-* verifyPKCS1 验签
+* sign2048PKCS1 2048位签名
+
+```
+    let sign = await RSA.sign2048PKCS1('这个是RSA的2048位验签字符串~~', rsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verifyPKCS1 1024位验签
 
 ```
     let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
     this.message = verify.getMsg();
 ```
 
-* pemToStrKey 将pem文件中的数据转换成公钥字符串目前只支持1024字节
+* verify2048PKCS1 2048位验签
 
 ```
+    let verify = await RSA.verify2048PKCS1(sign.getDataRow(), '这个是RSA的2048位验签字符串~~', rsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* pemToStrKey 将pem文件中的数据转换成公钥字符串支持1024/2048字节
+
+```
+    //1024位示例
     //pem中数据支持没有回车符、换行符也支持每行以'\r\n'符结束
     let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
                   MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhoZDHUVp7y2zw7T7SQYDiUQCn
@@ -285,6 +358,51 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
                 `)
     let decode = await RSA.decodePKCS1(encode.getDataRow(), priKey);
     this.message = decode.getDataRow();
+```
+
+```
+    //2048位示例
+    //pem中数据支持没有回车符、换行符也支持每行以'\r\n'符结束
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
+                +dMBCtoRb/SSY00ujBMsNPFdERxaizxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9
+                Wk2nVLpPRtZNjwJgNRB4pYKf+RmLn35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dv
+                xqVheO+S6IOLiN6XGbkNZM2VBNtmAhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7Cs
+                JE+Go5tb3BZjUYiF8fJ5ZKYCATkK4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S8
+                0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
+                4QIDAQAB
+                -----END PUBLIC KEY-----`);
+    let encode = await RSA.encode2048PKCS1('测试2048位RSA-PKCS1加密字符串CSX~~', pubKey);
+    this.message = encode.getDataRow();
+    //2048位pem私钥
+    let priKey = RSA.pemToStrKey(`-----BEGIN RSA PRIVATE KEY-----
+                MIIEpAIBAAKCAQEA1nwHtqSbMNwjHKutrLUI+dMBCtoRb/SSY00ujBMsNPFdERxa
+                izxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9Wk2nVLpPRtZNjwJgNRB4pYKf+RmL
+                n35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dvxqVheO+S6IOLiN6XGbkNZM2VBNtm
+                AhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7CsJE+Go5tb3BZjUYiF8fJ5ZKYCATkK
+                4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S80S3LFHcOyP7UoNfQ+cbV/z+72sYJ
+                V4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg4QIDAQABAoIBAB2ckhQNNb/RJKfY
+                q+mkNNEI6KPu52llgrBi/4InQ3srt4WdPILsmwC6g4G8jy/cD2++UhhPRYhFgNXn
+                7CRa9J17CxcPgdJt09dipJWu6HkxR5TEihpC/rZABCcfjH4VpN0FsrjEuLy8wl6y
+                NKl4Zt4uBv8DVGz1fFYxJPtQKSE5YBSbvMD1thhViKOSyYp/pQfu00oz7/XK6iDE
+                oHAhcdTBcBl9YW2WaXCnuX02FQkO5h8kjJbQd6pW4EfLLUxKjwcxcJ61DswcAaPw
+                PN4+bgiwMak8H3IFrZVP24qs4ZOT3Yh7dl75OZXw7XcuBxsR/eCDlIe5VSSS+MId
+                JCc42uECgYEA8jbvO07ESaVYvdij21knF+5Tdjg5rG2q0qsocWlxsE+8IkjzRAgF
+                oovXqwoyDkhFJ/1N/PEnBqiQngbUhRSst49ICCQVv+fzRX2WjUNg4k2FtLO0jwgL
+                Z+E6grMkMkv7VDIxyWlY5rYUC1yw6USFjgyMGQaWps8o4+JLsGJd9PsCgYEA4rER
+                ecoYZndLRGmqMtmGZATDyNh6jGXzGF4XgHahnbhqgw3+7aTDXpA9W1TdGeBI4cQ9
+                HQMjroJ+X/yx2JWysimnFxMXuU4eXZo3vMuebXB3lRe2QcloO1HobeSdUCosJ3qa
+                Ks+f3UtN9Q8ZiPb5P0tA/fIbe6cwwQTQ1FLbQtMCgYEA0DpD3lOv0bRRHxygeVEi
+                l6Muo0Jg6oh5Q5UbNqy0rSNPFJZsc/8FgSEBrqwcLkUZFvDf2+UhbMr7UK+Egkgs
+                171Y6o7DF/D7JbF6/USAhOyqVpfrUM9UpuBs4bHKG2dQ0Kg6PvHPGMBNaRsth8x9
+                mInW4yjT2OHdQFPqR9+48IMCgYBJXXkEa21+K/mGCJR2pIOj9w7N/5GZwpzsM/dz
+                MfGYM8j05SCuFHbOMexJlKuB5l5wAqysqQlxPvZbZlLAf6I3mtdi1mEFLc0SCgkj
+                5to9HPr2m5f2rpI3MIkCl8x510w28qzWUh+w5OA0AVEITLXZ0CcWiLZwTGmw7jgP
+                n0kq1QKBgQDWDHZaEGCAYPxytix3tTCG3EIly8+fQJGt1lc0vgiiFcS0cW2pBbko
+                rVvbu1gSJnmvj0dIObp55wwFBs30xEiMfli+83srOur6nxYUDgn9rqGcufn6hOeH
+                ++y1uOHhOenfUTy51Gy1Dlv+maJ3LZ0ZnqPnbBdhZ1RtXFnczVKeFg==
+                -----END RSA PRIVATE KEY-----`)
+    let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
 ```
 
 #### 4.AES的方法【返回结果均为OutDTO对象】
@@ -1310,7 +1428,31 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
      }
 ```
 
-### 3.UI组件使用API
+### 3.网络相关类组件使用API
+
+> #### 前言
+>
+>
+
+#### 1.ToastUtil的方法
+
+* showToast 弹出文本消息提示框
+
+```
+  入参
+  msg:提示消息
+  options: {
+    duration:'',
+    bottom:'',
+    showMode:0
+  }  提示参数duration为显示时长，bottom为距离底部位置,showMode设置弹窗是否显示在应用之上0内,1上
+  示例
+  ToastUtil.showToast('提示信息');//使用默认参数
+  ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });//修改参数
+```
+
+
+### 4.UI组件使用API
 
 #### 1.ToastUtil的方法
 
