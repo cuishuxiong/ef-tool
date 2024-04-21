@@ -132,10 +132,16 @@ struct Index {
   }
 
   async sendRequest() {
-    efAxiosParams.baseURL = 'https://ggzy.hainan.gov.cn';
-    efAxiosParams.sm2PubKey = (await SM2.generateSM2Key()).getDataRow().publicKey;
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.sm2PubKey = "3059301306072a8648ce3d020106082a811ccf5501822d03420004ef18c3b40d583632ef06b7fc7a37a1cfd8c5cfd38ecfa0022cf8535aca02651dd77c02d2dea42537cd1145bed6e31d2871be56555888e9728a3fee5db8ea2389";
 
-    const result = await efClientApi.post<UserQuery, UserDTO>('/EpointWebBuilder/rest/frontAppNotNeedLoginActionCustom/getJyxxList', new UserQuery('', '测试name入参'));
+    efAxiosParams.sm2PubKey = "04cb7ca56a3ee38ebcc53f510ece1703ed58a23c9561e17a725f076fe493576e7e163928354e270845ea3e617ff202d0b1227312be24788cc9f93b68a9e6fc1aed"
+
+    let d = await SM2.encode('cccccccccc',efAxiosParams.sm2PubKey);
+
+    let e = await SM2.decode(d.getDataRow(),'30310201010420eb3718e95b7f871ad98e0fd0414a5f83963e21908119f2000578331df285c23da00a06082a811ccf5501822d');
+
+    const result = await efClientApi.post<UserQuery, UserDTO>('/api/eftool/crypto', { 'name': '测试入参' });
     if (result) {
       ToastUtil.showToast(JSONUtil.toJSONString(result));
     }
@@ -423,10 +429,13 @@ struct Index {
     //             0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
     //             4QIDAQAB
     //             -----END PUBLIC KEY-----`);
-    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
-                    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
-                    /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
-                    -----END PUBLIC KEY-----`);
+    let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
+      // RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+      //               MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
+      //               /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
+      //               -----END PUBLIC KEY-----`);
+    // let eee = await CryptoUtil.convertPubKeyFromStr(pubKey,'ECC256');
+
     let ecdas = await ECDSA.generateECDSAKey();
     let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
     let aesKey = res.getDataRow();
@@ -439,8 +448,8 @@ struct Index {
 
 
     //SM2
-    // let sm2 = await SM2.generateSM2Key();
-    // this.message = sm2.getDataRow().publicKey;
+    let sm2 = await SM2.generateSM2Key();
+    this.message = sm2.getDataRow().publicKey;
     // let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
     // this.message = encode.getDataRow();
     // let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);

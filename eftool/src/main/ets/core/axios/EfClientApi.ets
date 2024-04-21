@@ -17,7 +17,7 @@ class EfClientApi {
    * @param query  请求参数
    * @returns 响应结果
    */
-  async post<F, E>(url: string, query: F): Promise<OutDTO<E>> {
+  async post<F, E>(url: string, query: Record<string, Object>): Promise<E> {
     //获取鉴权参数名称
     // let Authorization = efAxiosParams.tokenName;
     //获取鉴权参数值
@@ -25,7 +25,7 @@ class EfClientApi {
     // let result: OutDTO<E> = await efAxios.post<E, AxiosResponse<OutDTO<E>>, F>(url, query).then((response: AxiosResponse<OutDTO<E>>) => {
     //   return response.data
     // });
-    return await efAxios.post<E, AxiosResponse<OutDTO<E>>, F>(url, query).then((response: AxiosResponse<OutDTO<E>>) => {
+    return await efAxios.post<E, AxiosResponse<E>, F>(url, query as F).then((response: AxiosResponse<E>) => {
       return response.data
     });
     // .then((res: AxiosResponse<E>) => {
