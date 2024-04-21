@@ -133,18 +133,29 @@ struct Index {
 
   async sendRequest() {
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
-    efAxiosParams.sm2PubKey = "3059301306072a8648ce3d020106082a811ccf5501822d03420004ef18c3b40d583632ef06b7fc7a37a1cfd8c5cfd38ecfa0022cf8535aca02651dd77c02d2dea42537cd1145bed6e31d2871be56555888e9728a3fee5db8ea2389";
+    efAxiosParams.isAllEncrypt = false;
+    // efAxiosParams.sm2PubKey = "3059301306072a8648ce3d020106082a811ccf5501822d03420004ef18c3b40d583632ef06b7fc7a37a1cfd8c5cfd38ecfa0022cf8535aca02651dd77c02d2dea42537cd1145bed6e31d2871be56555888e9728a3fee5db8ea2389";
 
-    efAxiosParams.sm2PubKey = "04cb7ca56a3ee38ebcc53f510ece1703ed58a23c9561e17a725f076fe493576e7e163928354e270845ea3e617ff202d0b1227312be24788cc9f93b68a9e6fc1aed"
-
-    let d = await SM2.encode('cccccccccc',efAxiosParams.sm2PubKey);
-
-    let e = await SM2.decode(d.getDataRow(),'30310201010420eb3718e95b7f871ad98e0fd0414a5f83963e21908119f2000578331df285c23da00a06082a811ccf5501822d');
-
-    const result = await efClientApi.post<UserQuery, UserDTO>('/api/eftool/crypto', { 'name': '测试入参' });
-    if (result) {
-      ToastUtil.showToast(JSONUtil.toJSONString(result));
+    const post = await efClientApi.post<UserQuery, UserDTO>('/api/eftool/post', { 'name': '测试入参' });
+    if (post) {
+      ToastUtil.showToast(JSONUtil.toJSONString(post));
     }
+
+    const get = await efClientApi.get<UserDTO>('/api/eftool/get/11111111');
+    if (get) {
+      ToastUtil.showToast(JSONUtil.toJSONString(get));
+    }
+
+    const del = await efClientApi.delete<UserDTO>('/api/eftool/delete/1212133');
+    if (del) {
+      ToastUtil.showToast(JSONUtil.toJSONString(del));
+    }
+
+    const put = await efClientApi.put<UserQuery, UserDTO>('/api/eftool/put', { 'id': '11111' });
+    if (put) {
+      ToastUtil.showToast(JSONUtil.toJSONString(put));
+    }
+
     // if (result.getSuccess()) {
     //   ToastUtil.showToast(JSONUtil.toJSONString(result.getDataRow()));
     // }
@@ -430,10 +441,10 @@ struct Index {
     //             4QIDAQAB
     //             -----END PUBLIC KEY-----`);
     let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
-      // RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
-      //               MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
-      //               /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
-      //               -----END PUBLIC KEY-----`);
+    // RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+    //               MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
+    //               /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
+    //               -----END PUBLIC KEY-----`);
     // let eee = await CryptoUtil.convertPubKeyFromStr(pubKey,'ECC256');
 
     let ecdas = await ECDSA.generateECDSAKey();
