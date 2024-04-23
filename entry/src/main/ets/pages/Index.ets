@@ -70,6 +70,8 @@ class UserQuery extends User {
 }
 
 class UserDTO extends User {
+  token: string = '';
+
   constructor(id: string, name: string) {
     super(id, name);
   }
@@ -132,33 +134,45 @@ struct Index {
   }
 
   async sendRequest() {
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
-    efAxiosParams.isAllEncrypt = false;
-    // efAxiosParams.sm2PubKey = "3059301306072a8648ce3d020106082a811ccf5501822d03420004ef18c3b40d583632ef06b7fc7a37a1cfd8c5cfd38ecfa0022cf8535aca02651dd77c02d2dea42537cd1145bed6e31d2871be56555888e9728a3fee5db8ea2389";
-
-    const post = await efClientApi.post<UserQuery, UserDTO>('/api/eftool/post', { 'name': '测试入参' });
-    if (post) {
-      ToastUtil.showToast(JSONUtil.toJSONString(post));
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    //模拟登录
+    const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
+      'account': 'efadmin',
+      'pwd': '123456'
+    });
+    //登录成功
+    if (login.getSuccess()) {
+      //登录成功将token赋值，后续需要
+      efAxiosParams.tokenValue = login.getDataRow().token;
+      //模拟测试post请求
+      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
+        'nickName': 'post请求参数',
+        'name': '测试入参'
+      });
+      if (post.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
+      }
+      //模拟测试get请求
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      if (get.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+      }
+      //模拟测试delete请求
+      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
+      if (del.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      }
+      //模拟测试put请求
+      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
+        'id': '11111'
+      });
+      if (put.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+      }
+    } else {
+      //登录失败
+      ToastUtil.showToast(login.getMsg());
     }
-
-    const get = await efClientApi.get<UserDTO>('/api/eftool/get/11111111');
-    if (get) {
-      ToastUtil.showToast(JSONUtil.toJSONString(get));
-    }
-
-    const del = await efClientApi.delete<UserDTO>('/api/eftool/delete/1212133');
-    if (del) {
-      ToastUtil.showToast(JSONUtil.toJSONString(del));
-    }
-
-    const put = await efClientApi.put<UserQuery, UserDTO>('/api/eftool/put', { 'id': '11111' });
-    if (put) {
-      ToastUtil.showToast(JSONUtil.toJSONString(put));
-    }
-
-    // if (result.getSuccess()) {
-    //   ToastUtil.showToast(JSONUtil.toJSONString(result.getDataRow()));
-    // }
   }
 
   async pushBasic() {

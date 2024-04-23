@@ -67,11 +67,11 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.网络相关类组件
 
-| 模块            | 介绍                             |
-|---------------|--------------------------------|
-| efAxiosParams | 提供eftool封装axios请求所需的参数         |
-| efAxios       | 二次封装axios的产物,提供统一加解密,统一请求响应拦截等 |
-| efClientApi   | 提供针对于统一post,get等请求封装,包含上传下载    |
+| 模块            | 介绍                              |
+|---------------|---------------------------------|
+| efAxiosParams | 提供eftool封装axios请求所需的参数          |
+| efAxios       | 二次封装axios的产物,提供统一请求响应拦截等        |
+| efClientApi   | 提供针对于统一post,get,delete,put等请求封装 |
 
 ### 3.UI类组件
 
@@ -439,6 +439,20 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
+    this.message = decode.getDataRow();
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
     this.message = decode.getDataRow();
 ```
 
@@ -1430,25 +1444,188 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ### 3.网络相关类组件使用API
 
-> #### 前言
->
->
+#### 前言
 
-#### 1.ToastUtil的方法
+>efAxios封装需要大家共建和提出建议与需求,本版本为第一版本,暂时封装简单,后续逐渐完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见   
+> 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue   
+> 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-* showToast 弹出文本消息提示框
+#### 1.efAxiosParams类参数详解
 
 ```
-  入参
-  msg:提示消息
-  options: {
-    duration:'',
-    bottom:'',
-    showMode:0
-  }  提示参数duration为显示时长，bottom为距离底部位置,showMode设置弹窗是否显示在应用之上0内,1上
-  示例
-  ToastUtil.showToast('提示信息');//使用默认参数
-  ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });//修改参数
+  /**
+   * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true【预计1.1.9版本生效可用】
+   */
+  static isAllEncrypt: boolean = false;
+  /**
+   * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true 【预计1.1.9版本生效可用】
+   */
+  static isPartEncrypt: boolean = false;
+  /**
+   * 关键字加密时的关键字集合 【预计1.1.9版本生效可用】
+   */
+  static keyWordsList: Array<string> = new Array<string>();
+  /**
+   * 用户自定义token的Key,默认为Authorization 
+   */
+  static tokenName: string = 'Authorization';
+  /**
+   * 登录成功后的token值
+   */
+  static tokenValue: string = '';
+  /**
+   * 服务器 URL
+   */
+  static baseURL: string = '';
+  /**
+   * 请求头加密的SM2公钥  【预计1.1.9版本生效可用】
+   */
+  static sm2PubKey: string = '';
+```
+
+#### 2.AxiosUtil工具类
+
+* efAxios 全局对象
+
+```
+  该变量为抛出的全局二次封装的全局axios对象,默认超时时间为10s
+```
+
+* convertRequestInfo 封装的针对于统一请求的处理
+
+```
+   //1.统一给请求头添加nonce防篡改校验因子,业务自行实现,如有需求也可在后续demo中完善
+   //2.统一给请求头添加timestamp防重放的随机数因子,业务自行实现,如有需求也可在后续demo中完善
+   //3.设置默认请求类型 application/json
+   //4.添加统一的isAllEncrypt=true时整体加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+   //5.添加统一的isPartEncrypt=true时根据关键字加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+   //6.添加统一的请求头签名sign字段,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+```
+
+* convertResponseInfo 封装的针对于统一响应的处理 【统一返回OutDTO<T>】
+
+```
+  //目前只对返回数据格式做了统一的OutDTO转换   
+  //要求后端返回的数据格式包含OutDTO中的success,msg   
+  //dataRow和dataTable业务数据自行选择,非必填
+```
+
+#### 3.EfClientApi工具类
+
+> 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
+
+* post请求  async/await 方式
+
+```
+    //参数说明
+    post<F, E>(url: string, query: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //F 为请求入参对象,具体参照示例中的写法
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+```
+
+* get请求  async/await 方式
+
+```
+    //参数说明
+    async get<E>(url: string): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+```
+
+* delete请求  async/await 方式
+
+```
+    //参数说明
+    async delete<E>(url: string): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //注意demo中的delete请求为rest方式,即入参方式为 delete方法/param1/param2 以此类推
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+```
+
+* put请求  async/await 方式
+
+```
+    //参数说明
+    put<F, E>(url: string, query: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //F 为请求入参对象,具体参照示例中的写法
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+```
+
+* 登录示例
+
+```
+    //1.先设置统一的请求后端前缀 具体时机业务自行决定,Ability中也可
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    //2.调用接口
+    //模拟登录 UserQuery为请求参数,OutDTO<UserDTO>为响应的结果,OutDTO中的对象为业务自己创建
+    const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
+      'account': 'efadmin',
+      'pwd': '123456'
+    });
+    //登录成功
+    if (login.getSuccess()) {
+      //登录成功将token赋值，后续需要,默认token的key为Authorization
+      //如果需要更换业务调用efAxiosParams.tokenName = '业务自定义的token名称'
+      efAxiosParams.tokenName = '如此处更换为efToken';
+      efAxiosParams.tokenValue = login.getDataRow().token;
+    } else {
+      //登录失败
+      ToastUtil.showToast(login.getMsg());
+    }
+```
+
+* post示例
+
+```
+      //模拟测试post请求  此时的请求头中已经存在token字段
+      //UserQuery为请求参数,OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
+        'nickName': 'post请求参数',
+        'name': '测试入参'
+      });
+      if (post.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
+      }
+```
+
+* get示例
+
+```
+      //模拟测试get请求
+      //OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      if (get.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+      }
+```
+
+* put示例
+
+```
+      //模拟测试put请求
+      //UserQuery为请求参数,OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
+        'id': '11111'
+      });
+      if (put.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+      }
+```
+
+* delete示例
+
+```
+      //模拟测试delete请求
+      //OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
+      if (del.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      }
 ```
 
 

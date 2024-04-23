@@ -6,9 +6,7 @@
 
 * 二次封装Axios
 * 封装axios统一请求和响应
-* 封装统一整体传输加解密(SM2,SM3,SM4混合)
-* 封装axios根据关键字传输时加解密
-* 封装axios统一上传和下载
+* 简化post,get,put,delete等请求方式
 
 ### 🐞功能优化
 

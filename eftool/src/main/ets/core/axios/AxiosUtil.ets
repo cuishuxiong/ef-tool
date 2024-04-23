@@ -3,6 +3,8 @@ import { AxiosError } from '@ohos/axios';
 import { InternalAxiosRequestConfig } from '@ohos/axios';
 import { AxiosResponse } from '@ohos/axios';
 import { AxiosStatic } from '@ohos/axios';
+import { ToastUtil } from '../../ui/prompt/ToastUtil';
+import { OutDTO } from '../base/OutDTO';
 import { SM2 } from '../crypto/encryption/SM2';
 import { SM3 } from '../crypto/encryption/SM3';
 import { SM4 } from '../crypto/encryption/SM4';
@@ -21,7 +23,7 @@ export class AxiosUtil {
   private static getAxios(): AxiosStatic {
     const context = axios.create({
       baseURL: efAxiosParams.baseURL,
-      timeout: 1000
+      timeout: 10000
     });
     return context as AxiosStatic;
   }
@@ -90,7 +92,6 @@ export class AxiosUtil {
       //校验因子
       let enCodeKey = RandomUtil.randomStrBySize(32);
       let sm3 = await SM3.digest(params + enCodeKey + config.headers.timestamp);
-      // "veV8QV5bk2xGkeYkbRmXlsQADcqdX3qU";
       config.headers.sign = sm3.getDataRow();
     }
   }
@@ -100,156 +101,21 @@ export class AxiosUtil {
    * @param response  axios返回的响应对象
    */
   static async convertResponseInfo(response: AxiosResponse) {
-    let lastUrl: string =
-      response.config.url?.slice(
-        response.config.url?.lastIndexOf("/") + 1,
-        response.config.url.length
-      ).trim() || "";
     if (response.status === 200) {
-      // let data = response.data;
+      //将响应数据转换
+      response.data = new OutDTO(response.data.success, response.data.message, response.data.dataRow ? response.data.dataRow : '', response.data.dataTable ? response.data.dataTable : new Array());
+      //其他处理
       if (response.config.headers["Req-Type"] == "uploadOrDownload") {
-        //上传下载将数据转换为blob格式
-        // data = await promiseBlobToJson(data, response);
+        //上传下载将数据转换为blob格式 预计1.1.9版本完善
       }
       if (efAxiosParams.isAllEncrypt) {
-        //整体加密
+        //整体加密 预计1.1.9版本完善
       }
       if (efAxiosParams.isPartEncrypt) {
-
+        //关键字加密 预计1.1.9版本完善
       }
-      //   if (isAddSM) {
-      //     if (NO_SM_URL.indexOf(lastUrl) < 0) {
-      //       if (typeof data === "string" && data.indexOf("OutDTO") > -1) {
-      //       } else {
-      //         // } else {
-      //         let result: string = responseData(data);
-      //         try {
-      //           data = JSON.parse(result);
-      //         } catch (error) {
-      //           Message.error("json解析失败");
-      //         }
-      //         data.encryptParKey = response.headers.sm4key || "";
-      //         // }
-      //       }
-      //     }
-      //   }
-      //   if (data.success) {
-      //     return Promise.resolve(data);
-      //   } else {
-      //     let code: any, msgStr: any, msg: any;
-      //
-      //     if (typeof data === "string") {
-      //       const matchs = data.match(/code=(\d+)/);
-      //       msgStr = data.split(",");
-      //       msg = msgStr[1].split("=")[1];
-      //       if (matchs) {
-      //         code = Number(matchs[1]);
-      //       }
-      //     } else {
-      //       code = data.code;
-      //     }
-      //
-      //     switch (code) {
-      //     // 401: 未登录
-      //     // 未登录则跳转登录页面，并携带当前页面的路径
-      //     // 在登录成功后返回当前页面，这一步需要在登录页操作。
-      //       case 401:
-      //         {
-      //           let lastMsg: any = msg;
-      //           let IsSSo = getStore("isSSo");
-      //           if (router.currentRoute.name != "login") {
-      //             if (IsSSo == "3" || IsSSo == "4" || IsSSo == "2") {
-      //               let str: any = localStorage.getItem("userInfo");
-      //               const UserInfo = JSON.parse(str);
-      //               newAxios
-      //                 .post("/api/system/security/isc/logout", {
-      //                   express: { iscUserId: UserInfo.iscUserId },
-      //                 })
-      //                 .then((iscLogout: any) => {
-      //                   if (iscLogout.data.success) {
-      //                     localStorage.setItem("userInfo", "");
-      //                     localStorage.clear();
-      //                     store.commit("setAdded", false);
-      //                     setStore("accessToken", "");
-      //                     if (msg) {
-      //                       if (msg == "token已被顶下线") {
-      //                         lastMsg = "您的账号在其他地方登录，已强制下线！";
-      //                       }
-      //                       if (msg == "token已过期") {
-      //                         lastMsg = "您的会话已过期，请重新登录！";
-      //                       }
-      //                       if (msg == "token已被踢下线") {
-      //                         lastMsg =
-      //                           "同一机器仅允许登录一个账号，您已被踢下线";
-      //                       }
-      //                       //   Message.closeAll();
-      //                       Message.error(lastMsg);
-      //                     } else {
-      //                       Message.error("未知错误，请重新登录");
-      //                     }
-      //                     window.location = iscLogout.data.dataRow;
-      //                   }
-      //                 })
-      //                 .catch((err) => {
-      //                   console.log("csxxxxxxxxxxxxxxx:" + err);
-      //                 });
-      //             } else {
-      //               localStorage.setItem("userInfo", "");
-      //               localStorage.clear();
-      //               // store.commit("logout", this);
-      //               setStore("accessToken", "");
-      //               if (msg) {
-      //                 if (msg == "token已被顶下线") {
-      //                   lastMsg = "您的账号在其他地方登录，已强制下线！";
-      //                 }
-      //                 if (msg == "token已过期") {
-      //                   lastMsg = "您的会话已过期，请重新登录！";
-      //                 }
-      //                 if (msg == "token已被踢下线") {
-      //                   lastMsg = "同一机器仅允许登录一个账号，您已被踢下线";
-      //                 }
-      //                 // Message.closeAll();
-      //                 Message.error(lastMsg);
-      //               } else {
-      //                 Message.error("未知错误，请重新登录");
-      //               }
-      //               router.replace({
-      //                 path: "/",
-      //                 query: {
-      //                   redirect: router.currentRoute.fullPath,
-      //                 },
-      //               });
-      //               localStorage.clear();
-      //             }
-      //           } else {
-      //             // Message.closeAll();
-      //             Message.error(lastMsg);
-      //           }
-      //         }
-      //         break;
-      //     // 没有权限
-      //       case 403:
-      //         {
-      //           if (msg !== null) {
-      //             Message.error(msg);
-      //           } else {
-      //             Message.error("未知错误");
-      //           }
-      //         }
-      //         break;
-      //       case 500:
-      //         {
-      //           Message.error("服务器异常，请稍后重试");
-      //         }
-      //         break;
-      //       default: {
-      //         Message.error(data.message);
-      //       }
-      //     }
-      //     return Promise.reject(data);
-      //   }
-      // } else {
-      //   return Promise.reject(response);
+    } else {
+      ToastUtil.showToast("请求接口异常~");
     }
   }
 
@@ -323,7 +189,7 @@ export class efAxiosParams {
   /**
    * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true
    */
-  static isAllEncrypt: boolean = true;
+  static isAllEncrypt: boolean = false;
   /**
    * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true
    */

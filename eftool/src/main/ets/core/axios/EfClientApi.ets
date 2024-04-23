@@ -3,12 +3,8 @@
  * @DateTime 2024/4/19 08:00:04
  * @TODO EfApi  axios封装的请求工具类
  */
-import { AxiosError } from '@ohos/axios';
-import { AxiosHeaders } from '@ohos/axios';
 import { AxiosResponse } from '@ohos/axios';
-import { ToastUtil } from '../../ui/prompt/ToastUtil';
-import { OutDTO } from '../base/OutDTO';
-import { efAxios, efAxiosParams } from './AxiosUtil';
+import { efAxios } from './AxiosUtil';
 
 class EfClientApi {
   /**
@@ -57,10 +53,16 @@ class EfClientApi {
     });
   }
 
+  /**
+   * 统一的上传请求【预计1.1.9版本可用】
+   */
   upload() {
 
   }
 
+  /**
+   * 统一的下载请求【预计1.1.9版本可用】
+   */
   download() {
 
   }
