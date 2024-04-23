@@ -97,6 +97,50 @@ export class AxiosUtil {
   }
 
   /**
+   * 将后端返回的常见的信息封装成OutDTO对象
+   * @param response  响应对象
+   * @returns
+   */
+  static convertResponseDTO(response: AxiosResponse) {
+    //考虑几种常见的可能性
+    let success: boolean = true;
+    if (response.data && response.data.success) {
+      success = response.data.success;
+    }
+    if (response.data && response.data.flag) {
+      success = response.data.flag;
+    }
+    //2.返回的消息提示
+    let message: string = '';
+    if (response.data && response.data.msg) {
+      message = response.data.msg;
+    }
+    if (response.data && response.data.message) {
+      message = response.data.message;
+    }
+    //3.返回的单行数据
+    let dataRow: Record<string, Object> = {};
+    if (response.data && response.data.dataRow) {
+      dataRow = response.data.dataRow;
+    }
+    if (response.data && response.data.data) {
+      dataRow = response.data.data;
+    }
+    //4.返回的多行数据
+    let dataTable: Array<Record<string, Object>> = new Array();
+    if (response.data && response.data.dataTable) {
+      dataTable = response.data.dataTable;
+    }
+    if (response.data && response.data.list) {
+      dataTable = response.data.list;
+    }
+    if (response.data && response.data.arr) {
+      dataTable = response.data.arr;
+    }
+    return new OutDTO(success, message, dataRow, dataTable);
+  }
+
+  /**
    * 统一处理响应
    * @param response  axios返回的响应对象
    */

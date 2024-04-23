@@ -2,7 +2,7 @@
   "license": "Apache-2.0",
   "devDependencies": {},
   "keywords": [
-    "工具类",
+    "axios",
     "JSON",
     "UI组件",
     "RSA",
@@ -18,7 +18,7 @@
   "description": "一款高效的兼容API11的OpenHarmony/HarmonyOS工具包.封装了常用工具类如字符串、正则、加解密、axios、数据转换等和常用UI组件如Dialog,Loading,Cascade,通知,位置,窗口等,提供一系列快捷操作方法.",
   "main": "index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
     "@ohos/axios": "^2.2.0"

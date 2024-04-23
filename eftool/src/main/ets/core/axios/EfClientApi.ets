@@ -20,12 +20,26 @@ class EfClientApi {
   }
 
   /**
-   * get请求
+   * get请求 -rest 风格
    * @param url  请求URL附带参数
    * @returns 响应结果
    */
   async get<E>(url: string): Promise<E> {
     return await efAxios.get<E, AxiosResponse<E>, null>(url).then((response: AxiosResponse<E>) => {
+      return response.data
+    });
+  }
+
+  /**
+   * get请求 - json格式
+   * @param url
+   * @param params
+   * @returns
+   */
+  async getByParams<E>(url: string, params: Record<string, Object>): Promise<E> {
+    return await efAxios.get<E, AxiosResponse<E>, null>(url, {
+      params: params
+    }).then((response: AxiosResponse<E>) => {
       return response.data
     });
   }

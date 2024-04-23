@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.8(API11)</center>
+# <center>V1.1.9(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -1444,11 +1444,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ### 3.网络相关类组件使用API
 
- #### 前言
+#### 前言
 
-> efAxios封装需要大家共建和提出建议与需求,本版本为第一版本,暂时封装简单,后续逐渐完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见 
+> efAxios封装需要大家共建和提出建议与需求,本版本为第一版本,暂时封装简单,后续逐渐完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见
 
-> 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue   
+> 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
@@ -1514,9 +1514,9 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 3.EfClientApi工具类
 
-> 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象   
+> 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
-* post请求  async/await 方式
+* post请求 async/await 方式
 
 ```
     //参数说明
@@ -1527,7 +1527,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
 ```
 
-* get请求  async/await 方式
+* get请求 async/await 方式
 
 ```
     //参数说明
@@ -1537,7 +1537,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
 
-* delete请求  async/await 方式
+* delete请求 async/await 方式
 
 ```
     //参数说明
@@ -1547,7 +1547,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
 
-* put请求  async/await 方式
+* put请求 async/await 方式
 
 ```
     //参数说明
@@ -1629,7 +1629,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
         ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
       }
 ```
-
 
 ### 4.UI组件使用API
 
