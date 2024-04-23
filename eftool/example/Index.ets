@@ -41,19 +41,39 @@ import {
   AuthUtil,
   WindowUtil,
   NotificationUtil,
-  LocationUtil
+  LocationUtil,
+  efAxios,
+  efAxiosParams,
+  efClientApi
 } from '@yunkss/eftool'
 import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
+import { AxiosResponse } from '@ohos/axios';
+import { cryptoFramework } from '@kit.CryptoArchitectureKit';
+import { StrAndUintUtil } from '@yunkss/eftool/src/main/ets/core/util/StrAndUintUtil';
 
 class User {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
 
   constructor(id: string, name: string) {
     this.name = name;
     this.id = id;
+  }
+}
+
+class UserQuery extends User {
+  constructor(id: string, name: string) {
+    super(id, name);
+  }
+}
+
+class UserDTO extends User {
+  token: string = '';
+
+  constructor(id: string, name: string) {
+    super(id, name);
   }
 }
 
@@ -111,6 +131,48 @@ struct Index {
       ToastUtil.showToast(index > 0 ? '已经授予通知权限' : '用户禁止授权,请用户在设置中操作');
     });
 
+  }
+
+  async sendRequest() {
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    //模拟登录
+    const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
+      'account': 'efadmin',
+      'pwd': '123456'
+    });
+    //登录成功
+    if (login.getSuccess()) {
+      //登录成功将token赋值，后续需要
+      efAxiosParams.tokenValue = login.getDataRow().token;
+      //模拟测试post请求
+      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
+        'nickName': 'post请求参数',
+        'name': '测试入参'
+      });
+      if (post.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
+      }
+      //模拟测试get请求
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      if (get.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+      }
+      //模拟测试delete请求
+      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
+      if (del.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      }
+      //模拟测试put请求
+      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
+        'id': '11111'
+      });
+      if (put.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+      }
+    } else {
+      //登录失败
+      ToastUtil.showToast(login.getMsg());
+    }
   }
 
   async pushBasic() {
@@ -318,43 +380,101 @@ struct Index {
     // this.message = decodeCBC.getDataRow();
 
     //RSA
+    // let rsa = await RSA.generate2048RSAKey();
+    // this.message = rsa.getDataRow().publicKey;
+    // let encode = await RSA.encode2048PKCS1Segment('测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX~~', rsa.getDataRow()
+    //   .publicKey);
+    // this.message = encode.getDataRow();
+    // let decode = await RSA.decode2048PKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    // this.message = decode.getDataRow();
+    // let encode = await RSA.encode2048PKCS1('测试RSA-2048-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
+    // this.message = encode.getDataRow();
+    // let decode = await RSA.decode2048PKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    // this.message = decode.getDataRow();
+    // let sign = await RSA.sign2048PKCS1('这个是2048位RSA的验签字符串~~', rsa.getDataRow().privateKey);
+    // this.message = sign.getDataRow();
+    // let verify = await RSA.verify2048PKCS1(sign.getDataRow(), '这个是2048位RSA的验签字符串~~', rsa.getDataRow()
+    //   .publicKey);
+    // this.message = verify.getMsg();
     // let rsa = await RSA.generateRSAKey();
     // this.message = rsa.getDataRow().publicKey;
-    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
-                  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhoZDHUVp7y2zw7T7SQYDiUQCn
-                  ImnsKogqWOF3hBfaBr8xK/7I/PfbLcPV/MrWKPi2uaiXkhmITX+24ZWVBInxELBa
-                  4kccFJeZReMRmu7rKZgkVzU6JKyfaH8zMxipEBh0TyS6JVHHjPd4eezzzVDHc59O
-                  fYyzs3kM3Z6oczwTDwIDAQAB
-                  -----END PUBLIC KEY-----`);
-    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', pubKey);
-    this.message = encode.getDataRow();
-    let priKey = RSA.pemToStrKey(`-----BEGIN PRIVATE KEY-----
-                MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAOGhkMdRWnvLbPDt
-                PtJBgOJRAKciaewqiCpY4XeEF9oGvzEr/sj899stw9X8ytYo+La5qJeSGYhNf7bh
-                lZUEifEQsFriRxwUl5lF4xGa7uspmCRXNTokrJ9ofzMzGKkQGHRPJLolUceM93h5
-                7PPNUMdzn059jLOzeQzdnqhzPBMPAgMBAAECgYEAjJjm5Kz3G0kJ25+ak94pd91N
-                8Nfq9TUToH++D4GKc1vc68EkhQ3NTRDZhZB+vLDPOt26BqkNq/fO66DqWu93HEra
-                jBE4pZzCxmVmLanuimxiA45Td1DalL0mmd9ab2cusqwXo6LDs3mSU/t7gSBRUCnt
-                kv4MBZMgIDA92QSadHECQQD1HZKBIbWQtZ4nDxgaP1MOQC7dKmXlIkCsDbuwaZhj
-                RM8/+iqBBtgSkviwOCDWNiFcpzf+nUM1+ba9OE9iTOqTAkEA66Z/ifnKVCNbHiW8
-                i6E2K/2NcJH4qsxRrIMs+eyxqC/yEjkxol26OVmemxu22Fjkx/xIOKg6zFJRstXy
-                i6P3FQJBAKZ7xINCwxCb2uSKowNI2X/HZk0/u9+qqSRzW3TR8/gQx3eb0fy7Ck1r
-                V9BQ/zSfpX9J8IVWiU0C4/SXZ4vL1FMCQQCPaQh9I7NqeQne0wBnyXh6VRhaxbsb
-                1rRt1Hbusol73ZHoXT5Dnd7TQCMyKi+ggpjYzEP3lwoRhpeJyoKNUP/xAkB+//w9
-                SyKHWOZOCLj47/1/7YZGzKv/Ttb4NVFtqDPl2QtbXqDcP8d5ZI4p37rJIq1XZ0sT
-                l2UgKQV+KZkPdL1n
-                -----END PRIVATE KEY-----
-                `)
-    let decode = await RSA.decodePKCS1(encode.getDataRow(), priKey);
-    this.message = decode.getDataRow();
+    //2048位pem公钥
+    // let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+    //             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
+    //             +dMBCtoRb/SSY00ujBMsNPFdERxaizxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9
+    //             Wk2nVLpPRtZNjwJgNRB4pYKf+RmLn35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dv
+    //             xqVheO+S6IOLiN6XGbkNZM2VBNtmAhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7Cs
+    //             JE+Go5tb3BZjUYiF8fJ5ZKYCATkK4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S8
+    //             0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
+    //             4QIDAQAB
+    //             -----END PUBLIC KEY-----`);
+    // let encode = await RSA.encode2048PKCS1('测试2048位RSA-PKCS1加密字符串CSX~~', pubKey);
+    // this.message = encode.getDataRow();
+    //2048位pem私钥
+    // let priKey = RSA.pemToStrKey(`-----BEGIN RSA PRIVATE KEY-----
+    //             MIIEpAIBAAKCAQEA1nwHtqSbMNwjHKutrLUI+dMBCtoRb/SSY00ujBMsNPFdERxa
+    //             izxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9Wk2nVLpPRtZNjwJgNRB4pYKf+RmL
+    //             n35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dvxqVheO+S6IOLiN6XGbkNZM2VBNtm
+    //             AhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7CsJE+Go5tb3BZjUYiF8fJ5ZKYCATkK
+    //             4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S80S3LFHcOyP7UoNfQ+cbV/z+72sYJ
+    //             V4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg4QIDAQABAoIBAB2ckhQNNb/RJKfY
+    //             q+mkNNEI6KPu52llgrBi/4InQ3srt4WdPILsmwC6g4G8jy/cD2++UhhPRYhFgNXn
+    //             7CRa9J17CxcPgdJt09dipJWu6HkxR5TEihpC/rZABCcfjH4VpN0FsrjEuLy8wl6y
+    //             NKl4Zt4uBv8DVGz1fFYxJPtQKSE5YBSbvMD1thhViKOSyYp/pQfu00oz7/XK6iDE
+    //             oHAhcdTBcBl9YW2WaXCnuX02FQkO5h8kjJbQd6pW4EfLLUxKjwcxcJ61DswcAaPw
+    //             PN4+bgiwMak8H3IFrZVP24qs4ZOT3Yh7dl75OZXw7XcuBxsR/eCDlIe5VSSS+MId
+    //             JCc42uECgYEA8jbvO07ESaVYvdij21knF+5Tdjg5rG2q0qsocWlxsE+8IkjzRAgF
+    //             oovXqwoyDkhFJ/1N/PEnBqiQngbUhRSst49ICCQVv+fzRX2WjUNg4k2FtLO0jwgL
+    //             Z+E6grMkMkv7VDIxyWlY5rYUC1yw6USFjgyMGQaWps8o4+JLsGJd9PsCgYEA4rER
+    //             ecoYZndLRGmqMtmGZATDyNh6jGXzGF4XgHahnbhqgw3+7aTDXpA9W1TdGeBI4cQ9
+    //             HQMjroJ+X/yx2JWysimnFxMXuU4eXZo3vMuebXB3lRe2QcloO1HobeSdUCosJ3qa
+    //             Ks+f3UtN9Q8ZiPb5P0tA/fIbe6cwwQTQ1FLbQtMCgYEA0DpD3lOv0bRRHxygeVEi
+    //             l6Muo0Jg6oh5Q5UbNqy0rSNPFJZsc/8FgSEBrqwcLkUZFvDf2+UhbMr7UK+Egkgs
+    //             171Y6o7DF/D7JbF6/USAhOyqVpfrUM9UpuBs4bHKG2dQ0Kg6PvHPGMBNaRsth8x9
+    //             mInW4yjT2OHdQFPqR9+48IMCgYBJXXkEa21+K/mGCJR2pIOj9w7N/5GZwpzsM/dz
+    //             MfGYM8j05SCuFHbOMexJlKuB5l5wAqysqQlxPvZbZlLAf6I3mtdi1mEFLc0SCgkj
+    //             5to9HPr2m5f2rpI3MIkCl8x510w28qzWUh+w5OA0AVEITLXZ0CcWiLZwTGmw7jgP
+    //             n0kq1QKBgQDWDHZaEGCAYPxytix3tTCG3EIly8+fQJGt1lc0vgiiFcS0cW2pBbko
+    //             rVvbu1gSJnmvj0dIObp55wwFBs30xEiMfli+83srOur6nxYUDgn9rqGcufn6hOeH
+    //             ++y1uOHhOenfUTy51Gy1Dlv+maJ3LZ0ZnqPnbBdhZ1RtXFnczVKeFg==
+    //             -----END RSA PRIVATE KEY-----`)
+    // let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
+    // this.message = decode.getDataRow();
     // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
     // this.message = sign.getDataRow();
     // let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
     // this.message = verify.getMsg();
 
+    // let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+    //             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
+    //             +dMBCtoRb/SSY00ujBMsNPFdERxaizxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9
+    //             Wk2nVLpPRtZNjwJgNRB4pYKf+RmLn35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dv
+    //             xqVheO+S6IOLiN6XGbkNZM2VBNtmAhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7Cs
+    //             JE+Go5tb3BZjUYiF8fJ5ZKYCATkK4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S8
+    //             0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
+    //             4QIDAQAB
+    //             -----END PUBLIC KEY-----`);
+    let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
+    // RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+    //               MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
+    //               /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
+    //               -----END PUBLIC KEY-----`);
+    // let eee = await CryptoUtil.convertPubKeyFromStr(pubKey,'ECC256');
+
+    let ecdas = await ECDSA.generateECDSAKey();
+    let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
+    let aesKey = res.getDataRow();
+
+    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+
+    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+
+
     //SM2
-    // let sm2 = await SM2.generateSM2Key();
-    // this.message = sm2.getDataRow().publicKey;
+    let sm2 = await SM2.generateSM2Key();
+    this.message = sm2.getDataRow().publicKey;
     // let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
     // this.message = encode.getDataRow();
     // let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
@@ -508,8 +628,10 @@ struct Index {
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           // DownloadUtil({})
-
-          Button("默认toast").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+          Button("发送post请求").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+            this.sendRequest();
+          })
+          Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
             ToastUtil.showToast('duration:2000,bottom:10vp');
             this.testCrypto();
           })
