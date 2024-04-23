@@ -1446,8 +1446,10 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 前言
 
->efAxios封装需要大家共建和提出建议与需求,本版本为第一版本,暂时封装简单,后续逐渐完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见   
-> 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue   
+> efAxios封装需要大家共建和提出建议与需求,本版本为第一版本,暂时封装简单,后续逐渐完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见
+
+> 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
+
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
 #### 1.efAxiosParams类参数详解
