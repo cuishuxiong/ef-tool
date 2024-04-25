@@ -16,7 +16,7 @@ export { StrUtil } from './src/main/ets/core/util/StrUtil';
 
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
 
-export { JSONUtil } from './src/main/ets/core/util/JSONUtil';
+export { JSONUtil } from './src/main/ets/core/json/JSONUtil';
 
 export { RegexConst } from './src/main/ets/core/const/RegexConst';
 
@@ -53,6 +53,8 @@ export { SHA } from './src/main/ets/core/crypto/encryption/SHA';
 export { JSONObject } from './src/main/ets/core/json/JSONObject';
 
 export { JSONArray } from './src/main/ets/core/json/JSONArray';
+
+export { JSONArrayList } from './src/main/ets/core/json/JSONArrayList';
 
 export { JSONValue } from './src/main/ets/core/json/JSONValue';
 

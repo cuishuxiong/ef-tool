@@ -17,6 +17,7 @@ import {
   SM3,
   MD5,
   SHA,
+  JSONArray,
   LoadingUtil,
   TipsUtil,
   ConfirmUtil,
@@ -71,9 +72,9 @@ class Person {
   birth: Date;
   sex: boolean;
   user: User;
-  list: Array<User>;
+  list?: Array<User>;
 
-  constructor(name: string, age: number, sex: boolean, birth: Date, user: User, list: Array<User>) {
+  constructor(name: string, age: number, sex: boolean, birth: Date, user: User, list?: Array<User>) {
     this.birth = birth;
     this.name = name;
     this.age = age;
@@ -445,22 +446,22 @@ struct Index {
     //             0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
     //             4QIDAQAB
     //             -----END PUBLIC KEY-----`);
-    let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
+    // let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
     // RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
     //               MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
     //               /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
     //               -----END PUBLIC KEY-----`);
     // let eee = await CryptoUtil.convertPubKeyFromStr(pubKey,'ECC256');
 
-    let ecdas = await ECDSA.generateECDSAKey();
-    let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
-    let aesKey = res.getDataRow();
+    // let ecdas = await ECDSA.generateECDSAKey();
+    // let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
+    // let aesKey = res.getDataRow();
 
-    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
-    this.message = encode.getDataRow();
+    // let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    // this.message = encode.getDataRow();
 
-    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
-    this.message = decode.getDataRow();
+    // let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    // this.message = decode.getDataRow();
 
 
     //SM2
@@ -488,23 +489,38 @@ struct Index {
 
   testJSONObject(): void {
 
-    let jsonObj = new JSONObject();
-    jsonObj.set("id", "100010");
-    jsonObj.set("age", 27);
-    jsonObj.set("sex", true);
-    jsonObj.set("birth", new Date());
-    let user = new JSONObject();
-    user.set("uid", "121212");
-    user.set("uName", "测试嵌套对象");
-    jsonObj.set("user", user);
-    jsonObj.set("person", new User('objId', 'objName'));
-    jsonObj.set("name", "test字符串");
 
-    let st = jsonObj.toString();
+    let a = JSONArray
 
-    this.message = st;
+    // let jsonObj = new JSONObject();
+    // jsonObj.set("id", "100010");
+    // jsonObj.set("age", 27);
+    // jsonObj.set("sex", true);
+    // jsonObj.set("birth", new Date());
+    // let user = new JSONObject();
+    // user.set("uid", "121212");
+    // user.set("uName", "测试嵌套对象");
+    // jsonObj.set("user", user);
+    // jsonObj.set("person", new User('objId', 'objName'));
+    // jsonObj.set("name", "test字符串");
+    //
+    // let st = jsonObj.toString();
+    //
+    // this.message = st;
+    //
+    // Logger.debug('1111', '111');
 
-    Logger.debug('1111', '111');
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
+    let j = JSONObject.bean2JSONObject<Person>(person);
+
+    let str = j.toString();
+
+    this.message = str;
+
 
   }
 

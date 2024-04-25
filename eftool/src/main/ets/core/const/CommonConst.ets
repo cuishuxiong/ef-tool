@@ -5,9 +5,9 @@
  */
 export class CommonConst {
   /**
-   * 单引号
+   * 引号
    */
-  static readonly quot: string = "'";
+  static readonly quot: string = "\"";
   /**
    * 大于
    */

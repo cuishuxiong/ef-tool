@@ -4,7 +4,7 @@
  * @TODO JSONUtil   各种json转换工具类
  */
 import { DateConst } from '../const/DateConst';
-import { DateUtil } from './DateUtil'
+import { DateUtil } from '../util/DateUtil'
 
 export class JSONUtil {
   /**
