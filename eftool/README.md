@@ -1520,10 +1520,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     //参数说明
-    post<F, E>(url: string, query: Record<string, Object>): Promise<E>
+    async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
     //F 为请求入参对象,具体参照示例中的写法
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    //headers提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
 ```
 
@@ -1568,6 +1569,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
       'pwd': '123456'
+    }, { 
+      'testAddHeader': '1212121212'   //此处表示当前请求会额外将testAddHeader添加到请求头中
     });
     //登录成功
     if (login.getSuccess()) {

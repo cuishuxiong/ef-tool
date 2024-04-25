@@ -134,12 +134,14 @@ struct Index {
   }
 
   async sendRequest() {
-    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     //模拟登录
     const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
       'pwd': '123456'
+    }, {
+      'csxTest': '1212121212'
     });
     //登录成功
     if (login.getSuccess()) {

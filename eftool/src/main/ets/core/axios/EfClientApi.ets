@@ -3,18 +3,29 @@
  * @DateTime 2024/4/19 08:00:04
  * @TODO EfApi  axios封装的请求工具类
  */
-import { AxiosResponse } from '@ohos/axios';
+import { AxiosHeaders, AxiosResponse } from '@ohos/axios';
 import { efAxios } from './AxiosUtil';
-
 class EfClientApi {
   /**
    * post请求
    * @param url 请求url
-   * @param query  请求参数
+   * @param query 请求参数
+   * @param headers 请求参数
+   * @returns
    * @returns 响应结果
    */
-  async post<F, E>(url: string, query: Record<string, Object>): Promise<E> {
-    return await efAxios.post<E, AxiosResponse<E>, F>(url, query as F).then((response: AxiosResponse<E>) => {
+  async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
+    return await efAxios.post<E, AxiosResponse<E>, F>(url, query as F, {
+      headers: addHead
+    }).then((response: AxiosResponse<E>) => {
       return response.data
     });
   }

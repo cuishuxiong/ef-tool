@@ -11,6 +11,7 @@
 ### 🐞功能优化
 
 * efClientApi支持get请求的params方式
+* efClientApi支持post请求更改请求头参数[issuesI9JGTC](https://gitee.com/yunkss/ef-tool/issues/I9JGTC)
 
 ## [v1.1.8] 2024-04
 
