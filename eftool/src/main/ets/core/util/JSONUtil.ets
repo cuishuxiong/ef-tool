@@ -92,6 +92,8 @@ export class JSONUtil {
     let result: Record<string, Object> = {};
     let json: Record<string, Object> = JSON.parse(jsonStr);
     for (let key of Object.entries(json)) {
+
+
       let value = key[1];
       if (Array.isArray(value)) {
         result[key[0]] = parseValue(value) as [];

@@ -50,6 +50,12 @@ export { ECDSA } from './src/main/ets/core/crypto/encryption/ECDSA';
 
 export { SHA } from './src/main/ets/core/crypto/encryption/SHA';
 
+export { JSONObject } from './src/main/ets/core/json/JSONObject';
+
+export { JSONArray } from './src/main/ets/core/json/JSONArray';
+
+export { JSONValue } from './src/main/ets/core/json/JSONValue';
+
 export { MD5 } from './src/main/ets/core/crypto/encryption/MD5';
 
 export { ECDH } from './src/main/ets/core/crypto/keyAgree/ECDH';

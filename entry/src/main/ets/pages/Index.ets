@@ -1,27 +1,16 @@
 import {
-  CacheUtil,
   OutDTO,
   Logger,
-  IdCardUtil,
   ToastUtil,
   ActionUtil,
   DialogUtil,
-  ArrayUtil,
-  ObjectUtil,
-  PhoneUtil,
-  StrUtil,
-  DateUtil,
-  CharUtil,
-  RegUtil,
-  RegexConst,
-  RandomUtil,
-  IdUtil,
   AES,
   SM4,
   RSA,
   SM2,
   DES,
   ECDSA,
+  JSONObject,
   ECDH,
   CryptoUtil,
   X25519,
@@ -35,7 +24,6 @@ import {
   SelectUtil,
   JSONUtil,
   ExceptionUtil,
-// DownloadUtil,
   Cascade,
   DateConst,
   AuthUtil,
@@ -46,12 +34,12 @@ import {
   efAxiosParams,
   efClientApi
 } from '@yunkss/eftool'
-import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
-import { AxiosResponse } from '@ohos/axios';
-import { cryptoFramework } from '@kit.CryptoArchitectureKit';
-import { StrAndUintUtil } from '@yunkss/eftool/src/main/ets/core/util/StrAndUintUtil';
+
+class Message {
+  msg: string = '';
+}
 
 class User {
   id?: string;
@@ -498,8 +486,30 @@ struct Index {
 
   }
 
+  testJSONObject(): void {
+
+    let jsonObj = new JSONObject();
+    jsonObj.set("id", "100010");
+    jsonObj.set("age", 27);
+    jsonObj.set("sex", true);
+    jsonObj.set("birth", new Date());
+    let user = new JSONObject();
+    user.set("uid", "121212");
+    user.set("uName", "测试嵌套对象");
+    jsonObj.set("user", user);
+    jsonObj.set("person", new User('objId', 'objName'));
+    jsonObj.set("name", "test字符串");
+
+    let st = jsonObj.toString();
+
+    this.message = st;
+
+    Logger.debug('1111', '111');
+
+  }
+
   test(): void {
-    this.message = this.bottomRectHeight;
+    // this.message = this.bottomRectHeight;
     //存入字符串
     // CacheUtil.save<string>("str", "测试存入字符串");
     //存入对象T
@@ -507,6 +517,7 @@ struct Index {
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
 
     let str1 = JSONUtil.toJSONString(person, DateConst.YMD_HLINE_HMS);
 
@@ -631,7 +642,13 @@ struct Index {
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           // DownloadUtil({})
-          Button("发送post请求").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+          Button("测试JSONObject").margin({ bottom: '10vp' }).onClick(() => {
+            this.testJSONObject();
+          })
+          Button("测试JSONUtil").margin({ bottom: '10vp' }).onClick(() => {
+            this.test();
+          })
+          Button("发送post请求").margin({ bottom: '10vp' }).onClick(() => {
             this.sendRequest();
           })
           Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
