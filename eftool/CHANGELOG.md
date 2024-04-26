@@ -13,6 +13,7 @@
 * efClientApi支持get请求的params方式
 * efClientApi支持post请求更改请求头参数[issuesI9JGTC](https://gitee.com/yunkss/ef-tool/issues/I9JGTC)
 * 重构JSONUtil
+* 优化SM2转换密钥方法,新增将服务器端公私钥转换为uint8Array
 
 ## [v1.1.8] 2024-04
 

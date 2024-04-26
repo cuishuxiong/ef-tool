@@ -68,8 +68,12 @@ export class AxiosUtil {
       sm3Params = JSON.stringify(config.data);
       //每次请求都重新生成sm4的秘钥
       let sm4Key = await SM4.generateSM4Key();
-      //使用SM2的公钥将SM4的密钥加密,并存放header中
-      config.headers.ef_random_key = (await SM2.encode(sm4Key.getDataRow(), efAxiosParams.sm2PubKey)).getDataRow();
+      //每次请求都生成iv
+      let sm4IV = RandomUtil.generateIV();
+      //需要将服务器端的公钥转换成前端所需的公钥
+      let finalSM2 = await SM2.convertSM2PubKey(efAxiosParams.sm2PubKey);
+      //将SM4的密钥用SM2加密存入header
+      config.headers.ef_random_key = (await SM2.encode(sm4IV.getDataRow() + sm4Key.getDataRow(), finalSM2.getDataRow())).getDataRow();
       //整体加密(上传下载不加密请求头Req-Type为uploadOrDownload的请求)
       if (efAxiosParams.isAllEncrypt && config.headers["Req-Type"] != "uploadOrDownload") {
         //判断如果有不加解密的接口则跳过加密
@@ -79,6 +83,7 @@ export class AxiosUtil {
           config.data = await AxiosUtil.encryptRequestData(
             config.data,
             sm4Key.getDataRow(),
+            sm4IV.getDataRow(),
             config.method
           );
           let obj: Record<string, Object> = {};
@@ -91,7 +96,7 @@ export class AxiosUtil {
       //关键字加密
       if (efAxiosParams.isPartEncrypt) {
         //给部分敏感字段加密
-        config.data = AxiosUtil.encryptPartParam(config.data, sm4Key.getDataRow());
+        config.data = AxiosUtil.encryptPartParam(config.data, sm4Key.getDataRow(), sm4IV.getDataRow());
       }
       // 注意：config.method 的判断值必须是小写的post/get/put
       if (sm3Params.length > 32) {
@@ -189,10 +194,11 @@ export class AxiosUtil {
    * 加密全部请求参数
    * @param data  待加密的数据
    * @param sm4key  加密所需的SM4的密钥
+   * @param sm4Iv   加密所需的SM4的偏移量
    * @param type  请求类型
    * @returns 加密后的对象
    */
-  private static async encryptRequestData(data: Record<string, Object>, sm4key: string, type: string): Promise<Record<string, Object>> {
+  private static async encryptRequestData(data: Record<string, Object>, sm4key: string, sm4Iv: string, type: string): Promise<Record<string, Object>> {
     let params = '';
     let obj: Record<string, Object>;
     if (!data) {
@@ -201,7 +207,7 @@ export class AxiosUtil {
       };
       params = JSON.stringify(data);
       obj = {
-        'ef_request_params': (await SM4.encodeECB(params, sm4key)).getDataRow(),
+        'ef_request_params': (await SM4.encodeCBC(params, sm4key, sm4Iv)).getDataRow(),
         'ef_fingerprint': (await SM3.digest(params)).getDataRow()
       };
     } else {
@@ -213,7 +219,7 @@ export class AxiosUtil {
         params = JSON.stringify(data);
       }
       obj = {
-        'ef_request_params': (await SM4.encodeECB(params, sm4key)).getDataRow(),
+        'ef_request_params': (await SM4.encodeCBC(params, sm4key,sm4Iv)).getDataRow(),
         'ef_fingerprint': (await SM3.digest(params)).getDataRow()
       };
     }
@@ -224,17 +230,18 @@ export class AxiosUtil {
    * 关键字加密
    * @param obj  待加密的数据
    * @param sm4Key 加密所需的SM4的密钥
+   * @param sm4Iv   加密所需的SM4的偏移量
    * @returns 加密后的对象
    */
-  private static async encryptPartParam(obj: Record<string, Object>, sm4Key: string) {
+  private static async encryptPartParam(obj: Record<string, Object>, sm4Key: string, sm4Iv: string) {
     for (let inObj of Object.keys(obj).entries()) {
       if (typeof inObj[1] === "object") {
-        AxiosUtil.encryptPartParam(inObj[1], sm4Key);
+        AxiosUtil.encryptPartParam(inObj[1], sm4Key, sm4Iv);
       } else {
         let objKeys = Object.keys(obj);
         for (let item of objKeys.entries()) {
           if (efAxiosParams.keyWordsList.indexOf(item[1]) > -1) {
-            obj[item[0]] = (await SM4.encodeECB(item[1], sm4Key)).getDataRow();
+            obj[item[0]] = (await SM4.encodeCBC(item[1], sm4Key, sm4Iv)).getDataRow();
           }
         }
         return;

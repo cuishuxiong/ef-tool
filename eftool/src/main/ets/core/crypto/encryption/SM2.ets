@@ -2,6 +2,7 @@ import { OutDTO } from '../../base/OutDTO';
 import { CryptoKey, CryptoUtil } from '../../util/CryptoUtil';
 import { cryptoFramework } from '@kit.CryptoArchitectureKit';
 import { ToastUtil } from '../../../ui/prompt/ToastUtil';
+import { StrAndUintUtil } from '../../util/StrAndUintUtil';
 
 /**
  * @Author csx
@@ -57,43 +58,64 @@ export class SM2 {
     return CryptoUtil.verify(signStr, verifyStr, pubKey, 'SM2_256', 'SM2_256|SM3');
   }
 
-  static async convertECCSM2Key(pubKey: string) {
+  /**
+   * 将服务器端生成的16进制的长度为130位的04开头的SM2公钥转换为前端所需的公钥字符串
+   * @param pubKey   04开头的16进制的130位的公钥字符串
+   * @returns 转换后的公钥字符串
+   */
+  static async convertSM2PubKey(pubKey: string): Promise<OutDTO<string>> {
     if (pubKey.length != 130) {
       ToastUtil.showToast("SM2公钥长度不正确~");
-      return;
+      return OutDTO.Error('服务器端SM2公钥长度不正确~');
     }
-
-    let px = pubKey.substring(2,68);
-    let py = pubKey.substring(68);
-
-
+    //截取x参数
+    let px = pubKey.substring(2, 66);
+    //截取y参数
+    let py = pubKey.substring(66);
+    //转16进制放入对应的位置 04+x+y
+    let pk: cryptoFramework.Point = {
+      x: BigInt("0x" + px),
+      y: BigInt("0x" + py)
+    }
+    //构建SM2公钥参数对象
+    let keyPair: cryptoFramework.ECCPubKeySpec = {
+      params: cryptoFramework.ECCKeyUtil.genECCCommonParamsSpec('NID_sm2'),
+      pk: pk,
+      algName: 'SM2',
+      specType: cryptoFramework.AsyKeySpecType.PUBLIC_KEY_SPEC
+    }
+    //创建密钥生成器
+    let keyPairGenerator = await cryptoFramework.createAsyKeyGeneratorBySpec(keyPair);
+    //生成uint8Array格式密钥
+    let unit8PubKey = await keyPairGenerator.generatePubKey();
+    //转换成鸿蒙所需公钥字符串
+    return OutDTO.OKByDataRow<string>('转换服务器端公钥成功~', StrAndUintUtil.unitArray2String(unit8PubKey.getEncoded()
+      .data));
   }
 
   /**
-   * 获取SM2公共加密参数
-   * @returns
+   * 将服务器端生成的16进制的长度为64位的SM2私钥转换为前端所需的私钥字符串
+   * @param priKey   16进制的64位的私钥字符串
+   * @returns 转换后的私钥字符串
    */
-  static genSM2CommonSpec(): cryptoFramework.ECCCommonParamsSpec {
-    let fieldFp: cryptoFramework.ECFieldFp = {
-      fieldType: "Fp",
-      p: BigInt("0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF")
+  static async convertSM2PriKey(priKey: string): Promise<OutDTO<string>> {
+    if (priKey.length != 64) {
+      ToastUtil.showToast("SM2私钥长度不正确~");
+      return OutDTO.Error('服务器端SM2私钥长度不正确~');
     }
-
-    let G: cryptoFramework.Point = {
-      x: BigInt("0x32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7"),
-      y: BigInt("0xBC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0")
+    //构建SM2私钥参数对象
+    let keyPair: cryptoFramework.ECCPriKeySpec = {
+      params: cryptoFramework.ECCKeyUtil.genECCCommonParamsSpec('NID_sm2'),
+      algName: 'SM2',
+      sk: BigInt('0x' + priKey),
+      specType: cryptoFramework.AsyKeySpecType.PRIVATE_KEY_SPEC
     }
-
-    let SM2CommonSpec: cryptoFramework.ECCCommonParamsSpec = {
-      algName: "ECC",
-      specType: cryptoFramework.AsyKeySpecType.COMMON_PARAMS_SPEC,
-      field: fieldFp,
-      a: BigInt("0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC"),
-      b: BigInt("0x28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93"),
-      g: G,
-      n: BigInt("0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123"),
-      h: 1
-    }
-    return SM2CommonSpec;
+    //创建密钥生成器
+    let keyPairGenerator = await cryptoFramework.createAsyKeyGeneratorBySpec(keyPair);
+    //生成uint8Array格式密钥
+    let unit8PriKey = await keyPairGenerator.generatePriKey();
+    //转换成鸿蒙所需私钥字符串
+    return OutDTO.OKByDataRow<string>('转换服务器端私钥成功~', StrAndUintUtil.unitArray2String(unit8PriKey.getEncoded()
+      .data));
   }
 }

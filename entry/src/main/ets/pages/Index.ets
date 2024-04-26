@@ -33,7 +33,8 @@ import {
   LocationUtil,
   efAxios,
   efAxiosParams,
-  efClientApi
+  efClientApi,
+  RandomUtil
 } from '@yunkss/eftool'
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
@@ -123,8 +124,10 @@ struct Index {
   }
 
   async sendRequest() {
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.isAllEncrypt = true;
+    efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //模拟登录
     const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
@@ -137,30 +140,30 @@ struct Index {
       //登录成功将token赋值，后续需要
       efAxiosParams.tokenValue = login.getDataRow().token;
       //模拟测试post请求
-      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
-        'nickName': 'post请求参数',
-        'name': '测试入参'
-      });
-      if (post.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
-      }
-      //模拟测试get请求
-      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
-      if (get.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
-      }
-      //模拟测试delete请求
-      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
-      if (del.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
-      }
-      //模拟测试put请求
-      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
-        'id': '11111'
-      });
-      if (put.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
-      }
+      // const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
+      //   'nickName': 'post请求参数',
+      //   'name': '测试入参'
+      // });
+      // if (post.getSuccess()) {
+      //   ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
+      // }
+      // //模拟测试get请求
+      // const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      // if (get.getSuccess()) {
+      //   ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+      // }
+      // //模拟测试delete请求
+      // const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
+      // if (del.getSuccess()) {
+      //   ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      // }
+      // //模拟测试put请求
+      // const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
+      //   'id': '11111'
+      // });
+      // if (put.getSuccess()) {
+      //   ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+      // }
     } else {
       //登录失败
       ToastUtil.showToast(login.getMsg());
@@ -281,7 +284,7 @@ struct Index {
   async testCrypto() {
 
     //获取iv
-    // let iv = await RandomUtil.generateIV();
+    let iv = await RandomUtil.generateIV();
 
     //ECDSA
     // let ecdsa = await ECDSA.generateECDSAKey();
@@ -348,16 +351,16 @@ struct Index {
     // this.message = decode.getDataRow();
 
     //SM4
-    // let sm4 = await SM4.generateSM4Key();
-    // this.message = sm4.getDataRow();
+    let sm4 = await SM4.generateSM4Key();
+    this.message = sm4.getDataRow();
     // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
     // this.message = encodeECB.getDataRow();
     // let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
     // this.message = decodeECB.getDataRow();
-    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
-    // this.message = encodeCBC.getDataRow();
-    // let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
-    // this.message = decodeCBC.getDataRow();
+    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
 
     //3DES
     // let des = await DES.generate3DESKey();
@@ -487,8 +490,7 @@ struct Index {
 
   }
 
-  testJSONObject(): void {
-
+  async testJSONObject(): Promise<void> {
 
 
     // let jsonObj = new JSONObject();
@@ -509,11 +511,21 @@ struct Index {
     //
     // Logger.debug('1111', '111');
 
-    let pk = '04D03640597C482DC4684A753BEB6CD18669AF5B77EF90C2CA6EDD25D68A8F54916E445307B2EDD05789373CD1B96DE9F79367F4E9A1005B3845B971EA18007090';
-    let o1 = 'D03640597C482DC4684A753BEB6CD18669AF5B77EF90C2CA6EDD25D68A8F5491';
-    let o2 = '6E445307B2EDD05789373CD1B96DE9F79367F4E9A1005B3845B971EA18007090';
+    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
 
-    this.message = pk.length+"---"+o1.length+"------"+o2.length;
+    let s = await SM2.convertSM2PubKey(pk);
+
+    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+
+    let ddd = code.getDataRow();
+
+    let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
+
+    let dc = await SM2.convertSM2PriKey(pik);
+
+    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+
+    this.message = aaaa.getDataRow();
 
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
