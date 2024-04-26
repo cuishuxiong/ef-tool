@@ -490,7 +490,6 @@ struct Index {
   testJSONObject(): void {
 
 
-    let a = JSONArray
 
     // let jsonObj = new JSONObject();
     // jsonObj.set("id", "100010");
@@ -510,12 +509,18 @@ struct Index {
     //
     // Logger.debug('1111', '111');
 
+    let pk = '04D03640597C482DC4684A753BEB6CD18669AF5B77EF90C2CA6EDD25D68A8F54916E445307B2EDD05789373CD1B96DE9F79367F4E9A1005B3845B971EA18007090';
+    let o1 = 'D03640597C482DC4684A753BEB6CD18669AF5B77EF90C2CA6EDD25D68A8F5491';
+    let o2 = '6E445307B2EDD05789373CD1B96DE9F79367F4E9A1005B3845B971EA18007090';
+
+    this.message = pk.length+"---"+o1.length+"------"+o2.length;
+
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
 
-    let j = JSONObject.bean2JSONObject<Person>(person);
+    let j = JSONObject.from<Person>(person);
 
     let str = j.toString();
 
