@@ -1747,7 +1747,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * get请求 async/await 方式
 
 ```
-    //参数说明
+    //参数说明 格式为  getXXXX/id/name/xxxx
     async get<E>(url: string): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
@@ -1755,7 +1755,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 
 ```
-    //
+    //参数说明   参数为json格式
     async getByParams<E>(url: string, params: Record<string, Object>): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
     //params表示get请求的入参妇科key:value格式
