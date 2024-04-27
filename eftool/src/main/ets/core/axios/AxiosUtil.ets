@@ -87,7 +87,7 @@ export class AxiosUtil {
             config.method
           );
           let obj: Record<string, Object> = {};
-          obj.sm4keyNum = sm4Key.getDataRow();
+          obj.sm4keyNum = sm4IV.getDataRow() + sm4Key.getDataRow();
           obj.ef_request_params = config.data.ef_request_params;
           //response解密时需要
           AxiosUtil.sm4KeyList.add(obj);
@@ -169,7 +169,7 @@ export class AxiosUtil {
       if (efAxiosParams.isAllEncrypt) {
         //判断如果有不加解密的接口则跳过加密
         if (efAxiosParams.ignoreEncryptList.indexOf(lastUrl) < 0) {
-          // response.data = await AxiosUtil.decryptResponseData(response.data);
+          response.data = await AxiosUtil.decryptResponseData(response.data);
         }
       }
       //关键字加密
@@ -186,9 +186,38 @@ export class AxiosUtil {
    * @param data
    * @returns
    */
-  // private static async decryptResponseData(data: Record<string, Object>): Promise<Record<string, Object>> {
-  //
-  // }
+  private static async decryptResponseData(data: Object): Promise<Record<string, Object>> {
+    //最终返回结果
+    let result: Record<string, Object> = {};
+    //获取SM4的key
+    let sm4: string = '';
+    let convertData: Record<string, Object> = JSON.parse(JSON.stringify(data));
+    //判断data是不是json字符串
+    //获取解密密钥
+    if (convertData.ef_request_params) {
+      //循环获取数据
+      AxiosUtil.sm4KeyList.forEach(item => {
+        if (item["ef_request_params"] === convertData.ef_request_params) {
+          sm4 = item["sm4keyNum"] as string;
+          //从结果中移除
+          AxiosUtil.sm4KeyList.remove(item);
+        }
+      })
+      //获取到了密钥
+      if (sm4) {
+        if (convertData.data) {
+          let key = sm4.substring(32);
+          let iv = sm4.substring(0, 32);
+          //解密
+          let r = await SM4.decodeCBC(convertData.data as string, key, iv);
+          result = JSON.parse(r.getDataRow());
+        }
+      }
+    } else {
+      result = convertData;
+    }
+    return result;
+  }
 
   /**
    * 加密全部请求参数
@@ -219,7 +248,7 @@ export class AxiosUtil {
         params = JSON.stringify(data);
       }
       obj = {
-        'ef_request_params': (await SM4.encodeCBC(params, sm4key,sm4Iv)).getDataRow(),
+        'ef_request_params': (await SM4.encodeCBC(params, sm4key, sm4Iv)).getDataRow(),
         'ef_fingerprint': (await SM3.digest(params)).getDataRow()
       };
     }
