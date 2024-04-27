@@ -7,13 +7,14 @@
 * 封装axios的整体传输加解密
 * 封装axios的关键字传输加解密
 * 封装统一的上传下载方法
+* 封装JSON功能
 
 ### 🐞功能优化
 
 * efClientApi支持get请求的params方式
 * efClientApi支持post请求更改请求头参数[issuesI9JGTC](https://gitee.com/yunkss/ef-tool/issues/I9JGTC)
-* 重构JSONUtil
 * 优化SM2转换密钥方法,新增将服务器端公私钥转换为uint8Array
+* 调整API文档结构
 
 ## [v1.1.8] 2024-04
 
