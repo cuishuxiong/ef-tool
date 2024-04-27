@@ -163,7 +163,7 @@ export class AxiosUtil {
     if (response.status === 200) {
       //上传下载将数据转换为blob格式
       if (response.config.headers["Req-Type"] == "uploadOrDownload") {
-        //上传下载将数据转换为blob格式 预计1.1.9版本完善
+        //上传下载将数据转换为blob格式 预计1.1.10版本完善
       }
       //整体加密
       if (efAxiosParams.isAllEncrypt) {
@@ -174,12 +174,28 @@ export class AxiosUtil {
       }
       //关键字加密
       if (efAxiosParams.isPartEncrypt) {
-        //关键字加密 预计1.1.9版本完善
+        //关键字加密
+        response.data = await AxiosUtil.decryptPartResponseData(response.data);
       }
       //将响应数据转换
       response.data = AxiosUtil.convertResponseDTO(response);
+    } else {
+      ToastUtil.showToast('接口返回错误~');
     }
   }
+
+  /**
+   * 关键字解密全部响应结果
+   * @param data
+   * @returns
+   */
+  private static async decryptPartResponseData(data: Object): Promise<Record<string, Object>> {
+    //最终返回结果
+    let result: Record<string, Object> = {};
+
+    return result;
+  }
+
 
   /**
    * 解密全部响应结果
@@ -196,7 +212,7 @@ export class AxiosUtil {
     //获取解密密钥
     if (convertData.ef_request_params) {
       //循环获取数据
-      AxiosUtil.sm4KeyList.forEach(item => {
+      AxiosUtil.sm4KeyList.forEach((item: Record<string, Object>) => {
         if (item["ef_request_params"] === convertData.ef_request_params) {
           sm4 = item["sm4keyNum"] as string;
           //从结果中移除

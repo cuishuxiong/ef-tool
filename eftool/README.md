@@ -1212,6 +1212,28 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN
+
+```
+    //C1C3C2格式的公钥字符串
+    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    //转换后的ASN.1格式的字符串
+    let s = await SM2.convertSM2PubKey(pk);
+    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+    let ddd = code.getDataRow();
+```
+
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN
+
+```
+    //C1C3C2格式的私钥字符串
+    let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
+    //转换后的ASN.1格式的字符串
+    let dc = await SM2.convertSM2PriKey(pik);
+    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+    this.message = aaaa.getDataRow();
+```
+
 #### 5.SM3的方法【返回结果均为OutDTO对象】
 
 * digest SM3摘要
@@ -1730,6 +1752,15 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+```
+
+```
+    //
+    async getByParams<E>(url: string, params: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //params表示get请求的入参妇科key:value格式
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    
 ```
 
 * delete请求 async/await 方式

@@ -5,6 +5,7 @@
  */
 import { AxiosHeaders, AxiosResponse } from '@ohos/axios';
 import { efAxios } from './AxiosUtil';
+
 class EfClientApi {
   /**
    * post请求
@@ -79,14 +80,14 @@ class EfClientApi {
   }
 
   /**
-   * 统一的上传请求【预计1.1.9版本可用】
+   * 统一的上传请求【预计1.1.10版本可用】
    */
   upload() {
 
   }
 
   /**
-   * 统一的下载请求【预计1.1.9版本可用】
+   * 统一的下载请求【预计1.1.10版本可用】
    */
   download() {
 
