@@ -5,19 +5,11 @@
  */
 export namespace CacheUtil {
 
-/**
- * 私有缓存对象
- */
-  const cache = createConst();
-
   /**
-   * 创建一个变量
-   * @param value
-   * @returns
+   * 私有缓存对象
    */
-  function createConst<T>(value?: T): { readonly value: T } {
-    return { value };
-  }
+  const cache: Record<string, Object> = {};
+
 
   /**
    * 存值
@@ -25,7 +17,7 @@ export namespace CacheUtil {
    * @param value  存入数据
    */
   export function save<T>(key: string, value: T): void {
-    cache[key] = value;
+    cache[key] = value as Object;
   }
 
   /**
@@ -33,7 +25,8 @@ export namespace CacheUtil {
    * @param key   存入的key
    * @returns
    */
-  export function get<T>(key: string): T | undefined {
-    return cache[key];
+  export function get<T>(key: string): T {
+    return cache[key] as T;
   }
+
 }

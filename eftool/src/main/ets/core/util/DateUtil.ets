@@ -5,7 +5,6 @@
  */
 
 export class DateUtil {
-
   /**
    *将输入的日期字符串转换为Date日期类型
    * @param dateString
@@ -29,11 +28,11 @@ export class DateUtil {
       date.setSeconds(0);
     }
     const year = date.getFullYear();
-    const month = this.padZero(date.getMonth() + 1);
-    const day = this.padZero(date.getDate());
-    const hours = this.padZero(date.getHours());
-    const minutes = this.padZero(date.getMinutes());
-    const seconds = this.padZero(date.getSeconds());
+    const month = DateUtil.padZero(date.getMonth() + 1);
+    const day = DateUtil.padZero(date.getDate());
+    const hours = DateUtil.padZero(date.getHours());
+    const minutes = DateUtil.padZero(date.getMinutes());
+    const seconds = DateUtil.padZero(date.getSeconds());
     let formattedDate = format.replace("yyyy", year.toString());
     formattedDate = formattedDate.replace("MM", month);
     formattedDate = formattedDate.replace("dd", day);
@@ -51,11 +50,11 @@ export class DateUtil {
    */
   static format(date: Date, formatString: string): string {
     const year = date.getFullYear();
-    const month = this.padZero(date.getMonth() + 1);
-    const day = this.padZero(date.getDate());
-    const hours = this.padZero(date.getHours());
-    const minutes = this.padZero(date.getMinutes());
-    const seconds = this.padZero(date.getSeconds());
+    const month = DateUtil.padZero(date.getMonth() + 1);
+    const day = DateUtil.padZero(date.getDate());
+    const hours = DateUtil.padZero(date.getHours());
+    const minutes = DateUtil.padZero(date.getMinutes());
+    const seconds = DateUtil.padZero(date.getSeconds());
 
     let formattedDate = formatString.replace("yyyy", year.toString());
     formattedDate = formattedDate.replace("MM", month);
@@ -98,5 +97,16 @@ export class DateUtil {
 
   private static padZero(num: number): string {
     return num.toString().padStart(2, "0");
+  }
+
+  /**
+   * 判断传入字符串是否是日期字符串
+   * @param value 待验证的字符串
+   * @returns
+   */
+  public static isDate(value: string): boolean {
+    //需要循环常量中的时间格式看看是否符合，符合极为日期类型
+    const dateTimeRegex = /^(?:(?:\d{4}(?:\/|-)\d{1,2}(?:\/|-)\d{1,2})|(?:\d{1,2}:\d{1,2}(:\d{1,2})?))(T\d{1,2}:\d{1,2}:\d{1,2}\.\d{1,3}Z)?$/;
+    return dateTimeRegex.test(value);
   }
 }

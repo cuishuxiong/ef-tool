@@ -1,7 +1,7 @@
 {
   "app": {
     "bundleName": "com.yunkss.csx.tool",
-    "vendor": "example",
+    "vendor": "csx",
     "versionCode": 1000000,
     "versionName": "1.0.0",
     "icon": "$media:app_icon",

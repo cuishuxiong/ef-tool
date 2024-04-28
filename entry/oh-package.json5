@@ -1,12 +1,14 @@
 {
-  "license": "",
-  "devDependencies": {},
-  "author": "",
   "name": "entry",
+  "version": "1.0.0",
   "description": "Please describe the basic information.",
   "main": "",
-  "version": "1.0.0",
+  "author": "",
+  "license": "",
   "dependencies": {
-    "@yunkss/eftool": "file:../eftool"
-  }
+    "@yunkss/eftool": "file:../eftool",
+    "@ohos/axios": "^2.2.0"
+  },
+  "devDependencies": {},
+  "dynamicDependencies": {}
 }

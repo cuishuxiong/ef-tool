@@ -1,15 +1,18 @@
 /**
  * @Author csx
- * @DateTime 2024/2/6 10:02:02
+ * @DateTime 2024/3/26 10:02:02
  * @TODO Cascade  级联选择器
  */
-import { pcaJSON } from '../../core/const/CityConst'
 import { UiConst } from '../../core/const/UiConst'
-import { JSONUtil } from '../../core/util/JSONUtil'
+import { util } from '@kit.ArkTS'
+import { BusinessError } from '@kit.BasicServicesKit';
+import { ToastUtil } from '../prompt/ToastUtil';
+
 /**
  * 下划线样式
  */
-@Extend(Text) function cascadeUnderLine(selected: boolean) {
+@Extend(Text)
+function cascadeUnderLine(selected: boolean) {
   .height(UiConst.VP_3)
   .backgroundColor(selected ? "#1989fa" : "fff")
   .width(UiConst.VP_45)
@@ -20,8 +23,9 @@ import { JSONUtil } from '../../core/util/JSONUtil'
  * 顶部省市区文字样式
  * @param selected
  */
-@Extend(Text) function txtColor(selected: boolean) {
-  .fontSize(UiConst.FONT_14)
+@Extend(Text)
+function txtColor(selected: boolean) {
+  .fontSize(UiConst.FONT_16)
   .fontColor(selected ? "#969799" : "#000")
   .fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
 }
@@ -29,10 +33,9 @@ import { JSONUtil } from '../../core/util/JSONUtil'
 /**
  * 省市区list样式
  */
-@Extend(Text) function cityTxtColor() {
-  .height(UiConst.NUMBER_25)
+@Extend(Text)
+function cityTxtColor() {
   .fontSize(UiConst.FONT_16)
-  .lineHeight(UiConst.NUMBER_25)
   .textAlign(TextAlign.Start)
   .padding({ top: UiConst.NUMBER_3, bottom: UiConst.NUMBER_3 })
   .backgroundColor("#f7f8fa")
@@ -41,7 +44,6 @@ import { JSONUtil } from '../../core/util/JSONUtil'
 
 @Component
 export struct Cascade {
-
   //反会给上一级的数据
   @Link callCity: string
   //是否显示
@@ -68,12 +70,28 @@ export struct Cascade {
    * 初始化城市数据
    */
   private init() {
-    //解析省市区json
-    this.provinceList = JSONUtil.parseArray<City>(JSONUtil.toJSONString(pcaJSON));
-    this.provinceList.forEach(province => {
-      //默认将省数据赋值给当前listview对应的数据
-      this.currentList.push(new City(province.name, province.code));
-    })
+    try {
+      //获取区域数据
+      getContext(this).resourceManager.getRawFileContent("area.json", (error: BusinessError, value: Uint8Array) => {
+        if (error != null) {
+          ToastUtil.showToast(`获取区域数据出错, 错误编码: ${error.code}, 原因: ${error.message}.`);
+        } else {
+          //转码
+          let textCoder = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+          let vStr = textCoder.decodeWithStream(value, { stream: false });
+          //获取数据
+          this.provinceList = JSON.parse(vStr) as Array<City>;
+          this.provinceList.forEach(province => {
+            //默认将省数据赋值给当前listview对应的数据
+            this.currentList.push(new City(province.name, province.code));
+          })
+        }
+      });
+    } catch (error) {
+      let code = (error as BusinessError).code;
+      let message = (error as BusinessError).message;
+      ToastUtil.showToast(`获取区域数据出错, 错误编码: ${code}, 原因: ${message}.`);
+    }
   }
 
   /**
@@ -82,7 +100,7 @@ export struct Cascade {
    * @returns
    */
   private getCityData(prevCode: string): Array<City> {
-    return this.provinceList.find(pro => pro.code == prevCode).children;
+    return (this.provinceList.filter((pro: City) => pro.code == prevCode).pop() as City).children;
   }
 
   /**
@@ -92,10 +110,8 @@ export struct Cascade {
    * @returns
    */
   private getAreaData(prevCode: string, cityCode: string): Array<City> {
-    return this.provinceList.find(pro => pro.code == prevCode)
-      .children
-      .find(city => city.code == cityCode)
-      .children;
+    return ((this.provinceList.filter((pro: City) => pro.code == prevCode)
+      .pop() as City).children.filter((city: City) => city.code == cityCode).pop() as City).children;
   }
 
   /**
@@ -117,7 +133,8 @@ export struct Cascade {
    */
   private getProvinceData(): Array<City> {
     let provList: Array<City> = new Array();
-    pcaJSON.forEach(province => {
+    this.provinceList.forEach(province => {
+      //默认将省数据赋值给当前listview对应的数据
       provList.push(new City(province.name, province.code));
     })
     return provList;
@@ -129,20 +146,24 @@ export struct Cascade {
       Column() {
         Row() {
           Text('请选择地区').fontWeight('bold').fontSize(UiConst.FONT_16)
-          Image($r("app.media.close")).width(UiConst.VP_15).height(UiConst.VP_15).onClick(() => {
-            this.reset()
-          })
+          Image($r("app.media.close"))
+            .width(UiConst.VP_15)
+            .height(UiConst.VP_15)
+            .onClick(() => {
+              this.reset()
+            })
         }
         .width('100%')
         .padding({
           top: UiConst.NUMBER_15,
-          left: UiConst.NUMBER_15,
-          right: UiConst.NUMBER_15,
+          left: UiConst.NUMBER_20,
+          right: UiConst.NUMBER_25,
           bottom: UiConst.NUMBER_10
         })
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.SpaceBetween)
       }
+
       //中部选择区域
       Row() {
         //省市区
@@ -158,6 +179,7 @@ export struct Cascade {
             Text("1").cascadeUnderLine(this.selectIndex == 0)
           }
         }.margin({ right: UiConst.NUMBER_20 })
+
         //市
         if (this.showCity) {
           Column() {
@@ -173,6 +195,7 @@ export struct Cascade {
             }
           }.margin({ right: UiConst.NUMBER_20 })
         }
+        //区
         if (this.showArea) {
           //区域
           Column() {
@@ -190,13 +213,13 @@ export struct Cascade {
         }
       }
       .width("100%")
-      .margin({ top: UiConst.NUMBER_10, left: UiConst.NUMBER_20 })
+      .margin({ top: UiConst.NUMBER_10, left: UiConst.VP_35 })
       .justifyContent(FlexAlign.Start)
       .alignItems(VerticalAlign.Center)
 
       Row() {
         List({ space: UiConst.NUMBER_5, initialIndex: 0 }) {
-          ForEach(this.currentList, (item) => {
+          ForEach(this.currentList, (item: City) => {
             ListItem() {
               Row() {
                 if (this.selectIndex === 0) {
@@ -229,7 +252,8 @@ export struct Cascade {
               .alignItems(VerticalAlign.Center)
               .padding({ right: UiConst.NUMBER_20 })
             }
-            .onClick(event => {
+            .margin({ top: UiConst.NUMBER_5, bottom: UiConst.NUMBER_5 })
+            .onClick(() => {
               //点击赋值选中的数据
               if (this.selectIndex === 0) {
                 this.selectData.provinceName = item.name;
@@ -264,24 +288,27 @@ export struct Cascade {
                 this.reset()
               }
             })
-          }, item => item.code)
+          }, (item: City) => item.code)
         }
         .listDirection(Axis.Vertical) // 排列方向
         .edgeEffect(EdgeEffect.None)
         .width('100%')
-        .height(500)
         .scrollBar(BarState.Auto)
+        .scrollBarWidth(UiConst.NUMBER_3)
+        .scrollBarColor(UiConst.PRIMARY_COLOR)
+        .padding({ bottom: UiConst.NUMBER_10 })
       }
       .height('100%')
       .width("100%")
       .alignItems(VerticalAlign.Top)
-      .margin({ top: UiConst.NUMBER_5, left: UiConst.NUMBER_20, bottom: UiConst.NUMBER_5 })
+      .padding({ left: UiConst.NUMBER_20 })
     }
-    .type(PanelType.Temporary)
-    .mode(PanelMode.Full)
+    .type(PanelType.CUSTOM)
     .dragBar(false)
-    .fullHeight(700)
+    .height(PanelHeight.WRAP_CONTENT)
+    .customHeight(600)
     .backgroundColor("#f7f8fa")
+    .backgroundMask(UiConst.DIALOG_CANCEL_COLOR)
     .position({ x: 0, y: 0 })
   }
 }
@@ -290,12 +317,12 @@ export struct Cascade {
  * 回调的选中数据
  */
 class cascadeCity {
-  provinceName: string;
-  provinceCode: string;
-  cityName: string;
-  cityCode: string;
-  areaName: string;
-  areaCode: string;
+  provinceName: string = '';
+  provinceCode: string = '';
+  cityName: string = '';
+  cityCode: string = '';
+  areaName: string = '';
+  areaCode: string = '';
 }
 
 /**
@@ -304,9 +331,9 @@ class cascadeCity {
 class City {
   name: string;
   code: string;
-  children: Array<City>;
+  children: Array<City> = new Array<City>();
 
-  constructor(name, code) {
+  constructor(name: string, code: string) {
     this.name = name;
     this.code = code;
   }

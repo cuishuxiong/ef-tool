@@ -3,9 +3,10 @@
  * @DateTime 2023/12/29 20:08
  * @TODO RandomUtil  随机数工具类
  */
+import { OutDTO } from '../base/OutDTO';
+import { StrAndUintUtil } from './StrAndUintUtil';
+
 export class RandomUtil {
-
-
   /**
    * 获得随机Boolean值
    *
@@ -57,4 +58,40 @@ export class RandomUtil {
   static randomLimit(limit: number): number {
     return Math.floor(Math.random() * limit);
   }
+
+  /**
+   * 根据传入的大小生成随机字符串
+   * @param size
+   * @returns
+   */
+  static randomStrBySize(size: number): string {
+    let randArray:number[] = [];
+    for (let i = 0; i < size; i++) {
+      randArray[i] = Math.floor(Math.random() * 256);
+    }
+    let str = StrAndUintUtil.unitArray2String(new Uint8Array(randArray));
+    return str;
+  }
+
+  /**
+   * 根据传入的大小生成随机Uint8Array字节流
+   * @param size
+   * @returns
+   */
+  static randomUnitBySize(size: number): Uint8Array {
+    let randArray = new Array<number>();
+    for (let i = 0; i < size; i++) {
+      randArray.push(Math.floor(Math.random() * 256));
+    }
+    return new Uint8Array(randArray);
+  }
+
+  /**
+   * 生成CBC模式的iv
+   * @returns iv字符串
+   */
+  static generateIV(): OutDTO<string> {
+    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16));
+  }
+
 }

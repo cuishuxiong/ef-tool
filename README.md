@@ -1,10 +1,12 @@
 # <center>eftool</center>
 
--------------------------------------------------------------------------------
+# <center>V1.1.9(API11)</center>
+
+--------------------------------------------------------------------------------
 
 ## 📚简介
 
-`efTool`是一个功能丰富且易用的**OpenHarmony/HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
+`efTool`是一个功能丰富且易用的`兼容API11`的**OpenHarmony/HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
 这些封装的工具涵盖了字符串、数字、集合、JSON等一系列操作，
 可以满足各种不同的开发需求。本人为Java开发,故封装思路借鉴Java的工具类Hutool，同时扩展了HarmonyOS的UI组件。
 
@@ -21,47 +23,88 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 -------------------------------------------------------------------------------
 
+## 🛠️版本说明【重要】
+
+- 1.0.x版本系列兼容**API9**
+- 1.1.x版本系列兼容**API11**
+
 ## 🛠️包含组件
 
-一个OpenHarmony/HarmonyOS基础工具类，组成各种Util工具类，同时提供以下两部分组件：
+一个OpenHarmony/HarmonyOS基础工具类，组成各种Util工具类，同时提供以下五部分组件：
 
 ### 1.基础类组件
 
-| 模块         | 介绍                                   |
-|------------|--------------------------------------|
-| IdCardUtil | 提供对身份证校验系列方法                         |
-| JSONUtil   | 提供对于JSON对象集合跟JSON字符串的系列转换方法          |
-| RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
-| AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
-| MD5        | 提供摘要方法(基于HarmonyOS API)              |
-| SM3        | 提供国密SM3算法(迁移sm-crypto)               |
-| SM4        | 提供国密SM3算法(迁移和优化sm-crypto)            |
-| BASE64     | 提供BASE64对头的一系列方法                     |
-| IdUtil     | 提供生成ID的一系列方法                         |
-| ArrayUtil  | 提供对集合的一些常用的方法                        |
-| DateUtil   | 提供对日期的一系列封装                          |
-| ObjectUtil | 提供对于对象的系列操作方法                        |
-| RandomUtil | 提供随机数的系列方法                           |
-| RegUtil    | 提供对于常用正则表达式的方法                       |
-| StrUtil    | 提供对于字符串的操作方法                         |
-| PageUtil   | 提供常用的纯前端分页操作                         |
-| PhoneUtil  | 提供常用的手机座机等判断                         |
-| OutDTO     | 提供常用的返回实体对象                          |
-| PageQuery  | 提供常用的后端获取分页数据操作                      |
-| CharUtil   | 提供常用的字符操作                            |
-| Logger     | 提供常用的打印日志的方法                         |
-| RegexConst | 提供常用的正则表达式常量                         |
-| DateConst  | 提供常用的日期格式化表达式常量                      |
-| pcaJSON    | 提标准的省市区级联数据包括港澳台                     |
+| 模块         | 介绍              |
+|------------|-----------------|
+| IdCardUtil | 提供对身份证校验系列方法    |
+| IdUtil     | 提供生成ID的一系列方法    |
+| ArrayUtil  | 提供对集合的一些常用的方法   |
+| DateUtil   | 提供对日期的一系列封装     |
+| ObjectUtil | 提供对于对象的系列操作方法   |
+| RandomUtil | 提供随机数的系列方法      |
+| RegUtil    | 提供对于常用正则表达式的方法  |
+| StrUtil    | 提供对于字符串的操作方法    |
+| PhoneUtil  | 提供常用的手机座机等判断    |
+| OutDTO     | 提供常用的返回实体对象     |
+| CharUtil   | 提供常用的字符操作       |
+| CacheUtil  | 提缓存数据并且提取数据操作   |
+| Logger     | 提供常用的打印日志的方法    |
+| RegexConst | 提供常用的正则表达式常量    |
+| DateConst  | 提供常用的日期格式化表达式常量 |
+| AuthUtil   | 提供判断授权拉起授权的系列方法 |
 
-### 2.UI类组件
+### 2.加密类组件
 
-| 模块         | 介绍            |
-|------------|---------------|
-| ToastUtil  | 提供对文本提示的一系列方法 |
-| DialogUtil | 提供对弹出框的一系列方法  |
-| ActionUtil | 提供对操作菜单的一系列方法 |
-| Cascade    | 提供省市区级联选择组件   |
+| 模块     | 介绍                                   |
+|--------|--------------------------------------|
+| RSA    | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AES    | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| DES    | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
+| SM2    | 提供SM2生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM3    | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| SM4    | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SHA    | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| MD5    | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
+| ECDSA  | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
+| ECDH   | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
+| X25519 | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
+
+### 3.网络相关类组件
+
+| 模块            | 介绍                              |
+|---------------|---------------------------------|
+| efAxiosParams | 提供eftool封装axios请求所需的参数          |
+| efAxios       | 二次封装axios的产物,提供统一请求响应拦截等        |
+| efClientApi   | 提供针对于统一post,get,delete,put等请求封装 |
+
+### 4.JSON类组件
+
+| 模块            | 介绍                         |
+|---------------|----------------------------|
+| JSONValue     | 提供eftool中的JSON相关对象的类型定义    |
+| JSONObject    | 提供类Java的JSON对象的系列方法以及相互转换  |
+| JSONArray     | 提供类Java的JSON数组的系列方法以及相互转换  |
+| JSONArrayList | 提供类Java的JSON数组的系列方法以及相互转换  |
+| JSONUtil      | 提供JSON转换的系列方法如对象,数组字符串直接互转 |
+
+### 5.UI类组件
+
+| 模块               | 介绍            |
+|------------------|---------------|
+| ToastUtil        | 提供对文本提示的一系列方法 |
+| DialogUtil       | 提供对弹出框的一系列方法  |
+| ActionUtil       | 提供对操作菜单的一系列方法 |
+| LoadingUtil      | 提供全局加载工具类     |
+| TipsUtil         | 提供提示弹出工具类     |
+| SelectUtil       | 提供选择弹出工具类     |
+| ConfirmUtil      | 提供信息确认弹出工具类   |
+| AlertUtil        | 提供操作确认弹出工具类   |
+| ExceptionUtil    | 提供省市区级联选择组件   |
+| Cascade          | 提供省市区级联选择组件   |
+| ImmersionUtil    | 提供沉浸式导航设置     |
+| WindowUtil       | 提供窗口的创建关闭等功能  |
+| NotificationUtil | 提供发送,删除通知等功能  |
+| LocationUtil     | 提供获取定位,逆编码等功能 |
 
 ## 📦安装
 
@@ -78,7 +121,7 @@ ohpm install @yunkss/eftool
 ### 1.在项目中引入插件
 
 ```
-import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
+import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUtil ,xxxx} from '@yunkss/eftool'
 ```
 
 类按需引入,项目需要使用那个就引入
@@ -151,560 +194,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出 true--142303--汾阳市
 ```
 
-#### 2.JSONUtil的方法
-
-* toJSONString 将传入的json对象格式化成json字符串
-
-```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy-MM-dd HH:mm:ss')
-    console.error(JSONUtil.toJSONString(p))
-    //输出  {"name":"测试名称","age":18,"birth":"2024-01-03 00:00:00"}
-```
-
-* parse 将传入的json字符串格式化为Object对象
-
-```
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    let str = JSONUtil.toJSONString(person);
-    console.log(str)
-```
-
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
-
-```
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    let str = JSONUtil.toJSONString(person);
-    let p = JSONUtil.parseObject<Person>(str, 'yyyy/MM/dd HH:mm:ss')
-    let res: OutDTO<Person> = OutDTO.OKByDataRow('成功过了~', p);
-    console.error(res.getMsg() + "------" + res.getSuccess() + "-----" + res.getDataRow())
-    //输出  测试名称:2024-01-03 00:00:00
-```
-
-* parseArray 将传入的json字符串格式化为指定的实体对象集合
-
-```
-    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]',DateConst.YMD_HLINE_HMS) ;
-    pArr.forEach(item => {
-      console.error(item.name + "---" + item.birth);
-    })
-    //输出
-    //测试名称1---2023-01-01 00:00:00
-    //测试名称2---2021-01-01 12:12:12
-
-```
-
-* parseArrayDT 将传入的json字符串格式化为指定的实体对象集合，如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
-
-```
-    let pArr: Array<Person> = JSONUtil.parseArrayDT('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
-    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
-```
-
-#### 3.RSA的方法【返回结果均为OutDTO对象】
-
-* generateRsaKey 生成RSA的非对称密钥
-
-```
-    const keyPair = await RSA.generateRsaKey();
-    console.error("generateRsaKey结果:" + keyPair.getSuccess() + "---" + keyPair.getMsg()
-    + "\n" + "公钥:" + keyPair.getDataRow().publicKey + "私钥:" + keyPair.getDataRow().privateKey)
-```
-
-* encode 加密
-
-```
-    const encode = await RSA.encode('this is csx RSA!', keyPair.getDataRow().publicKey);
-    console.error("encode结果:" + encode.getSuccess() + "---" + encode.getMsg() + "---加密字符串:" + encode.getDataRow());
-```
-
-* decode 解密
-
-```
-    const decode = await RSA.decode(encode.getDataRow(), keyPair.getDataRow().privateKey);
-    console.error("decode结果:" + decode.getSuccess() + "---" + decode.getMsg() + "---解密字符串:" + decode.getDataRow());
-```
-
-* sign 签名
-
-```
-    const sign = await RSA.sign('this is csx RSA', keyPair.getDataRow().privateKey);
-    console.error("sign结果:" + sign.getSuccess() + "---" + sign.getMsg() + "---签名字符串:" + sign.getDataRow());
-```
-
-* verify 验签
-
-```
-    const result = await RSA.verify(sign.getDataRow(), 'this is csx RSA', keyPair.getDataRow().publicKey);
-    console.error("verify结果:" + result.getSuccess() + "---" + result.getMsg());
-```
-
-#### 4.AES的方法【返回结果均为OutDTO对象】
-
-* generateAesKey 生成AES的对称密钥
-
-```
-    const keyPair = await  AES.generateAesKey("AES128");
-    console.error("是否成功:" + keyPair.getSuccess() + "消息===:" + keyPair.getMsg() + "密钥======:", keyPair.getDataRow());
-```
-
-* convertKey 将传入的任意格式的key转换为系统所需的对称密钥
-
-```
-    const key = await  AES.convertKey('abcdefgabcdefg12');
-    console.error("是否成功:" + key.getSuccess() + "消息===:" + key.getMsg() + "密钥======:", key.getDataRow());
-```
-
-* encode 加密
-
-```
-    const encodeStr = await AES.encode("测试中文AES!", keyPair.getDataRow());
-    console.error("是否成功:" + encodeStr.getSuccess() + "消息===:" + encodeStr.getMsg() + "加密后的字符串======:", encodeStr.getDataRow());
-```
-
-* decode 解密
-
-```
-    const decodeStr = await AES.decode(encodeStr.getDataRow(), keyPair.getDataRow());
-    console.error("是否成功:" + decodeStr.getSuccess() + "消息===:" + decodeStr.getMsg() + "加密后的字符串======:", decodeStr.getDataRow());
-```
-
-#### 5.MD5的方法【返回结果均为OutDTO对象】
-
-* digest 摘要方法
-
-```
-    let md5 = await MD5.digest('这个是测试MD5摘要字符串~');
-    console.error("是否成功:" + md5.getSuccess() + "消息===:" + md5.getMsg() + "摘要字符串======:", md5.getDataRow());
-```
-
-#### 6.SM3的方法
-
-* SM3 杂凑/hmac
-
-```
-    let hashData = SM3('abc') // 杂凑
-    console.log(hashData)
-
-    // hmac
-    hashData = SM3('abc', {
-      key: 'daac25c1512fe50f79b0e4526b93f5c0e1460cef40b6dd44af13caec62e8c60e0d885f3c6d6fb51e530889e6fd4ac743a6d332e68a0f2a3923f42585dceb93e9', // 要求为 16 进制串或字节数组
-    })
-    console.log(hashData)
-```
-
-#### 7.SM4的方法
-
-* generateKey 随机生成16进制字符串和字节数组 128 比特
-
-```
-     const key = SM4.generateKey().hexString;
-     const key = SM4.generateKey().byteArray;
-     console.log(key)
-```
-
-* encrypt 加密
-
-```
-     const msg = 'hello world! 我是 csx.' // 可以为 utf8 串或字节数组
-     const key = SM4.generateKey().hexString;
-
-     let encryptData = SM4.encrypt(msg, key) // 加密，默认输出 16 进制字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
-     let encryptData1 = SM4.encrypt(msg, key, { padding: 'none' }) // 加密，不使用 padding
-     let encryptData2 = SM4.encrypt(msg, key, { padding: 'none', output: 'array' }) // 加密，不使用 padding，输出为字节数组
-     let encryptData3 = SM4.encrypt(msg, key, { mode: 'cbc', iv: 'fedcba98765432100123456789abcdef' }) // 加密，cbc 模式
-
-     console.log(encryptData)
-     console.log(encryptData1)
-     console.log(encryptData2)
-     console.log(encryptData3)
-```
-
-
-* decrypt 解密
-
-```
-     let decryptData = SM4.decrypt(encryptData, key) // 解密，默认输出 utf8 字符串，默认使用 pkcs#7 填充（传 pkcs#5 也会走 pkcs#7 填充）
-     let decryptData1 = SM4.decrypt(encryptData1, key, { padding: 'none' }) // 解密，不使用 padding
-     let decryptData2 = SM4.decrypt(encryptData2, key, { padding: 'none', output: 'array' }) // 解密，不使用 padding，输出为字节数组
-     let decryptData3 = SM4.decrypt(encryptData3, key, {
-       mode: 'cbc',
-       iv: 'fedcba98765432100123456789abcdef'
-     }) // 解密，cbc 模式
-
-     console.log(decryptData)
-     console.log(decryptData1)
-     console.log(decryptData2)
-     console.log(decryptData3)
-
-```
-
-#### 8.IdUtil的方法
-
-* simpleUUID 生成32为UUID不带-
-
-```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
-```
-
-* fastUUID 生成36为UUID带-
-
-```
-    console.error(IdUtil.fastUUID())
-    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
-```
-
-* fastSimpleUUID 生成32为UUID带-
-
-```
-    console.error(IdUtil.fastSimpleUUID())
-    //输出  56703FA1-0BB-503-D93-00E94A28422
-```
-
-* randomUUID 生成36为UUID带-,小写
-
-```
-    console.error(IdUtil.randomUUID())
-    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
-```
-
-#### 9.OutDTO的方法
-
-* 该对象有四个私有成员变量
-
-```
-  //成功失败标识
-  private success: boolean;
-  //返回提示信息
-  private msg: string;
-  //返回单行数据
-  private dataRow?: T;
-  //返回数据集合
-  private dataTable?: Array<T>;
-```
-
-* OK 只需要返回成功提示消息时使用
-
-```
-    let res:OutDTO = OutDTO.OK("只返回提示消息~");
-    console.error(res.getMsg()+"------"+res.getSuccess())
-    //输出只返回提示消息~------true  
-```
-
-* OKByDataRow 需要返回成功提示消息并且附带单行数据时使用
-
-```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
-    let res: OutDTO<Person> = OutDTO.OKByDataRow('成功过了~', p);
-    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataRow())
-    //输出   成功过了~------true-----[object Object]
-```
-
-* OKByDataTable 需要返回成功提示消息并且附带多行数据时使用
-
-```
-    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let res = OutDTO.OKByDataTable('成功过了11111~', pArr);
-    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
-    //输出  成功过了11111~------true-----2
-```
-
-* Error 只需要返回失败提示消息时使用
-
-```
-    let res:OutDTO = OutDTO.Error("只返回失败提示消息~");
-    console.error(res.getMsg()+"------"+res.getSuccess())
-    //输出 只返回失败提示消息~------false
-```
-
-* ErrorByDataRow 需要返回失败提示消息并且附带单行数据时使用
-
-```
-    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
-    let res: OutDTO = OutDTO.ErrorByDataRow("只返回失败提示消息~", p);
-    console.error(res.getMsg() + "------" + res.getSuccess()+res.getDataRow())
-    //输出  只返回失败提示消息~------false[object Object]
-```
-
-* getSuccess 获取成功失败标识
-
-* setSuccess 设置成功失败标识
-
-* getMsg 获取提示消息
-
-* setMsg 设置提示消息
-
-* getDataRow 获取单行数据
-
-* setDataRow 设置单行数据
-
-* getDataTable 获取多行数据
-
-* setDataTable 设置多行数据
-
-#### 10.PageUtil的方法
-
-* 该对象有如下私有成员变量
-
-```
-  //当前页数
-  private pageNumber: number = 1;
-  //每页记录数
-  private pageSize: number = 20;
-  //总记录数
-  private total: number;
-  //总页数
-  private pages: number;
-  //当前页数据
-  private list?: Array<T>;
-  //当前页记录集合
-  private records?: Array<T>;
-```
-
-* packPageInfo 包装分页对象
-
-```
-    let page: PageUtil = PageUtil.packPageInfo(后台获取的全量数据);
-```
-
-* getPrePage 获取上一页页码
-
-```
-     const prePage:number = page.getPrePage();
-```
-
-* getNextPage 获取下一页页码
-
-```
-    const nextPage:number = page.getNextPage();
-```
-
-* getLastPage 获取最后一页页码
-
-```
-    const lastPage:number = page.getLastPage();
-```
-
-* isFirstPage 是否第一页
-
-```
-    const isFirstPage:boolean = page.isFirstPage();
-```
-
-* isLastPage 是否最后一页
-
-```
-    const isLastPage:boolean = page.isLastPage();
-```
-
-* hasPreviousPage 是否有上一页
-
-```
-    const hasPreviousPage:boolean = page.hasPreviousPage();
-```
-
-* hasNextPage 是否有下一页
-
-```
-    const hasNextPage:boolean = page.hasNextPage();
-```
-
-* getRecords 获取当前页记录数
-
-```
-    const records:Array<T> = page.getRecords();
-```
-
-#### 11.ArrayUtil的方法
-
-* append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
-
-```
-    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
-    n.forEach(item => {
-      console.error(item);
-    })
-    //输出  1 2 3 4
-```
-
-* setOrAppend 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
-
-```
-    let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
-    console.error(JSON.stringify(arr))
-    //输出  ["1212","3232","你好","645654","64564564x"]
-```
-
-* replace 将新元素插入到到已有数组中的某个位置
-
-```
-    let arr2 = ArrayUtil.replace<string>(["1212", "3232", "5345", "645654", "64564564x"], 1, "halo");
-    console.error(JSON.stringify(arr2))
-    //输出  ["1212","halo","5345","645654","64564564x"]
-```
-
-* clone 克隆数组(深拷贝)
-
-```
-    let source = ["哈哈哈哈哈", 1212, true, new Person("测试", 12, new Date()), "64564564x"];
-    let arr3 = ArrayUtil.clone(source);
-    console.error(JSON.stringify(arr3))
-    //输出  ["哈哈哈哈哈",1212,true,{"birth":"2024-01-11T12:49:44.517Z","name":"测试","age":12},"64564564x"]
-```
-
-* deepClone 深拷贝对象T
-
-```
-    let person = new Person("测试", 12, new Date());
-    let p = ArrayUtil.deepClone<Person>(person);
-    console.error(JSON.stringify(p));
-    //输出  {"birth":"2024-01-11T12:49:44.517Z","name":"测试","age":12}
-```
-
-* filter 通过传入的filter实现来过滤返回需要的元素内容
-
-```
-    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称3","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
-    let flter = ArrayUtil.filter<Person>(pArr, (item: Person) => item.name.includes("4"));
-    console.error(JSON.stringify(flter))
-    //输出  [{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12"}]
-```
-
-* reverse 反转数组，会变更原数组
-
-```
-    ArrayUtil.reverse<Person>(pArr);
-    console.log(JSONUtil.toJSONString(pArr));
-    //输出  [{"name":"测试名称4","age":23,"birth":"2021-01-01 12:12:12"},{"name":"测试名称3","age":34,"birth":"2023-01-01 12:12:12"},{"name":"测试名称2","age":3,"birth":"2021-11-01 12:12:12"},{"name":"测试名称1","age":18,"birth":"2023-01-01 00:00:00"}]
-```
-
-* min 根据传入的数值字符串日期数组取最小值
-
-```
-    console.error(ArrayUtil.min<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
-    //输出  2
-```
-
-* max 根据传入的数值字符串日期数组取最大值
-
-```
-    console.error(ArrayUtil.max<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
-    //输出  899076
-```
-
-* distinct 去重数组中的元素，去重后生成新的数组，原数组不变
-
-```
-    let nArr = ArrayUtil.distinct<string, string>(["你", "helo", "哇哈哈哈", "212121", "2222", "哇哈哈哈", "你"], item => item);
-    console.error(JSONUtil.toJSONString(nArr));
-    //输出  ["你","helo","哇哈哈哈","212121","2222"]
-```
-
-* remove 移除数组中predicate返回为真值的所有元素，并返回移除元素组成的数组
-
-```
-    const array = [1, 2, 3, 4, 5];
-    const removed = ArrayUtil.remove(array, (value: number) => value % 2 === 0);
-    console.log(JSONUtil.toJSONString(removed)); // [4,2]
-    console.log(JSONUtil.toJSONString(array)); // [1, 3, 5]
-```
-
-* removeEmptyValues 去除集合中的空值
-
-```
-    console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true])))  
-    //输出  [1,"ssss",true]
-```
-
-* union 创建一个按顺序排列的唯一值的数组（注：arrays（数组）的并集，按顺序返回，返回数组的元素是唯一的）
-
-```
-    const arr1 = [1, 2, 3];
-    const arr2 = [2, 3, 4];
-    const arr3 = [3, 4, 5];
-    const result = ArrayUtil.union(arr1, arr2, arr3);
-    console.log(JSONUtil.toJSONString(result)); // 输出：[1, 2, 3, 4, 5]
-```
-
-* zip 创建一个分组元素的数组，数组的第一个元素包含所有给定数组的第一个元素，数组的第二个元素包含所有给定数组的第二个元素，以此类推
-
-```
-    const arr11 = [1, 2, 3];
-    const arr22 = ['a', 'b', 'c'];
-    const arr33 = [true, false, 'd'];
-    const result1 = ArrayUtil.zip(arr11, arr22, arr33);
-    console.log(JSONUtil.toJSONString(result1)); 
-    // 输出：[[1,"a",true],[2,"b",false],[3,"c","d"]]
-```
-
-* unzip 这个方法类似于zip除了它接收分组元素的数组，并且创建一个数组，分组元素到打包前的结构(
-  返回数组的第一个元素包含所有的输入数组的第一元素，第一个元素包含了所有的输入数组的第二元素，依此类推)
-
-```
-    const qwe = ArrayUtil.unzip(result1);
-    console.error(JSONUtil.toJSONString(qwe)) 
-    //输出[[1,2,3],["a","b","c"],[true,false,"d"]]
-```
-
-* defaultIfEmpty 集合为空时传入默认集合
-
-```
-    let str: string[] = [];
-    ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
-      this.message += item + "、";
-    })
-    //输出 1、32
-```
-
-* isNotEmpty 集合是否为空集合，不空为true否则false
-
-```
-    let str: string[] = [];
-    if (ArrayUtil.isNotEmpty(str)) {
-      this.message = "不是空的";
-    } else {
-      this.message = "是空的"
-    }
-    //输出 是空的
-```
-
-* isEmpty 集合是否为空集合,空为true否则false
-
-```
-    let str: string[] = [];
-    if (ArrayUtil.isEmpty(str)) {
-      this.message = "是空的";
-    } else {
-      this.message = "不是空的"
-    }
-    //输出 是空的
-```
-
-* strValIsEmpty 集合中每个值都为空则返回true,否则返回false
-
-```
-    let str: string[] = ["", ""];
-    if (ArrayUtil.strValIsEmpty(str)) {
-      this.message = "是空的";
-    } else {
-      this.message = "不是空的"
-    }
-```
-
-* strValIsNotEmpty 集合中只要有一个值不为空则返回true,否则返回false
-
-```
-    let str: string[] = ["1",""];
-    if (ArrayUtil.strValIsNotEmpty(str)) {
-      this.message = "不是空的";
-    } else {
-      this.message = "是空的"
-    }
-    //输出  不是空的
-```
-
-#### 12.DateUtil的方法
+#### 2.DateUtil的方法
 
 * parse 将输入的日期字符串转换为Date日期类型
 
@@ -745,7 +235,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.log(diff + ""); //输出 70
 ```
 
-#### 13.RegUtil的方法
+#### 3.RegUtil的方法
 
 * isMatch 给定内容是否匹配正则
 
@@ -779,13 +269,195 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出  false---身份证号格式不正确,请检查
 ```
 
-#### 14.StrUtil的方法
+#### 4.Logger的方法
+
+* init 初始化第一个入参为应用名,第二个为域可不填
+
+```
+    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ets的onWindowStageCreate方法中
+```
+
+* debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
+
+```
+    Logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* info info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】黄色
+
+```
+    Logger.info("info错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* warn warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 白色
+
+```
+    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
+```
+
+* error error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 红色
+
+```
+    Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
+```
+
+#### 5.ObjectUtil的方法
+
+* equal 判断两个传入的数值或者是字符串是否相等
+
+```
+    console.error(ObjectUtil.equal("1", "1") + "")
+    //输出 true
+```
+
+* notEqual 判断两个传入的数值或者是字符串是否不相等
+
+```
+    console.error(ObjectUtil.notEqual("1", "1") + "")
+    //输出 false
+```
+
+#### 6.AuthUtil的方法
+
+* checkPermissions 校验是否已授权 【异步方法】
+
+```
+    //单次校验一个权限,入参为需要校验的权限
+    let result = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+    if (!result) {
+     //此处可调用拉起授权方法
+     ToastUtil.showToast('用户未授权~');
+    } else {
+      ToastUtil.showToast('用户已授权~');
+    }
+```
+
+* reqPermissionsFromUser 拉起单个用户授权 【异步方法】 有callBack
+
+```
+     //拉起用户单个权限授权操作,第一个参数为需要授予的权限,第二个参数为用户授权回调
+     AuthUtil.reqPermissionsFromUser('ohos.permission.APPROXIMATELY_LOCATION', (index: number) => {
+        //用户同意授权index为1,用户拒绝授权index为-1,根据结果进行业务操作
+        ToastUtil.showToast(index == 1 ? '授权成功' : '用户取消授权~');
+     })
+```
+
+* reqPermissions 拉起单个用户授权 【异步方法】 无callBack
+
+```
+     //拉起用户单个权限授权操作,用户同意授权code为1,用户拒绝授权code为-1,根据结果进行业务操作
+     let code = await AuthUtil.reqPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+     if (code<0) {
+       //授权失败
+       return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+     }
+```
+
+* reqPermissionsList 拉起组合用户授权 【异步方法】 无callBack
+
+```
+     //拉起组合用户授权操作,入参为需要授权的权限集合
+     let code = await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
+     //code为true表示权限集合均被授权,为false表示有权限未被授权
+     if (!code) {
+       //授权失败
+       return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+     }
+```
+
+#### 7.PhoneUtil的方法
+
+* isMobile 验证是否为手机号码（中国）
+
+```
+    console.error(PhoneUtil.isMobile("17111114114").getMsg())
+    // 输出 手机号为中国号码
+```
+
+* isMobileHk 验证是否为手机号码（香港）
+
+```
+    console.error(PhoneUtil.isMobileHk("111111").getMsg())
+    // 输出 手机号非中国香港号码,请检查
+```
+
+* isMobileTw 验证是否为手机号码（台湾）
+
+```
+    console.error(PhoneUtil.isMobileTw("17111114114").getMsg())
+    // 输出 手机号非中国台湾号码,请检查
+```
+
+* isMobileMo 验证是否为手机号码（澳门）
+
+```
+    console.error(PhoneUtil.isMobileMo("17111114114").getMsg())
+    // 输出 手机号非中国澳门号码,请检查
+```
+
+* isTel 验证是否为座机号码（中国）
+
+```
+    console.error(PhoneUtil.isTel("17111114114").getMsg())
+    // 输出 号码非中国座机,请检查
+```
+
+* isTel400800 验证是否为座机号码（中国）+ 400 + 800
+
+```
+    console.error(PhoneUtil.isTel400800("17111114114").getMsg())
+    // 输出 号码非400800格式的座机,请检查
+```
+
+* isPhone 验证是否为座机号码+手机号码+ 400 + 800电话 + 手机号号码（香港）
+
+```
+    console.error(PhoneUtil.isPhone("17111114114").getMsg())
+    // 输出 手机号为中国号码
+```
+
+#### 8.CharUtil的方法
+
+* isEmoji 判断是否为emoji表情符
+
+```
+    console.error(CharUtil.isEmoji(38)+"")
+    // 输出 true
+```
+
+* isAscii 判断字符是否为ascii码
+
+```
+    console.error(CharUtil.isAscii("你")+"")
+    // 输出 false
+```
+
+#### 9.StrUtil的方法
 
 * isBlank 判断字符串是否为空白符(空白符包括空格、制表符、全角空格和不间断空格)true为空，否则false
 
 ```
     console.error(StrUtil.isBlank(' ')+"")
     //输出  true
+```
+
+* asString 将传入的值转换为字符串类型
+
+```
+    const obj:Record<string,string> = {'key': 'this is value'} // key的值类型为 string | undefined
+    const test = StrUtil.asString(obj)
+```
+
+* isBlankIfStr 判断传入的对象是否是空格
+
+```
+    const a = StrUtil.isBlankIfStr(obj);
+```
+
+* isEmptyIfStr 判断传入的对象是否是空
+
+```
+    const a = StrUtil.isEmptyIfStr(obj);
 ```
 
 * isNotBlank 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
@@ -887,14 +559,25 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
-* asString 将传入的值转换为字符串类型
+#### 10.RandomUtil的方法
+
+* randomStrBySize 根据传入的大小生成随机字符串
 
 ```
-    const obj = {'key': 'this is value'} // key的值类型为 string | undefined
-    const test = StrUtil.asString(obj['key']) 
+    RandomUtil.randomStrBySize(16);
 ```
 
-#### 15.RandomUtil的方法
+* randomUnitBySize 根据传入的大小生成随机Uint8Array字节流
+
+```
+    RandomUtil.randomUnitBySize(16);
+```
+
+* generateIV 生成CBC模式的iv
+
+```
+    let iv = await RandomUtil.generateIV();
+```
 
 * randomBoolean 随机生成一个布尔值
 
@@ -931,221 +614,1251 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     //输出  54
 ```
 
-#### 16.ObjectUtil的方法
+#### 11.ArrayUtil的方法
 
-* equal 判断两个传入的数值或者是字符串是否相等
-
-```
-    console.error(ObjectUtil.equal("1", "1") + "")
-    //输出 true
-```
-
-* notEqual 判断两个传入的数值或者是字符串是否不相等
+* append 将新元素添加到已有数组中 添加新元素会生成一个新的数组，不影响原数组
 
 ```
-    console.error(ObjectUtil.notEqual("1", "1") + "")
-    //输出 false
+    let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
+    n.forEach(item => {
+      console.error(item);
+    })
+    //输出  1 2 3 4
 ```
 
-#### 17.PhoneUtil的方法
-
-* isMobile 验证是否为手机号码（中国）
+* setOrAppend 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
 
 ```
-    console.error(PhoneUtil.isMobile("17111114114").getMsg())
-    // 输出 手机号为中国号码
+    let arr = ArrayUtil.setOrAppend<string>(["1212", "3232", "5345", "645654", "64564564x"], 2, "你好");
+    console.error(JSON.stringify(arr))
+    //输出  ["1212","3232","你好","645654","64564564x"]
 ```
 
-* isMobileHk 验证是否为手机号码（香港）
+* replace 将新元素插入到到已有数组中的某个位置
 
 ```
-    console.error(PhoneUtil.isMobileHk("111111").getMsg())
-    // 输出 手机号非中国香港号码,请检查
+    let arr2 = ArrayUtil.replace<string>(["1212", "3232", "5345", "645654", "64564564x"], 1, "halo");
+    console.error(JSON.stringify(arr2))
+    //输出  ["1212","halo","5345","645654","64564564x"]
 ```
 
-* isMobileTw 验证是否为手机号码（台湾）
+* filter 通过传入的filter实现来过滤返回需要的元素内容
 
 ```
-    console.error(PhoneUtil.isMobileTw("17111114114").getMsg())
-    // 输出 手机号非中国台湾号码,请检查
+    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称3","age":3,"birth":"2021-11-01 12:12:12" },{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12" },{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let flter = ArrayUtil.filter<Person>(pArr, (item: Person) => item.name.includes("4"));
+    console.error(JSON.stringify(flter))
+    //输出  [{"name":"测试名称4","age":34,"birth":"2023-01-01 12:12:12"}]
 ```
 
-* isMobileMo 验证是否为手机号码（澳门）
+* reverse 反转数组，会变更原数组
 
 ```
-    console.error(PhoneUtil.isMobileMo("17111114114").getMsg())
-    // 输出 手机号非中国澳门号码,请检查
+    ArrayUtil.reverse<Person>(pArr);
+    console.log(JSONUtil.toJSONString(pArr));
+    //输出  [{"name":"测试名称4","age":23,"birth":"2021-01-01 12:12:12"},{"name":"测试名称3","age":34,"birth":"2023-01-01 12:12:12"},{"name":"测试名称2","age":3,"birth":"2021-11-01 12:12:12"},{"name":"测试名称1","age":18,"birth":"2023-01-01 00:00:00"}]
 ```
 
-* isTel 验证是否为座机号码（中国）
+* min 根据传入的数值字符串日期数组取最小值
 
 ```
-    console.error(PhoneUtil.isTel("17111114114").getMsg())
-    // 输出 号码非中国座机,请检查
+    console.error(ArrayUtil.min<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    //输出  2
 ```
 
-* isTel400800 验证是否为座机号码（中国）+ 400 + 800
+* max 根据传入的数值字符串日期数组取最大值
 
 ```
-    console.error(PhoneUtil.isTel400800("17111114114").getMsg())
-    // 输出 号码非400800格式的座机,请检查
+    console.error(ArrayUtil.max<number>([345, 5, 67, 899076, 3, 2, 143, 17, 65]) + "")
+    //输出  899076
 ```
 
-* isPhone 验证是否为座机号码+手机号码+ 400 + 800电话 + 手机号号码（香港）
+* distinct 去重数组中的元素，去重后生成新的数组，原数组不变
 
 ```
-    console.error(PhoneUtil.isPhone("17111114114").getMsg())
-    // 输出 手机号为中国号码
+    let nArr = ArrayUtil.distinct<string, string>(["你", "helo", "哇哈哈哈", "212121", "2222", "哇哈哈哈", "你"], item => item);
+    console.error(JSONUtil.toJSONString(nArr));
+    //输出  ["你","helo","哇哈哈哈","212121","2222"]
 ```
 
-#### 18.PageQuery的方法
+* remove 移除数组中predicate返回为真值的所有元素，并返回移除元素组成的数组
 
 ```
-    有如下私有属性
-    //当前页码
-    private currentPage: number;
-    //每页记录数
-    private pageSize: number;
-    //总数
-    private total: number;
-    //总页数
-    private totalPages: number;
-    //记录数
-    private records: T[];
+    const array = [1, 2, 3, 4, 5];
+    const removed = ArrayUtil.remove(array, (value: number) => value % 2 === 0);
+    console.log(JSONUtil.toJSONString(removed)); // [4,2]
+    console.log(JSONUtil.toJSONString(array)); // [1, 3, 5]
 ```
 
-* queryData 查询分页数据 传入一个返回类型为Promise<PageResult<T>>)且入参类型为(currentPage: number, pageSize: number)
-  的Function
+* removeEmptyValues 去除集合中的空值
 
 ```
-    const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
-      const total = 100; // 假设总记录数为 100
-      const records: Person[] = [];
-      // 模拟循环请求，每次请求返回 pageSize 条记录
-      for (let i = 0; i < pageSize; i++) {
-        const id = (currentPage - 1) * pageSize + i + 1;
-        const person: Person = {
-          name: `person${id}`,
-          birth: new Date(),
-          age: id
-        };
-        records.push(person);
+    console.error(JSONUtil.toJSONString(ArrayUtil.removeEmptyValues([1, "", "ssss", "", true])))  
+    //输出  [1,"ssss",true]
+```
+
+* union 创建一个按顺序排列的唯一值的数组（注：arrays（数组）的并集，按顺序返回，返回数组的元素是唯一的）
+
+```
+    const arr1 = [1, 2, 3];
+    const arr2 = [2, 3, 4];
+    const arr3 = [3, 4, 5];
+    const result = ArrayUtil.union(arr1, arr2, arr3);
+    console.log(JSONUtil.toJSONString(result)); // 输出：[1, 2, 3, 4, 5]
+```
+
+* defaultIfEmpty 集合为空时传入默认集合
+
+```
+    let str: string[] = [];
+    ArrayUtil.defaultIfEmpty(str, ["1", "32"]).forEach(item => {
+      this.message += item + "、";
+    })
+    //输出 1、32
+```
+
+* isNotEmpty 集合是否为空集合，不空为true否则false
+
+```
+    let str: string[] = [];
+    if (ArrayUtil.isNotEmpty(str)) {
+      this.message = "不是空的";
+    } else {
+      this.message = "是空的"
+    }
+    //输出 是空的
+```
+
+* isEmpty 集合是否为空集合,空为true否则false
+
+```
+    let str: string[] = [];
+    if (ArrayUtil.isEmpty(str)) {
+      this.message = "是空的";
+    } else {
+      this.message = "不是空的"
+    }
+    //输出 是空的
+```
+
+* strValIsEmpty 集合中每个值都为空则返回true,否则返回false
+
+```
+    let str: string[] = ["", ""];
+    if (ArrayUtil.strValIsEmpty(str)) {
+      this.message = "是空的";
+    } else {
+      this.message = "不是空的"
+    }
+```
+
+* strValIsNotEmpty 集合中只要有一个值不为空则返回true,否则返回false
+
+```
+    let str: string[] = ["1",""];
+    if (ArrayUtil.strValIsNotEmpty(str)) {
+      this.message = "不是空的";
+    } else {
+      this.message = "是空的"
+    }
+    //输出  不是空的
+```
+
+#### 12.CacheUtil的方法
+
+* save 存储指定类型的数据(必须指定类型T) 第一个入参为key,第二个入参为待存入数据
+
+```
+    //存入字符串<>中数据类型为必填
+    CacheUtil.save<string>("str", "测试存入字符串");
+    //存入对象T<>中数据类型为必填
+    let person = new Person('测试', 12, new Date(), new User("uuid", "打撒吃的是草动次打次"));
+    CacheUtil.save<Person>("tetObj", person);
+    //存入对象集合<>中数据类型为必填
+    let arrP = Array<Person>();
+    arrP[0] = new Person('test1', 1, new Date(), new User("uuid1", "user测试内容1"));
+    arrP[1] = new Person('test2', 2, new Date(), new User("uuid2", "user测试内容2"));
+    arrP[2] = new Person('test3', 3, new Date(), new User("uuid3", "user测试内容3"));
+    CacheUtil.save<Array<Person>>("arrPerson", arrP);
+```
+
+* get 根据key获取指定类型的数据(必须指定类型T),入参为存入时的key
+
+```
+    //获取字符串<>中数据类型为必填
+    this.message = CacheUtil.get<string>("str");
+    //获取对象T<>中数据类型为必填
+    let p = CacheUtil.get<Person>("tetObj");
+    this.message = p.name + p.age + p.user.id;
+    //获取对象集合<>中数据类型为必填
+    let newStr: string = '';
+    let res = CacheUtil.get<Array<Person>>("arrPerson");
+    res.forEach(item => {
+      newStr += item.age + item.name + item.user.id + item.user.name;
+    })
+    this.message = newStr;
+```
+
+#### 13.IdUtil的方法
+
+* simpleUUID 生成32为UUID不带-
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
+
+* fastUUID 生成36为UUID带-
+
+```
+    console.error(IdUtil.fastUUID())
+    //输出  628128FC-55CA-48B7-8EA0-5162848FDCEF
+```
+
+* fastSimpleUUID 生成32为UUID带-
+
+```
+    console.error(IdUtil.fastSimpleUUID())
+    //输出  56703FA1-0BB-503-D93-00E94A28422
+```
+
+* randomUUID 生成36为UUID带-,小写
+
+```
+    console.error(IdUtil.randomUUID())
+    //输出  600cddfb-1e88-4798-8987-bfb703be76ff
+```
+
+#### 14.OutDTO的方法
+
+* 该对象有四个私有成员变量
+
+```
+  //成功失败标识
+  private success: boolean;
+  //返回提示信息
+  private msg: string;
+  //返回单行数据
+  private dataRow?: T;
+  //返回数据集合
+  private dataTable?: Array<T>;
+```
+
+* OK 只需要返回成功提示消息时使用
+
+```
+    let res:OutDTO = OutDTO.OK("只返回提示消息~");
+    console.error(res.getMsg()+"------"+res.getSuccess())
+    //输出只返回提示消息~------true  
+```
+
+* OKByDataRow 需要返回成功提示消息并且附带单行数据时使用
+
+```
+    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
+    let res: OutDTO<Person> = OutDTO.OKByDataRow<Person>('成功过了~', p);
+    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataRow())
+    //输出   成功过了~------true-----[object Object]
+```
+
+* OKByDataTable 需要返回成功提示消息并且附带多行数据时使用
+
+```
+    let pArr: Array<Person> = JSONUtil.parseArray('[{"name":"测试名称1","age":18,"birth":"2023-01-01"},{"name":"测试名称2","age":23,"birth":"2021-01-01 12:12:12" }]', DateConst.YMD_HLINE_HMS);
+    let res = OutDTO.OKByDataTable<Person>('成功过了11111~', pArr);
+    console.error(res.getMsg() + "------" + res.getSuccess()+"-----"+res.getDataTable().length)
+    //输出  成功过了11111~------true-----2
+```
+
+* Error 只需要返回失败提示消息时使用
+
+```
+    let res:OutDTO = OutDTO.Error("只返回失败提示消息~");
+    console.error(res.getMsg()+"------"+res.getSuccess())
+    //输出 只返回失败提示消息~------false
+```
+
+* ErrorByDataRow 需要返回失败提示消息并且附带单行数据时使用
+
+```
+    let p: Person = JSONUtil.parseObject<Person>('{"name":"测试名称","age":18,"birth":"2024-01-03" }', 'yyyy/MM/dd HH:mm:ss')
+    let res: OutDTO = OutDTO.ErrorByDataRow<Person>("只返回失败提示消息~", p);
+    console.error(res.getMsg() + "------" + res.getSuccess()+res.getDataRow())
+    //输出  只返回失败提示消息~------false[object Object]
+```
+
+* getSuccess 获取成功失败标识
+
+* setSuccess 设置成功失败标识
+
+* getMsg 获取提示消息
+
+* setMsg 设置提示消息
+
+* getDataRow 获取单行数据
+
+* setDataRow 设置单行数据
+
+* getDataTable 获取多行数据
+
+* setDataTable 设置多行数据
+
+### 3.加密相关组件使用API
+
+#### 1.RSA的方法【返回结果均为OutDTO对象】
+
+* generateRSAKey 生成1024位RSA的非对称密钥
+
+```
+    const rsa = await RSA.generateRSAKey();
+    console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
+    + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
+```
+
+* generate2048RSAKey 生成2048位RSA的非对称密钥
+
+```
+    const rsa = await RSA.generate2048RSAKey();
+    console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
+    + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
+```
+
+* encodePKCS1 1024位加密
+
+```
+    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encodePKCS1Segment 1024位分段加密
+
+```
+    let encode = await RSA.encodePKCS1Segment('测试RSA-PKCS1分段加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encode2048PKCS1 2048位加密
+
+```
+    let encode = await RSA.encode2048PKCS1('测试RSA-PKCS12048位加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encode2048PKCS1Segment 2048位分段加密
+
+```
+    let encode = await RSA.encode2048PKCS1Segment('测试RSA-PKCS12048位分段加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decodePKCS1 1024位解密
+
+```
+    let decode = await RSA.decodePKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decodePKCS1Segment 1024位分段解密
+
+```
+    let decode = await RSA.decodePKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decode2048PKCS1 2048位解密
+
+```
+    let decode = await RSA.decode2048PKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decode2048PKCS1Segment 2048位分段解密
+
+```
+    let decode = await RSA.decode2048PKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* signPKCS1 1024位签名
+
+```
+    let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* sign2048PKCS1 2048位签名
+
+```
+    let sign = await RSA.sign2048PKCS1('这个是RSA的2048位验签字符串~~', rsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verifyPKCS1 1024位验签
+
+```
+    let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* verify2048PKCS1 2048位验签
+
+```
+    let verify = await RSA.verify2048PKCS1(sign.getDataRow(), '这个是RSA的2048位验签字符串~~', rsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* pemToStrKey 将pem文件中的数据转换成公钥字符串支持1024/2048字节
+
+```
+    //1024位示例
+    //pem中数据支持没有回车符、换行符也支持每行以'\r\n'符结束
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhoZDHUVp7y2zw7T7SQYDiUQCn
+                  ImnsKogqWOF3hBfaBr8xK/7I/PfbLcPV/MrWKPi2uaiXkhmITX+24ZWVBInxELBa
+                  4kccFJeZReMRmu7rKZgkVzU6JKyfaH8zMxipEBh0TyS6JVHHjPd4eezzzVDHc59O
+                  fYyzs3kM3Z6oczwTDwIDAQAB
+                  -----END PUBLIC KEY-----`);
+    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', pubKey);
+    this.message = encode.getDataRow();
+    let priKey = RSA.pemToStrKey(`-----BEGIN PRIVATE KEY-----
+                MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAOGhkMdRWnvLbPDt
+                PtJBgOJRAKciaewqiCpY4XeEF9oGvzEr/sj899stw9X8ytYo+La5qJeSGYhNf7bh
+                lZUEifEQsFriRxwUl5lF4xGa7uspmCRXNTokrJ9ofzMzGKkQGHRPJLolUceM93h5
+                7PPNUMdzn059jLOzeQzdnqhzPBMPAgMBAAECgYEAjJjm5Kz3G0kJ25+ak94pd91N
+                8Nfq9TUToH++D4GKc1vc68EkhQ3NTRDZhZB+vLDPOt26BqkNq/fO66DqWu93HEra
+                jBE4pZzCxmVmLanuimxiA45Td1DalL0mmd9ab2cusqwXo6LDs3mSU/t7gSBRUCnt
+                kv4MBZMgIDA92QSadHECQQD1HZKBIbWQtZ4nDxgaP1MOQC7dKmXlIkCsDbuwaZhj
+                RM8/+iqBBtgSkviwOCDWNiFcpzf+nUM1+ba9OE9iTOqTAkEA66Z/ifnKVCNbHiW8
+                i6E2K/2NcJH4qsxRrIMs+eyxqC/yEjkxol26OVmemxu22Fjkx/xIOKg6zFJRstXy
+                i6P3FQJBAKZ7xINCwxCb2uSKowNI2X/HZk0/u9+qqSRzW3TR8/gQx3eb0fy7Ck1r
+                V9BQ/zSfpX9J8IVWiU0C4/SXZ4vL1FMCQQCPaQh9I7NqeQne0wBnyXh6VRhaxbsb
+                1rRt1Hbusol73ZHoXT5Dnd7TQCMyKi+ggpjYzEP3lwoRhpeJyoKNUP/xAkB+//w9
+                SyKHWOZOCLj47/1/7YZGzKv/Ttb4NVFtqDPl2QtbXqDcP8d5ZI4p37rJIq1XZ0sT
+                l2UgKQV+KZkPdL1n
+                -----END PRIVATE KEY-----
+                `)
+    let decode = await RSA.decodePKCS1(encode.getDataRow(), priKey);
+    this.message = decode.getDataRow();
+```
+
+```
+    //2048位示例
+    //pem中数据支持没有回车符、换行符也支持每行以'\r\n'符结束
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
+                +dMBCtoRb/SSY00ujBMsNPFdERxaizxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9
+                Wk2nVLpPRtZNjwJgNRB4pYKf+RmLn35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dv
+                xqVheO+S6IOLiN6XGbkNZM2VBNtmAhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7Cs
+                JE+Go5tb3BZjUYiF8fJ5ZKYCATkK4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S8
+                0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
+                4QIDAQAB
+                -----END PUBLIC KEY-----`);
+    let encode = await RSA.encode2048PKCS1('测试2048位RSA-PKCS1加密字符串CSX~~', pubKey);
+    this.message = encode.getDataRow();
+    //2048位pem私钥
+    let priKey = RSA.pemToStrKey(`-----BEGIN RSA PRIVATE KEY-----
+                MIIEpAIBAAKCAQEA1nwHtqSbMNwjHKutrLUI+dMBCtoRb/SSY00ujBMsNPFdERxa
+                izxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9Wk2nVLpPRtZNjwJgNRB4pYKf+RmL
+                n35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dvxqVheO+S6IOLiN6XGbkNZM2VBNtm
+                AhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7CsJE+Go5tb3BZjUYiF8fJ5ZKYCATkK
+                4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S80S3LFHcOyP7UoNfQ+cbV/z+72sYJ
+                V4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg4QIDAQABAoIBAB2ckhQNNb/RJKfY
+                q+mkNNEI6KPu52llgrBi/4InQ3srt4WdPILsmwC6g4G8jy/cD2++UhhPRYhFgNXn
+                7CRa9J17CxcPgdJt09dipJWu6HkxR5TEihpC/rZABCcfjH4VpN0FsrjEuLy8wl6y
+                NKl4Zt4uBv8DVGz1fFYxJPtQKSE5YBSbvMD1thhViKOSyYp/pQfu00oz7/XK6iDE
+                oHAhcdTBcBl9YW2WaXCnuX02FQkO5h8kjJbQd6pW4EfLLUxKjwcxcJ61DswcAaPw
+                PN4+bgiwMak8H3IFrZVP24qs4ZOT3Yh7dl75OZXw7XcuBxsR/eCDlIe5VSSS+MId
+                JCc42uECgYEA8jbvO07ESaVYvdij21knF+5Tdjg5rG2q0qsocWlxsE+8IkjzRAgF
+                oovXqwoyDkhFJ/1N/PEnBqiQngbUhRSst49ICCQVv+fzRX2WjUNg4k2FtLO0jwgL
+                Z+E6grMkMkv7VDIxyWlY5rYUC1yw6USFjgyMGQaWps8o4+JLsGJd9PsCgYEA4rER
+                ecoYZndLRGmqMtmGZATDyNh6jGXzGF4XgHahnbhqgw3+7aTDXpA9W1TdGeBI4cQ9
+                HQMjroJ+X/yx2JWysimnFxMXuU4eXZo3vMuebXB3lRe2QcloO1HobeSdUCosJ3qa
+                Ks+f3UtN9Q8ZiPb5P0tA/fIbe6cwwQTQ1FLbQtMCgYEA0DpD3lOv0bRRHxygeVEi
+                l6Muo0Jg6oh5Q5UbNqy0rSNPFJZsc/8FgSEBrqwcLkUZFvDf2+UhbMr7UK+Egkgs
+                171Y6o7DF/D7JbF6/USAhOyqVpfrUM9UpuBs4bHKG2dQ0Kg6PvHPGMBNaRsth8x9
+                mInW4yjT2OHdQFPqR9+48IMCgYBJXXkEa21+K/mGCJR2pIOj9w7N/5GZwpzsM/dz
+                MfGYM8j05SCuFHbOMexJlKuB5l5wAqysqQlxPvZbZlLAf6I3mtdi1mEFLc0SCgkj
+                5to9HPr2m5f2rpI3MIkCl8x510w28qzWUh+w5OA0AVEITLXZ0CcWiLZwTGmw7jgP
+                n0kq1QKBgQDWDHZaEGCAYPxytix3tTCG3EIly8+fQJGt1lc0vgiiFcS0cW2pBbko
+                rVvbu1gSJnmvj0dIObp55wwFBs30xEiMfli+83srOur6nxYUDgn9rqGcufn6hOeH
+                ++y1uOHhOenfUTy51Gy1Dlv+maJ3LZ0ZnqPnbBdhZ1RtXFnczVKeFg==
+                -----END RSA PRIVATE KEY-----`)
+    let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
+```
+
+#### 2.AES的方法【返回结果均为OutDTO对象】
+
+* generateAESKey 生成AES的对称密钥
+
+```
+    const aes = await  AES.generateAESKey();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* encodeGCM 加密-GCM模式
+
+```
+    let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
+    this.message = encodeGCM.getDataRow();
+```
+
+* decodeGCM 解密-GCM模式
+
+```
+    let decodeGCM = await AES.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
+    this.message = decodeGCM.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
+    this.message = decode.getDataRow();
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+#### 3.3DES的方法【返回结果均为OutDTO对象】
+
+* generate3DESKey 生成3DES的对称密钥
+
+```
+    let des = await DES.generate3DESKey();
+    console.error("是否成功:" + des.getSuccess() + "消息===:" + des.getMsg() + "密钥======:", des.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+#### 4.SM2的方法【返回结果均为OutDTO对象】
+
+* generateSM2Key 生成SM2的非对称密钥
+
+```
+    let sm2 = await SM2.generateSM2Key();
+    console.error("generateSM2Key:" + sm2.getSuccess() + "---" + sm2.getMsg()
+    + "\n" + "公钥:" + sm2.getDataRow().publicKey + "私钥:" + sm2.getDataRow().privateKey)
+```
+
+* encode 加密
+
+```
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decode 解密
+
+```
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* sign 签名
+
+```
+    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN
+
+```
+    //C1C3C2格式的公钥字符串
+    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    //转换后的ASN.1格式的字符串
+    let s = await SM2.convertSM2PubKey(pk);
+    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+    let ddd = code.getDataRow();
+```
+
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN
+
+```
+    //C1C3C2格式的私钥字符串
+    let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
+    //转换后的ASN.1格式的字符串
+    let dc = await SM2.convertSM2PriKey(pik);
+    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+    this.message = aaaa.getDataRow();
+```
+
+#### 5.SM3的方法【返回结果均为OutDTO对象】
+
+* digest SM3摘要
+
+```
+    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
+    this.message = sm3.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
+    this.message = hmac1.getDataRow();
+```
+
+#### 6.SM4的方法【返回结果均为OutDTO对象】
+
+* generateSM4Key 生成SM4的对称密钥
+
+```
+    let sm4 = await SM4.generateSM4Key();
+    console.error("是否成功:" + sm4.getSuccess() + "消息===:" + sm4.getMsg() + "密钥======:", sm4.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+#### 7.SHA的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    let digest = await SHA.digest('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA1 SHA1摘要
+
+```
+    let digest = await SHA.digestSHA1('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA224 SHA224摘要
+
+```
+    let digest = await SHA.digestSHA224('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA384 SHA384摘要
+
+```
+    let digest = await SHA.digestSHA384('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA512 SHA512摘要
+
+```
+    let digest = await SHA.digestSHA512('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    this.message = hmac2.getDataRow();
+```
+
+#### 8.MD5的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    let md5 = await MD5.digest('使用MD5进行摘要~~~');
+    this.message = md5.getDataRow();
+```
+
+#### 9.ECDSA的方法【返回结果均为OutDTO对象】
+
+* generateECDSAKey 生成ECDSA的非对称密钥
+
+```
+    let ecdsa = await ECDSA.generateECDSAKey();
+    console.error("generateECDSAKey:" + ecdsa.getSuccess() + "---" + ecdsa.getMsg()
+    + "\n" + "公钥:" + ecdsa.getDataRow().publicKey + "私钥:" + ecdsa.getDataRow().privateKey)
+```
+
+* sign 签名
+
+```
+    let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+#### 10.ECDH的方法【返回结果均为OutDTO对象】
+
+* ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let ecdsa = await ECDSA.generateECDSAKey();
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+    
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    // 创建非对称密钥生成器
+    let rsaGenerator = crypto.createAsyKeyGenerator('ECC256');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    //获取到贡献密钥
+    let symKey = await ECDH.ecdh(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+#### 11.X25519的方法【返回结果均为OutDTO对象】
+
+* x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    this.message = x25519.getDataRow();
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    let rsaGenerator = crypto.createAsyKeyGenerator('X25519');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    let x25519 = await X25519.x25519(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+### 4.JSON相关组件使用API
+
+#### 1.JSONValue的方法
+
+* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
+    JSONUtil.parse(str);
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+     let listStr = JSONUtil.toJSONString(userList);
+     let uList = JSONUtil.parseArray<User>(listStr);
+     uList.forEach(item => {
+       Logger.error(item.id, item.name);
+     })
+```
+
+#### 2.JSONObject的方法
+
+* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
+    JSONUtil.parse(str);
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+     let listStr = JSONUtil.toJSONString(userList);
+     let uList = JSONUtil.parseArray<User>(listStr);
+     uList.forEach(item => {
+       Logger.error(item.id, item.name);
+     })
+```
+
+#### 3.JSONArray的方法
+
+* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
+    JSONUtil.parse(str);
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+     let listStr = JSONUtil.toJSONString(userList);
+     let uList = JSONUtil.parseArray<User>(listStr);
+     uList.forEach(item => {
+       Logger.error(item.id, item.name);
+     })
+```
+
+#### 4.JSONArrayList的方法
+
+* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
+    JSONUtil.parse(str);
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+     let listStr = JSONUtil.toJSONString(userList);
+     let uList = JSONUtil.parseArray<User>(listStr);
+     uList.forEach(item => {
+       Logger.error(item.id, item.name);
+     })
+```
+
+#### 5.JSONUtil的方法
+
+* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+```
+
+* parse 将传入的json字符串格式化为Object对象
+
+```
+    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
+    let str = JSONUtil.toJSONString(person);
+    console.log(str)
+    JSONUtil.parse(str);
+```
+
+* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+```
+
+* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+
+```
+     let listStr = JSONUtil.toJSONString(userList);
+     let uList = JSONUtil.parseArray<User>(listStr);
+     uList.forEach(item => {
+       Logger.error(item.id, item.name);
+     })
+```
+
+### 5.网络相关类组件使用API
+
+#### 前言
+
+> efAxios封装需要大家共建和提出建议与需求,本版本为第一版本,暂时封装简单,后续逐渐完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见
+
+> 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
+
+> 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
+
+#### 1.efAxiosParams类参数详解
+
+```
+  /**
+   * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true【预计1.1.9版本生效可用】
+   */
+  static isAllEncrypt: boolean = false;
+  /**
+   * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true 【预计1.1.9版本生效可用】
+   */
+  static isPartEncrypt: boolean = false;
+  /**
+   * 关键字加密时的关键字集合 【预计1.1.9版本生效可用】
+   */
+  static keyWordsList: Array<string> = new Array<string>();
+  /**
+   * 用户自定义token的Key,默认为Authorization 
+   */
+  static tokenName: string = 'Authorization';
+  /**
+   * 登录成功后的token值
+   */
+  static tokenValue: string = '';
+  /**
+   * 服务器 URL
+   */
+  static baseURL: string = '';
+  /**
+   * 请求头加密的SM2公钥  【预计1.1.9版本生效可用】
+   */
+  static sm2PubKey: string = '';
+```
+
+#### 2.AxiosUtil工具类
+
+* efAxios 全局对象
+
+```
+  该变量为抛出的全局二次封装的全局axios对象,默认超时时间为10s
+```
+
+* convertRequestInfo 封装的针对于统一请求的处理
+
+```
+   //1.统一给请求头添加nonce防篡改校验因子,业务自行实现,如有需求也可在后续demo中完善
+   //2.统一给请求头添加timestamp防重放的随机数因子,业务自行实现,如有需求也可在后续demo中完善
+   //3.设置默认请求类型 application/json
+   //4.添加统一的isAllEncrypt=true时整体加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+   //5.添加统一的isPartEncrypt=true时根据关键字加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+   //6.添加统一的请求头签名sign字段,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+```
+
+* convertResponseInfo 封装的针对于统一响应的处理 【统一返回OutDTO<T>】
+
+```
+  //目前只对返回数据格式做了统一的OutDTO转换   
+  //要求后端返回的数据格式包含OutDTO中的success,msg   
+  //dataRow和dataTable业务数据自行选择,非必填
+```
+
+#### 3.EfClientApi工具类
+
+> 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
+
+* post请求 async/await 方式
+
+```
+    //参数说明
+    async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //F 为请求入参对象,具体参照示例中的写法
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    //headers提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+```
+
+* get请求 async/await 方式
+
+```
+    //参数说明 格式为  getXXXX/id/name/xxxx
+    async get<E>(url: string): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+```
+
+```
+    //参数说明   参数为json格式
+    async getByParams<E>(url: string, params: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //params表示get请求的入参妇科key:value格式
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    
+```
+
+* delete请求 async/await 方式
+
+```
+    //参数说明
+    async delete<E>(url: string): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //注意demo中的delete请求为rest方式,即入参方式为 delete方法/param1/param2 以此类推
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+```
+
+* put请求 async/await 方式
+
+```
+    //参数说明
+    put<F, E>(url: string, query: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //F 为请求入参对象,具体参照示例中的写法
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+```
+
+* 登录示例
+
+```
+    //1.先设置统一的请求后端前缀 具体时机业务自行决定,Ability中也可
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    //2.调用接口
+    //模拟登录 UserQuery为请求参数,OutDTO<UserDTO>为响应的结果,OutDTO中的对象为业务自己创建
+    const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
+      'account': 'efadmin',
+      'pwd': '123456'
+    }, { 
+      'testAddHeader': '1212121212'   //此处表示当前请求会额外将testAddHeader添加到请求头中
+    });
+    //登录成功
+    if (login.getSuccess()) {
+      //登录成功将token赋值，后续需要,默认token的key为Authorization
+      //如果需要更换业务调用efAxiosParams.tokenName = '业务自定义的token名称'
+      efAxiosParams.tokenName = '如此处更换为efToken';
+      efAxiosParams.tokenValue = login.getDataRow().token;
+    } else {
+      //登录失败
+      ToastUtil.showToast(login.getMsg());
+    }
+```
+
+* post示例
+
+```
+      //模拟测试post请求  此时的请求头中已经存在token字段
+      //UserQuery为请求参数,OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
+        'nickName': 'post请求参数',
+        'name': '测试入参'
+      });
+      if (post.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
       }
-      return {
-        total: total,
-        records: records,
-      };
-    };
 ```
 
-* totalPage 获取总记录数
-
-* hasNext 是否有下一页
-
-* hasPrev 是否有上一个页
-
-* nextPage 下一页页码
-
-* prevPage 上一页码
-
-* getRecords 获取记录数
-
-* goToPage 跳转到指定页码
+* get示例
 
 ```
-     //完整示例如下
-     //传入当前页数和每页记录数,默认是1,10
-     const pageQuery = new PageQuery<Person>(2, 20);
-     // 定义自己的 queryFunction
-     const queryFunction = async (currentPage: number, pageSize: number): Promise<PageResult<Person>> => {
-       const total = 100; // 假设总记录数为 100
-       const records: Person[] = [];
-       // 模拟循环请求，每次请求返回 pageSize 条记录
-       for (let i = 0; i < pageSize; i++) {
-         const id = (currentPage - 1) * pageSize + i + 1;
-         const person: Person = {
-           name: `person${id}`,
-           birth: new Date(),
-           age: id
-         };
-         records.push(person);
-       }
-       return {
-         total: total,
-         records: records,
-       };
-     };
-     // 调用查询接口
-     await pageQuery.queryData(queryFunction);
-     //获取到记录数
-     pageQuery.getRecords().forEach(item => {
-       console.error(item.name + "--" + item.age + "---" + item.birth)
-     })
-     //上一页
-     console.error(pageQuery.prevPage() + "");
-     //请求上一页数据
-     await pageQuery.queryData(queryFunction);
-     pageQuery.getRecords().forEach(item => {
-       console.error(item.name + "--" + item.age + "---" + item.birth)
-     })
-     //跳转到指定页码
-     await pageQuery.goToPage(4, queryFunction);
-     //获取数据
-     pageQuery.getRecords().forEach(item => {
-       console.error(item.name + "-|-" + item.age + "-|-" + item.birth)
-     })
-
+      //模拟测试get请求
+      //OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      if (get.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+      }
 ```
 
-#### 19.CharUtil的方法
-
-* isEmoji 判断是否为emoji表情符
+* put示例
 
 ```
-    console.error(CharUtil.isEmoji(38)+"")
-    // 输出 true
+      //模拟测试put请求
+      //UserQuery为请求参数,OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
+        'id': '11111'
+      });
+      if (put.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+      }
 ```
 
-* isAscii 判断字符是否为ascii码
+* delete示例
 
 ```
-    console.error(CharUtil.isAscii("你")+"")
-    // 输出 false
+      //模拟测试delete请求
+      //OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
+      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
+      if (del.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      }
 ```
 
-#### 20.Logger的方法
-
-*  init  初始化第一个入参为应用名,第二个为域可不填
-
-```
-    Logger.init('测试应用')   建议将该初始化方式写在EntryAbility.ts的onWindowStageCreate方法中
-```
-
-* debug debug级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】绿色
-
-```
-    Logger.debug("debug错误原因为:", 'xxxxxxxxxxxx')
-```
-
-* info info级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】黄色
-
-```
-    Logger.info("info错误原因为:", 'xxxxxxxxxxxx')
-```
-
-* warn warn级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 白色
-
-```
-    Logger.warn("warn错误原因为:", 'xxxxxxxxxxxx')
-```
-
-* error error级别日志【入参为两个字符串,第一个为提示消息,第二个为错误原因】 红色
-
-```
-    Logger.error("error错误原因为:", 'xxxxxxxxxxxx')
-```
-
-### 3.UI组件使用API
+### 6.UI组件使用API
 
 #### 1.ToastUtil的方法
 
@@ -1154,13 +1867,14 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 ```
   入参
   msg:提示消息
-  options {
-    duration: 显示时长,默认为2s,
-    bottom: 距离底部默认为20vp
-  }
+  options: {
+    duration:'',
+    bottom:'',
+    showMode:0
+  }  提示参数duration为显示时长，bottom为距离底部位置,showMode设置弹窗是否显示在应用之上0内,1上
   示例
   ToastUtil.showToast('提示信息');//使用默认参数
-  ToastUtil.showToast('提示信息', { duration: 4000, bottom: '50vp' });//修改参数
+  ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });//修改参数
 ```
 
 #### 2.DialogUtil的方法
@@ -1170,71 +1884,97 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 ```
     入參
     options: {
-      title:标题 默认为温馨提示,
-      msg:提示消息,
-      okText:确定按钮文本 默认为确定,
-      okCallBack:取消按钮文本 默认为取消,
-      okCallBack:确定按钮事件,
-      cancelCallBack:取消按钮事件
+     title:标题默认为温馨提示,
+     msg:提示消息,
+     okText:确定按钮文本,
+     cancelText:取消按钮文本,
+     alignment:弹窗在竖直方向上的对齐方式,
+     maskRect:弹窗遮蔽层区域,
+     isModal:弹窗是否为模态窗口,
+     offset:弹窗相对alignment所在位置的偏移量,
+     okCallBack:确定按钮事件,
+     cancelCallBack:取消按钮事件,不传入cancelCallBack则显示一个按钮
     }
-    //使用默认参数
-    DialogUtil.showDialog({
-      msg: '这是一个弹框提示',
-      okCallBack: this.test   //调用方法无需小括号()
-    });
-    //使用自定义参数
-    DialogUtil.showDialog({
-      title: '修改',
-      okText: 'ok',
-      cancelText: 'cancel',
-      msg: '这是一个弹框提示',
-      okCallBack: this.ok,    //调用方法无需小括号()
-      cancelCallBack: this.cancel       //调用方法无需小括号()
-    });
+    Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
+     DialogUtil.showDialog({
+        msg: '这是一个弹框提示~~~~',
+        okCallBack: this.ok,
+        okText: '揍你',
+        cancelText: '去吧',
+        cancelCallBack: this.cancel
+      });
+    })
+    Button("dialog一个按钮").margin({ bottom: '10vp' }).onClick(() => {
+      DialogUtil.showDialog({
+        msg: '不写cancelCallBack则显示一个按钮',
+        okCallBack: this.test   //调用方法无需小括号()
+      });
+    })
+    Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+      DialogUtil.showDialog({
+        msg: '这是一个弹框提示',
+        okText: '同意',
+        okCallBack: this.test, //调用方法无需小括号()
+        cancelCallBack: this.cancel
+      });
+    })
 ```
 
 * showAlertDialog 弹出一个警告提示框
 
 ```
     入參
-    msg:警告消息
-    {title:,autoCancel:,alignment:,gridCount:,buttons:按钮}
-    options: {
-      title:提示标题默认为(警告提示),
-      autoCancel:点击遮罩是否自动关闭默认为(false),
-      alignment:弹框对齐方式默认为(底部Bottom),
-      gridCount:宽度所占用栅格数默认为10,
-      buttons:按钮数组只能是两个,一个确定一个取消
+    options
+    {
+     msg:警告消息,
+     title:提示标题默认为(警告提示),
+     subtitle:副标题,
+     autoCancel:点击遮罩是否自动关闭默认为(false),
+     alignment:弹框对齐方式默认为(底部Bottom),
+     gridCount:宽度所占用栅格数默认为10,
+     offset:弹窗相对alignment所在位置的偏移量,
+     buttons:弹框按钮集合,
+     maskRect:弹窗遮蔽层区域
     }
+    buttons:AlertDialogBtn 弹框按钮类只允许有两个第一个为确认按按,第二个为取消按钮
     buttons的类型
     [
       {
         value:确定按钮文本默认为确定,
         fontColor:文本颜色默认为#fff,
         backgroundColor:背景颜色默认值为#409eff,
-        callBack:确定按钮回调事件
+        callBack:确定按钮回调事件,
+        enabled:点击Button是否响应,
+        defaultFocus:设置Button是否是默认焦点,
+        style:设置Button的风格样式
       },//确定按钮
       {
         value:取消按钮文本默认为取消,
         fontColor:文本颜色默认为#fff,
         backgroundColor:背景颜色默认值为#dcdfe6,
-        callBack:取消按钮回调事件
+        callBack:取消按钮回调事件,
+        enabled:点击Button是否响应,
+        defaultFocus:设置Button是否是默认焦点,
+        style:设置Button的风格样式
       }//取消按钮
     ]
     //使用默认参数
-    Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
-       DialogUtil.showAlertDialog("这个是一个，默认警告弹框");//调用方法无需小括号()
-    })
+    DialogUtil.showAlertDialog({
+      msg: "这个是一个，默认警告弹框",
+      buttons: [
+        { callBack: this.ok }
+      ]
+    });
     //使用自定义参数
-    Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
-       DialogUtil.showAlertDialog("这个是一个警告弹框",{
-         title:'标题',
-         alignment:DialogAlignment.Top,
-         buttons:[
-         {callBack:this.can },//调用方法无需小括号()
-         {callBack:this.two}//调用方法无需小括号()
-       ]});
-    })
+   DialogUtil.showAlertDialog({
+     msg: "这个是一个警告弹框",
+     title: '标题',
+     alignment: DialogAlignment.Top,
+     buttons: [
+       { callBack: this.ok, style: DialogButtonStyle.HIGHLIGHT },
+       { callBack: this.cancel }
+     ]
+   });
 ```
 
 #### 3.ActionUtil的方法
@@ -1245,7 +1985,9 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     入參
     options: {
       title:标题 默认为温馨提示,
-      btn:需要显示的菜单项,最大支持6个
+      btn:需要显示的菜单项,最大支持6个,
+      showInSubWindow:某弹框需要显示在主窗口之外时，是否在子窗口显示此弹窗,
+      isModal:弹窗是否为模态窗口，模态窗口有蒙层，非模态窗口无蒙层
     }
     Buttons:{
       text:菜单项标题
@@ -1270,8 +2012,10 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     入參
     options: {
       title:标题,
-      btn:菜单字符串数组 最多6个大于6个显示前6个,
-      clickCallBack:点击菜单回调函数，默认传回当前点击菜单项
+      btn:菜单字符串数组 最多6个,
+      clickCallBack:点击菜单回调函数，默认传回当前点击菜单项,
+      showInSubWindow:某弹框需要显示在主窗口之外时，是否在子窗口显示此弹窗
+      isModal:弹窗是否为模态窗口，模态窗口有蒙层，非模态窗口无蒙层
     }
     //使用默认参数
     Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
@@ -1294,9 +2038,17 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     options: {
       title:提示可不填,
       msg:内容可不填,
+      subtitle:副标题,
+      autoCancel:点击遮障层时，是否关闭弹窗,
+      offset:弹窗相对alignment所在位置的偏移量,
+      maskRect:弹窗遮蔽层区域，在遮蔽层区域内的事件不透传，在遮蔽层区域外的事件透传,
+      showInSubWindow:某弹框需要显示在主窗口之外时，是否在子窗口显示此弹窗,
+      isModal:弹窗是否为模态窗口，模态窗口有蒙层，非模态窗口无蒙层,
       alignment:弹框对齐方式默认为(底部Bottom),
       sheets:列表项字符串数组,
-      clickCallBack:点击列表项回调事件,默认传回选中的当前项
+      clickCallBack:点击列表项回调事件,默认传回选中的当前项,
+      backgroundColor:弹窗背板颜色,
+      backgroundBlurStyle:弹窗背板模糊材质
     }
     //使用默认参数
      Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
@@ -1311,6 +2063,7 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
       ActionUtil.showActionSheet({
         title:'弹框的标题',
         msg:'弹框的消息',
+        subtitle:'副标题',
         alignment:DialogAlignment.Top,
         sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         clickCallBack: (data: string) => {
@@ -1319,7 +2072,366 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
     })
 ```
 
-#### 4.Cascade省市区级联
+#### 4.LoadingUtil的方法
+
+* 入参介绍
+
+```
+    LoadOptions 全局加载入参实体
+    options:{
+        show:是否显示默认false,
+        content:加载提示内容默认正在拼命加载中,请稍后...,
+        showInSubWindow:是否显示在主窗口之外默认false,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showLoading: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    LoadingUtil({
+       options: { show: this.showLoading, alignment: DialogAlignment.Top, content: '更改了加载提示...' }
+    });
+```
+
+* show 显示加载框
+
+```
+    在需要显示的地方更改变量值,如发起一个axios请求时
+    this.showLoading = true;
+```
+
+* close 关闭加载框
+
+```
+    在需要关闭的地方更改变量值,如axios请求成功返回结果时
+    this.showLoading = false;
+```
+
+* 演示
+
+```
+    Button("显示全局loading").margin({ bottom: '10vp' }).onClick(() => {
+       this.showLoading = true;
+       setTimeout(() => {
+         this.showLoading = false;
+       }, 3000);
+    })
+```
+
+#### 5.TipsUtil的方法
+
+* 入参介绍
+
+```
+    TipsOptions 提示框入参实体
+    options:{
+        show:是否显示默认false,
+        title:提示框标题默认温馨提示,
+        content:提示框内容,
+        checkTips:checkbox的提示内容默认不再提醒,
+        btnList:按钮字符串数组默认['同意','取消']
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showTips: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    TipsUtil({
+      options: {
+        show: this.showTips,
+        content: '请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        clickCallBack: (index, isChecked) => {
+          ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+          this.showTips = false;
+        }
+      }
+    });
+    clickCallBack中的两个入参
+    1.index为点击按钮的下标,0为点击第一个按钮,1为点击第二个按钮
+    2.isChecked为checkbox是否选中,选中为true
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showTips = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index, isChecked) => {
+       this.showTips = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Tips").margin({ bottom: '10vp' }).onClick(() => {
+      this.showTips = true;
+    })
+```
+
+#### 6.SelectUtil的方法
+
+* 入参介绍
+
+```
+    SelectOptions 选择框入参实体
+    options:{
+        show:是否显示默认false,
+        title:选择弹出框标题,
+        content:选择弹出框内容,
+        btnTxt:按钮字符串,
+        ctxList:选项内容数组
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showSelect: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    SelectUtil({
+      options: {
+        show: this.showSelect,
+         ctxList: ['苹果', '香蕉', '梨', '哈密瓜','凤梨','西瓜','火龙果','伊丽莎白'],
+         clickCallBack: (selectData) => {
+           //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
+           if (selectData) {
+             ToastUtil.showToast('选择了' + selectData);
+           }
+           this.showSelect = false;
+         }
+      }
+    })
+    clickCallBack中的入参
+    1.selectData为点击选择的内容项
+```
+
+* 显示选中框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showSelect = true;
+```
+
+* 关闭选择框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (selectData) => {
+       //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
+       if (selectData) {
+         ToastUtil.showToast('选择了' + selectData);
+       }
+       this.showSelect = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Select").margin({ bottom: '10vp' }).onClick(() => {
+      this.showSelect = true;
+    })
+```
+
+#### 7.ConfirmUtil的方法
+
+* 入参介绍
+
+```
+    ConfirmOptions 信息确认框入参实体
+    options:{
+        show:是否显示默认false,
+        title:提示框标题默认操作确认,
+        content:提示框内容,
+        checkTips:checkbox的提示内容默认禁止后不再提醒,
+        btnList:按钮字符串数组默认['禁止','允许']
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showConfirm: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    ConfirmUtil({
+      options: {
+        show: this.showConfirm,
+        title: '这个是提示',
+        content: '确认要禁止定位权限么?',
+        clickCallBack: (index, isChecked) => {
+          ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+          this.showConfirm = false;
+        }
+      }
+    })
+    clickCallBack中的两个入参
+    1.index为点击按钮的下标,0为点击第一个按钮,1为点击第二个按钮
+    2.isChecked为checkbox是否选中,选中为true
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showConfirm = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index, isChecked) => {
+       this.showConfirm = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Conform").margin({ bottom: '10vp' }).onClick(() => {
+      this.showConfirm = true;
+    })
+```
+
+#### 8.AlertUtil的方法
+
+* 入参介绍
+
+```
+    AlertOptions 操作确认框入参实体
+    options:{
+        show:是否显示默认false,
+        content:提示框内容,
+        btnList:按钮字符串数组默认['确认','取消']
+        clickCallBack:点击弹框按钮回调函数,
+        alignment:弹窗在竖直方向上的对齐方式默认Center,
+        offset:弹窗相对alignment所在位置的偏移量默认Bottom相关y:-20,Top相关y:50
+    }
+```
+
+* 初始化
+
+```
+    @State showAlert: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    AlertUtil({
+      options: {
+        show: this.showAlert,
+        content: '这是一个警告弹出框',
+        clickCallBack: (index) => {
+          ToastUtil.showToast(index === 0 ? '点击了第一个按钮' : '点击了第二个按钮');
+          this.showAlert = false;
+        }
+      }
+    })
+    clickCallBack中的入参
+    1.index为点击按钮的下标,0为点击第一个按钮,1为点击第二个按钮
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如提示用户授权
+    this.showAlert = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index) => {
+       this.showAlert = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Alert").margin({ bottom: '10vp' }).onClick(() => {
+      this.index = true;
+    })
+```
+
+#### 9.ExceptionUtil的方法
+
+* 入参介绍
+
+```
+    PromOptions 异常提示框入参实体
+    options:{
+        show:是否显示默认false,
+        content:提示框内容,
+        actionText:指定当前异常提示的右侧图标按钮的文字,
+        clickCallBack:点击弹框按钮回调函数
+    }
+```
+
+* 初始化
+
+```
+    @State showException: boolean = false;
+    在build中初始化该组件,show接收一个@State修饰符修饰的boolean变量
+    ExceptionUtil({
+      options: {
+        show: this.showException,
+        clickCallBack: (index) => {
+          //index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+          ToastUtil.showToast("点击了" + index);
+          this.showException = false;
+        }
+      }
+    })
+    clickCallBack中的入参
+    1.index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方更改变量值,如网络异常
+    this.showException = true;
+```
+
+* 关闭提示框
+
+```
+    在回调成功事件中关闭
+    clickCallBack: (index) => {
+       this.showException = false;
+    }
+```
+
+* 演示
+
+```
+    Button("显示Exception").margin({ bottom: '10vp' }).onClick(() => {
+      this.showException = true;
+    })
+```
+
+#### 10.Cascade省市区级联
 
 ```
   入参  
@@ -1335,6 +2447,323 @@ import { JSONUtil,RSA,AES,xxxxxxxxxxx } from '@yunkss/eftool'
 
 - 效果图  
   [![cascade1.th.jpg](https://z4a.net/images/2024/02/21/cascade1.th.jpg)](https://z4a.net/image/jPZx5r)
+
+#### 11.ImmersionUtil沉浸式导航工具类
+
+* 初始化
+
+```
+  在EntryAbility中的onWindowStageCreate中进行初始化和设置
+  onWindowStageCreate(windowStage: window.WindowStage): void {
+    //1.初始化
+    let imm = new ImmersionUtil();
+    windowStage.loadContent('pages/Index', (err, data) => {
+      //2.调用沉浸式设置方法
+      imm.immersiveWindow(windowStage);
+      if (err.code) {
+        hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+        return;
+      }
+      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+    });
+  }
+```
+
+* immersiveWindow 设置
+
+```
+   //参数详解
+   {
+    windowStage:窗口对象,
+    isLayoutFullScreen:是否开启全屏显示,默认true,
+    hiddenBar:是否隐藏底部导航,默认false,当为true时页面无需避让,
+    color:窗口背景颜色,默认值为白色
+   }
+```
+
+* 示例
+
+```
+  //本示例主要讲解hiddenBar为false时避让区设置
+  //在初始化时已经向AppStorage中存入了变量bottomHeight,作为避让高度
+  //在需要避让的页面中获取存入的值设置bottom即可
+  //获取存入的应用变量
+  bottomRectHeight: string = AppStorage.get<number>('bottomHeight') + 'px';
+  //设置给对应的外层容器组件即可
+  .margin({ bottom: this.bottomRectHeight })
+```
+
+#### 12.WindowUtil窗口工具类
+
+* 入参介绍
+
+```
+    WinOptions 窗口工具入参实体
+    options:{
+        name:窗口名称默认eftool,
+        windowType:窗口类型默认TYPE_DIALOG,
+        contentRouter:窗口要显示的路由如:pages/Welcome需要在main_pages.json中声明,
+        bgColor:窗口背景颜色默认#33606266,
+        callBack:窗口创建回调函数
+    }
+```
+
+* createWindow 创建window
+
+```
+  在需要弹出窗口的页面创建弹出方法
+  async openWin() {
+    await WindowUtil.createWindow({
+      contentRouter: 'pages/Welcome',
+      callBack:()=>{
+          //此处如果创建完窗口有业务需求则自定义
+        ToastUtil.showToast('窗口已创建~');
+      }
+    })
+  }
+```
+
+* closeWindow 关闭window
+
+```
+   //在需要关闭弹窗的时候调用，如在弹窗内处理完需求后关闭
+   WindowUtil.closeWindow();
+```
+
+* 示例
+
+```
+  Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+    this.openWin();
+  })
+  
+  //Welcome页面
+  Button('关闭弹窗').margin({ top: 20 }).onClick(() => {
+    WindowUtil.closeWindow();
+  })
+```
+
+#### 13.NotificationUtil通知工具类
+
+* 入参介绍
+
+```
+    NoticeOptions 通知入参实体类
+    options:{
+        id:通知ID默认生成,
+        isOngoing:是否进行时通知默认true,
+        isStopwatch:是否显示已用时间默认true,
+        label:通知标签默认eftool,
+        title:通知标题默认来自eftool通知,
+        text:通知内容,
+        additionalText:通知附加内容默认'',
+        longText:通知的长文本/多行的文本用英文逗号分割(多行文本时记得用逗号分隔),
+        briefText:通知概要内容默认概要内容,
+        expandedTitle:通知展开时的标题默认展开标题,
+        picture:图片,
+        callBack:业务回调函数
+    }
+```
+
+* authorizeNotification 校验是否已授权通知服务
+
+```
+  在需要发送通知的业务中调用  index为-1表示禁止，1表示已授权
+  await NotificationUtil.authorizeNotification((index: number) => {
+    ToastUtil.showToast(index > 0 ? '已经授予通知权限' : '用户禁止授权,请用户在设置中操作');
+  });
+```
+
+* publishBasic 推送普通文本通知
+
+```
+   //在需要推送普通通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,text为必填,其余均有默认值
+   await NotificationUtil.publishBasic({
+     text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+     title: '抢票时间到',
+     additionalText: '这个是additionalText',
+     isOngoing:true,
+     isStopwatch:true,
+     label:'普通通知',
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* publishMultiLine 推送多文本通知
+
+```
+   //在需要推送多文本通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,longText为必填,其余均有默认值用英文逗号分隔
+   await NotificationUtil.publishMultiLine({
+     text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
+     title: '抢票时间到',
+     additionalText: '这个是additionalText',
+     expandedTitle: '多文本的展开',
+     briefText: '多文本的概要',
+     longText: '第一行的内容,第二行的内容,第三行的内容,第四行的内容,第无行的内容',
+     isOngoing:true,
+     isStopwatch:true,
+     label:'普通通知',
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* publishLongText 推送长文本通知
+
+```
+   //在需要推送长文本通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,longText为必填,其余均有默认值
+   await NotificationUtil.publishLongText({
+     text: '推送长文本内容！！！！！！！！！！！！！！！！！！！！',
+     title: '抢票时间到11111111111',
+     longText: '展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差展出差出差出差出差',
+     expandedTitle: '展开的副标题',
+     briefText: '这个是概要',
+     isOngoing:true,
+     isStopwatch:true,
+     label:'长文本通知',
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* publishPicture 推送带有图片的通知(暂时未见到图片通知,不知是否为BUG)
+
+```
+   //在需要推送长文本通知时调用,具体参数如图,下方为全量参数,具体根据业务自行选择,均有默认值
+   await NotificationUtil.publishPicture({
+     text: '222222',
+     title: '抢票时间到',
+     expandedTitle: '多文本的展开',
+     briefText: '多文本的概要',
+     isOngoing: true,
+     isStopwatch: true,
+     label: '图片通知',
+     picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+       .buffer).createPixelMap(),
+     callBack: (noticeId: number) => {
+       ToastUtil.showToast('通知推送成功:' + noticeId);
+     }
+   })
+```
+
+* readOrRemoveNotice 读取或清除通知后重置角标
+
+```
+   NotificationUtil.readOrRemoveNotice(want);
+```
+
+* cancelNotice 取消通知
+
+```
+   //在需要取消的时候调用，传入通知id
+   NotificationUtil.cancelNotice(10011, () => {
+     ToastUtil.showToast('取消通知成功~');
+   });
+```
+
+* clearBadge 重置角标
+
+```
+   NotificationUtil.clearBadge();
+```
+
+* clearNotice 清理所所有通知
+
+```
+   NotificationUtil.clearNotice();
+```
+
+* 当点击通知时默认调起当前Ability,清除时也需要重新设置应用角标
+
+```
+  //角标更新需要在UIAbility的onNewWant中处理,默认的为EntryAbility页面中
+  /**
+   * 监听通知传入的want
+   * @param want
+   * @param launchParam
+   */
+  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    NotificationUtil.readOrRemoveNotice(want);
+  }
+```
+
+#### 14.LocationUtil位置工具类
+
+* getGeoLocation 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限) 【返回OutDTO对象】
+
+```
+  //注意APPROXIMATELY_LOCATION和LOCATION权限需要配置到项目的module.json5文件的requestPermissions中
+  //需要获取用户当前定位的中文位置信息时调用,返回格式如北京市海淀区xxx街道xxxx号
+  let result = await LocationUtil.getGeoLocation();
+  this.message = result.getDataRow();
+```
+
+* address2Location 地理逆编码,将地理描述转换为具体坐标-无需申请定位权限 【返回OutDTO对象】
+
+```
+   //已有详细地址需要编码为坐标信息时调用
+   let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
+   this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+```
+
+* geoConvert 地理逆编码,转换为中文-无需申请定位权限
+
+```
+   //已知经纬度，需要获取中文地理位置描述时调用
+   let result = await LocationUtil.geoConvert(40.102248232795134, 116.54190501929297);
+   if (result.placeName) {
+     this.message = result.placeName;
+   }
+```
+
+* getCountryCode 获取当前的国家码-无需申请定位权限 【返回OutDTO对象】
+
+```
+   //在需要获取当前国家编码时调用
+   let res = await LocationUtil.getCountryCode();
+   this.message = res.getDataRow();
+```
+
+* 示例
+
+```
+  //方法
+  async geoLocation() {
+    let result = await LocationUtil.getGeoLocation();
+    this.message = result.getDataRow();
+  }
+  async add2location() {
+    let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
+    this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+  }
+  async geoConvert() {
+    let result = await LocationUtil.geoConvert(40.102248232795134, 116.54190501929297);
+    if (result.placeName) {
+      this.message = result.placeName;
+    }
+  }
+  async getCountryCode() {
+    let res = await LocationUtil.getCountryCode();
+    this.message = res.getDataRow();
+  }
+  //UI
+  Button('获取当前定位').margin({ bottom: '10vp' }).onClick(() => {
+    this.geoLocation();
+  })
+  Button('根据经纬度获取Location信息').margin({ bottom: '10vp' }).onClick(() => {
+    this.geoConvert();
+  })
+  Button('根据地理位置获取定位信息').margin({ bottom: '10vp' }).onClick(() => {
+    this.add2location();
+  })
+  Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
+    this.getCountryCode();
+  })
+```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 

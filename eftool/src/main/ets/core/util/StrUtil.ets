@@ -32,12 +32,12 @@ export class StrUtil {
    * @param s  传入要转换的值
    * @returns 转换后的字符串
    */
-  static asString(s: any): string | undefined {
+  static asString(s: object): string | undefined {
     return typeof s === 'string' ? s as string : undefined
   }
 
   /**
-   *判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
+   * 判断字符串是否为非空白符(空白符包括空格、制表符、全角空格和不间断空格)true为非空，否则false
    * @param str
    * @returns
    */
@@ -46,7 +46,7 @@ export class StrUtil {
   }
 
   /**
-   *
+   * 判断传入的对象是否是空格
    * @param obj
    * @returns
    */
@@ -59,7 +59,7 @@ export class StrUtil {
   }
 
   /**
-   *
+   * 判断传入的对象是否是空
    * @param obj
    * @returns
    */
@@ -92,7 +92,7 @@ export class StrUtil {
       return true;
     }
     for (let str of strs) {
-      if (this.isBlank(str)) {
+      if (StrUtil.isBlank(str)) {
         return true;
       }
     }
@@ -120,7 +120,7 @@ export class StrUtil {
     // 将字符串转换为小写，并按照空格、下划线、中划线来分割单词
     const words = input.toLowerCase().split(/[\s_-]+/);
     // 将首字母小写的单词转换为驼峰命名
-    const output = ArrayUtil.removeEmptyValues(words).map((word, index) => {
+    const output = ArrayUtil.removeEmptyValues(words).map((word: string, index) => {
       if (index === 0) {
         return word;
       }
@@ -204,42 +204,43 @@ export class StrUtil {
     return str.toUpperCase();
   }
 
+
   /**
    * 截断字符串，如果字符串超出了限定的最大值。 被截断的字符串后面会以 omission 代替，omission 默认是 "..."
    * @param string  要截断的字符串
-   * @param options 选项对象
+   * @param options 选项对象 StrOptions
    * @param options.length=20  允许的最大长度
    * @param options.omission='...'  超出后的代替字符
    * @param options.separator  截断点
    * @returns 截取后的字符串
    */
-  static truncate(string: string = '', options?: {
-    length?: number,
-    omission?: string,
-    separator?: RegExp | string
-  }): string {
-    const {
-      length = 20,
-      omission = '...',
-      separator
-    } = options || {};
-    if (string.length <= length) {
+  static truncate(string: string = '', options?: StrOptions): string {
+    if (!options) {
+      options = new StrOptions();
+    }
+    if (string.length <= options.length) {
       return string;
     }
-    if (!separator) {
-      return string.slice(0, length) + omission;
+    if (!options.separator) {
+      return string.slice(0, options.length) + options.omission;
     }
-    if (typeof separator === 'string') {
-      const index = string.indexOf(separator, length);
+    if (typeof options.separator === 'string') {
+      const index = string.indexOf(options.separator, options.length);
       if (index !== -1) {
-        return string.slice(0, index) + omission;
+        return string.slice(0, index) + options.omission;
       }
-    } else if (separator instanceof RegExp) {
-      const match = string.slice(0, length).match(separator);
+    } else if (options.separator instanceof RegExp) {
+      const match = string.slice(0, options.length).match(options.separator);
       if (match) {
-        return string.slice(0, length - (match[0].length)) + omission;
+        return string.slice(0, options.length - (match[0].length)) + options.omission;
       }
     }
-    return string.slice(0, length) + omission;
+    return string.slice(0, options.length) + options.omission;
   }
+}
+
+export class StrOptions {
+  length: number = 20;
+  omission: string = '...';
+  separator?: RegExp | string
 }
