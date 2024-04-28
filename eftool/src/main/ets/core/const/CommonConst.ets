@@ -36,4 +36,12 @@ export class CommonConst {
    * 右花括号
    */
   static readonly ykh: string = "}";
+  /**
+   * 左中括号
+   */
+  static readonly zzkh: string = "[";
+  /**
+   * 右中括号
+   */
+  static readonly yzkh: string = "]";
 }

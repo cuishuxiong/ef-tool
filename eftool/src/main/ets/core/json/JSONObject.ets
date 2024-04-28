@@ -15,59 +15,21 @@ import { JSONArrayList } from './JSONArrayList';
 export class JSONObject extends HashMap<string, JSONValue> {
   /**
    * json字符串转换为JSONObject对象
-   * @param bean 实体对象
-   * @returns JSON 对象
+   * @param jsonStr json字符串
+   * @returns JSONObject 对象
    */
   public static parse(jsonStr: string): JSONObject {
     let json = new JSONObject();
-
-    return json;
-  }
-
-  /**
-   * json字符串转换为实体对象
-   * @param bean 实体对象
-   * @returns JSON 对象
-   */
-  public static parseObject<T>(jsonStr: string): T {
-    let json = new JSONObject();
-
-    return json as T;
-  }
-
-  /**
-   * json字符串转换为实体对象
-   * @param bean 实体对象
-   * @returns JSON 对象
-   */
-  public static toJSONString(object: Object): string {
-    let sb = new StringBuilder();
-
-    Object.entries(object).keys()
-
-    return sb.toString();
-  }
-
-  /**
-   * 实体对象转换为JSONObject对象
-   * @param bean 实体对象
-   * @returns JSON 对象
-   */
-  public static from<T>(bean: T): JSONObject {
-    let json = new JSONObject();
-    //转换成字符串
-    let str = JSON.stringify(bean);
     //转换成json对象
-    let jVal: Record<string, JSONValue> = JSON.parse(str);
-    //接收
+    let jVal: Record<string, JSONValue> = JSON.parse(jsonStr);
     //循环赋值
     Object.entries(jVal).forEach((item) => {
       if (item[1] instanceof JSONObject) {
         json.set(item[0], JSONObject.from(item[1]));
       } else if (item[1] instanceof JSONArray) {
-        json.set(item[0], JSONArray.bean2JSONArray(item[1]));
+        json.set(item[0], JSONArray.from(item[1]));
       } else if (item[1] instanceof JSONArrayList) {
-        json.set(item[0], JSONArrayList.bean2JSONArray(item[1]));
+        json.set(item[0], JSONArrayList.from(item[1]));
       } else if (item[1] instanceof Date) {
         json.set(item[0], DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
       } else if (item[1] instanceof Object) {
@@ -80,11 +42,71 @@ export class JSONObject extends HashMap<string, JSONValue> {
   }
 
   /**
-   * 迭代获取
-   * @param iter
-   * @returns
+   * json字符串转换为实体对象
+   * @param jsonStr json字符串
+   * @returns T 对象
    */
-  public convertString(iter: IterableIterator<string>): string {
+  public static parseObject<T>(jsonStr: string): T {
+    let json = JSONObject.parse(jsonStr);
+    return json as T;
+  }
+
+  /**
+   * Object对象换为json字符串
+   * @param object object对象
+   * @returns JSON字符串
+   */
+  public static toJSONString(object: Object): string {
+    //转换成字符串
+    let str = JSON.stringify(object);
+    //转换成json对象
+    let jVal: Record<string, JSONValue> = JSON.parse(str);
+    let map = new HashMap<string, JSONValue>();
+    //转换成map
+    Object.entries(jVal).forEach(item => {
+      map.set(item[0], item[1]);
+    })
+    //获取key迭代器
+    let iter: IterableIterator<string> = map.keys();
+    return new JSONObject().convertString(iter, map);
+  }
+
+  /**
+   * 实体对象转换为JSONObject对象
+   * @param bean 实体对象
+   * @returns JSONObject 对象
+   */
+  public static from<T>(bean: T): JSONObject {
+    let json = new JSONObject();
+    //转换成字符串
+    let str = JSON.stringify(bean);
+    //转换成json对象
+    let jVal: Record<string, JSONValue> = JSON.parse(str);
+    //循环赋值
+    Object.entries(jVal).forEach((item) => {
+      if (item[1] instanceof JSONObject) {
+        json.set(item[0], JSONObject.from(item[1]));
+      } else if (item[1] instanceof JSONArray) {
+        json.set(item[0], JSONArray.from(item[1]));
+      } else if (item[1] instanceof JSONArrayList) {
+        json.set(item[0], JSONArrayList.from(item[1]));
+      } else if (item[1] instanceof Date) {
+        json.set(item[0], DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
+      } else if (item[1] instanceof Object) {
+        json.set(item[0], JSONObject.from(item[1]));
+      } else {
+        json.set(item[0], item[1]);
+      }
+    })
+    return json;
+  }
+
+  /**
+   * 迭代转换json
+   * @param iter  迭代器
+   * @returns json字符串
+   */
+  private convertString(iter: IterableIterator<string>, map?: HashMap<string, JSONValue>): string {
     //转换的字符串
     let sb: StringBuilder = new StringBuilder();
     //拼接左括号
@@ -99,7 +121,10 @@ export class JSONObject extends HashMap<string, JSONValue> {
       }
       isFirst = false;
       //获取值
-      let val: JSONValue = this.get(key);
+      let val: JSONValue = '';
+      if (map && map.length > 0) {
+        val = map.get(key);
+      }
       //判断类型
       if (val instanceof JSONObject) {
         sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONObject).toString());
@@ -126,7 +151,7 @@ export class JSONObject extends HashMap<string, JSONValue> {
       } else if (typeof val === 'number' || typeof val === 'boolean') {
         sb.append(Const.quot + key + Const.quot + Const.mh + val);
       } else {
-        continue;
+        sb.append(Const.quot + key + Const.quot + Const.mh + null);
       }
     }
     //拼接右括号
@@ -139,54 +164,9 @@ export class JSONObject extends HashMap<string, JSONValue> {
    * @returns
    */
   public toString(): string {
-    //转换的字符串
-    let sb: StringBuilder = new StringBuilder();
-    //拼接左括号
-    sb.append(Const.zkh);
     //获取key的迭代器
     let iter: IterableIterator<string> = this.keys();
-    // 是否为第一个字符
-    let isFirst: boolean = true;
-    //迭代获取值转换成字符串
-    for (const key of iter) {
-      if (!isFirst) {
-        //拼接逗号
-        sb.append(Const.dh);
-      }
-      isFirst = false;
-      //获取值
-      let val: JSONValue = this.get(key);
-      //判断类型
-      if (val instanceof JSONObject) {
-        sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONObject).toString());
-      } else if (val instanceof JSONArray) {
-        sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONArray).toString());
-      } else if (val instanceof JSONArrayList) {
-        sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONArrayList).toString());
-      } else if (val instanceof Date) {
-        sb.append(Const.quot + key + Const.quot + Const.mh + DateUtil.format((val as Date), DateConst.YMD_HLINE_HMS));
-      } else if (val instanceof Object) {
-        //转换成字符串
-        let str = JSON.stringify(val);
-        //转换成json对象
-        let jVal: Record<string, JSONValue> = JSON.parse(str);
-        //接收
-        let jo = new JSONObject();
-        //循环赋值
-        Object.entries(jVal).forEach((item) => {
-          jo.set(item[0], item[1]);
-        })
-        sb.append(Const.quot + key + Const.quot + Const.mh + jo.toString());
-      } else if (typeof val === 'string') {
-        sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
-      } else if (typeof val === 'number' || typeof val === 'boolean') {
-        sb.append(Const.quot + key + Const.quot + Const.mh + val);
-      } else {
-        continue;
-      }
-    }
-    //拼接右括号
-    sb.append(Const.ykh);
-    return sb.toString();
+    //转换数据
+    return new JSONObject().convertString(iter, this);
   }
 }

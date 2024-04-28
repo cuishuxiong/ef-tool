@@ -7,4 +7,4 @@ import { JSONArray } from './JSONArray';
 import { JSONArrayList } from './JSONArrayList';
 import { JSONObject } from './JSONObject';
 
-export type JSONValue = string | number | boolean | Date | Object | JSONObject | JSONArray | JSONArrayList ;
+export type JSONValue = string | number | boolean | Date | Object | JSONObject | JSONArray | JSONArrayList | null;

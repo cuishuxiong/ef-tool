@@ -4,14 +4,14 @@
  * @TODO StringBuilder
  */
 export class StringBuilder {
-  private value: string[];
+  private value: (string | number | boolean | null)[];
 
   constructor() {
     this.value = [];
   }
 
-  append(str: string | number): StringBuilder {
-    this.value.push(String(str));
+  append(str: string | number | boolean | null): StringBuilder {
+    this.value.push(str);
     return this;
   }
 
