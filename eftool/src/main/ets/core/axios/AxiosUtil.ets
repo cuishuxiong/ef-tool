@@ -177,8 +177,10 @@ export class AxiosUtil {
         //关键字加密
         response.data = await AxiosUtil.decryptPartResponseData(response.data);
       }
-      //将响应数据转换
-      response.data = AxiosUtil.convertResponseDTO(response);
+      if (efAxiosParams.isConvertDTO) {
+        //将响应数据转换
+        response.data = AxiosUtil.convertResponseDTO(response);
+      }
     } else {
       ToastUtil.showToast('接口返回错误~');
     }
@@ -332,6 +334,10 @@ export class efAxiosParams {
    *加解密接口忽略集合
    */
   static ignoreEncryptList: Array<string> = new Array<string>();
+  /**
+   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
+   */
+  static isConvertDTO: boolean = true;
 }
 
 /**

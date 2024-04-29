@@ -1672,15 +1672,15 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
   /**
-   * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true【预计1.1.9版本生效可用】
+   * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true
    */
   static isAllEncrypt: boolean = false;
   /**
-   * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true 【预计1.1.9版本生效可用】
+   * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true
    */
   static isPartEncrypt: boolean = false;
   /**
-   * 关键字加密时的关键字集合 【预计1.1.9版本生效可用】
+   * 关键字加密时的关键字集合
    */
   static keyWordsList: Array<string> = new Array<string>();
   /**
@@ -1696,9 +1696,17 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
    */
   static baseURL: string = '';
   /**
-   * 请求头加密的SM2公钥  【预计1.1.9版本生效可用】
+   * 请求头加密的SM2公钥
    */
   static sm2PubKey: string = '';
+   /**
+   *加解密接口忽略集合
+   */
+  static ignoreEncryptList: Array<string> = new Array<string>();
+  /**
+   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
+   */
+  static isConvertDTO: boolean = true;
 ```
 
 #### 2.AxiosUtil工具类
@@ -1785,6 +1793,20 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 
 * 登录示例
+
+```
+    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
+    efAxiosParams.isConvertDTO = false;
+    const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
+      'account': 'efadmin',
+      'pwd': '123456'
+    }, {
+      'csxTest': '1212121212'
+    });
+    if (loginNoDTO.token) {
+      ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
+    }
+```
 
 ```
     //1.先设置统一的请求后端前缀 具体时机业务自行决定,Ability中也可

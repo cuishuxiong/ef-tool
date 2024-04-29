@@ -124,10 +124,24 @@ struct Index {
   }
 
   async sendRequest() {
-    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     efAxiosParams.isAllEncrypt = true;
     efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+
+    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
+    // efAxiosParams.isConvertDTO = false;
+
+    // const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
+    //   'account': 'efadmin',
+    //   'pwd': '123456'
+    // }, {
+    //   'csxTest': '1212121212'
+    // });
+    // if (loginNoDTO.token) {
+    //   ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
+    // }
+
     //模拟登录
     const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
