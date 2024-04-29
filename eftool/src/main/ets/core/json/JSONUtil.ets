@@ -1,17 +1,18 @@
+import { DateConst } from '../const/DateConst';
+import { DateUtil } from '../util/DateUtil'
 /**
  * @Author csx
  * @DateTime 2023/12/29 20:10
  * @TODO JSONUtil   各种json转换工具类
+ * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 代替
  */
-import { DateConst } from '../const/DateConst';
-import { DateUtil } from '../util/DateUtil'
-
 export class JSONUtil {
   /**
    * 将传入的json对象格式化成json字符串
    * @param object 待转换的对象
    * @param formatStr 字符串格式化模版
    * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   static toJSONString(object: Object, formatStr?: string): string {
     const stringifyValue = (value: Object): string => {
@@ -59,6 +60,7 @@ export class JSONUtil {
    *将传入的json字符串格式化为Object对象
    * @param jsonStr
    * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   static parse(jsonStr: string): Object {
     return JSON.parse(jsonStr);
@@ -68,7 +70,7 @@ export class JSONUtil {
    * 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型默认为yyyy-MM-dd，并且支持嵌套类
    * @param jsonStr  待转换字符串
    * @param formatStr 字符串格式化模版
-   * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   static parseObject<T>(jsonStr: string, formatStr?: string): T {
     const parseValue = (value: Object): Object => {
@@ -112,6 +114,7 @@ export class JSONUtil {
    * @param jsonStr
    * @param formatStr 字符串格式化模版
    * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   static parseArray<T>(jsonStr: string, formatStr?: string): Array<T> {
     let result: Array<T> = new Array<T>();
@@ -127,6 +130,7 @@ export class JSONUtil {
    * 将字符串格式Array转换成Array数组
    * @param str 待验证字符串
    * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   private static parseStringArray(jsonStr: string): Array<Object> {
     const jsonArray: Record<string, Object> = JSON.parse(jsonStr); // 解析字符串为对象数组
@@ -142,6 +146,7 @@ export class JSONUtil {
    * 判断传入的字符串是否是布尔类型
    * @param str
    * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   private static isBoolean(str: string): boolean {
     return typeof str === 'boolean' || str === 'true' || str === 'false';
@@ -151,6 +156,7 @@ export class JSONUtil {
    * 判断是否是字符串格式Array
    * @param str 待验证字符串
    * @returns
+   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
   private static isJSONStringArray(str: string): boolean {
     try {
