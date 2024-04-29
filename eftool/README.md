@@ -1731,6 +1731,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * convertResponseInfo 封装的针对于统一响应的处理 【统一返回OutDTO<T>】
 
 ```
+  //新增efAxiosParams.isConvertDTO来根据业务需要自行决定是否开启封装返回数据为OutDTO
   //目前只对返回数据格式做了统一的OutDTO转换   
   //要求后端返回的数据格式包含OutDTO中的success,msg   
   //dataRow和dataTable业务数据自行选择,非必填
@@ -1761,6 +1762,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
+
+* getByParams请求 async/await 方式
 
 ```
     //参数说明   参数为json格式
