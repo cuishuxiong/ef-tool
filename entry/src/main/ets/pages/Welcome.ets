@@ -50,7 +50,7 @@ struct Welcome {
     arr.add(true);
     arr.add(null);
     arr.add(new User("10010", "实体数据"));
-    let str = JSONArrayList.toJSONString(arr);
+    let str = arr.toString();
     this.msg = str;
   }
 
@@ -65,7 +65,7 @@ struct Welcome {
     arr.push(true);
     arr.push(null);
     arr.push(new User("10010", "实体数据"));
-    let str = JSONArray.toJSONString(arr);
+    let str = arr.toString();;
     this.msg = str;
   }
 
@@ -77,13 +77,24 @@ struct Welcome {
     jsonObj.set("birth", new Date());
     let user = new JSONObject();
     user.set("uid", "121212");
-    user.set("uName", "测试\"套对象");
+    user.set("uName", "测试\\\"套对象");
     jsonObj.set("user", user);
     jsonObj.set("test", null);
     jsonObj.set("person", new User('实体id', '实体name'));
     jsonObj.set("name", "test字符串");
     let st = jsonObj.toString();
-    this.msg = st;
+
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
+    let j = JSONObject.toJSONString(person);
+
+    let o = JSONObject.parseObject<Person>(j);
+
+
+    this.msg = o.birth+"-----"+o.sex+'------'+o.user.name+'======'+o.list?.length;
   }
 
   build() {
