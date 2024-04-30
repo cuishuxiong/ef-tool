@@ -5,7 +5,7 @@ import { AxiosResponse } from '@ohos/axios';
 import { AxiosStatic } from '@ohos/axios';
 import { ToastUtil } from '../../ui/prompt/ToastUtil';
 import { OutDTO } from '../base/OutDTO';
-import { SM2 } from '../crypto/encryption/SM2';
+import { SM2 } from '../crypto/encryption/sm2/SM2';
 import { SM3 } from '../crypto/encryption/SM3';
 import { SM4 } from '../crypto/encryption/SM4';
 import { RandomUtil } from '../util/RandomUtil';

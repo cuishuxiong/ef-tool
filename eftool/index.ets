@@ -38,7 +38,9 @@ export { RSA } from './src/main/ets/core/crypto/encryption/RSA';
 
 export { AES } from './src/main/ets/core/crypto/encryption/AES';
 
-export { SM2 } from './src/main/ets/core/crypto/encryption/SM2';
+export { SM2 } from './src/main/ets/core/crypto/encryption/sm2/SM2';
+
+export { SM2Convert } from './src/main/ets/core/crypto/encryption/sm2/SM2Convert';
 
 export { SM3 } from './src/main/ets/core/crypto/encryption/SM3';
 
