@@ -6,7 +6,7 @@
 
 * 封装axios的整体传输加解密
 * 封装axios的关键字传输加解密
-* 封装JSON功能
+* 封装JSON功能,提供JSONObject/JSONArray
 
 ### 🐞功能优化
 
