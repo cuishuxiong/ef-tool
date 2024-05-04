@@ -1,10 +1,10 @@
 import { DateConst } from '../const/DateConst';
 import { DateUtil } from '../util/DateUtil'
+
 /**
  * @Author csx
  * @DateTime 2023/12/29 20:10
  * @TODO JSONUtil   各种json转换工具类
- * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 代替
  */
 export class JSONUtil {
   /**
@@ -130,9 +130,8 @@ export class JSONUtil {
    * 将字符串格式Array转换成Array数组
    * @param str 待验证字符串
    * @returns
-   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
-  private static parseStringArray(jsonStr: string): Array<Object> {
+  public static parseStringArray(jsonStr: string): Array<Object> {
     const jsonArray: Record<string, Object> = JSON.parse(jsonStr); // 解析字符串为对象数组
     const result: Array<Object> = new Array();
     for (let key of Object.entries(jsonArray as Record<string, Object>)) {
@@ -146,9 +145,8 @@ export class JSONUtil {
    * 判断传入的字符串是否是布尔类型
    * @param str
    * @returns
-   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
-  private static isBoolean(str: string): boolean {
+  public static isBoolean(str: string): boolean {
     return typeof str === 'boolean' || str === 'true' || str === 'false';
   }
 
@@ -156,9 +154,8 @@ export class JSONUtil {
    * 判断是否是字符串格式Array
    * @param str 待验证字符串
    * @returns
-   * @deprecated 使用JSONObject或者JSONArray/JSONArrayList 方法代替
    */
-  private static isJSONStringArray(str: string): boolean {
+  public static isJSONStringArray(str: string): boolean {
     try {
       const jsonArray: Record<string, Object> = JSON.parse(str);
       if (!Array.isArray(jsonArray)) {
@@ -180,7 +177,7 @@ export class JSONUtil {
    * @param str 待验证字符串
    * @returns
    */
-  private static isJSONString(str: string): boolean {
+  public static isJSONString(str: string): boolean {
     try {
       JSON.parse(str);
       return true;
@@ -194,7 +191,7 @@ export class JSONUtil {
    * @param str 待验证字符串
    * @returns
    */
-  private static isNumber(str: string): boolean {
+  public static isNumber(str: string): boolean {
     return /^\d+(\.\d+)?$/.test(str);
   }
 }

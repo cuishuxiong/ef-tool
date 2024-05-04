@@ -154,30 +154,30 @@ struct Index {
       //登录成功将token赋值，后续需要
       efAxiosParams.tokenValue = login.getDataRow().token;
       //模拟测试post请求
-      // const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
-      //   'nickName': 'post请求参数',
-      //   'name': '测试入参'
-      // });
-      // if (post.getSuccess()) {
-      //   ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
-      // }
-      // //模拟测试get请求
-      // const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
-      // if (get.getSuccess()) {
-      //   ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
-      // }
-      // //模拟测试delete请求
-      // const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
-      // if (del.getSuccess()) {
-      //   ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
-      // }
-      // //模拟测试put请求
-      // const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
-      //   'id': '11111'
-      // });
-      // if (put.getSuccess()) {
-      //   ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
-      // }
+      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
+        'nickName': 'post请求参数',
+        'name': '测试入参'
+      });
+      if (post.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
+      }
+      //模拟测试get请求
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      if (get.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+      }
+      //模拟测试delete请求
+      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
+      if (del.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      }
+      //模拟测试put请求
+      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
+        'id': '11111'
+      });
+      if (put.getSuccess()) {
+        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+      }
     } else {
       //登录失败
       ToastUtil.showToast(login.getMsg());

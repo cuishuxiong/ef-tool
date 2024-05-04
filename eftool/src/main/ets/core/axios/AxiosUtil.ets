@@ -10,6 +10,7 @@ import { SM3 } from '../crypto/encryption/SM3';
 import { SM4 } from '../crypto/encryption/SM4';
 import { RandomUtil } from '../util/RandomUtil';
 import { ArrayList } from '@kit.ArkTS';
+import { JSONUtil } from '../json/JSONUtil';
 
 /**
  * @Author csx
@@ -214,28 +215,46 @@ export class AxiosUtil {
       //获取到了密钥
       if (sm4) {
         if (convertData.data) {
-          let key = sm4.substring(32);
-          let iv = sm4.substring(0, 32);
-          //解密  递归获取关键字解密
-          let inObj: Record<string, Object>;
-          // for (inObj of Object.entries(convertData.data)) {
-          //   //每行递归
-          //   if (typeof inObj[1] === "object") {
-          //     AxiosUtil.decryptPartResponseData(inObj[1] as Record<string, Object>);
-          //   } else {
-          //     if (efAxiosParams.keyWordsList.indexOf(inObj[0]) > -1) {
-          //       convertData.data[inObj[0]] = (await SM4.encodeCBC(inObj[1], key, iv)).getDataRow();
-          //     }
-          //   }
-          // }
-          let r = await SM4.decodeCBC(convertData.data as string, key, iv);
-          result = JSON.parse(r.getDataRow());
+          //是否是json
+          if (JSONUtil.isJSONString(convertData.data as string)) {
+            let key = sm4.substring(32);
+            let iv = sm4.substring(0, 32);
+            //解密  递归获取关键字解密
+            let inObj: Record<string, Object> = JSON.parse(convertData.data as string);
+            result = await AxiosUtil.convertResponseData(inObj, key, iv);
+          } else {
+            result = convertData;
+          }
         }
       }
     } else {
       result = convertData;
     }
     return result;
+  }
+
+  /**
+   * 递归查找响应字符串中是否有解密关键字
+   * @param data  待递归的数据
+   * @param key  sm4的key
+   * @param iv  sm4的偏移量
+   * @returns 查找后的结果
+   */
+  private static async convertResponseData(data: Record<string, Object>, key: string, iv: string): Promise<Record<string, Object>> {
+    if (typeof data === "object") {
+      for (let item of Object.entries(data)) {
+        if (typeof item[1] === "object") {
+          data[item[0]] = await AxiosUtil.convertResponseData(item[1] as Record<string, Object>, key, iv);
+        } else if (typeof item[1] === "string" && JSONUtil.isJSONString(item[1])) {
+          data[item[0]] = await AxiosUtil.convertResponseData(JSON.parse(item[1]), key, iv);
+        } else {
+          if (efAxiosParams.keyWordsList.includes(item[0])) {
+            data[item[0]] = (await SM4.decodeCBC(item[1], key, iv)).getDataRow();
+          }
+        }
+      }
+    }
+    return data;
   }
 
 
