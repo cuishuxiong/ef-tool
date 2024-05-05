@@ -242,13 +242,13 @@ struct Index {
     await NotificationUtil.publishPicture({
       text: '222222',
       title: '抢票时间到',
-      expandedTitle: '多文本的展开',
-      briefText: '多文本的概要',
+      expandedTitle: '图片的展开',
+      briefText: '图片的概要',
       isOngoing: true,
       isStopwatch: true,
       label: '图片通知',
-      picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
-        .buffer).createPixelMap(),
+      // picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+      //   .buffer).createPixelMap(),
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }

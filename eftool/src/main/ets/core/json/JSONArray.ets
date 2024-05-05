@@ -19,7 +19,24 @@ export class JSONArray extends Array<JSONValue> {
    */
   public static parse(jsonStr: string): JSONArray {
     let json = new JSONArray();
-
+    //转换成json对象
+    let jVal: Record<string, JSONValue> = JSON.parse(jsonStr);
+    //循环赋值
+    Object.entries(jVal).forEach((item) => {
+      if (item[1] instanceof JSONObject) {
+        json.push(JSONObject.from(item[1]));
+      } else if (item[1] instanceof JSONArray) {
+        json.push(JSONArray.from(item[1]));
+      } else if (item[1] instanceof JSONArrayList) {
+        json.push(JSONArrayList.from(item[1]));
+      } else if (item[1] instanceof Date) {
+        json.push(DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
+      } else if (item[1] instanceof Object) {
+        json.push(JSONObject.from(item[1]));
+      } else {
+        json.push(item[1]);
+      }
+    })
     return json;
   }
 
@@ -66,7 +83,25 @@ export class JSONArray extends Array<JSONValue> {
     //接收
     //循环赋值
     Object.entries(jVal).forEach((item) => {
-
+      if (item[1] instanceof JSONObject) {
+        json.push(JSONObject.from(item[1]));
+      } else if (item[1] instanceof JSONArray) {
+        json.push(JSONArray.from(item[1]));
+      } else if (item[1] instanceof JSONArrayList) {
+        json.push(JSONArrayList.from(item[1]));
+      } else if (item[1] instanceof Date) {
+        json.push(DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
+      } else if (item[1] instanceof Object) {
+        json.push(JSONObject.from(item[1]));
+      } else if (typeof item[1] === 'string') {
+        if (DateUtil.isDate(item[1])) {
+          json.push(DateUtil.formatDate(item[1], DateConst.YMD_HLINE_HMS));
+        } else {
+          json.push(item[1]);
+        }
+      } else {
+        json.push(item[1]);
+      }
     })
     return json;
   }

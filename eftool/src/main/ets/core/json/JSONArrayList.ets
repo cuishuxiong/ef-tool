@@ -3,13 +3,14 @@
  * @DateTime 2024/4/25 19:35:04
  * @TODO JSONArray  定义json集合
  */
-import { ArrayList } from '@kit.ArkTS';
 import { StringBuilder } from '../base/StringBuilder';
 import { JSONValue } from './JSONValue';
 import { CommonConst as Const } from '../const/CommonConst';
 import { DateUtil } from '../util/DateUtil';
 import { DateConst } from '../const/DateConst';
 import { JSONObject } from './JSONObject';
+import { ArrayList } from '@kit.ArkTS';
+import { JSONArray } from './JSONArray';
 
 export class JSONArrayList extends ArrayList<JSONValue> {
   /**
@@ -19,7 +20,24 @@ export class JSONArrayList extends ArrayList<JSONValue> {
    */
   public static parse(jsonStr: string): JSONArrayList {
     let json = new JSONArrayList();
-
+    //转换成json对象
+    let jVal: Record<string, JSONValue> = JSON.parse(jsonStr);
+    //循环赋值
+    Object.entries(jVal).forEach((item) => {
+      if (item[1] instanceof JSONObject) {
+        json.add(JSONObject.from(item[1]));
+      } else if (item[1] instanceof JSONArray) {
+        json.add(JSONArray.from(item[1]));
+      } else if (item[1] instanceof JSONArrayList) {
+        json.add(JSONArrayList.from(item[1]));
+      } else if (item[1] instanceof Date) {
+        json.add(DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
+      } else if (item[1] instanceof Object) {
+        json.add(JSONObject.from(item[1]));
+      } else {
+        json.add(item[1]);
+      }
+    })
     return json;
   }
 
@@ -66,7 +84,25 @@ export class JSONArrayList extends ArrayList<JSONValue> {
     //接收
     //循环赋值
     Object.entries(jVal).forEach((item) => {
-
+      if (item[1] instanceof JSONObject) {
+        json.add(JSONObject.from(item[1]));
+      } else if (item[1] instanceof JSONArray) {
+        json.add(JSONArray.from(item[1]));
+      } else if (item[1] instanceof JSONArrayList) {
+        json.add(JSONArrayList.from(item[1]));
+      } else if (item[1] instanceof Date) {
+        json.add(DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
+      } else if (item[1] instanceof Object) {
+        json.add(JSONObject.from(item[1]));
+      } else if (typeof item[1] === 'string') {
+        if (DateUtil.isDate(item[1])) {
+          json.add(DateUtil.formatDate(item[1], DateConst.YMD_HLINE_HMS));
+        } else {
+          json.add(item[1]);
+        }
+      } else {
+        json.add(item[1]);
+      }
     })
     return json;
   }
