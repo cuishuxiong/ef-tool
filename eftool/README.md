@@ -1261,11 +1261,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * encodeECB 加密-ECB模式
 
-* hmac 消息认证码计算
-
-```
-    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
-    this.message = hmac1.getDataRow();
 ```
     let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
     this.message = encodeECB.getDataRow();
@@ -1615,8 +1610,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 5.JSONUtil的方法
 
-* <s>toJSONString
-  将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd</s>
+* <s>toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1636,8 +1630,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     JSONUtil.parse(str);
 ```
 
-* <s>parseObject
-  将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
+* <s>parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1649,8 +1642,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
 ```
 
-* <s>parseArray
-  将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
+* <s>parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
      let listStr = JSONUtil.toJSONString(userList);
