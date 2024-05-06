@@ -42,13 +42,43 @@ export class JSONObject extends HashMap<string, JSONValue> {
   }
 
   /**
+   * 递归解析字符串
+   * @param nestedJson 待解析的json
+   * @returns 解析后的结果
+   */
+  private static parseNestedObject<U>(nestedJson: Record<string, JSONValue>): U {
+    let nestedData: Record<string, JSONValue> = {};
+    for (let key of Object.entries(nestedJson)) {
+      if (typeof nestedJson[key[0]] === 'object' && nestedJson[key[0]] !== null) {
+        if (nestedJson[key[0]] instanceof Date) {
+          nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
+        } else if (Array.isArray(nestedJson[key[0]])) {
+          nestedData[key[0]] = (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
+        } else {
+          nestedData[key[0]] = JSONObject.parseNestedObject(nestedJson[key[0]] as Record<string, JSONValue>);
+        }
+      } else if (typeof nestedJson[key[0]] === 'string') {
+        if (DateUtil.isDate(nestedJson[key[0]] as string)) {
+          nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
+        } else {
+          nestedData[key[0]] = nestedJson[key[0]];
+        }
+      } else {
+        nestedData[key[0]] = nestedJson[key[0]];
+      }
+    }
+    return nestedData as U;
+  }
+
+  /**
    * json字符串转换为实体对象
    * @param jsonStr json字符串
    * @returns T 对象
    */
   public static parseObject<T>(jsonStr: string): T {
-    let json = JSONObject.parse(jsonStr);
-    return json as T;
+    let json: Record<string, JSONValue> = JSON.parse(jsonStr);
+    let data: T = JSONObject.parseNestedObject<T>(json);
+    return data;
   }
 
   /**
@@ -94,6 +124,12 @@ export class JSONObject extends HashMap<string, JSONValue> {
         json.set(item[0], DateUtil.format(item[1], DateConst.YMD_HLINE_HMS));
       } else if (item[1] instanceof Object) {
         json.set(item[0], JSONObject.from(item[1]));
+      } else if (typeof item[1] === 'string') {
+        if (DateUtil.isDate(item[1])) {
+          json.set(item[0], DateUtil.formatDate(item[1], DateConst.YMD_HLINE_HMS));
+        } else {
+          json.set(item[0], item[1]);
+        }
       } else {
         json.set(item[0], item[1]);
       }
@@ -128,12 +164,18 @@ export class JSONObject extends HashMap<string, JSONValue> {
       //判断类型
       if (val instanceof JSONObject) {
         sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONObject).toString());
+      } else if (val instanceof Array) {
+        let jArr = new JSONArray();
+        (val as Array<JSONValue>).forEach(item => {
+          jArr.push(item);
+        });
+        sb.append(Const.quot + key + Const.quot + Const.mh + jArr.toString());
       } else if (val instanceof JSONArray) {
         sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONArray).toString());
       } else if (val instanceof JSONArrayList) {
         sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONArrayList).toString());
       } else if (val instanceof Date) {
-        sb.append(Const.quot + key + Const.quot + Const.mh + DateUtil.format((val as Date), DateConst.YMD_HLINE_HMS));
+        sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + DateUtil.format((val as Date), DateConst.YMD_HLINE_HMS) + Const.quot);
       } else if (val instanceof Object) {
         //转换成字符串
         let str = JSON.stringify(val);
@@ -147,7 +189,11 @@ export class JSONObject extends HashMap<string, JSONValue> {
         })
         sb.append(Const.quot + key + Const.quot + Const.mh + jo.toString());
       } else if (typeof val === 'string') {
-        sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
+        if (DateUtil.isDate(val)) {
+          sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + DateUtil.formatDate(val, DateConst.YMD_HLINE_HMS) + Const.quot);
+        } else {
+          sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
+        }
       } else if (typeof val === 'number' || typeof val === 'boolean') {
         sb.append(Const.quot + key + Const.quot + Const.mh + val);
       } else {

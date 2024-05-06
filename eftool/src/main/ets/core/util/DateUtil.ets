@@ -106,7 +106,7 @@ export class DateUtil {
    */
   public static isDate(value: string): boolean {
     //需要循环常量中的时间格式看看是否符合，符合极为日期类型
-    const dateTimeRegex = /^(?:(?:\d{4}(?:\/|-)\d{1,2}(?:\/|-)\d{1,2})|(?:\d{1,2}:\d{1,2}(:\d{1,2})?))(T\d{1,2}:\d{1,2}:\d{1,2}\.\d{1,3}Z)?$/;
+    const dateTimeRegex = /^(?:(?:\d{4}(?:\/|-)\d{1,2}(?:\/|-)\d{1,2})|(?:\d{1,2}:\d{1,2}(:\d{1,2})?))(T\d{1,2}:\d{1,2}:\d{1,2}\.\d{1,3}Z)?|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
     return dateTimeRegex.test(value);
   }
 }

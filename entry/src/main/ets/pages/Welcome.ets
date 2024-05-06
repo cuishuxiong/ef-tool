@@ -4,6 +4,7 @@
  * @TODO Welcome
  */
 import { JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
+import { ArrayList } from '@kit.ArkTS';
 
 
 class User {
@@ -50,8 +51,24 @@ struct Welcome {
     arr.add(true);
     arr.add(null);
     arr.add(new User("10010", "实体数据"));
-    let str = JSONArrayList.toJSONString(arr);
-    this.msg = str;
+    let str = arr.toString();
+
+    let userList = new ArrayList<User>();
+    userList.add(new User('2345', '测试用户1'));
+    userList.add(new User('7844', '测试用户2'));
+    userList.add(new User('1314', '测试用户3'));
+    userList.add(new User('5210', '测试用户4'));
+
+    let jarr = JSONArrayList.from(userList);
+    this.msg = jarr.length+"";
+
+    let s = JSONArrayList.toJSONString(userList);
+    this.msg = s;
+
+    let jsArr = JSONArrayList.parse(s);
+    this.msg = jsArr.length +"";
+
+
   }
 
   testJSONArray() {
@@ -65,8 +82,22 @@ struct Welcome {
     arr.push(true);
     arr.push(null);
     arr.push(new User("10010", "实体数据"));
-    let str = JSONArray.toJSONString(arr);
-    this.msg = str;
+    let str = arr.toString();
+
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    userList.push(new User('1314', '测试用户3'));
+    userList.push(new User('5210', '测试用户4'));
+
+    let jarr = JSONArray.from(userList);
+    // this.msg = jarr.length + "----" + jarr[1]?.toString();
+
+    let s = JSONArray.toJSONString(userList);
+
+    let jsArr = JSONArray.parse(s);
+    this.msg = jsArr.length + "----" + jsArr[2]?.toString();
+    // this.msg = s;
   }
 
   testJSONObject() {
@@ -77,13 +108,26 @@ struct Welcome {
     jsonObj.set("birth", new Date());
     let user = new JSONObject();
     user.set("uid", "121212");
-    user.set("uName", "测试\"套对象");
+    user.set("uName", "测试\\\"套对象");
     jsonObj.set("user", user);
     jsonObj.set("test", null);
     jsonObj.set("person", new User('实体id', '实体name'));
     jsonObj.set("name", "test字符串");
     let st = jsonObj.toString();
-    this.msg = st;
+
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
+    let j = JSONObject.toJSONString(person);
+
+    let f = JSONObject.parse(j);
+
+    let o = JSONObject.parseObject<Person>(j);
+
+
+    this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
 
   build() {

@@ -215,6 +215,11 @@ export class CryptoUtil {
     let updateOutput = await encoder.doFinal({ data: encode.encodeInto(str) });
     //转换字符串
     let result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    // if (symAlgName.indexOf('SM2') >= 0 || symEncryptName.indexOf('SM2') >= 0) {
+    //   result = StrAndUintUtil.unitArray2String(updateOutput.data, true);
+    // } else {
+    //   result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    // }
     return OutDTO.OKByDataRow(symAlgName + '加密成功~', result);
   }
 
@@ -306,8 +311,14 @@ export class CryptoUtil {
     let encoder = crypto.createCipher(symEncryptName);
     //初始化解密环境
     await encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
+    let cryptoArr = StrAndUintUtil.stringToByteArray(str);
+    // if (symAlgName.indexOf('SM2') >= 0 || symEncryptName.indexOf('SM2') >= 0) {
+    //   cryptoArr = StrAndUintUtil.stringToByteArray(str, true);
+    // } else {
+    //   cryptoArr = StrAndUintUtil.stringToByteArray(str);
+    // }
     //封装加密所需数据
-    let updateOutput = await encoder.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
+    let updateOutput = await encoder.doFinal({ data: cryptoArr });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     return OutDTO.OKByDataRow(symAlgName + '解密成功~', decode.decodeWithStream(updateOutput.data));
   }

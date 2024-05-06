@@ -309,9 +309,10 @@ export class NotificationUtil {
     }
     if (!options.picture) {
       let ctx = getContext() as common.UIAbilityContext;
-      options.picture = await image.createImageSource(ctx.resourceManager.getMediaContentSync($r("app.media.notice"))
-        .buffer)
-        .createPixelMap();
+      let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
+      let imageResource = image.createImageSource(imageArray.buffer as ArrayBuffer);
+      let picture = await imageResource.createPixelMap();
+      options.picture = picture;
     }
     //创建wantAgentInfo
     let wantAgentInfo = NotificationUtil.createWantAgent(options.id);

@@ -1,18 +1,20 @@
 # Changelog
 
-## [v1.1.9] 2024-04
+## [v1.1.9] 2024-05
 
 ### 🐣新特性(API11)
 
 * 封装axios的整体传输加解密
 * 封装axios的关键字传输加解密
-* 封装JSON功能
+* 封装JSON功能,提供JSONObject/JSONArray
 
 ### 🐞功能优化
 
 * efClientApi支持get请求的params方式
 * efClientApi支持post请求更改请求头参数[issuesI9JGTC](https://gitee.com/yunkss/ef-tool/issues/I9JGTC)
-* 优化SM2转换密钥方法,新增将服务器端公私钥转换为uint8Array
+* 优化SM2转换密钥方法,新增C1C3C2格式密钥转换为ASN1格式方法
+* 优化SM2加解密显示字符串ASN1和C1C3C2格式开关
+* 优化efAxios响应数据封装OutDTO转换开关
 * 调整API文档结构
 
 ## [v1.1.8] 2024-04

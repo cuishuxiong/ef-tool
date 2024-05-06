@@ -125,9 +125,23 @@ struct Index {
 
   async sendRequest() {
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
-    efAxiosParams.isAllEncrypt = true;
+    efAxiosParams.baseURL = 'http://192.168.0.104:18088';
+    efAxiosParams.isPartEncrypt = true;
     efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    //关键字加密集合
+    efAxiosParams.keyWordsList = ['account','pwd'];
+    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
+    // efAxiosParams.isConvertDTO = false;
+    // const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
+    //   'account': 'efadmin',
+    //   'pwd': '123456'
+    // }, {
+    //   'csxTest': '1212121212'
+    // });
+    // if (loginNoDTO.token) {
+    //   ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
+    // }
+
     //模拟登录
     const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
@@ -228,13 +242,13 @@ struct Index {
     await NotificationUtil.publishPicture({
       text: '222222',
       title: '抢票时间到',
-      expandedTitle: '多文本的展开',
-      briefText: '多文本的概要',
+      expandedTitle: '图片的展开',
+      briefText: '图片的概要',
       isOngoing: true,
       isStopwatch: true,
       label: '图片通知',
-      picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
-        .buffer).createPixelMap(),
+      // picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+      //   .buffer).createPixelMap(),
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }
@@ -351,16 +365,16 @@ struct Index {
     // this.message = decode.getDataRow();
 
     //SM4
-    let sm4 = await SM4.generateSM4Key();
-    this.message = sm4.getDataRow();
+    // let sm4 = await SM4.generateSM4Key();
+    // this.message = sm4.getDataRow();
     // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
     // this.message = encodeECB.getDataRow();
     // let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
     // this.message = decodeECB.getDataRow();
-    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
-    this.message = encodeCBC.getDataRow();
-    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
-    this.message = decodeCBC.getDataRow();
+    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    // this.message = encodeCBC.getDataRow();
+    // let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    // this.message = decodeCBC.getDataRow();
 
     //3DES
     // let des = await DES.generate3DESKey();
@@ -470,10 +484,11 @@ struct Index {
     //SM2
     let sm2 = await SM2.generateSM2Key();
     this.message = sm2.getDataRow().publicKey;
-    // let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
-    // this.message = encode.getDataRow();
-    // let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
-    // this.message = decode.getDataRow();
+    this.message = sm2.getDataRow().privateKey;
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    this.message = decode.getDataRow();
     // let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
     // this.message = sign.getDataRow();
     // let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);

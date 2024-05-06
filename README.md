@@ -79,13 +79,13 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 4.JSON类组件
 
-| 模块            | 介绍                         |
-|---------------|----------------------------|
-| JSONValue     | 提供eftool中的JSON相关对象的类型定义    |
-| JSONObject    | 提供类Java的JSON对象的系列方法以及相互转换  |
-| JSONArray     | 提供类Java的JSON数组的系列方法以及相互转换  |
-| JSONArrayList | 提供类Java的JSON数组的系列方法以及相互转换  |
-| JSONUtil      | 提供JSON转换的系列方法如对象,数组字符串直接互转 |
+| 模块            | 介绍                        |
+|---------------|---------------------------|
+| JSONValue     | 提供eftool中的JSON相关对象的类型定义   |
+| JSONObject    | 提供类Java的JSON对象的系列方法以及相互转换 |
+| JSONArray     | 提供类Java的JSON数组的系列方法以及相互转换 |
+| JSONArrayList | 提供类Java的JSON数组的系列方法以及相互转换 |
+| JSONUtil      | 提供JSON转换一系列判断方法,废弃一部分方法   |
 
 ### 5.UI类组件
 
@@ -1212,7 +1212,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN (1.1.9+)
 
 ```
     //C1C3C2格式的公钥字符串
@@ -1223,7 +1223,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let ddd = code.getDataRow();
 ```
 
-* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN (1.1.9+)
 
 ```
     //C1C3C2格式的私钥字符串
@@ -1261,6 +1261,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * encodeECB 加密-ECB模式
 
+* digest SM3摘要
+
+```
+    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
+    this.message = sm3.getDataRow();
 ```
     let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
     this.message = encodeECB.getDataRow();
@@ -1438,185 +1443,179 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ### 4.JSON相关组件使用API
 
-#### 1.JSONValue的方法
+#### 1.JSONValue的解释
 
-* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-
-```
-    let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
-```
-
-* parse 将传入的json字符串格式化为Object对象
-
-```
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    let str = JSONUtil.toJSONString(person);
-    console.log(str)
-    JSONUtil.parse(str);
-```
-
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
-
-```
-    let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
-    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
-```
-
-* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
-
-```
-     let listStr = JSONUtil.toJSONString(userList);
-     let uList = JSONUtil.parseArray<User>(listStr);
-     uList.forEach(item => {
-       Logger.error(item.id, item.name);
-     })
-```
+* 定义了JSON相关类的value的取值范围
 
 #### 2.JSONObject的方法
 
-* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+* parse json字符串转换为JSONObject对象
 
 ```
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let j = JSONObject.toJSONString(person);
+    let f = JSONObject.parse(j);
 ```
 
-* parse 将传入的json字符串格式化为Object对象
-
-```
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    let str = JSONUtil.toJSONString(person);
-    console.log(str)
-    JSONUtil.parse(str);
-```
-
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* parseObject json字符串转换为实体对象
 
 ```
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
-    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+    let j = JSONObject.toJSONString(person);
+    let o = JSONObject.parseObject<Person>(j);
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* toJSONString Object对象换为json字符串
 
 ```
-     let listStr = JSONUtil.toJSONString(userList);
-     let uList = JSONUtil.parseArray<User>(listStr);
-     uList.forEach(item => {
-       Logger.error(item.id, item.name);
-     })
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    let j = JSONObject.toJSONString(person);
+```
+
+* from 实体对象转换为JSONObject对象
+
+```
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    let j = JSONObject.from<Person>(person);
+```
+
+* toString 将本对象转换成json字符串
+
+```
+    let jsonObj = new JSONObject();
+    jsonObj.set("id", "100010");
+    jsonObj.set("age", 27);
+    jsonObj.set("sex", true);
+    jsonObj.set("birth", new Date());
+    let user = new JSONObject();
+    user.set("uid", "121212");
+    user.set("uName", "测试\\\"套对象");
+    jsonObj.set("user", user);
+    jsonObj.set("test", null);
+    jsonObj.set("person", new User('实体id', '实体name'));
+    jsonObj.set("name", "test字符串");
+    let st = jsonObj.toString();
 ```
 
 #### 3.JSONArray的方法
 
-* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+* parse json字符串转换为JSONArray对象
 
 ```
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    userList.push(new User('1314', '测试用户3'));
+    userList.push(new User('5210', '测试用户4'));
+    let s = JSONArray.toJSONString(userList);
+    let jsArr = JSONArray.parse(s);
 ```
 
-* parse 将传入的json字符串格式化为Object对象
-
-```
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    let str = JSONUtil.toJSONString(person);
-    console.log(str)
-    JSONUtil.parse(str);
-```
-
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* toJSONString 集合对象转换为json字符串
 
 ```
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
-    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+    userList.push(new User('1314', '测试用户3'));
+    userList.push(new User('5210', '测试用户4'));
+    let s = JSONArray.toJSONString(userList);
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* from 实体集合转换为JSONArray对象
 
 ```
-     let listStr = JSONUtil.toJSONString(userList);
-     let uList = JSONUtil.parseArray<User>(listStr);
-     uList.forEach(item => {
-       Logger.error(item.id, item.name);
-     })
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    userList.push(new User('1314', '测试用户3'));
+    userList.push(new User('5210', '测试用户4'));
+    let jarr = JSONArray.from(userList);
+```
+
+* toString 将本对象转换成json字符串
+
+```
+    let arr = new JSONArray();
+    arr.push(1);
+    arr.push("cccc");
+    arr.push("123");
+    arr.push("aaaaa\\\"34343434");
+    arr.push("2223\"dasdass");
+    arr.push(new Date());
+    arr.push(true);
+    arr.push(null);
+    arr.push(new User("10010", "实体数据"));
+    let str = arr.toString();
 ```
 
 #### 4.JSONArrayList的方法
 
-* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+* parse json字符串转换为JSONArrayList对象
 
 ```
-    let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
+    let userList = new ArrayList<User>();
+    userList.add(new User('2345', '测试用户1'));
+    userList.add(new User('7844', '测试用户2'));
+    userList.add(new User('1314', '测试用户3'));
+    userList.add(new User('5210', '测试用户4'));
+    let s = JSONArrayList.toJSONString(userList);
+    let jsArr = JSONArrayList.parse(s);
 ```
 
-* parse 将传入的json字符串格式化为Object对象
+* toJSONString 集合对象转换为json字符串
 
 ```
-    let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
-    let str = JSONUtil.toJSONString(person);
-    console.log(str)
-    JSONUtil.parse(str);
+    let userList = new ArrayList<User>();
+    userList.add(new User('2345', '测试用户1'));
+    userList.add(new User('7844', '测试用户2'));
+    userList.add(new User('1314', '测试用户3'));
+    userList.add(new User('5210', '测试用户4'));
+    let s = JSONArrayList.toJSONString(userList);
 ```
 
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* from 实体集合转换为JSONArrayList对象
 
 ```
-    let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
-    //第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
-    let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
-    let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
+    let userList = new ArrayList<User>();
+    userList.add(new User('2345', '测试用户1'));
+    userList.add(new User('7844', '测试用户2'));
+    userList.add(new User('1314', '测试用户3'));
+    userList.add(new User('5210', '测试用户4'));
+    let jarr = JSONArrayList.from(userList);
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* toString 将本对象转换成json字符串
 
 ```
-     let listStr = JSONUtil.toJSONString(userList);
-     let uList = JSONUtil.parseArray<User>(listStr);
-     uList.forEach(item => {
-       Logger.error(item.id, item.name);
-     })
+    let arr = new JSONArrayList();
+    arr.add(1);
+    arr.add("cccc");
+    arr.add("123");
+    arr.add("aaaaa\\\"34343434");
+    arr.add("2223\"dasdass");
+    arr.add(new Date());
+    arr.add(true);
+    arr.add(null);
+    arr.add(new User("10010", "实体数据"));
+    let str = arr.toString();
 ```
 
 #### 5.JSONUtil的方法
 
-* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+* <s>toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1627,7 +1626,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
 ```
 
-* parse 将传入的json字符串格式化为Object对象
+* <s>parse 将传入的json字符串格式化为Object对象</s>
 
 ```
     let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
@@ -1636,7 +1635,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     JSONUtil.parse(str);
 ```
 
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* <s>parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1648,7 +1647,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* <s>parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
      let listStr = JSONUtil.toJSONString(userList);
@@ -1657,6 +1656,16 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
        Logger.error(item.id, item.name);
      })
 ```
+
+* parseStringArray 将字符串格式Array转换成Array数组
+
+* isBoolean 判断传入的字符串是否是布尔类型
+
+* isJSONStringArray 判断是否是字符串格式Array
+
+* isJSONString 判断是否是字符串格式json
+
+* isNumber 是否是字符串
 
 ### 5.网络相关类组件使用API
 
@@ -1672,15 +1681,15 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
   /**
-   * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true【预计1.1.9版本生效可用】
+   * 是否整体传输加密 与关键字加密isAllEncrypt互斥 二者只能有其一为true
    */
   static isAllEncrypt: boolean = false;
   /**
-   * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true 【预计1.1.9版本生效可用】
+   * 是否部分关键字传输加密 与整体传输加密互斥 二者只能有其一为true
    */
   static isPartEncrypt: boolean = false;
   /**
-   * 关键字加密时的关键字集合 【预计1.1.9版本生效可用】
+   * 关键字加密时的关键字集合
    */
   static keyWordsList: Array<string> = new Array<string>();
   /**
@@ -1696,9 +1705,17 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
    */
   static baseURL: string = '';
   /**
-   * 请求头加密的SM2公钥  【预计1.1.9版本生效可用】
+   * 请求头加密的SM2公钥
    */
   static sm2PubKey: string = '';
+   /**
+   *加解密接口忽略集合
+   */
+  static ignoreEncryptList: Array<string> = new Array<string>();
+  /**
+   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭(1.1.9+)
+   */
+  static isConvertDTO: boolean = true;
 ```
 
 #### 2.AxiosUtil工具类
@@ -1723,6 +1740,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * convertResponseInfo 封装的针对于统一响应的处理 【统一返回OutDTO<T>】
 
 ```
+  //新增efAxiosParams.isConvertDTO来根据业务需要自行决定是否开启封装返回数据为OutDTO
   //目前只对返回数据格式做了统一的OutDTO转换   
   //要求后端返回的数据格式包含OutDTO中的success,msg   
   //dataRow和dataTable业务数据自行选择,非必填
@@ -1753,6 +1771,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
+
+* getByParams请求 async/await 方式 (1.1.9+)
 
 ```
     //参数说明   参数为json格式
@@ -1785,6 +1805,20 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 
 * 登录示例
+
+```
+    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
+    efAxiosParams.isConvertDTO = false;
+    const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
+      'account': 'efadmin',
+      'pwd': '123456'
+    }, {
+      'csxTest': '1212121212'
+    });
+    if (loginNoDTO.token) {
+      ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
+    }
+```
 
 ```
     //1.先设置统一的请求后端前缀 具体时机业务自行决定,Ability中也可

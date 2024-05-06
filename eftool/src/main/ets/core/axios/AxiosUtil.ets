@@ -5,11 +5,12 @@ import { AxiosResponse } from '@ohos/axios';
 import { AxiosStatic } from '@ohos/axios';
 import { ToastUtil } from '../../ui/prompt/ToastUtil';
 import { OutDTO } from '../base/OutDTO';
-import { SM2 } from '../crypto/encryption/SM2';
+import { SM2 } from '../crypto/encryption/sm2/SM2';
 import { SM3 } from '../crypto/encryption/SM3';
 import { SM4 } from '../crypto/encryption/SM4';
 import { RandomUtil } from '../util/RandomUtil';
 import { ArrayList } from '@kit.ArkTS';
+import { JSONUtil } from '../json/JSONUtil';
 
 /**
  * @Author csx
@@ -96,7 +97,12 @@ export class AxiosUtil {
       //关键字加密
       if (efAxiosParams.isPartEncrypt) {
         //给部分敏感字段加密
-        config.data = AxiosUtil.encryptPartParam(config.data, sm4Key.getDataRow(), sm4IV.getDataRow());
+        config.data = await AxiosUtil.encryptPartParam(config.data, sm4Key.getDataRow(), sm4IV.getDataRow());
+        let obj: Record<string, Object> = {};
+        obj.sm4keyNum = sm4IV.getDataRow() + sm4Key.getDataRow();
+        obj.ef_request_params = JSON.stringify(config.data.ef_request_params);
+        //response解密时需要
+        AxiosUtil.sm4KeyList.add(obj);
       }
       // 注意：config.method 的判断值必须是小写的post/get/put
       if (sm3Params.length > 32) {
@@ -165,20 +171,21 @@ export class AxiosUtil {
       if (response.config.headers["Req-Type"] == "uploadOrDownload") {
         //上传下载将数据转换为blob格式 预计1.1.10版本完善
       }
-      //整体加密
+      //整体解密
       if (efAxiosParams.isAllEncrypt) {
         //判断如果有不加解密的接口则跳过加密
         if (efAxiosParams.ignoreEncryptList.indexOf(lastUrl) < 0) {
           response.data = await AxiosUtil.decryptResponseData(response.data);
         }
       }
-      //关键字加密
+      //关键字解密
       if (efAxiosParams.isPartEncrypt) {
-        //关键字加密
         response.data = await AxiosUtil.decryptPartResponseData(response.data);
       }
-      //将响应数据转换
-      response.data = AxiosUtil.convertResponseDTO(response);
+      if (efAxiosParams.isConvertDTO) {
+        //将响应数据转换
+        response.data = AxiosUtil.convertResponseDTO(response);
+      }
     } else {
       ToastUtil.showToast('接口返回错误~');
     }
@@ -192,8 +199,62 @@ export class AxiosUtil {
   private static async decryptPartResponseData(data: Object): Promise<Record<string, Object>> {
     //最终返回结果
     let result: Record<string, Object> = {};
-
+    //获取SM4的key
+    let sm4: string = '';
+    let convertData: Record<string, Object> = JSON.parse(JSON.stringify(data));
+    //获取解密密钥
+    if (convertData.ef_request_params) {
+      //循环获取数据
+      AxiosUtil.sm4KeyList.forEach((item: Record<string, Object>) => {
+        if (item["ef_request_params"] === convertData.ef_request_params) {
+          sm4 = item["sm4keyNum"] as string;
+          //从结果中移除
+          AxiosUtil.sm4KeyList.remove(item);
+        }
+      })
+      //获取到了密钥
+      if (sm4) {
+        if (convertData.data) {
+          //是否是json
+          if (JSONUtil.isJSONString(convertData.data as string)) {
+            let key = sm4.substring(32);
+            let iv = sm4.substring(0, 32);
+            //解密  递归获取关键字解密
+            let inObj: Record<string, Object> = JSON.parse(convertData.data as string);
+            result = await AxiosUtil.convertResponseData(inObj, key, iv);
+          } else {
+            result = convertData;
+          }
+        }
+      }
+    } else {
+      result = convertData;
+    }
     return result;
+  }
+
+  /**
+   * 递归查找响应字符串中是否有解密关键字
+   * @param data  待递归的数据
+   * @param key  sm4的key
+   * @param iv  sm4的偏移量
+   * @returns 查找后的结果
+   */
+  private static async convertResponseData(data: Record<string, Object>, key: string, iv: string): Promise<Record<string, Object>> {
+    if (typeof data === "object") {
+      for (let item of Object.entries(data)) {
+        if (typeof item[1] === "object") {
+          data[item[0]] = await AxiosUtil.convertResponseData(item[1] as Record<string, Object>, key, iv);
+        } else if (typeof item[1] === "string" && JSONUtil.isJSONString(item[1])) {
+          data[item[0]] = await AxiosUtil.convertResponseData(JSON.parse(item[1]), key, iv);
+        } else {
+          if (efAxiosParams.keyWordsList.includes(item[0])) {
+            data[item[0]] = (await SM4.decodeCBC(item[1], key, iv)).getDataRow();
+          }
+        }
+      }
+    }
+    return data;
   }
 
 
@@ -279,20 +340,21 @@ export class AxiosUtil {
    * @returns 加密后的对象
    */
   private static async encryptPartParam(obj: Record<string, Object>, sm4Key: string, sm4Iv: string) {
-    for (let inObj of Object.keys(obj).entries()) {
+    let result: Record<string, Object> = {
+      'ef_fingerprint': (await SM3.digest(JSON.stringify(obj))).getDataRow()
+    };
+    for (let inObj of Object.entries(obj)) {
+      //每行递归
       if (typeof inObj[1] === "object") {
-        AxiosUtil.encryptPartParam(inObj[1], sm4Key, sm4Iv);
+        AxiosUtil.encryptPartParam(inObj[1] as Record<string, Object>, sm4Key, sm4Iv);
       } else {
-        let objKeys = Object.keys(obj);
-        for (let item of objKeys.entries()) {
-          if (efAxiosParams.keyWordsList.indexOf(item[1]) > -1) {
-            obj[item[0]] = (await SM4.encodeCBC(item[1], sm4Key, sm4Iv)).getDataRow();
-          }
+        if (efAxiosParams.keyWordsList.indexOf(inObj[0]) > -1) {
+          obj[inObj[0]] = (await SM4.encodeCBC(inObj[1], sm4Key, sm4Iv)).getDataRow();
         }
-        return;
       }
     }
-    return obj;
+    result.ef_request_params = obj;
+    return result;
   }
 }
 
@@ -332,6 +394,10 @@ export class efAxiosParams {
    *加解密接口忽略集合
    */
   static ignoreEncryptList: Array<string> = new Array<string>();
+  /**
+   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
+   */
+  static isConvertDTO: boolean = true;
 }
 
 /**
