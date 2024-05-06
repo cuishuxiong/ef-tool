@@ -1610,7 +1610,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 5.JSONUtil的方法
 
-* toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd
+* <s>toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1621,7 +1621,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let str1 = JSONUtil.toJSONString(person,DateConst.YMD_HLINE_HMS);
 ```
 
-* parse 将传入的json字符串格式化为Object对象
+* <s>parse 将传入的json字符串格式化为Object对象</s>
 
 ```
     let person = new Person('测试', 12, new Date(), new User("101291021", "打撒吃的是草动次打次"));
@@ -1630,7 +1630,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     JSONUtil.parse(str);
 ```
 
-* parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* <s>parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1642,7 +1642,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
 ```
 
-* parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd
+* <s>parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
      let listStr = JSONUtil.toJSONString(userList);
@@ -1651,6 +1651,16 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
        Logger.error(item.id, item.name);
      })
 ```
+
+* parseStringArray 将字符串格式Array转换成Array数组
+
+* isBoolean 判断传入的字符串是否是布尔类型
+
+* isJSONStringArray 判断是否是字符串格式Array
+
+* isJSONString 判断是否是字符串格式json
+
+* isNumber 是否是字符串
 
 ### 5.网络相关类组件使用API
 
@@ -1698,7 +1708,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
    */
   static ignoreEncryptList: Array<string> = new Array<string>();
   /**
-   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
+   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭(1.1.9+)
    */
   static isConvertDTO: boolean = true;
 ```
@@ -1757,7 +1767,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
 
-* getByParams请求 async/await 方式
+* getByParams请求 async/await 方式 (1.1.9+)
 
 ```
     //参数说明   参数为json格式
