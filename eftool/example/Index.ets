@@ -1,33 +1,23 @@
 import {
-  CacheUtil,
   OutDTO,
   Logger,
-  IdCardUtil,
   ToastUtil,
   ActionUtil,
   DialogUtil,
-  ArrayUtil,
-  ObjectUtil,
-  PhoneUtil,
-  StrUtil,
-  DateUtil,
-  CharUtil,
-  RegUtil,
-  RegexConst,
-  RandomUtil,
-  IdUtil,
   AES,
   SM4,
   RSA,
   SM2,
   DES,
   ECDSA,
+  JSONObject,
   ECDH,
   CryptoUtil,
   X25519,
   SM3,
   MD5,
   SHA,
+  JSONArray,
   LoadingUtil,
   TipsUtil,
   ConfirmUtil,
@@ -35,7 +25,6 @@ import {
   SelectUtil,
   JSONUtil,
   ExceptionUtil,
-// DownloadUtil,
   Cascade,
   DateConst,
   AuthUtil,
@@ -44,14 +33,15 @@ import {
   LocationUtil,
   efAxios,
   efAxiosParams,
-  efClientApi
+  efClientApi,
+  RandomUtil
 } from '@yunkss/eftool'
-import { notificationManager } from '@kit.NotificationKit';
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
-import { AxiosResponse } from '@ohos/axios';
-import { cryptoFramework } from '@kit.CryptoArchitectureKit';
-import { StrAndUintUtil } from '@yunkss/eftool/src/main/ets/core/util/StrAndUintUtil';
+
+class Message {
+  msg: string = '';
+}
 
 class User {
   id?: string;
@@ -83,9 +73,9 @@ class Person {
   birth: Date;
   sex: boolean;
   user: User;
-  list: Array<User>;
+  list?: Array<User>;
 
-  constructor(name: string, age: number, sex: boolean, birth: Date, user: User, list: Array<User>) {
+  constructor(name: string, age: number, sex: boolean, birth: Date, user: User, list?: Array<User>) {
     this.birth = birth;
     this.name = name;
     this.age = age;
@@ -134,11 +124,30 @@ struct Index {
   }
 
   async sendRequest() {
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.104:18088';
+    efAxiosParams.isPartEncrypt = true;
+    efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    //关键字加密集合
+    efAxiosParams.keyWordsList = ['account','pwd'];
+    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
+    // efAxiosParams.isConvertDTO = false;
+    // const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
+    //   'account': 'efadmin',
+    //   'pwd': '123456'
+    // }, {
+    //   'csxTest': '1212121212'
+    // });
+    // if (loginNoDTO.token) {
+    //   ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
+    // }
+
     //模拟登录
     const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
       'pwd': '123456'
+    }, {
+      'csxTest': '1212121212'
     });
     //登录成功
     if (login.getSuccess()) {
@@ -233,13 +242,13 @@ struct Index {
     await NotificationUtil.publishPicture({
       text: '222222',
       title: '抢票时间到',
-      expandedTitle: '多文本的展开',
-      briefText: '多文本的概要',
+      expandedTitle: '图片的展开',
+      briefText: '图片的概要',
       isOngoing: true,
       isStopwatch: true,
       label: '图片通知',
-      picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
-        .buffer).createPixelMap(),
+      // picture: await image.createImageSource((getContext(this) as common.UIAbilityContext).resourceManager.getMediaContentSync($r("app.media.startIcon"))
+      //   .buffer).createPixelMap(),
       callBack: (noticeId: number) => {
         ToastUtil.showToast('通知推送成功:' + noticeId);
       }
@@ -289,7 +298,7 @@ struct Index {
   async testCrypto() {
 
     //获取iv
-    // let iv = await RandomUtil.generateIV();
+    let iv = await RandomUtil.generateIV();
 
     //ECDSA
     // let ecdsa = await ECDSA.generateECDSAKey();
@@ -454,31 +463,32 @@ struct Index {
     //             0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
     //             4QIDAQAB
     //             -----END PUBLIC KEY-----`);
-    let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
+    // let pubKey = '0462f1582e89f99f9b10c6ba139f101db7cf8b28b3f864c1b9eócef9ec7d1565650db62ad8cc1978e9a55fa3bfbcdc2a94fa1386ccad7ebea1cefe8348e226e73b';
     // RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
     //               MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFbL2rINkPPjHL8YOR535rJIKKG+V
     //               /NKFdFFDSfGZjkI+tK4Rvig/LD/TFeFbtQwKYJsKXeeadNbTCiiU/KZ1JQ==
     //               -----END PUBLIC KEY-----`);
     // let eee = await CryptoUtil.convertPubKeyFromStr(pubKey,'ECC256');
 
-    let ecdas = await ECDSA.generateECDSAKey();
-    let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
-    let aesKey = res.getDataRow();
+    // let ecdas = await ECDSA.generateECDSAKey();
+    // let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
+    // let aesKey = res.getDataRow();
 
-    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
-    this.message = encode.getDataRow();
+    // let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    // this.message = encode.getDataRow();
 
-    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
-    this.message = decode.getDataRow();
+    // let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    // this.message = decode.getDataRow();
 
 
     //SM2
     let sm2 = await SM2.generateSM2Key();
     this.message = sm2.getDataRow().publicKey;
-    // let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
-    // this.message = encode.getDataRow();
-    // let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
-    // this.message = decode.getDataRow();
+    this.message = sm2.getDataRow().privateKey;
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    this.message = decode.getDataRow();
     // let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
     // this.message = sign.getDataRow();
     // let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
@@ -495,8 +505,59 @@ struct Index {
 
   }
 
+  async testJSONObject(): Promise<void> {
+
+
+    // let jsonObj = new JSONObject();
+    // jsonObj.set("id", "100010");
+    // jsonObj.set("age", 27);
+    // jsonObj.set("sex", true);
+    // jsonObj.set("birth", new Date());
+    // let user = new JSONObject();
+    // user.set("uid", "121212");
+    // user.set("uName", "测试嵌套对象");
+    // jsonObj.set("user", user);
+    // jsonObj.set("person", new User('objId', 'objName'));
+    // jsonObj.set("name", "test字符串");
+    //
+    // let st = jsonObj.toString();
+    //
+    // this.message = st;
+    //
+    // Logger.debug('1111', '111');
+
+    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+
+    let s = await SM2.convertSM2PubKey(pk);
+
+    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+
+    let ddd = code.getDataRow();
+
+    let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
+
+    let dc = await SM2.convertSM2PriKey(pik);
+
+    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+
+    this.message = aaaa.getDataRow();
+
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
+    let j = JSONObject.from<Person>(person);
+
+    let str = j.toString();
+
+    this.message = str;
+
+
+  }
+
   test(): void {
-    this.message = this.bottomRectHeight;
+    // this.message = this.bottomRectHeight;
     //存入字符串
     // CacheUtil.save<string>("str", "测试存入字符串");
     //存入对象T
@@ -504,6 +565,7 @@ struct Index {
     userList.push(new User('2345', '测试用户1'));
     userList.push(new User('7844', '测试用户2'));
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+
 
     let str1 = JSONUtil.toJSONString(person, DateConst.YMD_HLINE_HMS);
 
@@ -628,7 +690,13 @@ struct Index {
             .fontSize(50)
             .fontWeight(FontWeight.Bold)
           // DownloadUtil({})
-          Button("发送post请求").margin({ top: 30, bottom: '10vp' }).onClick(() => {
+          Button("测试JSONObject").margin({ bottom: '10vp' }).onClick(() => {
+            this.testJSONObject();
+          })
+          Button("测试JSONUtil").margin({ bottom: '10vp' }).onClick(() => {
+            this.test();
+          })
+          Button("发送post请求").margin({ bottom: '10vp' }).onClick(() => {
             this.sendRequest();
           })
           Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {

@@ -46,7 +46,7 @@ export class JSONObject extends HashMap<string, JSONValue> {
    * @param nestedJson 待解析的json
    * @returns 解析后的结果
    */
-  public static parseNestedObject<U>(nestedJson: Record<string, JSONValue>): U {
+  private static parseNestedObject<U>(nestedJson: Record<string, JSONValue>): U {
     let nestedData: Record<string, JSONValue> = {};
     for (let key of Object.entries(nestedJson)) {
       if (typeof nestedJson[key[0]] === 'object' && nestedJson[key[0]] !== null) {

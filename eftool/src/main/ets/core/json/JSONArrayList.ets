@@ -14,7 +14,7 @@ import { JSONArray } from './JSONArray';
 
 export class JSONArrayList extends ArrayList<JSONValue> {
   /**
-   * json字符串转换为JSONObject对象
+   * json字符串转换为JSONArrayList对象
    * @param bean 实体对象
    * @returns JSON 对象
    */
@@ -42,18 +42,18 @@ export class JSONArrayList extends ArrayList<JSONValue> {
   }
 
   /**
-   * json字符串转换为实体对象
+   * json字符串转换为实体对象【预计1.1.10上线】
    * @param bean 实体对象
    * @returns JSON 对象
    */
-  public static parseObject<T>(jsonStr: string): T {
-    let json = new JSONArrayList();
-
-    return json as T;
-  }
+  // public static parseObject<T>(jsonStr: string): T {
+  //   let json = new JSONArrayList();
+  //
+  //   return json as T;
+  // }
 
   /**
-   * json字符串转换为实体对象
+   * 集合对象转换为json字符串
    * @param bean 实体对象
    * @returns JSON 对象
    */
@@ -71,7 +71,7 @@ export class JSONArrayList extends ArrayList<JSONValue> {
   }
 
   /**
-   * 实体对象转换为JSONObject对象
+   * 实体集合转换为JSONArrayList对象
    * @param bean 实体对象
    * @returns JSON 对象
    */

@@ -41,18 +41,17 @@ struct Welcome {
   @State msg: string = 'csx';
 
   testJSONArrayList() {
-    // let arr = new JSONArrayList();
-    // arr.add(1);
-    // arr.add("cccc");
-    // arr.add("123");
-    // arr.add("aaaaa\\\"34343434");
-    // arr.add("2223\"dasdass");
-    // arr.add(new Date());
-    // arr.add(true);
-    // arr.add(null);
-    // arr.add(new User("10010", "实体数据"));
-    // let str = arr.toString();
-    // this.msg = str;
+    let arr = new JSONArrayList();
+    arr.add(1);
+    arr.add("cccc");
+    arr.add("123");
+    arr.add("aaaaa\\\"34343434");
+    arr.add("2223\"dasdass");
+    arr.add(new Date());
+    arr.add(true);
+    arr.add(null);
+    arr.add(new User("10010", "实体数据"));
+    let str = arr.toString();
 
     let userList = new ArrayList<User>();
     userList.add(new User('2345', '测试用户1'));
@@ -73,18 +72,17 @@ struct Welcome {
   }
 
   testJSONArray() {
-    // let arr = new JSONArray();
-    // arr.push(1);
-    // arr.push("cccc");
-    // arr.push("123");
-    // arr.push("aaaaa\\\"34343434");
-    // arr.push("2223\"dasdass");
-    // arr.push(new Date());
-    // arr.push(true);
-    // arr.push(null);
-    // arr.push(new User("10010", "实体数据"));
-    // let str = arr.toString();;
-    // this.msg = str;
+    let arr = new JSONArray();
+    arr.push(1);
+    arr.push("cccc");
+    arr.push("123");
+    arr.push("aaaaa\\\"34343434");
+    arr.push("2223\"dasdass");
+    arr.push(new Date());
+    arr.push(true);
+    arr.push(null);
+    arr.push(new User("10010", "实体数据"));
+    let str = arr.toString();
 
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
@@ -92,7 +90,7 @@ struct Welcome {
     userList.push(new User('1314', '测试用户3'));
     userList.push(new User('5210', '测试用户4'));
 
-    // let jarr = JSONArray.from(userList);
+    let jarr = JSONArray.from(userList);
     // this.msg = jarr.length + "----" + jarr[1]?.toString();
 
     let s = JSONArray.toJSONString(userList);
@@ -123,6 +121,8 @@ struct Welcome {
     let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
 
     let j = JSONObject.toJSONString(person);
+
+    let f = JSONObject.parse(j);
 
     let o = JSONObject.parseObject<Person>(j);
 
