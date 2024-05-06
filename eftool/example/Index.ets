@@ -48,8 +48,7 @@ class User {
   name?: string;
 
   constructor(id: string, name: string) {
-    this.name = name;
-    this.id = id;
+    super(id, name);
   }
 }
 
