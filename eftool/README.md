@@ -1261,6 +1261,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * encodeECB 加密-ECB模式
 
+* hmac 消息认证码计算
+
+```
+    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
+    this.message = hmac1.getDataRow();
 ```
     let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
     this.message = encodeECB.getDataRow();

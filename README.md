@@ -1261,6 +1261,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * encodeECB 加密-ECB模式
 
+* digest SM3摘要
+
+```
+    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
+    this.message = sm3.getDataRow();
 ```
     let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
     this.message = encodeECB.getDataRow();
