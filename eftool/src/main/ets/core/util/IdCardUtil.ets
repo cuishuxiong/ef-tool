@@ -119,7 +119,7 @@ export class IdCardUtil {
       // 获取校验位
       let val = IdCardUtil.getCheckCode18(code17);
       // 第18位
-      if (idCard.charAt(17).toLowerCase() === val) {
+      if (idCard.charAt(17).toLowerCase() === val.toLowerCase()) {
         return OutDTO.OK("身份证格式正确");
       }
       return OutDTO.Error("校验码不匹配");

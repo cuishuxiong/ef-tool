@@ -3,7 +3,7 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-import { JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
+import { IdCardUtil, JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 
 
@@ -129,10 +129,18 @@ struct Welcome {
 
     this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
+  testIdCard(){
+    let res = IdCardUtil.isValidCard18('12022519540815028x');
+    this.msg = res.getMsg();
+  }
+
 
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
+      Button('验证身份证号').margin({ top: 20 }).onClick(() => {
+        this.testIdCard();
+      })
       Button('测试JSONArray').margin({ top: 20 }).onClick(() => {
         this.testJSONArray();
       })
