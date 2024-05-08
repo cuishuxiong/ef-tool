@@ -3,8 +3,12 @@
  * @DateTime 2024/4/19 08:00:04
  * @TODO EfApi  axios封装的请求工具类
  */
-import { AxiosHeaders, AxiosResponse } from '@ohos/axios';
+import { AxiosError, AxiosHeaders, AxiosProgressEvent, AxiosResponse, FormData } from '@ohos/axios';
 import { efAxios } from './AxiosUtil';
+import fs from '@ohos.file.fs';
+import { ToastUtil } from '../../ui/prompt/ToastUtil';
+import { common } from '@kit.AbilityKit';
+
 
 class EfClientApi {
   /**
@@ -81,16 +85,76 @@ class EfClientApi {
 
   /**
    * 统一的上传请求【预计1.1.10版本可用】
+   * @param url 上次url
+   * @param isUri  是否为uri文件
+   * @param data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
+   * @param uri   isUri=true时传入  表示上传的文件为uri格式
+   * @param fileName  上传时后端接收的key,默认为file
+   * @returns 上传结果
    */
-  upload() {
+  async upload(url: string, isUri: boolean, data?: ArrayBuffer, uri?: string, fileName?: string) {
+    let formData = new FormData();
+    if (fileName) {
+      if (isUri) {
+        formData.append(fileName, 'internal://cache/' + uri);
+      } else {
+        formData.append(fileName, data);
+      }
+    } else {
+      if (isUri) {
+        formData.append('file', 'internal://cache/' + uri);
+      } else {
+        formData.append('file', data);
+      }
+    }
+    return await efAxios.post<string, AxiosResponse<string>, FormData>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      context: getContext(this),
+      onUploadProgress: (progressEvent: AxiosProgressEvent): void => {
+        console.info(progressEvent && progressEvent.loaded && progressEvent.total ? Math.ceil(progressEvent.loaded / progressEvent.total * 100) + '%' : '0%');
+      }
+    }).then((response: AxiosResponse<string>) => {
+      return response.data
+    });
 
   }
 
   /**
    * 统一的下载请求【预计1.1.10版本可用】
+   * @param url 下载URL
+   * @param filePath  下载文件全路径
+   * @returns
    */
-  download() {
+  async download(url: string, filePath: string) {
 
+    let context = getContext(this) as common.UIAbilityContext;
+    let filesDir = context.filesDir;
+
+    let finalPath = filesDir + "/" + filePath;
+    try {
+      let isExists = fs.accessSync(finalPath);
+
+      if (isExists) {
+        fs.unlinkSync(finalPath);
+      }
+    } catch (err) {
+      ToastUtil.showToast('删除路径下已存在文件失败:' + filePath);
+      return;
+    }
+
+    return await efAxios({
+      url: url,
+      method: 'get',
+      context: getContext(this),
+      filePath: finalPath,
+      onDownloadProgress: (progressEvent: AxiosProgressEvent): void => {
+        console.info("progress: " + (progressEvent && progressEvent.loaded && progressEvent.total ? Math.ceil(progressEvent.loaded / progressEvent.total * 100) : 0));
+      }
+    }).then((response: AxiosResponse<string>) => {
+      return response.data
+    }).catch((err: AxiosError) => {
+      let e = err.message;
+    });
   }
 }
 

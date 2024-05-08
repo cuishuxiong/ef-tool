@@ -3,7 +3,7 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-import { IdCardUtil, JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
+import { efClientApi, IdCardUtil, JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 
 
@@ -60,13 +60,13 @@ struct Welcome {
     userList.add(new User('5210', '测试用户4'));
 
     let jarr = JSONArrayList.from(userList);
-    this.msg = jarr.length+"";
+    this.msg = jarr.length + "";
 
     let s = JSONArrayList.toJSONString(userList);
     this.msg = s;
 
     let jsArr = JSONArrayList.parse(s);
-    this.msg = jsArr.length +"";
+    this.msg = jsArr.length + "";
 
 
   }
@@ -129,15 +129,23 @@ struct Welcome {
 
     this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
-  testIdCard(){
+
+  testIdCard() {
     let res = IdCardUtil.isValidCard18('12022519540815028x');
     this.msg = res.getMsg();
   }
 
+  async testDownload() {
+    let res = await efClientApi.download('https://pic.rmb.bdstatic.com/bjh/events/e8d967c6c7ac8d0f2b6b8bc7b40240184034.png@h_1280', 'csx.png');
+    this.msg = res ? res : '';
+  }
 
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
+      Button('下载文件').margin({ top: 20 }).onClick(() => {
+        this.testDownload();
+      })
       Button('验证身份证号').margin({ top: 20 }).onClick(() => {
         this.testIdCard();
       })
