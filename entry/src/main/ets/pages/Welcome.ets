@@ -72,32 +72,44 @@ struct Welcome {
   }
 
   testJSONArray() {
-    let arr = new JSONArray();
-    arr.push(1);
-    arr.push("cccc");
-    arr.push("123");
-    arr.push("aaaaa\\\"34343434");
-    arr.push("2223\"dasdass");
-    arr.push(new Date());
-    arr.push(true);
-    arr.push(null);
-    arr.push(new User("10010", "实体数据"));
-    let str = arr.toString();
+    // let arr = new JSONArray();
+    // arr.push(1);
+    // arr.push("cccc");
+    // arr.push("123");
+    // arr.push("aaaaa\\\"34343434");
+    // arr.push("2223\"dasdass");
+    // arr.push(new Date());
+    // arr.push(true);
+    // arr.push(null);
+    // arr.push(new User("10010", "实体数据"));
+    // let str = arr.toString();
 
-    let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    userList.push(new User('1314', '测试用户3'));
-    userList.push(new User('5210', '测试用户4'));
+    // let userList = new Array<User>();
+    // userList.push(new User('2345', '测试用户1'));
+    // userList.push(new User('7844', '测试用户2'));
+    // userList.push(new User('1314', '测试用户3'));
+    // userList.push(new User('5210', '测试用户4'));
 
-    let jarr = JSONArray.from(userList);
+    // let jarr = JSONArray.from(userList);
     // this.msg = jarr.length + "----" + jarr[1]?.toString();
 
-    let s = JSONArray.toJSONString(userList);
+    // let s = JSONArray.toJSONString(userList);
 
-    let jsArr = JSONArray.parse(s);
-    this.msg = jsArr.length + "----" + jsArr[2]?.toString();
+    // let jsArr = JSONArray.parse(s);
+    // this.msg = jsArr.length + "----" + jsArr[2]?.toString();
     // this.msg = s;
+
+    let array = new JSONArray();
+    let o1 = new JSONObject();
+    o1.set('k1', 'value1');
+    let o2 = new JSONObject();
+    o2.set('k2', 'value2');
+    array.push(o1);
+    array.push(o2);
+    array.push('hhh');
+    let a = array.toString();
+    this.msg = a;
+
   }
 
   testJSONObject() {
@@ -113,21 +125,29 @@ struct Welcome {
     jsonObj.set("test", null);
     jsonObj.set("person", new User('实体id', '实体name'));
     jsonObj.set("name", "test字符串");
+    let arr = new JSONArray();
+    arr.push(1234);
+    arr.push(true);
+    arr.push(null);
+    arr.push(new Date());
+    arr.push(user);
+    jsonObj.set("csx", arr);
     let st = jsonObj.toString();
+    this.msg = st;
 
-    let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    // let userList = new Array<User>();
+    // userList.push(new User('2345', '测试用户1'));
+    // userList.push(new User('7844', '测试用户2'));
+    // let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
 
-    let j = JSONObject.toJSONString(person);
+    // let j = JSONObject.toJSONString(person);
 
-    let f = JSONObject.parse(j);
+    // let f = JSONObject.parse(j);
 
-    let o = JSONObject.parseObject<Person>(j);
+    // let o = JSONObject.parseObject<Person>(j);
 
 
-    this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
+    // this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
 
   testIdCard() {

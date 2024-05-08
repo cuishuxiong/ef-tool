@@ -11,6 +11,7 @@
 ### 🐞功能优化
 
 * 优化IdCardUtil.isValidCard18校验尾号为x的身份证时，失败[issuesI9MW72](https://gitee.com/yunkss/ef-tool/issues/I9MW72)
+* 优化JSONArray嵌套JSONObject转为字符串异常[issuesI9NEIZ](https://gitee.com/yunkss/ef-tool/issues/I9NEIZ)
 
 ## [v1.1.9] 2024-05
 

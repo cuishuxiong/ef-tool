@@ -9,7 +9,7 @@ import { CommonConst as Const } from '../const/CommonConst';
 import { DateUtil } from '../util/DateUtil';
 import { DateConst } from '../const/DateConst';
 import { JSONObject } from './JSONObject';
-import { ArrayList } from '@kit.ArkTS';
+import { ArrayList, HashMap } from '@kit.ArkTS';
 import { JSONArray } from './JSONArray';
 
 export class JSONArrayList extends ArrayList<JSONValue> {
@@ -136,6 +136,13 @@ export class JSONArrayList extends ArrayList<JSONValue> {
         sb.append(JSONArrayList.toJSONString(item));
       } else if (item instanceof JSONArrayList) {
         sb.append(JSONArrayList.toJSONString(item));
+      } else if (item instanceof HashMap) {
+        let tmp = item as HashMap<string, JSONValue>;
+        let jsonObj = new JSONObject();
+        tmp.forEach((val, key) => {
+          jsonObj.set(key, val);
+        });
+        sb.append(jsonObj.toString());
       } else if (item instanceof JSONObject || item instanceof Object) {
         sb.append(JSONObject.toJSONString(item));
       } else if (typeof item === 'string') {

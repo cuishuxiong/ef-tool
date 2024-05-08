@@ -10,6 +10,7 @@ import { JSONObject } from './JSONObject';
 import { JSONArrayList } from './JSONArrayList';
 import { DateUtil } from '../util/DateUtil';
 import { DateConst } from '../const/DateConst';
+import { HashMap } from '@kit.ArkTS';
 
 export class JSONArray extends Array<JSONValue> {
   /**
@@ -134,6 +135,13 @@ export class JSONArray extends Array<JSONValue> {
         sb.append(JSONArray.toJSONString(item));
       } else if (item instanceof JSONArrayList) {
         sb.append(JSONArrayList.toJSONString(item));
+      } else if (item instanceof HashMap) {
+        let tmp = item as HashMap<string, JSONValue>;
+        let jsonObj = new JSONObject();
+        tmp.forEach((val, key) => {
+          jsonObj.set(key, val);
+        });
+        sb.append(jsonObj.toString());
       } else if (item instanceof JSONObject || item instanceof Object) {
         sb.append(JSONObject.toJSONString(item));
       } else if (typeof item === 'string') {
