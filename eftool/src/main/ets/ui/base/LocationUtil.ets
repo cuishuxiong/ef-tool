@@ -1,7 +1,6 @@
 import geoLocationManager from '@ohos.geoLocationManager';
 import { AuthUtil } from '../../core/auth/AuthUtil';
 import { OutDTO } from '../../core/base/OutDTO';
-import { JSONUtil } from '../../core/json/JSONUtil';
 import { ToastUtil } from '../prompt/ToastUtil';
 
 /**

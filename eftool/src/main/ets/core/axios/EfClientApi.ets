@@ -84,7 +84,7 @@ class EfClientApi {
   }
 
   /**
-   * 统一的上传请求【预计1.1.10版本可用】
+   * 统一的上传请求
    * @param url 上次url
    * @param isUri  是否为uri文件
    * @param data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
@@ -120,20 +120,21 @@ class EfClientApi {
   }
 
   /**
-   * 统一的下载请求【预计1.1.10版本可用】
+   * 统一的下载请求
    * @param url 下载URL
    * @param filePath  下载文件全路径
+   * @param progressCallBack  下载进度回调方法
    * @returns
    */
-  async download(url: string, filePath: string) {
-
+  async download(url: string, filePath: string, progressCallBack: (process: number) => void) {
+    //获取上下文
     let context = getContext(this) as common.UIAbilityContext;
     let filesDir = context.filesDir;
-
+    //组装下载路径
     let finalPath = filesDir + "/" + filePath;
     try {
       let isExists = fs.accessSync(finalPath);
-
+      //如果已存在则删除
       if (isExists) {
         fs.unlinkSync(finalPath);
       }
@@ -141,19 +142,22 @@ class EfClientApi {
       ToastUtil.showToast('删除路径下已存在文件失败:' + filePath);
       return;
     }
-
+    //下载
     return await efAxios({
       url: url,
       method: 'get',
-      context: getContext(this),
+      context: context,
       filePath: finalPath,
       onDownloadProgress: (progressEvent: AxiosProgressEvent): void => {
-        console.info("progress: " + (progressEvent && progressEvent.loaded && progressEvent.total ? Math.ceil(progressEvent.loaded / progressEvent.total * 100) : 0));
+        if (progressEvent && progressEvent.loaded && progressEvent.total) {
+          //回调进度
+          progressCallBack(Math.ceil(progressEvent.loaded / progressEvent.total * 100));
+        }
       }
     }).then((response: AxiosResponse<string>) => {
       return response.data
     }).catch((err: AxiosError) => {
-      let e = err.message;
+      ToastUtil.showToast(err.message);
     });
   }
 }

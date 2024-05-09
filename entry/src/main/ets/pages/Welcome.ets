@@ -3,7 +3,7 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-import { efClientApi, IdCardUtil, JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
+import { DownloadUtil, efClientApi, IdCardUtil, JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 
 
@@ -150,13 +150,22 @@ struct Welcome {
     // this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
 
+  @State showDownBtn: Visibility = Visibility.None;
+  @State process: number = 0;
+
   testIdCard() {
     let res = IdCardUtil.isValidCard18('12022519540815028x');
     this.msg = res.getMsg();
   }
 
   async testDownload() {
-    let res = await efClientApi.download('https://pic.rmb.bdstatic.com/bjh/events/e8d967c6c7ac8d0f2b6b8bc7b40240184034.png@h_1280', 'csx.png');
+    this.showDownBtn = Visibility.Visible;
+    let res = await efClientApi.download('https://img2.baidu.com/it/u=1278474283,3384681497&fm=253&fmt=auto&app=138&f=BMP?w=889&h=500', 'girl.png', (progress: number) => {
+      if (progress >= 100) {
+        this.showDownBtn = Visibility.None;
+      }
+      this.process = progress;
+    });
     this.msg = res ? res : '';
   }
 
@@ -165,6 +174,11 @@ struct Welcome {
       Text(this.msg).fontColor('#ff4400')
       Button('下载文件').margin({ top: 20 }).onClick(() => {
         this.testDownload();
+      })
+      DownloadUtil({
+        progressState: this.showDownBtn,
+        halfProgress: this.process,
+        ctx: '下载mp4中...'
       })
       Button('验证身份证号').margin({ top: 20 }).onClick(() => {
         this.testIdCard();

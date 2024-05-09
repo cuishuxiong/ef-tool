@@ -98,7 +98,7 @@ export { efAxiosParams } from './src/main/ets/core/axios/AxiosUtil';
 
 export { efClientApi } from './src/main/ets/core/axios/EfClientApi';
 
-// export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
+export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
 
