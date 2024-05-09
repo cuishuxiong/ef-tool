@@ -169,6 +169,19 @@ struct Welcome {
     this.msg = res ? res : '';
   }
 
+  testArray2Object() {
+    let arr = new JSONArray();
+    arr.push(new User('10010', '测试用户111'));
+    arr.push(new User('10011', '测试用户222'));
+    arr.push(new User('10012', '测试用户333'));
+    arr.push(new User('10013', '测试用户444'));
+
+    let obj = JSONObject.toJSONString(arr);
+
+    this.msg = obj;
+
+  }
+
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
@@ -178,7 +191,10 @@ struct Welcome {
       DownloadUtil({
         progressState: this.showDownBtn,
         halfProgress: this.process,
-        ctx: '下载mp4中...'
+        ctx: '下载文件中...'
+      })
+      Button('Array转Object').margin({ top: 20 }).onClick(() => {
+        this.testArray2Object();
       })
       Button('验证身份证号').margin({ top: 20 }).onClick(() => {
         this.testIdCard();

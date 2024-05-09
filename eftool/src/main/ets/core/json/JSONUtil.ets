@@ -173,6 +173,23 @@ export class JSONUtil {
   }
 
   /**
+   * 判断是否是json数组
+   * @param str
+   * @returns
+   */
+  public static isJSONArray(str: string): boolean {
+    try {
+      const jsonArray: Record<string, Object> = JSON.parse(str);
+      if (!Array.isArray(jsonArray)) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
    * 判断是否是字符串格式json
    * @param str 待验证字符串
    * @returns

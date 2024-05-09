@@ -91,6 +91,10 @@ export class JSONObject extends HashMap<string, JSONValue> {
     let str = JSON.stringify(object);
     //转换成json对象
     let jVal: Record<string, JSONValue> = JSON.parse(str);
+    //如果是数组直接转换返回
+    if (Array.isArray(jVal)) {
+      return JSONArray.toJSONString(jVal);
+    }
     let map = new HashMap<string, JSONValue>();
     //转换成map
     Object.entries(jVal).forEach(item => {
