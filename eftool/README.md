@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.9(API11)</center>
+# <center>V1.1.10(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -105,6 +105,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | WindowUtil       | 提供窗口的创建关闭等功能  |
 | NotificationUtil | 提供发送,删除通知等功能  |
 | LocationUtil     | 提供获取定位,逆编码等功能 |
+| DownloadUtil     | 统一的上传下载按钮工具   |
 
 ## 📦安装
 
@@ -1610,7 +1611,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 5.JSONUtil的方法
 
-* <s>toJSONString 将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd</s>
+* <s>toJSONString
+  将传入的json对象格式化成json字符串,第二个参数为如果数据有日期类型时是否传入转换格式,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1630,7 +1632,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     JSONUtil.parse(str);
 ```
 
-* <s>parseObject 将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
+* <s>parseObject
+  将传入的json字符串格式化为指定的实体对象,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
     let userList = new Array<User>();
@@ -1642,7 +1645,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let p = JSONUtil.parseObject<Person>(str1,DateConst.YMD_HLINE_HMS);
 ```
 
-* <s>parseArray 将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
+* <s>parseArray
+  将传入的json字符串格式化为指定的实体对象集合,如果实体中有日期类型可以传入格式化format,不传默认为yyyy-MM-dd</s>
 
 ```
      let listStr = JSONUtil.toJSONString(userList);
@@ -1799,6 +1803,29 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
 ```
 
+* upload 统一的上传请求 async/await 方式 (1.1.10+)
+
+```
+    //参数说明
+    async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, data?: ArrayBuffer, uri?: string, fileName?: string)
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //progressCallBack 上传进度回调,具体参照示例中的写法
+    //isUri  是否为uri文件
+    //data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
+    //uri   isUri=true时传入  表示上传的文件为uri格式
+    //fileName  上传时后端接收的key,默认为file
+```
+
+* download 统一的下载请求 async/await 方式 (1.1.10+)
+
+```
+    //参数说明
+    async download(url: string, filePath: string, progressCallBack: (process: number) => void)
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //filePath  下载文件名称 如下载png图片后希望名称为girl.png
+    //progressCallBack  下载进度回调方法
+```
+
 * 登录示例
 
 ```
@@ -1884,6 +1911,43 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
       if (del.getSuccess()) {
         ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+      }
+```
+
+* 上传示例  (1.1.10+)
+
+```
+      //模拟文件上传
+      async testUpload() {
+          this.showDownBtn = Visibility.Visible;
+          efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+          let ctx = getContext() as common.UIAbilityContext;
+          let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
+          let imageResource = imageArray.buffer as ArrayBuffer;
+          let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
+            if (progress >= 100) {
+              this.showDownBtn = Visibility.None;
+            }
+            this.process = progress;
+          }, imageResource);
+          this.msg = res ? res["dataRow"] : '';
+     }
+```
+
+* 下载示例  (1.1.10+)
+
+```
+      //模拟测试文件下载
+      async testDownload() {
+        efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+        this.showDownBtn = Visibility.Visible;
+        let res = await efClientApi.download('/api/eftool/download/0d6a25e4-f61b-48eb-8a12-53f82c5b957d-default1715324534920.png', 'girl.png', (progress: number) => {
+          if (progress >= 100) {
+            this.showDownBtn = Visibility.None;
+          }
+          this.process = progress;
+        });
+        this.msg = res ? res["msg"] : '';
       }
 ```
 
@@ -2792,6 +2856,69 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
     this.getCountryCode();
   })
+```
+
+#### 15.DownloadUtil上传下载工具类 (1.1.10+)
+
+* 示例
+
+```
+  //入参介绍
+  progressState:是否显示进度按钮
+  halfProgress:当前下载进度
+  ctx:进度按钮文字提示
+  //UI中引入
+  DownloadUtil({
+    progressState: this.showDownBtn,
+    halfProgress: this.process,
+    ctx: this.btnCtx
+  })
+```
+
+* 上传
+
+```
+  Button('上传文件').margin({ top: 20 }).onClick(() => {
+    this.btnCtx = '上传文件中...';
+    this.testUpload();
+  })
+  
+  async testUpload() {
+    //显示进度按钮
+    this.showDownBtn = Visibility.Visible;
+    
+    let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
+      if (progress >= 100) {
+        //上传完毕隐藏进度按钮
+        this.showDownBtn = Visibility.None;
+      }
+      //设置当前进度
+      this.process = progress;
+    }, imageResource);
+  }
+  
+```
+
+* 下载
+
+```
+  Button('下载文件').margin({ top: 20 }).onClick(() => {
+    this.btnCtx = '下载文件中...';
+    this.testDownload();
+  })
+  
+  async testDownload() {
+    //显示进度按钮
+    this.showDownBtn = Visibility.Visible;
+    let res = await efClientApi.download('/api/eftool/download/0d6a25e4-f61b-48eb-8a12-53f82c5b957d-default1715324534920.png', 'girl.png', (progress: number) => {
+      if (progress >= 100) {
+        //下载完毕隐藏进度按钮
+        this.showDownBtn = Visibility.None;
+      }
+      //设置当前进度
+      this.process = progress;
+    });
+  }
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
