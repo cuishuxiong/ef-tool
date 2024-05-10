@@ -3,8 +3,17 @@
  * @DateTime 2024/4/3 10:24:04
  * @TODO Welcome
  */
-import { DownloadUtil, efClientApi, IdCardUtil, JSONArray, JSONArrayList, JSONObject } from '@yunkss/eftool'
+import {
+  DownloadUtil,
+  efAxiosParams,
+  efClientApi,
+  IdCardUtil,
+  JSONArray,
+  JSONArrayList,
+  JSONObject
+} from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
+import { common } from '@kit.AbilityKit';
 
 
 class User {
@@ -152,10 +161,26 @@ struct Welcome {
 
   @State showDownBtn: Visibility = Visibility.None;
   @State process: number = 0;
+  @State btnCtx: string = '';
 
   testIdCard() {
     let res = IdCardUtil.isValidCard18('12022519540815028x');
     this.msg = res.getMsg();
+  }
+
+  async testUpload() {
+    this.showDownBtn = Visibility.Visible;
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    let ctx = getContext() as common.UIAbilityContext;
+    let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
+    let imageResource = imageArray.buffer as ArrayBuffer;
+    let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
+      if (progress >= 100) {
+        this.showDownBtn = Visibility.None;
+      }
+      this.process = progress;
+    }, imageResource);
+    this.msg = res ? res : '';
   }
 
   async testDownload() {
@@ -185,13 +210,19 @@ struct Welcome {
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
+
+      Button('上传文件').margin({ top: 20 }).onClick(() => {
+        this.btnCtx = '上传文件中...';
+        this.testUpload();
+      })
       Button('下载文件').margin({ top: 20 }).onClick(() => {
+        this.btnCtx = '下载文件中...';
         this.testDownload();
       })
       DownloadUtil({
         progressState: this.showDownBtn,
         halfProgress: this.process,
-        ctx: '下载文件中...'
+        ctx: this.btnCtx
       })
       Button('Array转Object').margin({ top: 20 }).onClick(() => {
         this.testArray2Object();

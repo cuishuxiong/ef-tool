@@ -84,15 +84,17 @@ class EfClientApi {
   }
 
   /**
+   *
    * 统一的上传请求
    * @param url 上次url
+   * @param progressCallBack 上传进度回调
    * @param isUri  是否为uri文件
    * @param data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
    * @param uri   isUri=true时传入  表示上传的文件为uri格式
    * @param fileName  上传时后端接收的key,默认为file
    * @returns 上传结果
    */
-  async upload(url: string, isUri: boolean, data?: ArrayBuffer, uri?: string, fileName?: string) {
+  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, data?: ArrayBuffer, uri?: string, fileName?: string) {
     let formData = new FormData();
     if (fileName) {
       if (isUri) {
@@ -107,14 +109,24 @@ class EfClientApi {
         formData.append('file', data);
       }
     }
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    addHead.set('Content-Type', 'multipart/form-data', true);
+    addHead.set('Accept', '*/*', true);
+    addHead.set('Req-Type', 'uploadOrDownload', true);
     return await efAxios.post<string, AxiosResponse<string>, FormData>(url, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      context: getContext(this),
+      headers: addHead,
+      context: getContext(this) as common.UIAbilityContext,
       onUploadProgress: (progressEvent: AxiosProgressEvent): void => {
-        console.info(progressEvent && progressEvent.loaded && progressEvent.total ? Math.ceil(progressEvent.loaded / progressEvent.total * 100) + '%' : '0%');
+        if (progressEvent && progressEvent.loaded && progressEvent.total) {
+          //回调进度
+          progressCallBack(Math.ceil(progressEvent.loaded / progressEvent.total * 100));
+        }
       }
     }).then((response: AxiosResponse<string>) => {
       return response.data
+    }).catch((err: AxiosError) => {
+      ToastUtil.showToast(err.message);
     });
 
   }
@@ -142,12 +154,16 @@ class EfClientApi {
       ToastUtil.showToast('删除路径下已存在文件失败:' + filePath);
       return;
     }
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    addHead.set('Req-Type', 'uploadOrDownload', true);
     //下载
     return await efAxios({
       url: url,
       method: 'get',
       context: context,
       filePath: finalPath,
+      headers: addHead,
       onDownloadProgress: (progressEvent: AxiosProgressEvent): void => {
         if (progressEvent && progressEvent.loaded && progressEvent.total) {
           //回调进度

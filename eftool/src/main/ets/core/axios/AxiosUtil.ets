@@ -56,7 +56,9 @@ export class AxiosUtil {
     //防重放的随机数因子
     config.headers.timestamp = new Date().getTime();
     //设置默认请求类型
-    config.headers['Content-Type'] = 'application/json';
+    if (!config.headers['Content-Type']) {
+      config.headers['Content-Type'] = 'application/json';
+    }
     //有token值说明登录成功则添加到请求头
     if (efAxiosParams.tokenValue) {
       //token鉴权值
