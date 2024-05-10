@@ -125,6 +125,9 @@ export class AxiosUtil {
   static convertResponseDTO(response: AxiosResponse) {
     //考虑几种常见的可能性
     let success: boolean = true;
+    if (response.config.headers["Req-Type"]) {
+      return new OutDTO(true, '下载文件成功~', '', new Array());
+    }
     if (response.data && response.data.success) {
       success = response.data.success;
     }
@@ -169,10 +172,6 @@ export class AxiosUtil {
     //判断如果有不加解密的接口则跳过加密
     let lastUrl: string = response.config.url?.slice(response.config.url?.lastIndexOf("/") + 1, response.config.url.length).trim() || "";
     if (response.status === 200) {
-      //上传下载将数据转换为blob格式
-      if (response.config.headers["Req-Type"] == "uploadOrDownload") {
-        //上传下载将数据转换为blob格式 预计1.1.10版本完善
-      }
       //整体解密
       if (efAxiosParams.isAllEncrypt) {
         //判断如果有不加解密的接口则跳过加密

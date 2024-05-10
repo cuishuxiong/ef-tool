@@ -180,18 +180,19 @@ struct Welcome {
       }
       this.process = progress;
     }, imageResource);
-    this.msg = res ? res : '';
+    this.msg = res ? res["dataRow"] : '';
   }
 
   async testDownload() {
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.download('https://img2.baidu.com/it/u=1278474283,3384681497&fm=253&fmt=auto&app=138&f=BMP?w=889&h=500', 'girl.png', (progress: number) => {
+    let res = await efClientApi.download('/api/eftool/download/0d6a25e4-f61b-48eb-8a12-53f82c5b957d-default1715324534920.png', 'girl.png', (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
       this.process = progress;
     });
-    this.msg = res ? res : '';
+    this.msg = res ? res["msg"] : '';
   }
 
   testArray2Object() {
