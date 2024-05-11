@@ -165,7 +165,6 @@ struct Welcome {
   @State showDownBtn: Visibility = Visibility.None;
   @State process: number = 0;
   @State btnCtx: string = '';
-  bufferImg = new ArrayBuffer(4096);
 
   testIdCard() {
     let res = IdCardUtil.isValidCard18('12022519540815028x');
@@ -173,37 +172,39 @@ struct Welcome {
   }
 
   async selectImage() {
-    await PickerUtil.selectPhotoVideo({
-      selectCallBack: (list) => {
-        list.forEach(item => {
-          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-          let readLen = fs.readSync(file.fd, this.bufferImg);
-          console.info('readSync data to file succeed and buffer size is:' + readLen);
-          fs.closeSync(file);
-        })
-      }
-    })
-    setTimeout(() => {
-      this.testUpload(this.bufferImg);
-    }, 3000);
+    //拉起选中照片
+    let result = await PickerUtil.selectPhotoVideo();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        console.info('readSync data to file succeed and buffer size is:' + readLen);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      await this.testUpload(bufferImg);
+    }
   }
 
   async selectFile() {
-    await PickerUtil.selectFile({
-      selectCallBack: (list) => {
-        list.forEach(item => {
-          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-          let readLen = fs.readSync(file.fd, this.bufferImg);
-          console.info('readSync data to file succeed and buffer size is:' + readLen);
-          fs.closeSync(file);
-        })
-      }
-    })
-
-    setTimeout(() => {
-      this.testUpload(this.bufferImg);
-    }, 3000);
-
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(4096);
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        console.info('readSync data to file succeed and buffer size is:' + readLen);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      await this.testUpload(bufferImg);
+    }
   }
 
   async testUriUpload() {
@@ -221,7 +222,8 @@ struct Welcome {
 
   async testUpload(data: ArrayBuffer) {
     this.showDownBtn = Visibility.Visible;
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -232,9 +234,10 @@ struct Welcome {
   }
 
   async testDownload() {
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.download('/api/eftool/download/0d6a25e4-f61b-48eb-8a12-53f82c5b957d-default1715324534920.png', 'girl.png', (progress: number) => {
+    let res = await efClientApi.download('/api/eftool/download/5da06445-9cb0-4dda-a01d-e5629fedb3d9-default1715433397000.jpg', 'girl.jpg', (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
