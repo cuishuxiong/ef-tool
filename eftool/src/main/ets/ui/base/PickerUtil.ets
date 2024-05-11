@@ -71,11 +71,16 @@ export class PickerUtil {
     }
   }
 
+  /**
+   *
+   * @param options
+   * @returns
+   */
   static async selectPhotoVideo(options?: efPickerOptions): Promise<void> {
     //1.校验是否有权限
-    let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
+    let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
     if (!isAuth) {
-      let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
+      let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
       if (res < 0) {
         ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
         return;

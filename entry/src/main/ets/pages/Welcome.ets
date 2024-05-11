@@ -16,6 +16,7 @@ import {
 } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
+import fs from '@ohos.file.fs';
 
 
 class User {
@@ -164,22 +165,45 @@ struct Welcome {
   @State showDownBtn: Visibility = Visibility.None;
   @State process: number = 0;
   @State btnCtx: string = '';
+  bufferImg = new ArrayBuffer(4096);
 
   testIdCard() {
     let res = IdCardUtil.isValidCard18('12022519540815028x');
     this.msg = res.getMsg();
   }
 
+  async selectImage() {
+    await PickerUtil.selectPhotoVideo({
+      selectCallBack: (list) => {
+        list.forEach(item => {
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, this.bufferImg);
+          console.info('readSync data to file succeed and buffer size is:' + readLen);
+          fs.closeSync(file);
+        })
+      }
+    })
+    setTimeout(() => {
+      this.testUpload(this.bufferImg);
+    }, 3000);
+  }
+
   async selectFile() {
     await PickerUtil.selectFile({
       selectCallBack: (list) => {
         list.forEach(item => {
-          ToastUtil.showToast(item);
-          this.msg += item;
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, this.bufferImg);
+          console.info('readSync data to file succeed and buffer size is:' + readLen);
+          fs.closeSync(file);
         })
-
       }
     })
+
+    setTimeout(() => {
+      this.testUpload(this.bufferImg);
+    }, 3000);
+
   }
 
   async testUriUpload() {
@@ -188,18 +212,22 @@ struct Welcome {
     let ctx = getContext() as common.UIAbilityContext;
   }
 
-  async testUpload() {
-    this.showDownBtn = Visibility.Visible;
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+  async commonUpload() {
     let ctx = getContext() as common.UIAbilityContext;
     let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
     let imageResource = imageArray.buffer as ArrayBuffer;
+    await this.testUpload(imageResource);
+  }
+
+  async testUpload(data: ArrayBuffer) {
+    this.showDownBtn = Visibility.Visible;
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
       this.process = progress;
-    }, imageResource);
+    }, data);
     this.msg = res ? res["dataRow"] : '';
   }
 
@@ -234,13 +262,16 @@ struct Welcome {
       Button('选择文件').margin({ top: 20 }).onClick(() => {
         this.selectFile();
       })
+      Button('选择图片').margin({ top: 20 }).onClick(() => {
+        this.selectImage();
+      })
       Button('uri上传文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '上传URI文件中...';
         this.testUriUpload();
       })
       Button('上传文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '上传文件中...';
-        this.testUpload();
+        this.commonUpload();
       })
       Button('下载文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '下载文件中...';
