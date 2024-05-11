@@ -10,7 +10,9 @@ import {
   IdCardUtil,
   JSONArray,
   JSONArrayList,
-  JSONObject
+  JSONObject,
+  PickerUtil,
+  ToastUtil
 } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
@@ -168,6 +170,24 @@ struct Welcome {
     this.msg = res.getMsg();
   }
 
+  async selectFile() {
+    await PickerUtil.selectFile({
+      selectCallBack: (list) => {
+        list.forEach(item => {
+          ToastUtil.showToast(item);
+          this.msg += item;
+        })
+
+      }
+    })
+  }
+
+  async testUriUpload() {
+    this.showDownBtn = Visibility.Visible;
+    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    let ctx = getContext() as common.UIAbilityContext;
+  }
+
   async testUpload() {
     this.showDownBtn = Visibility.Visible;
     efAxiosParams.baseURL = 'http://192.168.1.126:18088';
@@ -211,7 +231,13 @@ struct Welcome {
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
-
+      Button('选择文件').margin({ top: 20 }).onClick(() => {
+        this.selectFile();
+      })
+      Button('uri上传文件').margin({ top: 20 }).onClick(() => {
+        this.btnCtx = '上传URI文件中...';
+        this.testUriUpload();
+      })
       Button('上传文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '上传文件中...';
         this.testUpload();

@@ -100,6 +100,8 @@ export { efClientApi } from './src/main/ets/core/axios/EfClientApi';
 
 export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
+export { PickerUtil } from './src/main/ets/ui/base/PickerUtil';
+
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
 
 export { Cascade } from './src/main/ets/ui/select/Cascade';

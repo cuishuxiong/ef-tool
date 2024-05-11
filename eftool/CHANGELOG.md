@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.1.11] 2024-05
+
+### 🐣新特性(API11)
+
+* 封装CameraUtil拉起相机工具类
+* 封装PreviewUtil预览工具类
+* 封装PickerUtil拉起系统picker工具类
+
 ## [v1.1.10] 2024-05
 
 ### 🐣新特性(API11)

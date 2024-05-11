@@ -11,6 +11,14 @@
     {
       "name": "EntryAbility_label",
       "value": "label"
+    },
+    {
+      "name": "read_permission",
+      "value": "读取权限"
+    },
+    {
+      "name": "write_permission",
+      "value": "写入权限"
     }
   ]
 }
