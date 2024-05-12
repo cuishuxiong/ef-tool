@@ -12,22 +12,7 @@ import contact from '@ohos.contact';
 
 
 export class PickerUtil {
-  /**
-   * 拉起picker选择文件 - 回调方式
-   * @param options 选择入参详见efPickerOptions
-   * @returns
-   */
-  static async selectFileCallBack(options?: efPickerOptions): Promise<void> {
-    //1.校验是否有权限
-    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
-    // if (!isAuth) {
-    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
-    //   if (res < 0) {
-    //     ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
-    //     return;
-    //   }
-    // }
-    //默认的文档后缀集合
+  private static initSuffixList(): Array<string> {
     let suffixList = new Array<string>();
     suffixList.push('.doc');
     suffixList.push('.docx');
@@ -38,9 +23,19 @@ export class PickerUtil {
     suffixList.push('.wps');
     suffixList.push('.xls');
     suffixList.push('.xlsx');
+    return suffixList;
+  }
+
+  /**
+   * 拉起picker选择文件 - 回调方式
+   * @param options 选择入参详见efPickerOptions
+   * @returns
+   */
+  static async selectFileCallBack(options?: efPickerOptions): Promise<void> {
+    //默认的文档后缀集合
     if (!options) {
       options = new efPickerOptions();
-      options.suffixList = suffixList;
+      options.suffixList = PickerUtil.initSuffixList();
       options.maxNumber = 5;
       options.selectMode = picker.DocumentSelectMode.FILE;
     }
@@ -51,7 +46,7 @@ export class PickerUtil {
       options.selectMode = picker.DocumentSelectMode.FILE;
     }
     if (!options.suffixList) {
-      options.suffixList = suffixList;
+      options.suffixList = PickerUtil.initSuffixList();
     }
     try {
       let selectOpts = new picker.DocumentSelectOptions();
@@ -80,28 +75,9 @@ export class PickerUtil {
    * @returns
    */
   static async selectFile(options?: efPickerOptions): Promise<OutDTO<string>> {
-    //1.校验是否有权限
-    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
-    // if (!isAuth) {
-    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
-    //   if (res < 0) {
-    //     return OutDTO.Error('用户取消授权读取媒体文件,调用失败~');
-    //   }
-    // }
-    //默认的文档后缀集合
-    let suffixList = new Array<string>();
-    suffixList.push('.doc');
-    suffixList.push('.docx');
-    suffixList.push('.pdf');
-    suffixList.push('.ppt');
-    suffixList.push('.pptx');
-    suffixList.push('.txt');
-    suffixList.push('.wps');
-    suffixList.push('.xls');
-    suffixList.push('.xlsx');
     if (!options) {
       options = new efPickerOptions();
-      options.suffixList = suffixList;
+      options.suffixList = PickerUtil.initSuffixList();
       options.maxNumber = 5;
       options.selectMode = picker.DocumentSelectMode.FILE;
     }
@@ -112,7 +88,7 @@ export class PickerUtil {
       options.selectMode = picker.DocumentSelectMode.FILE;
     }
     if (!options.suffixList) {
-      options.suffixList = suffixList;
+      options.suffixList = PickerUtil.initSuffixList();
     }
     let selectOpts = new picker.DocumentSelectOptions();
     selectOpts.fileSuffixFilters = options.suffixList;
@@ -135,15 +111,6 @@ export class PickerUtil {
    * @returns
    */
   static async selectPhotoVideoCallBack(options?: efPickerOptions): Promise<void> {
-    //1.校验是否有权限
-    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
-    // if (!isAuth) {
-    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
-    //   if (res < 0) {
-    //     ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
-    //     return;
-    //   }
-    // }
     if (!options) {
       options = new efPickerOptions();
       options.maxNumber = 5;
@@ -176,14 +143,6 @@ export class PickerUtil {
    * @returns
    */
   static async selectPhotoVideo(options?: efPickerOptions): Promise<OutDTO<string>> {
-    //1.校验是否有权限
-    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
-    // if (!isAuth) {
-    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
-    //   if (res < 0) {
-    //     return OutDTO.Error('用户取消授权读取相册权限,调用失败~');
-    //   }
-    // }
     if (!options) {
       options = new efPickerOptions();
       options.maxNumber = 5;
@@ -211,15 +170,6 @@ export class PickerUtil {
    * @returns
    */
   static async selectAudioCallBack(options?: efPickerOptions): Promise<void> {
-    //1.校验是否有权限
-    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_AUDIO');
-    // if (!isAuth) {
-    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_AUDIO');
-    //   if (res < 0) {
-    //     ToastUtil.showToast('用户取消授权读取音频文件,调用失败~');
-    //     return;
-    //   }
-    // }
     try {
       //创建picker
       let documentPicker = new picker.AudioViewPicker();
@@ -243,14 +193,6 @@ export class PickerUtil {
    * @returns
    */
   static async selectAudio(): Promise<OutDTO<string>> {
-    //1.校验是否有权限
-    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_AUDIO');
-    // if (!isAuth) {
-    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_AUDIO');
-    //   if (res < 0) {
-    //     return OutDTO.Error('用户取消授权读取音频文件,调用失败~');
-    //   }
-    // }
     //创建picker
     let audioPicker = new picker.AudioViewPicker();
     //拉起
@@ -273,7 +215,6 @@ export class PickerUtil {
     }
     return OutDTO.ErrorByDataRow<contact.Contact>('选择文件失败~', new contact.Contact());
   }
-
 }
 
 /**
