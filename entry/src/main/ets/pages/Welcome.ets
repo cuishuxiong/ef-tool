@@ -174,20 +174,20 @@ struct Welcome {
   async selectAudio() {
     let result = await PickerUtil.selectAudio();
     let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+    let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
       let list = result.getDataTable();
       list.forEach(item => {
         let fileUriObject = new fileUri.FileUri(item);
-        let name = fileUriObject.name;
-
+        name = fileUriObject.name;
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
         console.info('readSync data to file succeed and buffer size is:' + readLen);
         fs.closeSync(file);
       })
       //上传选择的的照片
-      await this.testUpload(bufferImg);
+      await this.testUpload(bufferImg, name);
     }
   }
 
@@ -206,12 +206,13 @@ struct Welcome {
     //拉起选中照片
     let result = await PickerUtil.selectPhotoVideo();
     let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
       let list = result.getDataTable();
       list.forEach(item => {
         let fileUriObject = new fileUri.FileUri(item);
-        let name = fileUriObject.name;
+        name = fileUriObject.name;
 
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
@@ -219,7 +220,7 @@ struct Welcome {
         fs.closeSync(file);
       })
       //上传选择的的照片
-      await this.testUpload(bufferImg);
+      await this.testUpload(bufferImg, name);
     }
   }
 
@@ -227,17 +228,20 @@ struct Welcome {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
     let bufferImg: ArrayBuffer = new ArrayBuffer(4096);
+    let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
       let list = result.getDataTable();
       list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
         console.info('readSync data to file succeed and buffer size is:' + readLen);
         fs.closeSync(file);
       })
       //上传选择的的照片
-      await this.testUpload(bufferImg);
+      await this.testUpload(bufferImg, name);
     }
   }
 
@@ -251,10 +255,10 @@ struct Welcome {
     let ctx = getContext() as common.UIAbilityContext;
     let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
     let imageResource = imageArray.buffer as ArrayBuffer;
-    await this.testUpload(imageResource);
+    await this.testUpload(imageResource, 'notice.png');
   }
 
-  async testUpload(data: ArrayBuffer) {
+  async testUpload(data: ArrayBuffer, fileName: string) {
     this.showDownBtn = Visibility.Visible;
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
@@ -263,7 +267,7 @@ struct Welcome {
         this.showDownBtn = Visibility.None;
       }
       this.process = progress;
-    }, data);
+    }, fileName, data);
     this.msg = res ? res["dataRow"] : '';
   }
 

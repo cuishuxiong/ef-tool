@@ -88,25 +88,28 @@ class EfClientApi {
    * 统一的上传请求
    * @param url 上次url
    * @param progressCallBack 上传进度回调
+   * @param fieldData 表单其他字段，如文件名
    * @param isUri  是否为uri文件
    * @param data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
    * @param uri   isUri=true时传入  表示上传的文件为uri格式
-   * @param fileName  上传时后端接收的key,默认为file
+   * @param keyName  上传时后端接收的key,默认为file
    * @returns 上传结果
+
+
    */
-  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, data?: ArrayBuffer, uri?: string, fileName?: string) {
+  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, fileName: string, data?: ArrayBuffer, uri?: string, keyName?: string) {
     let formData = new FormData();
-    if (fileName) {
+    if (keyName) {
       if (isUri) {
-        formData.append(fileName, 'internal://cache/' + uri);
+        formData.append(keyName, 'internal://cache/' + uri, { fileName: fileName });
       } else {
-        formData.append(fileName, data);
+        formData.append(keyName, data, { fileName: fileName });
       }
     } else {
       if (isUri) {
-        formData.append('file', 'internal://cache/' + uri);
+        formData.append('file', 'internal://cache/' + uri, { fileName: fileName });
       } else {
-        formData.append('file', data);
+        formData.append('file', data, { fileName: fileName });
       }
     }
     //需要添加的header对象
