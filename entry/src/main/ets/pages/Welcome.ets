@@ -12,11 +12,11 @@ import {
   JSONArrayList,
   JSONObject,
   PickerUtil,
-  ToastUtil
 } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
+import fileUri from "@ohos.file.fileuri";
 
 
 class User {
@@ -171,6 +171,37 @@ struct Welcome {
     this.msg = res.getMsg();
   }
 
+  async selectAudio() {
+    let result = await PickerUtil.selectAudio();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        let name = fileUriObject.name;
+
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        console.info('readSync data to file succeed and buffer size is:' + readLen);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      await this.testUpload(bufferImg);
+    }
+  }
+
+  async selectContact() {
+    let result = await PickerUtil.selectContact();
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let str = JSONObject.toJSONString(item);
+        this.msg = str;
+      });
+    }
+  }
+
   async selectImage() {
     //拉起选中照片
     let result = await PickerUtil.selectPhotoVideo();
@@ -179,6 +210,9 @@ struct Welcome {
     if (result.getSuccess()) {
       let list = result.getDataTable();
       list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        let name = fileUriObject.name;
+
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
         console.info('readSync data to file succeed and buffer size is:' + readLen);
@@ -267,6 +301,12 @@ struct Welcome {
       })
       Button('选择图片').margin({ top: 20 }).onClick(() => {
         this.selectImage();
+      })
+      Button('选择音频').margin({ top: 20 }).onClick(() => {
+        this.selectAudio();
+      })
+      Button('选择联系人').margin({ top: 20 }).onClick(() => {
+        this.selectContact();
       })
       Button('uri上传文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '上传URI文件中...';

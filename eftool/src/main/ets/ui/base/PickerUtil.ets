@@ -8,6 +8,8 @@ import { ToastUtil } from '../prompt/ToastUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { AuthUtil } from '../../core/auth/AuthUtil';
 import { OutDTO } from '../../core/base/OutDTO';
+import contact from '@ohos.contact';
+
 
 export class PickerUtil {
   /**
@@ -17,14 +19,14 @@ export class PickerUtil {
    */
   static async selectFileCallBack(options?: efPickerOptions): Promise<void> {
     //1.校验是否有权限
-    let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
-    if (!isAuth) {
-      let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
-      if (res < 0) {
-        ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
-        return;
-      }
-    }
+    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
+    // if (!isAuth) {
+    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
+    //   if (res < 0) {
+    //     ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
+    //     return;
+    //   }
+    // }
     //默认的文档后缀集合
     let suffixList = new Array<string>();
     suffixList.push('.doc');
@@ -73,19 +75,19 @@ export class PickerUtil {
   }
 
   /**
-   * 拉起picker选择文件 - 回调方式
+   * 拉起picker选择文件  返回值方式
    * @param options 选择入参详见efPickerOptions
    * @returns
    */
   static async selectFile(options?: efPickerOptions): Promise<OutDTO<string>> {
     //1.校验是否有权限
-    let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
-    if (!isAuth) {
-      let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
-      if (res < 0) {
-        return OutDTO.Error('用户取消授权读取媒体文件,调用失败~');
-      }
-    }
+    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_MEDIA');
+    // if (!isAuth) {
+    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_MEDIA');
+    //   if (res < 0) {
+    //     return OutDTO.Error('用户取消授权读取媒体文件,调用失败~');
+    //   }
+    // }
     //默认的文档后缀集合
     let suffixList = new Array<string>();
     suffixList.push('.doc');
@@ -134,14 +136,14 @@ export class PickerUtil {
    */
   static async selectPhotoVideoCallBack(options?: efPickerOptions): Promise<void> {
     //1.校验是否有权限
-    let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
-    if (!isAuth) {
-      let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
-      if (res < 0) {
-        ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
-        return;
-      }
-    }
+    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
+    // if (!isAuth) {
+    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
+    //   if (res < 0) {
+    //     ToastUtil.showToast('用户取消授权读取媒体文件,调用失败~');
+    //     return;
+    //   }
+    // }
     if (!options) {
       options = new efPickerOptions();
       options.maxNumber = 5;
@@ -175,13 +177,13 @@ export class PickerUtil {
    */
   static async selectPhotoVideo(options?: efPickerOptions): Promise<OutDTO<string>> {
     //1.校验是否有权限
-    let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
-    if (!isAuth) {
-      let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
-      if (res < 0) {
-        return OutDTO.Error('用户取消授权读取相册权限,调用失败~');
-      }
-    }
+    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_IMAGEVIDEO');
+    // if (!isAuth) {
+    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_IMAGEVIDEO');
+    //   if (res < 0) {
+    //     return OutDTO.Error('用户取消授权读取相册权限,调用失败~');
+    //   }
+    // }
     if (!options) {
       options = new efPickerOptions();
       options.maxNumber = 5;
@@ -202,6 +204,76 @@ export class PickerUtil {
     }
     return OutDTO.Error('选择照片或视频失败~');
   }
+
+  /**
+   * 拉起picker选择音频 - 回调方式
+   * @param options 选择入参详见efPickerOptions 参数中只有selectCallBack使用
+   * @returns
+   */
+  static async selectAudioCallBack(options?: efPickerOptions): Promise<void> {
+    //1.校验是否有权限
+    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_AUDIO');
+    // if (!isAuth) {
+    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_AUDIO');
+    //   if (res < 0) {
+    //     ToastUtil.showToast('用户取消授权读取音频文件,调用失败~');
+    //     return;
+    //   }
+    // }
+    try {
+      //创建picker
+      let documentPicker = new picker.AudioViewPicker();
+      //调起选择
+      documentPicker.select(new picker.AudioSelectOptions()).then((list: Array<string>) => {
+        if (list !== null && list !== undefined) {
+          if (options?.selectCallBack) {
+            options.selectCallBack(list);
+          }
+        }
+      }).catch((err: BusinessError) => {
+        ToastUtil.showToast(err.message);
+      });
+    } catch (err) {
+      ToastUtil.showToast(err.message);
+    }
+  }
+
+  /**
+   * 拉起picker选择音频 - 返回值方式
+   * @returns
+   */
+  static async selectAudio(): Promise<OutDTO<string>> {
+    //1.校验是否有权限
+    // let isAuth = await AuthUtil.checkPermissions('ohos.permission.READ_AUDIO');
+    // if (!isAuth) {
+    //   let res = await AuthUtil.reqPermissions('ohos.permission.READ_AUDIO');
+    //   if (res < 0) {
+    //     return OutDTO.Error('用户取消授权读取音频文件,调用失败~');
+    //   }
+    // }
+    //创建picker
+    let audioPicker = new picker.AudioViewPicker();
+    //拉起
+    let list = await audioPicker.select(new picker.AudioSelectOptions());
+    if (list !== null && list !== undefined) {
+      return OutDTO.OKByDataTable<string>('选择文件成功~', list, '');
+    }
+    return OutDTO.Error('选择文件失败~');
+  }
+
+  /**
+   * 拉起picker选择联系人 - 返回值方式
+   * @returns
+   */
+  static async selectContact(): Promise<OutDTO<contact.Contact>> {
+    //创建picker
+    let list = await contact.selectContacts();
+    if (list !== null && list !== undefined) {
+      return OutDTO.OKByDataTable<contact.Contact>('选择文件成功~', list, new contact.Contact());
+    }
+    return OutDTO.ErrorByDataRow<contact.Contact>('选择文件失败~', new contact.Contact());
+  }
+
 }
 
 /**

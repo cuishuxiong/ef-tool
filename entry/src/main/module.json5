@@ -65,36 +65,66 @@
           "when": "always"
         }
       },
-      {
-        "name": "ohos.permission.MEDIA_LOCATION",
-        "reason": "$string:read_permission",
-        "usedScene": {
-          "abilities": [
-            "EntryAbility"
-          ],
-          "when": "always"
-        }
-      },
-      {
-        "name": "ohos.permission.READ_MEDIA",
-        "reason": "$string:read_permission",
-        "usedScene": {
-          "abilities": [
-            "EntryAbility"
-          ],
-          "when": "always"
-        }
-      },
-      {
-        "name": "ohos.permission.READ_IMAGEVIDEO",
-        "reason": "$string:read_permission",
-        "usedScene": {
-          "abilities": [
-            "EntryAbility"
-          ],
-          "when": "always"
-        }
-      }
+//      {
+//        "name": "ohos.permission.READ_MEDIA",
+//        "reason": "$string:read_permission",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "always"
+//        }
+//      },
+//      {
+//        "name": "ohos.permission.READ_IMAGEVIDEO",
+//        "reason": "$string:read_permission",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "always"
+//        }
+//      },
+//      {
+//        "name": "ohos.permission.READ_DOCUMENT",
+//        "reason": "$string:read_permission",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "always"
+//        }
+//      },
+//      {
+//        "name": "ohos.permission.READ_AUDIO",
+//        "reason": "$string:read_permission",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "always"
+//        }
+//      },
+//      {
+//        "name": "ohos.permission.CAMERA",
+//        "reason": "$string:read_permission",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "always"
+//        }
+//      },
+//      {
+//        "name": "ohos.permission.READ_CONTACTS",
+//        "reason": "$string:read_permission",
+//        "usedScene": {
+//          "abilities": [
+//            "EntryAbility"
+//          ],
+//          "when": "always"
+//        }
+//      }
     ]
   }
 }
