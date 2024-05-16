@@ -1,17 +1,20 @@
 /**
  * @Author csx
  * @DateTime 2024/5/11 09:26:05
- * @TODO PickerUtil  拉起系统picker工具类
+ * @TODO PickerUtil  拉起系统picker工具类-均无需获取权限
  */
 import { picker } from '@kit.CoreFileKit';
 import { ToastUtil } from '../prompt/ToastUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { AuthUtil } from '../../core/auth/AuthUtil';
 import { OutDTO } from '../../core/base/OutDTO';
 import contact from '@ohos.contact';
 
 
 export class PickerUtil {
+  /**
+   * 初始化内置的文件选择后缀
+   * @returns
+   */
   private static initSuffixList(): Array<string> {
     let suffixList = new Array<string>();
     suffixList.push('.doc');
@@ -198,9 +201,9 @@ export class PickerUtil {
     //拉起
     let list = await audioPicker.select(new picker.AudioSelectOptions());
     if (list !== null && list !== undefined) {
-      return OutDTO.OKByDataTable<string>('选择文件成功~', list, '');
+      return OutDTO.OKByDataTable<string>('选择音频成功~', list, '');
     }
-    return OutDTO.Error('选择文件失败~');
+    return OutDTO.Error('选择音频失败~');
   }
 
   /**
@@ -211,9 +214,9 @@ export class PickerUtil {
     //创建picker
     let list = await contact.selectContacts();
     if (list !== null && list !== undefined) {
-      return OutDTO.OKByDataTable<contact.Contact>('选择文件成功~', list, new contact.Contact());
+      return OutDTO.OKByDataTable<contact.Contact>('选择联系人成功~', list, new contact.Contact());
     }
-    return OutDTO.ErrorByDataRow<contact.Contact>('选择文件失败~', new contact.Contact());
+    return OutDTO.ErrorByDataRow<contact.Contact>('选择联系人失败~', new contact.Contact());
   }
 }
 
