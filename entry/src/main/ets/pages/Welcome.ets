@@ -188,7 +188,10 @@ struct Welcome {
         fs.closeSync(file);
       })
       //上传选择的的照片
-      await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      this.testDownload(upName, name);
+
     }
   }
 
@@ -221,12 +224,14 @@ struct Welcome {
         fs.closeSync(file);
       })
       //上传选择的的照片
-      await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      this.testDownload(upName, name);
     }
   }
 
   async camera() {
-    let bufferImg = new ArrayBuffer(4096);
+    let bufferImg = new ArrayBuffer(40960000);
     let res = await CameraUtil.picker();
     if (res.getSuccess()) {
       let str = res.getDataRow().resultUri;
@@ -235,6 +240,8 @@ struct Welcome {
       let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
       let readLen = fs.readSync(file.fd, bufferImg);
       fs.closeSync(file);
+      let upName = await this.testUpload(bufferImg, name);
+      await this.testDownload(upName, name);
       this.msg = name;
     }
   }
@@ -242,7 +249,7 @@ struct Welcome {
   async selectFile() {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(4096);
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
     let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
@@ -256,13 +263,15 @@ struct Welcome {
         fs.closeSync(file);
       })
       //上传选择的的照片
-      await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg, name);
+
+      await this.testDownload(upName, name);
     }
   }
 
   async testUriUpload() {
     this.showDownBtn = Visibility.Visible;
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     let ctx = getContext() as common.UIAbilityContext;
   }
 
@@ -273,10 +282,10 @@ struct Welcome {
     await this.testUpload(imageResource, 'notice.png');
   }
 
-  async testUpload(data: ArrayBuffer, fileName: string) {
+  async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
     this.showDownBtn = Visibility.Visible;
-    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -284,13 +293,14 @@ struct Welcome {
       this.process = progress;
     }, fileName, data);
     this.msg = res ? res["dataRow"] : '';
+    return this.msg;
   }
 
-  async testDownload() {
-    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
-    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+  async testDownload(upName: string, downName: string) {
+    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.download('/api/eftool/download/1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg', (progress: number) => {
+    let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
@@ -340,7 +350,7 @@ struct Welcome {
       })
       Button('下载文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '下载文件中...';
-        this.testDownload();
+        this.testDownload('1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg');
       })
       DownloadUtil({
         progressState: this.showDownBtn,

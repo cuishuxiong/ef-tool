@@ -126,6 +126,9 @@ export class AxiosUtil {
     //考虑几种常见的可能性
     let success: boolean = true;
     if (response.config.headers["Req-Type"]) {
+      if (response.data && response.data.dataRow) {
+        return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array());
+      }
       return new OutDTO(true, '下载文件成功~', '', new Array());
     }
     if (response.data && response.data.success) {
