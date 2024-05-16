@@ -276,7 +276,7 @@ struct Welcome {
   async testUpload(data: ArrayBuffer, fileName: string) {
     this.showDownBtn = Visibility.Visible;
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -287,10 +287,10 @@ struct Welcome {
   }
 
   async testDownload() {
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.download('/api/eftool/download/5da06445-9cb0-4dda-a01d-e5629fedb3d9-default1715433397000.jpg', 'girl.jpg', (progress: number) => {
+    let res = await efClientApi.download('/api/eftool/download/1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg', (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
