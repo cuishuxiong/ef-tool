@@ -4,6 +4,7 @@
  * @TODO Welcome
  */
 import {
+  CameraUtil,
   DownloadUtil,
   efAxiosParams,
   efClientApi,
@@ -224,6 +225,20 @@ struct Welcome {
     }
   }
 
+  async camera() {
+    let bufferImg = new ArrayBuffer(4096);
+    let res = await CameraUtil.picker();
+    if (res.getSuccess()) {
+      let str = res.getDataRow().resultUri;
+      let fileUriObject = new fileUri.FileUri(str);
+      let name = fileUriObject.name;
+      let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
+      let readLen = fs.readSync(file.fd, bufferImg);
+      fs.closeSync(file);
+      this.msg = name;
+    }
+  }
+
   async selectFile() {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
@@ -300,6 +315,9 @@ struct Welcome {
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
+      Button('相机拍照').margin({ top: 20 }).onClick(() => {
+        this.camera();
+      })
       Button('选择文件').margin({ top: 20 }).onClick(() => {
         this.selectFile();
       })
