@@ -4,16 +4,20 @@
  * @TODO Welcome
  */
 import {
+  CameraUtil,
   DownloadUtil,
   efAxiosParams,
   efClientApi,
   IdCardUtil,
   JSONArray,
   JSONArrayList,
-  JSONObject
+  JSONObject,
+  PickerUtil,
 } from '@yunkss/eftool'
 import { ArrayList } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
+import fs from '@ohos.file.fs';
+import fileUri from "@ohos.file.fileuri";
 
 
 class User {
@@ -168,25 +172,140 @@ struct Welcome {
     this.msg = res.getMsg();
   }
 
-  async testUpload() {
+  async selectAudio() {
+
+    await PickerUtil.selectAudioCallBack({
+      selectCallBack:(list)=>{
+        list.forEach(item => {
+          let fileUriObject = new fileUri.FileUri(item);
+          name = fileUriObject.name;
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, bufferImg);
+          fs.closeSync(file);
+        })
+      }
+    })
+
+    let result = await PickerUtil.selectAudio();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+    let name: string = '';
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      this.testDownload(upName, name);
+    }
+  }
+
+  async selectContact() {
+    let result = await PickerUtil.selectContact();
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let str = JSONArray.toJSONString(list);
+      this.msg = str;
+    }
+  }
+
+  async selectImage() {
+    //拉起选中照片
+    let result = await PickerUtil.selectPhotoVideo();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    let name: string = '';
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        console.info('readSync data to file succeed and buffer size is:' + readLen);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      this.testDownload(upName, name);
+    }
+  }
+
+  async camera() {
+    let bufferImg = new ArrayBuffer(40960000);
+    let res = await CameraUtil.picker();
+    if (res.getSuccess()) {
+      let str = res.getDataRow().resultUri;
+      let fileUriObject = new fileUri.FileUri(str);
+      let name = fileUriObject.name;
+      let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
+      fs.closeSync(file);
+      //上传
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      await this.testDownload(upName, name);
+    }
+  }
+
+  async selectFile() {
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    let name: string = '';
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      await this.testDownload(upName, name);
+    }
+  }
+
+  async testUriUpload() {
     this.showDownBtn = Visibility.Visible;
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    let ctx = getContext() as common.UIAbilityContext;
+  }
+
+  async commonUpload() {
     let ctx = getContext() as common.UIAbilityContext;
     let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
     let imageResource = imageArray.buffer as ArrayBuffer;
+    await this.testUpload(imageResource, 'notice.png');
+  }
+
+  async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
+    this.showDownBtn = Visibility.Visible;
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
       this.process = progress;
-    }, imageResource);
+    }, fileName, data);
     this.msg = res ? res["dataRow"] : '';
+    return this.msg;
   }
 
-  async testDownload() {
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
+  async testDownload(upName: string, downName: string) {
+    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.download('/api/eftool/download/0d6a25e4-f61b-48eb-8a12-53f82c5b957d-default1715324534920.png', 'girl.png', (progress: number) => {
+    let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
       }
@@ -211,14 +330,32 @@ struct Welcome {
   build() {
     Column() {
       Text(this.msg).fontColor('#ff4400')
-
+      Button('相机拍照').margin({ top: 20 }).onClick(() => {
+        this.camera();
+      })
+      Button('选择文件').margin({ top: 20 }).onClick(() => {
+        this.selectFile();
+      })
+      Button('选择图片').margin({ top: 20 }).onClick(() => {
+        this.selectImage();
+      })
+      Button('选择音频').margin({ top: 20 }).onClick(() => {
+        this.selectAudio();
+      })
+      Button('选择联系人').margin({ top: 20 }).onClick(() => {
+        this.selectContact();
+      })
+      Button('uri上传文件').margin({ top: 20 }).onClick(() => {
+        this.btnCtx = '上传URI文件中...';
+        this.testUriUpload();
+      })
       Button('上传文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '上传文件中...';
-        this.testUpload();
+        this.commonUpload();
       })
       Button('下载文件').margin({ top: 20 }).onClick(() => {
         this.btnCtx = '下载文件中...';
-        this.testDownload();
+        this.testDownload('1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg');
       })
       DownloadUtil({
         progressState: this.showDownBtn,

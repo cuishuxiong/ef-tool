@@ -292,7 +292,6 @@ struct Welcome {
   async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
     this.showDownBtn = Visibility.Visible;
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
-    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -304,7 +303,6 @@ struct Welcome {
   }
 
   async testDownload(upName: string, downName: string) {
-    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     this.showDownBtn = Visibility.Visible;
     let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
