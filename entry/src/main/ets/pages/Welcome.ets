@@ -173,6 +173,19 @@ struct Welcome {
   }
 
   async selectAudio() {
+
+    await PickerUtil.selectAudioCallBack({
+      selectCallBack:(list)=>{
+        list.forEach(item => {
+          let fileUriObject = new fileUri.FileUri(item);
+          name = fileUriObject.name;
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, bufferImg);
+          fs.closeSync(file);
+        })
+      }
+    })
+
     let result = await PickerUtil.selectAudio();
     let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
     let name: string = '';
@@ -184,14 +197,12 @@ struct Welcome {
         name = fileUriObject.name;
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
-        console.info('readSync data to file succeed and buffer size is:' + readLen);
         fs.closeSync(file);
       })
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg, name);
       //下载
       this.testDownload(upName, name);
-
     }
   }
 
@@ -199,10 +210,8 @@ struct Welcome {
     let result = await PickerUtil.selectContact();
     if (result.getSuccess()) {
       let list = result.getDataTable();
-      list.forEach(item => {
-        let str = JSONObject.toJSONString(item);
-        this.msg = str;
-      });
+      let str = JSONArray.toJSONString(list);
+      this.msg = str;
     }
   }
 
@@ -217,7 +226,6 @@ struct Welcome {
       list.forEach(item => {
         let fileUriObject = new fileUri.FileUri(item);
         name = fileUriObject.name;
-
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
         console.info('readSync data to file succeed and buffer size is:' + readLen);
@@ -238,11 +246,11 @@ struct Welcome {
       let fileUriObject = new fileUri.FileUri(str);
       let name = fileUriObject.name;
       let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
-      let readLen = fs.readSync(file.fd, bufferImg);
       fs.closeSync(file);
+      //上传
       let upName = await this.testUpload(bufferImg, name);
+      //下载
       await this.testDownload(upName, name);
-      this.msg = name;
     }
   }
 
@@ -259,12 +267,11 @@ struct Welcome {
         name = fileUriObject.name;
         let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
         let readLen = fs.readSync(file.fd, bufferImg);
-        console.info('readSync data to file succeed and buffer size is:' + readLen);
         fs.closeSync(file);
       })
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg, name);
-
+      //下载
       await this.testDownload(upName, name);
     }
   }

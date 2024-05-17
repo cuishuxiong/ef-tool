@@ -73,7 +73,7 @@ export class PickerUtil {
   }
 
   /**
-   * 拉起picker选择文件  返回值方式
+   * 拉起picker选择文件 - 返回值方式
    * @param options 选择入参详见efPickerOptions
    * @returns
    */
@@ -106,7 +106,6 @@ export class PickerUtil {
     }
     return OutDTO.Error('选择文件失败~');
   }
-
 
   /**
    * 拉起照片和视频选择 - 回调方式
@@ -210,9 +209,16 @@ export class PickerUtil {
    * 拉起picker选择联系人 - 返回值方式
    * @returns
    */
-  static async selectContact(): Promise<OutDTO<contact.Contact>> {
+  static async selectContact(options?: efPickerOptions): Promise<OutDTO<contact.Contact>> {
+    if (!options) {
+      options = new efPickerOptions();
+      options.isMultiSelect = true;
+    }
+    if (options.isMultiSelect == undefined) {
+      options.isMultiSelect = true;
+    }
     //创建picker
-    let list = await contact.selectContacts();
+    let list = await contact.selectContacts({ isMultiSelect: options.isMultiSelect });
     if (list !== null && list !== undefined) {
       return OutDTO.OKByDataTable<contact.Contact>('选择联系人成功~', list, new contact.Contact());
     }
@@ -236,6 +242,10 @@ class efPickerOptions {
    * 选择模式是文件还是目录
    */
   selectMode?: number;
+  /**
+   * 是否多选联系人
+   */
+  isMultiSelect?: boolean;
   /**
    * 选择完成回调
    */

@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.10(API11)</center>
+# <center>V1.1.11(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -89,23 +89,25 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 5.UI类组件
 
-| 模块               | 介绍            |
-|------------------|---------------|
-| ToastUtil        | 提供对文本提示的一系列方法 |
-| DialogUtil       | 提供对弹出框的一系列方法  |
-| ActionUtil       | 提供对操作菜单的一系列方法 |
-| LoadingUtil      | 提供全局加载工具类     |
-| TipsUtil         | 提供提示弹出工具类     |
-| SelectUtil       | 提供选择弹出工具类     |
-| ConfirmUtil      | 提供信息确认弹出工具类   |
-| AlertUtil        | 提供操作确认弹出工具类   |
-| ExceptionUtil    | 提供省市区级联选择组件   |
-| Cascade          | 提供省市区级联选择组件   |
-| ImmersionUtil    | 提供沉浸式导航设置     |
-| WindowUtil       | 提供窗口的创建关闭等功能  |
-| NotificationUtil | 提供发送,删除通知等功能  |
-| LocationUtil     | 提供获取定位,逆编码等功能 |
-| DownloadUtil     | 统一的上传下载按钮工具   |
+| 模块               | 介绍               |
+|------------------|------------------|
+| ToastUtil        | 提供对文本提示的一系列方法    |
+| DialogUtil       | 提供对弹出框的一系列方法     |
+| ActionUtil       | 提供对操作菜单的一系列方法    |
+| LoadingUtil      | 提供全局加载工具类        |
+| TipsUtil         | 提供提示弹出工具类        |
+| SelectUtil       | 提供选择弹出工具类        |
+| ConfirmUtil      | 提供信息确认弹出工具类      |
+| AlertUtil        | 提供操作确认弹出工具类      |
+| ExceptionUtil    | 提供省市区级联选择组件      |
+| Cascade          | 提供省市区级联选择组件      |
+| ImmersionUtil    | 提供沉浸式导航设置        |
+| WindowUtil       | 提供窗口的创建关闭等功能     |
+| NotificationUtil | 提供发送,删除通知等功能     |
+| LocationUtil     | 提供获取定位,逆编码等功能    |
+| DownloadUtil     | 统一的上传下载按钮工具      |
+| PickerUtil       | 调起选择文件、照片、音频等工具类 |
+| CameraUtil       | 调起拍照工具类          |
 
 ## 📦安装
 
@@ -2919,6 +2921,167 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       this.process = progress;
     });
   }
+```
+
+#### 16.PickerUtil 调起选择工具类(1.1.11+)
+
+* efPickerOptions picker选择入参实体
+
+```
+    options: {
+     suffixList:选择文件的后缀类型,【只在选择文档时需要】
+     maxNumber:选择文档的最大数目,【在选择文档和照片时需要】
+     selectMode:选择模式是文件还是目录,【只在选择文档时需要】
+     isMultiSelect:是否多选联系人,【只在选择联系人时需要】
+     selectCallBack:选择完成回调【回调方式方法时需要】
+    }
+```
+
+* selectFileCallBack 拉起picker选择文件 - 回调方式
+
+```
+     let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+     //拉起选择文件
+     await PickerUtil.selectFile({
+      selectCallBack:(list)=>{
+        //此处只是举例操作
+        list.forEach(item => {
+          let fileUriObject = new fileUri.FileUri(item);
+          name = fileUriObject.name;
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, bufferImg);
+          fs.closeSync(file);
+        })
+      }
+    });
+```
+
+* selectFile 拉起picker选择文件 - 返回值方式
+
+```
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        //此处只是举例操作
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        fs.closeSync(file);
+      })
+    }
+```
+
+* selectPhotoVideoCallBack 拉起照片和视频选择 - 回调方式
+
+```
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    //拉起照片和视频选择
+    await PickerUtil.selectAudioCallBack({
+      selectCallBack:(list)=>{
+        //此处只是举例操作
+        list.forEach(item => {
+          let fileUriObject = new fileUri.FileUri(item);
+          name = fileUriObject.name;
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, bufferImg);
+          fs.closeSync(file);
+        })
+      }
+    });
+```
+
+* selectPhotoVideo 拉起照片和视频选择 -返回值方式
+
+```
+    //拉起选中照片
+    let result = await PickerUtil.selectPhotoVideo();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        //此处只是举例操作
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        fs.closeSync(file);
+      })
+    }
+```
+
+* selectAudioCallBack 拉起picker选择音频 - 回调方式
+
+```
+      //拉起选择音频picker
+      let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+      await PickerUtil.selectAudioCallBack({
+      selectCallBack:(list)=>{
+        //此处只是举例操作
+        list.forEach(item => {
+          let fileUriObject = new fileUri.FileUri(item);
+          name = fileUriObject.name;
+          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+          let readLen = fs.readSync(file.fd, bufferImg);
+          fs.closeSync(file);
+        })
+      }
+    })
+```
+
+* selectAudio 拉起picker选择音频 - 返回值方式
+
+```
+    /拉起选择音频
+    let result = await PickerUtil.selectAudio();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        //此处只是举例操作
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        fs.closeSync(file);
+      })
+    }
+```
+
+* selectContact 拉起picker选择联系人 - 返回值方式
+
+```
+    //拉起选择联系人picker 默认多选
+    let result = await PickerUtil.selectContact();
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let str = JSONArray.toJSONString(list);
+      this.msg = str;
+    }
+```
+
+#### 17.CameraUtil 调起拍照工具类(1.1.11+)
+
+* picker 调起照相和录屏
+
+```
+    let bufferImg = new ArrayBuffer(40960000);
+    //调起拍照
+    let res = await CameraUtil.picker();
+    if (res.getSuccess()) {
+      //此处只是举例操作
+      let str = res.getDataRow().resultUri;
+      let fileUriObject = new fileUri.FileUri(str);
+      let name = fileUriObject.name;
+      let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
+      fs.closeSync(file);
+    }
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
