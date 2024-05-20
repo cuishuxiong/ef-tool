@@ -13,8 +13,9 @@ import {
   JSONArrayList,
   JSONObject,
   PickerUtil,
+  SHA,
 } from '@yunkss/eftool'
-import { ArrayList } from '@kit.ArkTS';
+import { ArrayList, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
@@ -147,7 +148,7 @@ struct Welcome {
     jsonObj.set("csx", arr);
     let st = jsonObj.toString();
     this.msg = st;
-
+    this.msg = util.RationalNumber.parseRationalNumber(0,100)+"";
     // let userList = new Array<User>();
     // userList.push(new User('2345', '测试用户1'));
     // userList.push(new User('7844', '测试用户2'));
@@ -167,15 +168,19 @@ struct Welcome {
   @State process: number = 0;
   @State btnCtx: string = '';
 
-  testIdCard() {
-    let res = IdCardUtil.isValidCard18('12022519540815028x');
-    this.msg = res.getMsg();
+  async testIdCard() {
+
+    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    this.msg = hmac2.getDataRow();
+
+    // let res = IdCardUtil.isValidCard18('12022519540815028x');
+    // this.msg = res.getMsg();
   }
 
   async selectAudio() {
 
     await PickerUtil.selectAudioCallBack({
-      selectCallBack:(list)=>{
+      selectCallBack: (list) => {
         list.forEach(item => {
           let fileUriObject = new fileUri.FileUri(item);
           name = fileUriObject.name;
@@ -292,6 +297,7 @@ struct Welcome {
   async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
     this.showDownBtn = Visibility.Visible;
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -303,6 +309,7 @@ struct Welcome {
   }
 
   async testDownload(upName: string, downName: string) {
+    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     this.showDownBtn = Visibility.Visible;
     let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
@@ -328,62 +335,63 @@ struct Welcome {
   }
 
   build() {
-    Column() {
-      Text(this.msg).fontColor('#ff4400')
-      Button('相机拍照').margin({ top: 20 }).onClick(() => {
-        this.camera();
-      })
-      Button('选择文件').margin({ top: 20 }).onClick(() => {
-        this.selectFile();
-      })
-      Button('选择图片').margin({ top: 20 }).onClick(() => {
-        this.selectImage();
-      })
-      Button('选择音频').margin({ top: 20 }).onClick(() => {
-        this.selectAudio();
-      })
-      Button('选择联系人').margin({ top: 20 }).onClick(() => {
-        this.selectContact();
-      })
-      Button('uri上传文件').margin({ top: 20 }).onClick(() => {
-        this.btnCtx = '上传URI文件中...';
-        this.testUriUpload();
-      })
-      Button('上传文件').margin({ top: 20 }).onClick(() => {
-        this.btnCtx = '上传文件中...';
-        this.commonUpload();
-      })
-      Button('下载文件').margin({ top: 20 }).onClick(() => {
-        this.btnCtx = '下载文件中...';
-        this.testDownload('1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg');
-      })
-      DownloadUtil({
-        progressState: this.showDownBtn,
-        halfProgress: this.process,
-        ctx: this.btnCtx
-      })
-      Button('Array转Object').margin({ top: 20 }).onClick(() => {
-        this.testArray2Object();
-      })
-      Button('验证身份证号').margin({ top: 20 }).onClick(() => {
-        this.testIdCard();
-      })
-      Button('测试JSONArray').margin({ top: 20 }).onClick(() => {
-        this.testJSONArray();
-      })
-      Button('测试JSONArrayList').margin({ top: 20 }).onClick(() => {
-        this.testJSONArrayList();
-      })
-      Button('测试JSONObject').margin({ top: 20 }).onClick(() => {
-        this.testJSONObject();
-      })
-    }
-    .backgroundColor("#fff")
-    .align(Alignment.Center)
-    .width('100%')
-    .borderRadius(10)
-    .margin({ top: 80 })
-    .padding({ top: 20, bottom: 20 })
+    Scroll(){
+      Column() {
+        Text(this.msg).fontColor('#ff4400')
+        Button('相机拍照').margin({ top: 20 }).onClick(() => {
+          this.camera();
+        })
+        Button('选择文件').margin({ top: 20 }).onClick(() => {
+          this.selectFile();
+        })
+        Button('选择图片').margin({ top: 20 }).onClick(() => {
+          this.selectImage();
+        })
+        Button('选择音频').margin({ top: 20 }).onClick(() => {
+          this.selectAudio();
+        })
+        Button('选择联系人').margin({ top: 20 }).onClick(() => {
+          this.selectContact();
+        })
+        Button('uri上传文件').margin({ top: 20 }).onClick(() => {
+          this.btnCtx = '上传URI文件中...';
+          this.testUriUpload();
+        })
+        Button('上传文件').margin({ top: 20 }).onClick(() => {
+          this.btnCtx = '上传文件中...';
+          this.commonUpload();
+        })
+        Button('下载文件').margin({ top: 20 }).onClick(() => {
+          this.btnCtx = '下载文件中...';
+          this.testDownload('1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg');
+        })
+        DownloadUtil({
+          progressState: this.showDownBtn,
+          halfProgress: this.process,
+          ctx: this.btnCtx
+        })
+        Button('Array转Object').margin({ top: 20 }).onClick(() => {
+          this.testArray2Object();
+        })
+        Button('验证身份证号').margin({ top: 20 }).onClick(() => {
+          this.testIdCard();
+        })
+        Button('测试JSONArray').margin({ top: 20 }).onClick(() => {
+          this.testJSONArray();
+        })
+        Button('测试JSONArrayList').margin({ top: 20 }).onClick(() => {
+          this.testJSONArrayList();
+        })
+        Button('测试JSONObject').margin({ top: 20 }).onClick(() => {
+          this.testJSONObject();
+        })
+      }
+      .backgroundColor("#fff")
+      .align(Alignment.Center)
+      .width('100%')
+      .borderRadius(10)
+      .padding({ top: 20, bottom: 20 })
+    }.scrollable(ScrollDirection.Vertical)
 
   }
 }
