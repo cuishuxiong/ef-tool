@@ -69,7 +69,7 @@ export struct Cascade {
    */
   private init() {
     //解析省市区json
-    this.provinceList = JSONUtil.parseArray<City>(JSONUtil.toJSONString(pcaJSON));
+    this.provinceList = JSON.parse(JSON.stringify(pcaJSON))
     this.provinceList.forEach(province => {
       //默认将省数据赋值给当前listview对应的数据
       this.currentList.push(new City(province.name, province.code));
