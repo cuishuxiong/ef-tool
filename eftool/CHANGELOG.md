@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.1.12] 2024-05
+
+### 🐣新特性(API11)
+
+* JSONArray新增parseArray方法将json字符串转换为Array<T>
+* JSONArrayList新增parseArrayList方法将json字符串转换为ArrayList<T>
+* 新增PreviewUtil
+* 新增WinDialogUtil,以Window方式弹出的Dialog
+* AES新增128位密钥生成,加解密方法
+
+### 🐞功能优化
+
+* 优化AES中encodeECB方法使用16位密钥加密失败[issuesI9R8QA](https://gitee.com/yunkss/ef-tool/issues/I9R8QA)
+* 优化解析报错JSONArrayList.parse解析为空[issuesI9R181](https://gitee.com/yunkss/ef-tool/issues/I9R181)
+
 ## [v1.1.11] 2024-05
 
 ### 🐣新特性(API11)

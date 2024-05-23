@@ -11,6 +11,8 @@ import { JSONArrayList } from './JSONArrayList';
 import { DateUtil } from '../util/DateUtil';
 import { DateConst } from '../const/DateConst';
 import { HashMap } from '@kit.ArkTS';
+import { JSONUtil } from './JSONUtil';
+import { ToastUtil } from '../../ui/prompt/ToastUtil';
 
 export class JSONArray extends Array<JSONValue> {
   /**
@@ -42,15 +44,40 @@ export class JSONArray extends Array<JSONValue> {
   }
 
   /**
-   * json字符串转换为实体对象【预计1.1.10上线】
-   * @param bean 实体对象
-   * @returns JSON 对象
+   * json字符串转换为实体对象集合
+   * @param jsonStr 实体对象集合字符串
+   * @returns 实体对象集合Array<T>
    */
-  // public static parseObject<T>(jsonStr: string): T {
-  //   let json = new JSONArray();
-  //
-  //   return json as T;
-  // }
+  public static parseArray<T>(jsonStr: string): Array<T> {
+    //判断是否是json数组
+    if (JSONUtil.isJSONArray(jsonStr)) {
+      //转换成jsonArray
+      let res = JSONArray.parse(jsonStr);
+      //返回结果
+      let list = new Array<T>();
+      //递归
+      res.forEach(item => {
+        if (item instanceof HashMap) {
+          let tmp = item as HashMap<string, JSONValue>;
+          let jsonObj = new JSONObject();
+          tmp.forEach((val, key) => {
+            jsonObj.set(key, val);
+          });
+          let obj = JSONObject.parseObject<T>(jsonObj.toString());
+          list.push(obj);
+        } else if (item instanceof JSONObject || item instanceof Object) {
+          let obj = JSONObject.parseObject<T>(JSONObject.toJSONString(item));
+          list.push(obj);
+        } else {
+          list.push(item as T);
+        }
+      })
+      return list;
+    } else {
+      ToastUtil.showToast('该字符串无法转换为JSONArray~');
+      return new Array();
+    }
+  }
 
   /**
    * 集合对象转换为json字符串

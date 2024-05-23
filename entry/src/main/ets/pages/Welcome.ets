@@ -4,6 +4,7 @@
  * @TODO Welcome
  */
 import {
+  AES,
   CameraUtil,
   DownloadUtil,
   efAxiosParams,
@@ -20,6 +21,24 @@ import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 
+class TestDDD {
+  threeMonthRate?: string;
+  moduleName?: string;
+  productName?: string;
+  marketPatter?: string;
+  labelListJson?: site;
+}
+
+class site {
+  site1?: site1;
+}
+
+class site1 {
+  labelType?: string;
+  labelValue?: string;
+  labelName?: string;
+  labelLocation?: string;
+}
 
 class User {
   id?: string;
@@ -55,33 +74,40 @@ struct Welcome {
   @State msg: string = 'csx';
 
   testJSONArrayList() {
-    let arr = new JSONArrayList();
-    arr.add(1);
-    arr.add("cccc");
-    arr.add("123");
-    arr.add("aaaaa\\\"34343434");
-    arr.add("2223\"dasdass");
-    arr.add(new Date());
-    arr.add(true);
-    arr.add(null);
-    arr.add(new User("10010", "实体数据"));
-    let str = arr.toString();
+    // let arr = new JSONArrayList();
+    // arr.add(1);
+    // arr.add("cccc");
+    // arr.add("123");
+    // arr.add("aaaaa\\\"34343434");
+    // arr.add("2223\"dasdass");
+    // arr.add(new Date());
+    // arr.add(true);
+    // arr.add(null);
+    // arr.add(new User("10010", "实体数据"));
+    // let str = arr.toString();
+    //
+    // let userList = new ArrayList<User>();
+    // userList.add(new User('2345', '测试用户1'));
+    // userList.add(new User('7844', '测试用户2'));
+    // userList.add(new User('1314', '测试用户3'));
+    // userList.add(new User('5210', '测试用户4'));
+    //
+    // let jarr = JSONArrayList.from(userList);
+    // this.msg = jarr.length + "";
+    //
+    // let s = JSONArrayList.toJSONString(userList);
+    // this.msg = s;
+    //
+    // let jsArr = JSONArrayList.parse(s);
+    // this.msg = jsArr.length + "";
 
-    let userList = new ArrayList<User>();
-    userList.add(new User('2345', '测试用户1'));
-    userList.add(new User('7844', '测试用户2'));
-    userList.add(new User('1314', '测试用户3'));
-    userList.add(new User('5210', '测试用户4'));
+    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
 
-    let jarr = JSONArrayList.from(userList);
-    this.msg = jarr.length + "";
+    let array = JSONArrayList.parseArrayList<TestDDD>(str1);
 
-    let s = JSONArrayList.toJSONString(userList);
-    this.msg = s;
-
-    let jsArr = JSONArrayList.parse(s);
-    this.msg = jsArr.length + "";
-
+    array.forEach(item => {
+      this.msg += item.labelListJson?.site1?.labelName + " ";
+    })
 
   }
 
@@ -113,55 +139,72 @@ struct Welcome {
     // this.msg = jsArr.length + "----" + jsArr[2]?.toString();
     // this.msg = s;
 
-    let array = new JSONArray();
-    let o1 = new JSONObject();
-    o1.set('k1', 'value1');
-    let o2 = new JSONObject();
-    o2.set('k2', 'value2');
-    array.push(o1);
-    array.push(o2);
-    array.push('hhh');
-    let a = array.toString();
-    this.msg = a;
+    // let array = new JSONArray();
+    // let o1 = new JSONObject();
+    // o1.set('k1', 'value1');
+    // let o2 = new JSONObject();
+    // o2.set('k2', 'value2');
+    // array.push(o1);
+    // array.push(o2);
+    // array.push('hhh');
+    // let a = array.toString();
+    // this.msg = a;
+
+    let arr = new Array<Person>();
+    arr.push(new Person('csx', 18, true, new Date(), new User('1111', '哈哈哈哈哈')));
+    arr.push(new Person('lcp', 19, false, new Date(), new User('2222', '嘻嘻嘻嘻嘻')));
+    arr.push(new Person('zzp', 20, true, new Date(), new User('3333', '呜呜呜呜呜')));
+    arr.push(new Person('wsp', 21, false, new Date(), new User('4444', '呵呵呵呵呵')));
+
+    let str = JSONArray.toJSONString(arr);
+
+    let list = JSONArray.parseArray<Person>(str);
+
+    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
+
+    let array = JSONArray.parseArray<TestDDD>(str1);
+
+    array.forEach(item => {
+      this.msg += item.labelListJson?.site1?.labelName + " ";
+    })
 
   }
 
   testJSONObject() {
-    let jsonObj = new JSONObject();
-    jsonObj.set("id", "100010");
-    jsonObj.set("age", 27);
-    jsonObj.set("sex", true);
-    jsonObj.set("birth", new Date());
-    let user = new JSONObject();
-    user.set("uid", "121212");
-    user.set("uName", "测试\\\"套对象");
-    jsonObj.set("user", user);
-    jsonObj.set("test", null);
-    jsonObj.set("person", new User('实体id', '实体name'));
-    jsonObj.set("name", "test字符串");
-    let arr = new JSONArray();
-    arr.push(1234);
-    arr.push(true);
-    arr.push(null);
-    arr.push(new Date());
-    arr.push(user);
-    jsonObj.set("csx", arr);
-    let st = jsonObj.toString();
-    this.msg = st;
-    this.msg = util.RationalNumber.parseRationalNumber(0,100)+"";
-    // let userList = new Array<User>();
-    // userList.push(new User('2345', '测试用户1'));
-    // userList.push(new User('7844', '测试用户2'));
-    // let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    // let jsonObj = new JSONObject();
+    // jsonObj.set("id", "100010");
+    // jsonObj.set("age", 27);
+    // jsonObj.set("sex", true);
+    // jsonObj.set("birth", new Date());
+    // let user = new JSONObject();
+    // user.set("uid", "121212");
+    // user.set("uName", "测试\\\"套对象");
+    // jsonObj.set("user", user);
+    // jsonObj.set("test", null);
+    // jsonObj.set("person", new User('实体id', '实体name'));
+    // jsonObj.set("name", "test字符串");
+    // let arr = new JSONArray();
+    // arr.push(1234);
+    // arr.push(true);
+    // arr.push(null);
+    // arr.push(new Date());
+    // arr.push(user);
+    // jsonObj.set("csx", arr);
+    // let st = jsonObj.toString();
+    // this.msg = st;
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
 
-    // let j = JSONObject.toJSONString(person);
+    let j = JSONObject.toJSONString(person);
 
     // let f = JSONObject.parse(j);
 
-    // let o = JSONObject.parseObject<Person>(j);
+    let o = JSONObject.parseObject<Person>(j);
 
 
-    // this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
+    this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
 
   @State showDownBtn: Visibility = Visibility.None;
@@ -192,7 +235,7 @@ struct Welcome {
     })
 
     let result = await PickerUtil.selectAudio();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000000000);
     let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
@@ -223,7 +266,7 @@ struct Welcome {
   async selectImage() {
     //拉起选中照片
     let result = await PickerUtil.selectPhotoVideo();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
     let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
@@ -244,7 +287,7 @@ struct Welcome {
   }
 
   async camera() {
-    let bufferImg = new ArrayBuffer(40960000);
+    let bufferImg = new ArrayBuffer(409600000);
     let res = await CameraUtil.picker();
     if (res.getSuccess()) {
       let str = res.getDataRow().resultUri;
@@ -262,7 +305,7 @@ struct Welcome {
   async selectFile() {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000);
+    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
     let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
@@ -296,8 +339,8 @@ struct Welcome {
 
   async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
     this.showDownBtn = Visibility.Visible;
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
-    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
+    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -309,8 +352,8 @@ struct Welcome {
   }
 
   async testDownload(upName: string, downName: string) {
-    // efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
-    efAxiosParams.baseURL = 'http://192.168.0.103:18088';
+    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
+    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     this.showDownBtn = Visibility.Visible;
     let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
       if (progress >= 100) {
@@ -334,10 +377,21 @@ struct Welcome {
 
   }
 
+  async aes() {
+    let key1 = await AES.generateAESKey();
+    let key = await AES.generateAESKey128();
+    this.msg = key.getDataRow();
+    let encode = await AES.encodeECB128('测试16位key加密', '6b0c2dd933bef6a768a0c1270251716b');
+    console.debug(encode.getDataRow());
+  }
+
   build() {
-    Scroll(){
+    Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('AES-ECB-16key').margin({ top: 20 }).onClick(() => {
+          this.aes();
+        })
         Button('相机拍照').margin({ top: 20 }).onClick(() => {
           this.camera();
         })
@@ -390,7 +444,7 @@ struct Welcome {
       .align(Alignment.Center)
       .width('100%')
       .borderRadius(10)
-      .padding({ top: 20, bottom: 20 })
+      .padding({ top: 50, bottom: 40 })
     }.scrollable(ScrollDirection.Vertical)
 
   }

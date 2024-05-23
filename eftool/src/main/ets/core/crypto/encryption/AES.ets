@@ -52,6 +52,15 @@ export class AES {
   }
 
   /**
+   * 生成AES的对称密钥-128位
+   * @returns AES密钥-128位
+   */
+  static async generateAESKey128(): Promise<OutDTO<string>> {
+    return CryptoUtil.generateSymKey('AES128');
+  }
+
+
+  /**
    * 加密-GCM模式
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
@@ -104,6 +113,17 @@ export class AES {
   }
 
   /**
+   * 加密-ECB模式-128位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥-128位
+   * @returns
+   */
+  static async encodeECB128(str: string, aesKey: string): Promise<OutDTO<string>> {
+    return CryptoUtil.encodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7');
+  }
+
+
+  /**
    * 解密-GCM模式
    * @param str  加密的字符串
    * @param aesKey  AES密钥
@@ -145,4 +165,15 @@ export class AES {
   static async decodeECB(str: string, aesKey: string): Promise<OutDTO<string>> {
     return CryptoUtil.decodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7');
   }
+
+  /**
+   * 解密-ECB模式-128位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥-128位
+   * @returns
+   */
+  static async decodeECB128(str: string, aesKey: string): Promise<OutDTO<string>> {
+    return CryptoUtil.decodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7');
+  }
+
 }
