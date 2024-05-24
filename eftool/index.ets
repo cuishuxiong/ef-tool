@@ -84,6 +84,8 @@ export { ConfirmUtil } from './src/main/ets/ui/prompt/ConfirmUtil';
 
 export { AlertUtil } from './src/main/ets/ui/prompt/AlertUtil';
 
+export { WinDialogUtil } from './src/main/ets/ui/prompt/WinDialogUtil';
+
 export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
 
 export { ExceptionUtil } from './src/main/ets/ui/prompt/ExceptionUtil';

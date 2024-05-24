@@ -15,6 +15,7 @@ import {
   JSONObject,
   PickerUtil,
   SHA,
+  WinDialogUtil,
 } from '@yunkss/eftool'
 import { ArrayList, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
@@ -377,18 +378,28 @@ struct Welcome {
 
   }
 
+  async openAlert() {
+    await WinDialogUtil.showAlert({
+      title: 'ef温馨提示',
+      content: '只设置了内容，其他都默认~~~~~'
+    });
+  }
+
   async aes() {
     let key1 = await AES.generateAESKey();
     let key = await AES.generateAESKey128();
     this.msg = key.getDataRow();
     let encode = await AES.encodeECB128('测试16位key加密', '6b0c2dd933bef6a768a0c1270251716b');
-    console.debug(encode.getDataRow());
+    this.msg = encode.getDataRow();
   }
 
   build() {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('打开弹窗').margin({ top: 20 }).onClick(() => {
+          this.openAlert();
+        })
         Button('AES-ECB-16key').margin({ top: 20 }).onClick(() => {
           this.aes();
         })

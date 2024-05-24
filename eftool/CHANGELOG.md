@@ -7,7 +7,7 @@
 * JSONArray新增parseArray方法将json字符串转换为Array<T>
 * JSONArrayList新增parseArrayList方法将json字符串转换为ArrayList<T>
 * 新增PreviewUtil
-* 新增WinDialogUtil,以Window方式弹出的Dialog
+* 新增WinDialogUtil,以Window方式弹出Alert
 * AES新增128位密钥生成,加解密方法
 
 ### 🐞功能优化
