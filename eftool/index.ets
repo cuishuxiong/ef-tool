@@ -94,6 +94,8 @@ export { NotificationUtil } from './src/main/ets/ui/base/NotificationUtil';
 
 export { LocationUtil } from './src/main/ets/ui/base/LocationUtil';
 
+export { PreviewUtil } from './src/main/ets/ui/base/PreviewUtil';
+
 export { efAxios } from './src/main/ets/core/axios/AxiosUtil';
 
 export { efAxiosParams } from './src/main/ets/core/axios/AxiosUtil';

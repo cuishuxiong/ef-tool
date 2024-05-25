@@ -83,7 +83,7 @@ export class efAlertOptions {
   /**
    * 提醒内容
    */
-  content?: string;
+  content: string = '';
   /**
    * 确认文本
    */

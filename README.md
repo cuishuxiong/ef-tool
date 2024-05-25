@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.1.11(API11)</center>
+# <center>V1.1.12(API11)</center>
 
 --------------------------------------------------------------------------------
 
@@ -108,6 +108,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | DownloadUtil     | 统一的上传下载按钮工具      |
 | PickerUtil       | 调起选择文件、照片、音频等工具类 |
 | CameraUtil       | 调起拍照工具类          |
+| WinDialogUtil    | 窗口方式弹框工具类        |
+| PreviewUtil      | 预览工具类            |
 
 ## 📦安装
 
@@ -1098,6 +1100,13 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
 ```
 
+* generateAESKey128 生成128位AES的对称密钥(1.1.12+)
+
+```
+    const aes = await  AES.generateAESKey128();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
 * encodeGCM 加密-GCM模式
 
 ```
@@ -1137,6 +1146,20 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+* encodeECB128 加密-ECB模式-128位(1.1.12+)
+
+```
+    let encode = await AES.encodeECB128('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB128 解密-ECB模式-128位(1.1.12+)
+
+```
+    let decode = await AES.decodeECB128(encode.getDataRow(), aesKey);
     this.message = decode.getDataRow();
 ```
 
@@ -1559,6 +1582,32 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let str = arr.toString();
 ```
 
+* parseArray json字符串转换为实体对象集合(1.1.12+)
+
+```
+    class TestDDD {
+      threeMonthRate?: string;
+      moduleName?: string;
+      productName?: string;
+      marketPatter?: string;
+      labelListJson?: site;
+    }
+    class site {
+      site1?: site1;
+    }
+    class site1 {
+      labelType?: string;
+      labelValue?: string;
+      labelName?: string;
+      labelLocation?: string;
+    }
+    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
+    let array = JSONArray.parseArray<TestDDD>(str1);
+    array.forEach(item => {
+      this.msg += item.labelListJson?.site1?.labelName + " ";
+    })
+```
+
 #### 4.JSONArrayList的方法
 
 * parse json字符串转换为JSONArrayList对象
@@ -1609,6 +1658,32 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     arr.add(null);
     arr.add(new User("10010", "实体数据"));
     let str = arr.toString();
+```
+
+* parseArrayList json字符串转换为实体对象集合(1.1.12+)
+
+```
+    class TestDDD {
+      threeMonthRate?: string;
+      moduleName?: string;
+      productName?: string;
+      marketPatter?: string;
+      labelListJson?: site;
+    }
+    class site {
+      site1?: site1;
+    }
+    class site1 {
+      labelType?: string;
+      labelValue?: string;
+      labelName?: string;
+      labelLocation?: string;
+    }
+    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
+    let array = JSONArrayList.parseArrayList<TestDDD>(str1);
+    array.forEach(item => {
+      this.msg += item.labelListJson?.site1?.labelName + " ";
+    })
 ```
 
 #### 5.JSONUtil的方法
@@ -3081,6 +3156,107 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       let name = fileUriObject.name;
       let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
       fs.closeSync(file);
+    }
+```
+
+#### 18.WinDialogUtil 以窗口方式弹出框工具类(1.1.12+)
+
+* 入参介绍
+
+```
+    efAlertOptions 弹出框入参实体
+    options:{
+        title:提醒标题默认为温馨提示,
+        content:提示框内容,
+        okText:确认文本默认为确认,
+        cancelText:取消文本默认为取消,
+        okCallBack:确认回调函数,
+        cancelCallBack:取消回调函数
+    }
+```
+
+* 显示提示框
+
+```
+    在需要显示的地方调用
+    await WinDialogUtil.showAlert({
+      title: 'ef温馨提示',
+      content: '只设置了内容，其他都默认~~~~~',
+      okCallBack:this.aes,
+      cancelCallBack:this.testJSONObject
+    });
+```
+
+* 关闭提示框
+
+```
+    点击确认和取消按钮均会自动关闭提示框
+```
+
+#### 19.PreviewUtil 预览工具类(1.1.12+)
+
+* previewTxt 预览文本
+
+```
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewTxt(item);
+    }
+```
+
+* previewHtml 预览网页
+
+```
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewHtml(item);
+    }
+```
+
+* previewImage 预览图片
+
+```
+    //拉起选择文件
+    let result = await PickerUtil.selectPhotoVideo();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewImage(item);
+    }
+```
+
+* previewVideo 预览视频
+
+```
+    //拉起选择文件
+    let result = await PickerUtil.selectPhotoVideo();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewVideo(item);
+    }
+```
+
+* previewAudio 预览音频
+
+```
+    //拉起选择文件
+    let result = await PickerUtil.selectAudio();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewAudio(item);
     }
 ```
 

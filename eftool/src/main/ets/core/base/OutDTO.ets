@@ -28,6 +28,16 @@ export class OutDTO<T> {
   }
 
   /**
+   * 创建空实例
+   * @returns
+   */
+  static create(): OutDTO<string> {
+    let outDTO = new OutDTO<string>(true, '', '', []);
+    return outDTO;
+  }
+
+
+  /**
    * 成功-只包含消息
    * @param msg   提示消息
    * @returns
@@ -84,6 +94,10 @@ export class OutDTO<T> {
     return dto;
   }
 
+  public setSuccess(success: boolean) {
+    this.success = success;
+  }
+
   public getSuccess(): boolean {
     return this.success;
   }
@@ -93,9 +107,17 @@ export class OutDTO<T> {
     return this.msg;
   }
 
+  public setMsg(msg: string) {
+    this.msg = msg;
+  }
+
 
   public getDataRow(): T {
     return this.dataRow;
+  }
+
+  public setDataRow(dataRow: T) {
+    this.dataRow = dataRow;
   }
 
 

@@ -14,6 +14,7 @@ import {
   JSONArrayList,
   JSONObject,
   PickerUtil,
+  PreviewUtil,
   SHA,
   WinDialogUtil,
 } from '@yunkss/eftool'
@@ -303,28 +304,6 @@ struct Welcome {
     }
   }
 
-  async selectFile() {
-    //拉起选择文件
-    let result = await PickerUtil.selectFile();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
-    let name: string = '';
-    //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      list.forEach(item => {
-        let fileUriObject = new fileUri.FileUri(item);
-        name = fileUriObject.name;
-        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-        let readLen = fs.readSync(file.fd, bufferImg);
-        fs.closeSync(file);
-      })
-      //上传选择的的照片
-      let upName = await this.testUpload(bufferImg, name);
-      //下载
-      await this.testDownload(upName, name);
-    }
-  }
-
   async testUriUpload() {
     this.showDownBtn = Visibility.Visible;
     efAxiosParams.baseURL = 'http://192.168.0.103:18088';
@@ -378,10 +357,78 @@ struct Welcome {
 
   }
 
+  async selectFile() {
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
+    let name: string = '';
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      list.forEach(item => {
+        let fileUriObject = new fileUri.FileUri(item);
+        name = fileUriObject.name;
+        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        let readLen = fs.readSync(file.fd, bufferImg);
+        fs.closeSync(file);
+      })
+      //上传选择的的照片
+      let upName = await this.testUpload(bufferImg, name);
+      //下载
+      await this.testDownload(upName, name);
+    }
+  }
+
+  async previewDocument() {
+    //拉起选择文件
+    let result = await PickerUtil.selectFile();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewTxt(item);
+    }
+  }
+
+  async previewImage() {
+    //拉起选择文件
+    let result = await PickerUtil.selectPhotoVideo();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewImage(item);
+    }
+  }
+
+  async previewVideo() {
+    //拉起选择文件
+    let result = await PickerUtil.selectPhotoVideo();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewVideo(item);
+    }
+  }
+
+  async previewAudio() {
+    //拉起选择文件
+    let result = await PickerUtil.selectAudio();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      let item = list[0];
+      await PreviewUtil.previewAudio(item);
+    }
+  }
+
   async openAlert() {
     await WinDialogUtil.showAlert({
       title: 'ef温馨提示',
-      content: '只设置了内容，其他都默认~~~~~'
+      content: '只设置了内容，其他都默认~~~~~',
+      okCallBack: this.aes,
+      cancelCallBack: this.testJSONObject
     });
   }
 
@@ -397,6 +444,18 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('预览文档').margin({ top: 20 }).onClick(() => {
+          this.previewDocument();
+        })
+        Button('预览图片').margin({ top: 20 }).onClick(() => {
+          this.previewImage();
+        })
+        Button('预览视频').margin({ top: 20 }).onClick(() => {
+          this.previewVideo();
+        })
+        Button('预览音频').margin({ top: 20 }).onClick(() => {
+          this.previewAudio();
+        })
         Button('打开弹窗').margin({ top: 20 }).onClick(() => {
           this.openAlert();
         })
