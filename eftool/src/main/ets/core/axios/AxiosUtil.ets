@@ -131,10 +131,10 @@ export class AxiosUtil {
       }
       return new OutDTO(true, '下载文件成功~', '', new Array());
     }
-    if (response.data && response.data.success) {
+    if (response.data && response.data.success != undefined) {
       success = response.data.success;
     }
-    if (response.data && response.data.flag) {
+    if (response.data && response.data.flag != undefined) {
       success = response.data.flag;
     }
     //2.返回的消息提示
