@@ -3264,7 +3264,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ## 为了更好的共建鸿蒙生态,决定创建微信群相互学习,大家有需求也可以直接在群里圈我
 
-![qrcode.jpg](http://aliyunmr.com:12306/qrcode.jpg)
+![qrcode.jpg](entry/src/main/resources/base/media/qrcode.jpg)
 
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化
