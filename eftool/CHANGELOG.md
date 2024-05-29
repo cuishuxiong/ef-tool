@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.1.13] 2024-05
+
+### 🐣新特性(API11)
+
+* 3DES新增128位秘钥生成以及加解密
+* 新增图片处理工具类ImageUtil
+* 新增音频播放录制工具类VideoUtil
+* 新增DES加密
+
+### 🐞功能优化
+
+* 优化AES.encodeECB128加解密与在线网站不一致[issuesI9SX4O](https://gitee.com/yunkss/ef-tool/issues/I9SX4O)
+* 优化上传下载demo整体完整性流程
+
 ## [v1.1.12] 2024-05
 
 ### 🐣新特性(API11)
