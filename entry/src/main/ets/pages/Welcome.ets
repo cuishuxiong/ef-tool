@@ -16,6 +16,7 @@ import {
   PickerUtil,
   PreviewUtil,
   SHA,
+  ToastUtil,
   WinDialogUtil,
 } from '@yunkss/eftool'
 import { ArrayList, util } from '@kit.ArkTS';
@@ -74,6 +75,19 @@ class Person {
 @Component
 struct Welcome {
   @State msg: string = 'csx';
+  private alertWinName: string = '';
+
+  /**
+   * 初始化请求参数
+   */
+  aboutToAppear(): void {
+    //请求地址前缀
+    efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
+    //是否开启传输整体加密
+    efAxiosParams.isAllEncrypt = true;
+    //加密的SM2key
+    efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+  }
 
   testJSONArrayList() {
     // let arr = new JSONArrayList();
@@ -223,32 +237,26 @@ struct Welcome {
   }
 
   async selectAudio() {
-
-    await PickerUtil.selectAudioCallBack({
-      selectCallBack: (list) => {
-        list.forEach(item => {
-          let fileUriObject = new fileUri.FileUri(item);
-          name = fileUriObject.name;
-          let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-          let readLen = fs.readSync(file.fd, bufferImg);
-          fs.closeSync(file);
-        })
-      }
-    })
-
     let result = await PickerUtil.selectAudio();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(40960000000000);
-    let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
       let list = result.getDataTable();
-      list.forEach(item => {
-        let fileUriObject = new fileUri.FileUri(item);
-        name = fileUriObject.name;
-        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-        let readLen = fs.readSync(file.fd, bufferImg);
-        fs.closeSync(file);
-      })
+      //获取选中照片uri
+      let item = list[0];
+      //创建文件信息
+      let fileUriObject = new fileUri.FileUri(item);
+      //获取文件名
+      let name = fileUriObject.name;
+      //打开文件
+      let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+      //读取文件大小
+      let info = fs.statSync(file.fd);
+      //缓存照片数据
+      let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
+      //写入缓存
+      fs.readSync(file.fd, bufferImg);
+      //关闭文件流
+      fs.closeSync(file);
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg, name);
       //下载
@@ -268,19 +276,25 @@ struct Welcome {
   async selectImage() {
     //拉起选中照片
     let result = await PickerUtil.selectPhotoVideo();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
-    let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
       let list = result.getDataTable();
-      list.forEach(item => {
-        let fileUriObject = new fileUri.FileUri(item);
-        name = fileUriObject.name;
-        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-        let readLen = fs.readSync(file.fd, bufferImg);
-        console.info('readSync data to file succeed and buffer size is:' + readLen);
-        fs.closeSync(file);
-      })
+      //获取选中照片uri
+      let item = list[0];
+      //创建文件信息
+      let fileUriObject = new fileUri.FileUri(item);
+      //获取文件名
+      let name = fileUriObject.name;
+      //打开文件
+      let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+      //读取文件大小
+      let info = fs.statSync(file.fd);
+      //缓存照片数据
+      let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
+      //写入缓存
+      fs.readSync(file.fd, bufferImg);
+      //关闭文件流
+      fs.closeSync(file);
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg, name);
       //下载
@@ -289,13 +303,16 @@ struct Welcome {
   }
 
   async camera() {
-    let bufferImg = new ArrayBuffer(409600000);
     let res = await CameraUtil.picker();
     if (res.getSuccess()) {
       let str = res.getDataRow().resultUri;
       let fileUriObject = new fileUri.FileUri(str);
       let name = fileUriObject.name;
       let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
+      //读取文件大小
+      let info = fs.statSync(file.fd);
+      //缓存照片数据
+      let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
       fs.closeSync(file);
       //上传
       let upName = await this.testUpload(bufferImg, name);
@@ -319,8 +336,6 @@ struct Welcome {
 
   async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
     this.showDownBtn = Visibility.Visible;
-    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
-    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
@@ -332,8 +347,6 @@ struct Welcome {
   }
 
   async testDownload(upName: string, downName: string) {
-    efAxiosParams.baseURL = 'http://www.aliyunmr.com:18088';
-    // efAxiosParams.baseURL = 'http://192.168.0.103:18088';
     this.showDownBtn = Visibility.Visible;
     let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
       if (progress >= 100) {
@@ -341,7 +354,26 @@ struct Welcome {
       }
       this.process = progress;
     });
-    this.msg = res ? res["msg"] : '';
+    ToastUtil.showToast(res ? res["msg"] : '下载文件出错了~');
+    let context = getContext(this) as common.UIAbilityContext;
+    //获取沙箱文件
+    let filesDir = context.filesDir + "/" + downName;
+    //转换成uri
+    let uri = fileUri.getUriFromPath(filesDir);
+    let suffix = uri.substring(uri.lastIndexOf(".") + 1);
+    if (suffix === 'txt') {
+      await PreviewUtil.previewTxt(uri);
+    } else if (['png', 'gif', 'webp', 'bmp'].includes(suffix) || suffix === 'jpg' || suffix === 'jpeg' || suffix === 'svg') {
+      await PreviewUtil.previewImage(uri);
+    } else if (suffix === 'mp4' || suffix === 'mkv' || suffix === 'ts') {
+      await PreviewUtil.previewVideo(uri);
+    } else if (['aac', 'ogg'].includes(suffix) || suffix === 'm4a' || suffix === 'mp3' || suffix === 'wav') {
+      await PreviewUtil.previewAudio(uri);
+    } else if (['html', 'htm'].includes(suffix)) {
+      await PreviewUtil.previewHtml(uri);
+    } else {
+      ToastUtil.showToast('该uri格式暂时无法预览~');
+    }
   }
 
   testArray2Object() {
@@ -360,18 +392,26 @@ struct Welcome {
   async selectFile() {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
-    let bufferImg: ArrayBuffer = new ArrayBuffer(409600000);
     let name: string = '';
     //判断是否成功
     if (result.getSuccess()) {
       let list = result.getDataTable();
-      list.forEach(item => {
-        let fileUriObject = new fileUri.FileUri(item);
-        name = fileUriObject.name;
-        let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-        let readLen = fs.readSync(file.fd, bufferImg);
-        fs.closeSync(file);
-      })
+      //获取选中照片uri
+      let item = list[0];
+      //创建文件信息
+      let fileUriObject = new fileUri.FileUri(item);
+      //获取文件名
+      let name = fileUriObject.name;
+      //打开文件
+      let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+      //读取文件大小
+      let info = fs.statSync(file.fd);
+      //缓存照片数据
+      let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
+      //写入缓存
+      fs.readSync(file.fd, bufferImg);
+      //关闭文件流
+      fs.closeSync(file);
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg, name);
       //下载
@@ -423,21 +463,41 @@ struct Welcome {
     }
   }
 
+  async openAlertTwo(winName?: string) {
+    if (winName) {
+      //将当前窗体名称存储在需要时关闭
+      this.alertWinName = winName;
+    }
+    await WinDialogUtil.showAlert({
+      title: '测试第二个弹框',
+      content: '第二个弹框内容',
+      okCallBack: () => {
+        this.aes()
+      },
+      cancelCallBack: () => {
+        this.testJSONArray()
+      }
+    });
+  }
+
   async openAlert() {
     await WinDialogUtil.showAlert({
       title: 'ef温馨提示',
       content: '只设置了内容，其他都默认~~~~~',
-      okCallBack: this.aes,
+      isAutoClose: false,
+      okCallBack: this.openAlertTwo,
       cancelCallBack: this.testJSONObject
     });
   }
 
   async aes() {
-    let key1 = await AES.generateAESKey();
-    let key = await AES.generateAESKey128();
-    this.msg = key.getDataRow();
-    let encode = await AES.encodeECB128('测试16位key加密', '6b0c2dd933bef6a768a0c1270251716b');
+    const textEncoder = new util.TextEncoder("utf-8")
+    let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
     this.msg = encode.getDataRow();
+    //关闭第一个窗体
+    if (this.alertWinName) {
+      WinDialogUtil.closeAlert(this.alertWinName);
+    }
   }
 
   build() {

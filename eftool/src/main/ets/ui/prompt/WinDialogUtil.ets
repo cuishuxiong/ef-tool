@@ -8,19 +8,16 @@ import { common } from '@kit.AbilityKit';
 import { ToastUtil } from './ToastUtil';
 import { RandomUtil } from '../../core/util/RandomUtil';
 import { efAlertOptions } from './efAlert';
+import { HashMap } from '@kit.ArkTS';
 
 import('./efAlert'); // 引入命名路由页面
 
 
 export class WinDialogUtil {
   /**
-   * 缓存窗体,关闭时需要
+   * 缓存窗体集合,关闭时需要
    */
-  private static cacheWindow: window.Window;
-  /**
-   * 是否打开loading
-   */
-  public loading: boolean = false;
+  private static cacheWindowMap = new HashMap<string, window.Window>();
 
   /**
    * 根据参数创建窗口
@@ -30,14 +27,20 @@ export class WinDialogUtil {
   static async showAlert(options?: efAlertOptions): Promise<void> {
     let ctx = getContext() as common.UIAbilityContext;
     try {
+      //当前窗口的编码
+      let winName = 'efLoading' + RandomUtil.randomNumber(1000, 1000000);
+      //创建存储
+      let efStorage = new LocalStorage();
+      //存储
+      efStorage.setOrCreate('efDialogName', winName);
       //创建窗口
       let windowClass = await window.createWindow({
-        name: 'efLoading' + RandomUtil.randomNumber(1000, 1000000),
+        name: winName,
         windowType: window.WindowType.TYPE_DIALOG,
         ctx: ctx
       });
       //将窗口缓存
-      WinDialogUtil.cacheWindow = windowClass;
+      WinDialogUtil.cacheWindowMap.set(winName, windowClass);
       //更新属性
       if (options) {
         if (!options.title) {
@@ -49,9 +52,13 @@ export class WinDialogUtil {
         if (!options.cancelText) {
           options.cancelText = "取消";
         }
-        AppStorage.setOrCreate('efAlertOptions', options);
+        if (options.isAutoClose == undefined) {
+          options.isAutoClose = true;
+        }
+        //存储数据
+        efStorage.setOrCreate('efAlertOptions', options);
       }
-      await windowClass.loadContentByName('efAlert')
+      await windowClass.loadContentByName('efAlert', efStorage);
       //获取屏幕四大角
       let d = display.getDefaultDisplaySync();
       //设置窗口大小
@@ -69,9 +76,9 @@ export class WinDialogUtil {
    * 关闭窗口
    * @returns
    */
-  static async closeAlert(): Promise<void> {
-    if (WinDialogUtil.cacheWindow) {
-      await WinDialogUtil.cacheWindow.destroyWindow();
+  static async closeAlert(winName: string): Promise<void> {
+    if (WinDialogUtil.cacheWindowMap && WinDialogUtil.cacheWindowMap.hasKey(winName)) {
+      await WinDialogUtil.cacheWindowMap.get(winName).destroyWindow();
     }
   }
 }

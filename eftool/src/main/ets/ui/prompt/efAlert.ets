@@ -6,13 +6,13 @@
 import { UiConst } from '../../core/const/UiConst';
 import { WinDialogUtil } from './WinDialogUtil';
 
-@Entry({ routeName: 'efAlert' })
+@Entry({ routeName: 'efAlert', storage: LocalStorage.getShared() })
 @Component
 export struct efAlert {
   /**
    * 属性配置
    */
-  @StorageProp('efAlertOptions') options: efAlertOptions = new efAlertOptions();
+  @LocalStorageProp('efAlertOptions') options: efAlertOptions = new efAlertOptions();
 
   build() {
     Stack() {
@@ -38,23 +38,45 @@ export struct efAlert {
             .backgroundColor(UiConst.ALERT_OK_BG_COLOR)
             .padding({ left: UiConst.NUMBER_50, right: UiConst.NUMBER_50 })
             .onClick(() => {
+              //当前窗体名称
+              let winName = LocalStorage.getShared().get<string>("efDialogName");
               //确定点击事件
               if (this.options.okCallBack) {
-                this.options.okCallBack();
+                //如果非自动关闭回调函数返回当前窗体名称
+                if (this.options.isAutoClose == false) {
+                  this.options.okCallBack(winName);
+                } else {
+                  this.options.okCallBack();
+                }
               }
-              //关闭弹窗
-              WinDialogUtil.closeAlert();
+              if (this.options.isAutoClose) {
+                if (winName) {
+                  //关闭弹窗
+                  WinDialogUtil.closeAlert(winName);
+                }
+              }
             })
           Button(this.options.cancelText)
             .backgroundColor(UiConst.DIALOG_CANCEL_COLOR)
             .padding({ left: UiConst.NUMBER_50, right: UiConst.NUMBER_50 })
             .onClick(() => {
+              //当前窗体名称
+              let winName = LocalStorage.getShared().get<string>("efDialogName");
               //取消点击事件
               if (this.options.cancelCallBack) {
-                this.options.cancelCallBack();
+                //如果非自动关闭回调函数返回当前窗体名称
+                if (this.options.isAutoClose == false) {
+                  this.options.cancelCallBack(winName);
+                } else {
+                  this.options.cancelCallBack();
+                }
               }
-              //关闭弹窗
-              WinDialogUtil.closeAlert();
+              if (this.options.isAutoClose) {
+                if (winName) {
+                  //关闭弹窗
+                  WinDialogUtil.closeAlert(winName);
+                }
+              }
             })
         }
         .padding({ top: UiConst.NUMBER_20 })
@@ -93,19 +115,22 @@ export class efAlertOptions {
    */
   cancelText?: string;
   /**
-   * 确认回调函数
+   * 是否点击时自动关闭弹框(1.1.13+)
    */
-  okCallBack?: () => void = () => {
-  };
+  isAutoClose?: boolean;
   /**
-   * 取消回调函数
+   * 确认回调函数,非自动关闭窗体时winName为当前窗体名称
    */
-  cancelCallBack?: () => void = () => {
-  };
+  okCallBack?: (winName?: string) => void;
+  /**
+   * 取消回调函数,非自动关闭窗体时winName为当前窗体名称
+   */
+  cancelCallBack?: (winName?: string) => void;
 
   constructor() {
     this.title = '温馨提示';
     this.okText = "确定";
     this.cancelText = "取消";
+    this.isAutoClose = true;
   }
 }
