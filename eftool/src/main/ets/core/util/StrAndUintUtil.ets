@@ -5,6 +5,7 @@
  */
 import { SM2Convert } from '../../../../..';
 import { StringBuilder } from '../base/StringBuilder';
+import { buffer } from '@kit.ArkTS';
 
 export class StrAndUintUtil {
   /**
@@ -15,11 +16,16 @@ export class StrAndUintUtil {
    */
   static unitArray2String(arr: Uint8Array, isC1C3C2?: boolean): string {
     //转换成可以读懂的字符串
-    let sb = new StringBuilder();
-    arr.forEach((value) => {
-      sb.append(('00' + value.toString(16)).slice(-2));
-    });
-    let asn1Str = sb.toString();
+    // let sb = new StringBuilder();
+    // arr.forEach((value) => {
+    //   sb.append(('00' + value.toString(16)).slice(-2));
+    // });
+    // let asn1Str = sb.toString();
+    // if (isC1C3C2) {
+    //   asn1Str = new SM2Convert().d2i(asn1Str);
+    // }
+    // return asn1Str;
+    let asn1Str = buffer.from(arr).toString('hex');
     if (isC1C3C2) {
       asn1Str = new SM2Convert().d2i(asn1Str);
     }
