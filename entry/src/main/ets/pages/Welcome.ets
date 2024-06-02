@@ -16,13 +16,16 @@ import {
   PickerUtil,
   PreviewUtil,
   SHA,
+  SM2,
+  SM2Convert,
   ToastUtil,
   WinDialogUtil,
 } from '@yunkss/eftool'
-import { ArrayList, util } from '@kit.ArkTS';
+import { ArrayList, buffer, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
+import { cryptoFramework } from '@kit.CryptoArchitectureKit';
 
 class TestDDD {
   threeMonthRate?: string;
@@ -419,6 +422,21 @@ struct Welcome {
     }
   }
 
+  async SM2d2i() {
+    let result = await SM2.generateSM2Key();
+    let pubKey = result.getDataRow().publicKey;
+
+    let ecc = cryptoFramework.ECCKeyUtil.genECCCommonParamsSpec('NID_sm2');
+
+
+    let srr = buffer.from(pubKey, 'hex');
+
+
+    let convert = new SM2Convert();
+    let sm2PubKey = convert.d2i(pubKey);
+    this.msg = sm2PubKey;
+  }
+
   async previewDocument() {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
@@ -491,8 +509,9 @@ struct Welcome {
   }
 
   async aes() {
-    const textEncoder = new util.TextEncoder("utf-8")
-    let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    let key = await AES.generateAESKey();
+    let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    let encode1 = await AES.encodeECB('123456', key.getDataRow());
     this.msg = encode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {
@@ -504,6 +523,9 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('SM2d2i').margin({ top: 20 }).onClick(() => {
+          this.SM2d2i();
+        })
         Button('预览文档').margin({ top: 20 }).onClick(() => {
           this.previewDocument();
         })

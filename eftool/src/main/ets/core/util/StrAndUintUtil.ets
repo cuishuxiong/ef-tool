@@ -32,6 +32,17 @@ export class StrAndUintUtil {
     return asn1Str;
   }
 
+  /**
+   * 判断输入的字符串是否只有数字和字母
+   * @param inputString
+   * @returns
+   */
+  static hasSpecialCharacters(inputString: string): boolean {
+    // 定义特殊字符的正则表达式，这里包括除字母、数字和标点符号外的所有字符
+    const pattern: RegExp = /^[a-zA-Z0-9]*$/;
+    return pattern.test(inputString);
+  }
+
 
   /**
    * 字节流转成可理解的字符串
@@ -61,13 +72,17 @@ export class StrAndUintUtil {
     if (isC1C3C2) {
       str = new SM2Convert().i2dSM2(str);
     }
-    const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
-    let arr = new Array<string>();
-    hexString?.forEach((val) => {
-      arr.push(val);
-    })
-    const byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
-    return new Uint8Array(byteArray);
+    if (StrAndUintUtil.hasSpecialCharacters(str)) {
+      const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+      let arr = new Array<string>();
+      hexString?.forEach((val) => {
+        arr.push(val);
+      })
+      const byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+      return new Uint8Array(byteArray);
+    } else {
+      return new Uint8Array(buffer.from(str, 'utf-8').buffer);
+    }
   }
 
   /**
