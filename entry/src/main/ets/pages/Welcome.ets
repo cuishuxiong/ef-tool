@@ -5,6 +5,7 @@
  */
 import {
   AES,
+  AudioCapturerUtil,
   CameraUtil,
   DES,
   DownloadUtil,
@@ -247,7 +248,6 @@ struct Welcome {
     let res = IdCardUtil.isValidCard18('12022519540815028x');
     this.msg = res.getMsg();
   }
-
 
   async selectAudio() {
     let result = await PickerUtil.selectAudio();
@@ -509,19 +509,27 @@ struct Welcome {
   }
 
   async openAlert() {
+    let _that = this;
     await WinDialogUtil.showAlert({
       title: 'ef温馨提示',
       content: '只设置了内容，其他都默认~~~~~',
       isAutoClose: false,
-      okCallBack: this.openAlertTwo,
-      cancelCallBack: this.testJSONObject
+      okCallBack: (winName?: string) => {
+        _that.openAlertTwo(winName)
+      },
+      cancelCallBack: (winName?: string) => {
+        _that.testJSONObject();
+        if (winName) {
+          WinDialogUtil.closeAlert(winName);
+        }
+      }
     });
   }
 
   async aes() {
     let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
     this.msg = encode.getDataRow();
-    let decode = await AES.decodeECB(encode.getDataRow(),'4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    let decode = await AES.decodeECB(encode.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
     this.msg = decode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {
@@ -529,10 +537,45 @@ struct Welcome {
     }
   }
 
+  async stopRecording() {
+    let res = await AudioCapturerUtil.stopRecording();
+    if (res.getSuccess()) {
+      this.msg = res.getMsg();
+    }
+  }
+
+  async recording() {
+    let path = getContext().cacheDir;
+    let filePath = path + '/csx.wav';
+    let file: fs.File = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+    let bufferSize: number = 0;
+    let initResult = await AudioCapturerUtil.init((buffer: ArrayBuffer) => {
+      fs.writeSync(file.fd, buffer, {
+        offset: bufferSize,
+        length: buffer.byteLength
+      });
+      bufferSize += buffer.byteLength;
+    });
+    if (!initResult.getSuccess()) {
+      ToastUtil.showToast(initResult.getMsg());
+      return;
+    }
+    let record = await AudioCapturerUtil.startRecording();
+    if (record.getSuccess()) {
+      this.msg = record.getMsg();
+    }
+  }
+
   build() {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('录音').margin({ top: 20 }).onClick(() => {
+          this.recording();
+        })
+        Button('停止录音').margin({ top: 20 }).onClick(() => {
+          this.stopRecording();
+        })
         Button('SM2d2i').margin({ top: 20 }).onClick(() => {
           this.SM2d2i();
         })

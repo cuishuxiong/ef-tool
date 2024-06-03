@@ -95,7 +95,7 @@ struct efAlert {
 }
 
 /**
- *
+ * 窗口弹框方式入参实体
  */
 export class efAlertOptions {
   /**

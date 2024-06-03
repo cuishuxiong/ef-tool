@@ -3170,12 +3170,13 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
         content:提示框内容,
         okText:确认文本默认为确认,
         cancelText:取消文本默认为取消,
-        okCallBack:确认回调函数,
-        cancelCallBack:取消回调函数
+        okCallBack:确认回调函数, //如果isAutoClose为false时,将返回当前弹窗的唯一编码winName,用于后续手动关闭
+        cancelCallBack:取消回调函数,
+        isAutoClose?: 是否自动关闭弹框默认为true(1.1.13+)
     }
 ```
 
-* 显示提示框
+* 显示提示框(支持弹出多个1.1.13+)
 
 ```
     在需要显示的地方调用
@@ -3187,10 +3188,72 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     });
 ```
 
-* 关闭提示框
+* 关闭提示框(支持用户选择是否自动关闭1.1.13+)
 
 ```
     点击确认和取消按钮均会自动关闭提示框
+    自动调用时传入弹框id
+    WinDialogUtil.closeAlert(winName);
+```
+
+* 示例(弹出两个窗体)
+
+```
+    Button('打开弹窗').margin({ top: 20 }).onClick(() => {
+      //打开第一个弹窗
+      this.openAlert();
+    })
+    
+    //第一个弹窗方法
+    async openAlert() {
+      //此处需要特别注意,弹出多个弹窗时需要缓存this,否则内部弹窗的this指向将被覆盖
+      let _that = this;
+      await WinDialogUtil.showAlert({
+        title: 'ef温馨提示',
+        content: '只设置了内容，其他都默认~~~~~',
+        isAutoClose: false,//设置为用户自己触发关闭弹窗
+        okCallBack: (winName?: string) => {
+          //winName为当前弹窗的名称
+          _that.openAlertTwo(winName)
+        },
+        cancelCallBack: (winName?: string) => {
+          _that.testJSONObject();
+          if (winName) {
+            //用户处理完业务需求后自行关闭弹窗
+            WinDialogUtil.closeAlert(winName);
+          }
+        }
+    });
+    
+    //打开第二个弹窗
+    async openAlertTwo(winName?: string) {
+      if (winName) {
+        //将当前窗体名称存储在需要时关闭
+        this.alertWinName = winName;
+      }
+      await WinDialogUtil.showAlert({
+        title: '测试第二个弹框',
+        content: '第二个弹框内容',
+        okCallBack: () => {
+          this.aes()
+        },
+        cancelCallBack: () => {
+          this.testJSONArray()
+        }
+      });
+    }
+  
+    //第二个弹窗的确认回调函数
+    async aes() {
+      let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+      this.msg = encode.getDataRow();
+      let decode = await AES.decodeECB(encode.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+      this.msg = decode.getDataRow();
+      //关闭第一个窗体
+      if (this.alertWinName) {
+        WinDialogUtil.closeAlert(this.alertWinName);
+      }
+    }
 ```
 
 #### 19.PreviewUtil 预览工具类(1.1.12+)
@@ -3258,6 +3321,14 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       let item = list[0];
       await PreviewUtil.previewAudio(item);
     }
+```
+
+* canPreview 判断传入uri是否可以预览(1.1.13+)
+
+```
+  let res = await PreviewUtil.canPreview('http://124.71.72.144:8801/mbank/dist/121.gif');
+  //res.success为true表示可以预览,否则为不可预览,注意预览的为文件uri地址,而非网络地址
+  this.msg = res.getMsg();
 ```
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
