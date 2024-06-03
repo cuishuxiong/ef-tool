@@ -6,6 +6,7 @@
 import {
   AES,
   CameraUtil,
+  DES,
   DownloadUtil,
   efAxiosParams,
   efClientApi,
@@ -518,10 +519,10 @@ struct Welcome {
   }
 
   async aes() {
-    // let key = await AES.generateAESKey();
-    let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
-    // let encode1 = await AES.encodeECB('123456', key.getDataRow());
+    let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
     this.msg = encode.getDataRow();
+    let decode = await AES.decodeECB(encode.getDataRow(),'4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    this.msg = decode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {
       WinDialogUtil.closeAlert(this.alertWinName);
