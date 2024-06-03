@@ -80,6 +80,19 @@ export class PreviewUtil {
   }
 
   /**
+   * 判断传入uri是否可以预览
+   * @param uri 判断的uri
+   * @returns
+   */
+   static async  canPreview(uri: string): Promise<OutDTO<string>> {
+    let isOk = await filePreview.canPreview(getContext() as common.UIAbilityContext, uri);
+    if (isOk) {
+      return OutDTO.OK('该uri支持预览~');
+    }
+    return OutDTO.Error('该uri不支持预览~');
+  }
+
+  /**
    * 预览格式判断
    * @param type  预览类型
    * @param uri  预览url

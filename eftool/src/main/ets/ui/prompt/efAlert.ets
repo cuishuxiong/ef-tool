@@ -8,7 +8,7 @@ import { WinDialogUtil } from './WinDialogUtil';
 
 @Entry({ routeName: 'efAlert', storage: LocalStorage.getShared() })
 @Component
-export struct efAlert {
+struct efAlert {
   /**
    * 属性配置
    */

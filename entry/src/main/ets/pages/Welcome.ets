@@ -232,12 +232,21 @@ struct Welcome {
 
   async testIdCard() {
 
-    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
-    this.msg = hmac2.getDataRow();
+    // let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    // this.msg = hmac2.getDataRow();
 
-    // let res = IdCardUtil.isValidCard18('12022519540815028x');
-    // this.msg = res.getMsg();
+    let re1 = await PreviewUtil.canPreview('http://124.71.72.144:8801/mbank/dist/121.gif');
+
+    this.msg = re1.getMsg();
+
+    // let isOk = await filePreview.canPreview(this.getUIContext(),'http://124.71.72.144:8801/mbank/dist/121.gif');
+    // if (isOk) {
+    //   ToastUtil.showToast('可以预览~');
+    // }
+    let res = IdCardUtil.isValidCard18('12022519540815028x');
+    this.msg = res.getMsg();
   }
+
 
   async selectAudio() {
     let result = await PickerUtil.selectAudio();
@@ -509,9 +518,9 @@ struct Welcome {
   }
 
   async aes() {
-    let key = await AES.generateAESKey();
-    let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
-    let encode1 = await AES.encodeECB('123456', key.getDataRow());
+    // let key = await AES.generateAESKey();
+    let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    // let encode1 = await AES.encodeECB('123456', key.getDataRow());
     this.msg = encode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {
