@@ -12,13 +12,10 @@
 
 ### 🐞功能优化
 
-* 优化AES.encodeECB128加解密与在线网站不一致[issuesI9SX4O](https://gitee.com/yunkss/ef-tool/issues/I9SX4O)
-
-* 优化3DES.encode有特殊字符的加解密不成功[issuesI9TON5](https://gitee.com/yunkss/ef-tool/issues/I9TON5)
-
-[//]: # (* 优化窗口方式全局弹框只允许弹一个[issuesI9TC0S]&#40;https://gitee.com/yunkss/ef-tool/issues/I9TC0S&#41;)
-
-* 优化上传下载demo整体完整性流程
+* 优化AES.encodeECB128加解密与在线网站不一致[issuesI9SX4O](https://gitee.com/yunkss/ef-tool/issues/I9SX4O)   
+* 优化3DES.encode有特殊字符的加解密不成功[issuesI9TON5](https://gitee.com/yunkss/ef-tool/issues/I9TON5)   
+[//]: # (* 优化窗口方式全局弹框只允许弹一个[issuesI9TC0S]&#40;https://gitee.com/yunkss/ef-tool/issues/I9TC0S&#41;)   
+* 优化上传下载demo整体完整性流程   
 
 ## [v1.1.12] 2024-05
 
