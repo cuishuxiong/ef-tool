@@ -28,6 +28,7 @@ import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 import { cryptoFramework } from '@kit.CryptoArchitectureKit';
+import { image } from '@kit.ImageKit';
 
 class TestDDD {
   threeMonthRate?: string;
@@ -471,6 +472,22 @@ struct Welcome {
       let item = list[0];
       let res = await PreviewUtil.canPreview(item);
       if (res.getSuccess()) {
+        // //打开文件
+        // let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
+        // //读取文件大小
+        // let info = fs.statSync(file.fd);
+        // //缓存照片数据
+        // let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
+        // //写入缓存
+        // fs.readSync(file.fd, bufferImg);
+        // //关闭文件流
+        // fs.closeSync(file);
+        // //创建imageResource
+        // let imageResource = image.createImageSource(bufferImg);
+        // //创建pixelMap
+        // let picture = await imageResource.createPixelMap();
+        //
+
         await PreviewUtil.previewImage(item);
       } else {
         ToastUtil.showToast(res.getMsg());
