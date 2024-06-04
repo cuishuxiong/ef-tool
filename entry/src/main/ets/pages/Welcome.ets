@@ -374,6 +374,10 @@ struct Welcome {
     //转换成uri
     let uri = fileUri.getUriFromPath(filesDir);
     let suffix = uri.substring(uri.lastIndexOf(".") + 1);
+    let r = await PreviewUtil.canPreview(uri);
+    if (!r.getSuccess()) {
+      ToastUtil.showToast(r.getMsg());
+    }
     if (suffix === 'txt') {
       await PreviewUtil.previewTxt(uri);
     } else if (['png', 'gif', 'webp', 'bmp'].includes(suffix) || suffix === 'jpg' || suffix === 'jpeg' || suffix === 'svg') {
@@ -465,7 +469,13 @@ struct Welcome {
     if (result.getSuccess()) {
       let list = result.getDataTable();
       let item = list[0];
-      await PreviewUtil.previewImage(item);
+      let res = await PreviewUtil.canPreview(item);
+      if (res.getSuccess()) {
+        await PreviewUtil.previewImage(item);
+      } else {
+        ToastUtil.showToast(res.getMsg());
+      }
+
     }
   }
 
