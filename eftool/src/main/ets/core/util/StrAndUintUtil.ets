@@ -5,7 +5,7 @@
  */
 import { SM2Convert } from '../../../../..';
 import { StringBuilder } from '../base/StringBuilder';
-import { ArrayList, buffer } from '@kit.ArkTS';
+import { buffer } from '@kit.ArkTS';
 
 export class StrAndUintUtil {
   /**
@@ -29,8 +29,8 @@ export class StrAndUintUtil {
    * @returns
    */
   static hasSpecialCharacters(inputString: string): boolean {
-    // 定义特殊字符的正则表达式，这里包括除字母、数字和标点符号外的所有字符
-    const pattern: RegExp = /^[a-zA-Z0-9]*$/;
+    // 定义特殊字符的正则表达式，这里包括除字母、数字外的所有字符
+    const pattern: RegExp = /^[a-z0-9]*$/;
     return pattern.test(inputString);
   }
 
@@ -63,6 +63,7 @@ export class StrAndUintUtil {
     if (isC1C3C2) {
       str = new SM2Convert().i2dSM2(str);
     }
+    //判断是否为HarmonyOS自己生成的字符串,只包含小写a-z和数字
     if (StrAndUintUtil.hasSpecialCharacters(str)) {
       const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
       let arr = new Array<string>();

@@ -12,6 +12,8 @@
 ### 🐞功能优化
 
 * 优化WinDialogUtil弹窗支持同时弹出多个[issuesI9TC0S](https://gitee.com/yunkss/ef-tool/issues/I9TC0S)
+* 优化转json时候，数值转换错误[issuesI9V6JS](https://gitee.com/yunkss/ef-tool/issues/I9V6JS)
+* 优化SM4字符串key包含大写字母时加密报错[issuesI9V8P2](https://gitee.com/yunkss/ef-tool/issues/I9V8P2)
 
 ## [v1.1.12-1] 2024-06
 

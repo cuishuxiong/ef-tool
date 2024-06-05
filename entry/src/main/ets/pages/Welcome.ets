@@ -20,6 +20,7 @@ import {
   SHA,
   SM2,
   SM2Convert,
+  SM4,
   ToastUtil,
   WinDialogUtil,
 } from '@yunkss/eftool'
@@ -182,7 +183,7 @@ struct Welcome {
 
     let list = JSONArray.parseArray<Person>(str);
 
-    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
+    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"111111","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"2024-06-05T16:00:34.859Z","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"24:91:bb","labelLocation":false}}}]';
 
     let array = JSONArray.parseArray<TestDDD>(str1);
 
@@ -571,6 +572,13 @@ struct Welcome {
     }
   }
 
+  async sm416() {
+    // let key =  await SM4.generateSM4Key();
+    // this.msg = key.getDataRow();
+    let res = await SM4.encodeCBC('121212121', 'o243DjGm8000zC05', '4zop22e82I1I9881');
+    this.msg = res.getDataRow();
+  }
+
   async recording() {
     let path = getContext().cacheDir;
     let filePath = path + '/csx.wav';
@@ -597,6 +605,9 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('SM4-key-16').margin({ top: 20 }).onClick(() => {
+          this.sm416();
+        })
         Button('录音').margin({ top: 20 }).onClick(() => {
           this.recording();
         })

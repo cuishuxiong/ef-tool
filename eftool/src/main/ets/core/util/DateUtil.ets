@@ -105,8 +105,23 @@ export class DateUtil {
    * @returns
    */
   public static isDate(value: string): boolean {
-    //需要循环常量中的时间格式看看是否符合，符合极为日期类型
-    const dateTimeRegex = /^(?:(?:\d{4}(?:\/|-)\d{1,2}(?:\/|-)\d{1,2})|(?:\d{1,2}:\d{1,2}(:\d{1,2})?))(T\d{1,2}:\d{1,2}:\d{1,2}\.\d{1,3}Z)?|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
-    return dateTimeRegex.test(value);
+    //日期类型正则集合
+    const dateTimeRegexList = [
+      /^\d{8}$/,
+      /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/,
+      /^([01]\d|2[0-3]):[0-5]\d$/,
+      /^\d{4}[-/]\d{2}[-/]\d{2}$/,
+      /^\d{4}[-/]\d{2}[-/]\d{2} ([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/,
+      /^\d{4}[/]\d{2}[/]\d{2}$/,
+      /^\d{4}[/]\d{2}[/]\d{2} ([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/,
+      /^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d:[0-5]\d\.\d{1,3}Z$/
+    ];
+    let result = dateTimeRegexList.filter(item => {
+      return item.test(value)
+    }).length;
+    if (result > 0) {
+      return true;
+    }
+    return false;
   }
 }
