@@ -30,7 +30,8 @@ import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 import { cryptoFramework } from '@kit.CryptoArchitectureKit';
-import { image } from '@kit.ImageKit';
+
+import { DESNdk } from '@yunkss/efndk'
 
 class TestDDD {
   threeMonthRate?: string;
@@ -410,6 +411,7 @@ struct Welcome {
   }
 
   async selectFile() {
+
     //拉起选择文件
     let result = await PickerUtil.selectFile();
     let name: string = '';
@@ -584,6 +586,12 @@ struct Welcome {
     }
   }
 
+  async testNDK() {
+    let key = await DES.generate3DESKey();
+    let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key.getDataRow());
+    this.msg = str;
+  }
+
   async sm416() {
     // let key =  await SM4.generateSM4Key();
     // this.msg = key.getDataRow();
@@ -617,6 +625,9 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('testNDK').margin({ top: 20 }).onClick(() => {
+          this.testNDK();
+        })
         Button('SM4-key-16').margin({ top: 20 }).onClick(() => {
           this.sm416();
         })

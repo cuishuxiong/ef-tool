@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "efndk",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+      "tablet"
+    ]
+  }
+}

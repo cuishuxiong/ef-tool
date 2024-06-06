@@ -1,0 +1,19 @@
+{
+  "name": "@yunkss/efndk",
+  "keywords": [
+    "napi",
+    "eftool",
+    "ndk",
+    "des"
+  ],
+  "description": "eftool的扩展ndk产物,提供des加解密.",
+  "main": "index.ets",
+  "author": "csx",
+  "license": "Apache-2.0",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
+  "version": "1.0.0",
+  "homepage": "https://gitee.com/yunkss",
+  "dependencies": {
+    "libefndk": "file:./src/main/cpp/types/libefndk"
+  }
+}

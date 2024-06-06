@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EfndkAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EfndkAbility_label",
+      "value": "label"
+    }
+  ]
+}
