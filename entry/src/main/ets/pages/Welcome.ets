@@ -21,6 +21,7 @@ import {
   SM2,
   SM2Convert,
   SM4,
+  StrUtil,
   ToastUtil,
   WinDialogUtil,
 } from '@yunkss/eftool'
@@ -438,6 +439,17 @@ struct Welcome {
     }
   }
 
+  async replace() {
+
+    let res = await SM4.encodeCBC('csx', 'o243DjGm8000zC05', '4zop22e82I1I9881');
+
+    if (res.getSuccess()) {
+      this.msg = res.getDataRow();
+    }
+
+    this.msg = StrUtil.replace('<em>珠海众</em>友<em>联</em>创企业管理咨询有限公司', /<em>(.*?)<\/em>/g, '$1')
+  }
+
   async SM2d2i() {
     let result = await SM2.generateSM2Key();
     let pubKey = result.getDataRow().publicKey;
@@ -613,6 +625,9 @@ struct Welcome {
         })
         Button('停止录音').margin({ top: 20 }).onClick(() => {
           this.stopRecording();
+        })
+        Button('replace').margin({ top: 20 }).onClick(() => {
+          this.replace();
         })
         Button('SM2d2i').margin({ top: 20 }).onClick(() => {
           this.SM2d2i();
