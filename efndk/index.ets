@@ -1,1 +1,0 @@
-export { DESNdk } from './src/main/ets/util/DESNdk';

@@ -1,6 +1,6 @@
 {
-  "name": "libefndk",
+  "name": "libefndk.so",
   "types": "./index.d.ts",
-  "version": "1.0.0",
-  "description": "eftool的扩展ndk产物,提供des加解密."
+  "version": "",
+  "description": "Please describe the basic information."
 }

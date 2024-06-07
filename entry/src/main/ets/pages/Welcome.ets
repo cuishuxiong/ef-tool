@@ -31,7 +31,8 @@ import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 import { cryptoFramework } from '@kit.CryptoArchitectureKit';
 
-import { DESNdk } from '@yunkss/efndk'
+import {  encodeCBC } from '@yunkss/efndk'
+
 
 class TestDDD {
   threeMonthRate?: string;
@@ -85,6 +86,7 @@ class Person {
 struct Welcome {
   @State msg: string = 'csx';
   private alertWinName: string = '';
+  @State previewPath: string = '';
 
   /**
    * 初始化请求参数
@@ -411,7 +413,6 @@ struct Welcome {
   }
 
   async selectFile() {
-
     //拉起选择文件
     let result = await PickerUtil.selectFile();
     let name: string = '';
@@ -587,9 +588,34 @@ struct Welcome {
   }
 
   async testNDK() {
-    let key = await DES.generate3DESKey();
-    let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key.getDataRow());
-    this.msg = str;
+    // let key = await DES.generate3DESKey();
+    // this.msg = add(12, 23) + "";
+    this.msg = encodeCBC('hello 字符串', 'secret key 123');
+
+    // this.msg = nDES.ndkEncodeCBC('hello 字符串', 'secret key 123');
+    // let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key.getDataRow());
+    // this.msg = str;
+  }
+
+  async resFileCanPreview() {
+    //转换成数组
+    let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+    //获取沙箱路径
+    let context = getContext(this) as common.UIAbilityContext;
+    let filesDir = context.filesDir;
+    //组装存储临时路径
+    let finalPath = filesDir + "/preview.png";
+    //创建文件
+    let file: fs.File = fs.openSync(finalPath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+    //写入文件
+    fs.writeSync(file.fd, array.buffer);
+    fs.closeSync(file);
+    //转换地址
+    let uri = fileUri.getUriFromPath(finalPath);
+    let can = await PreviewUtil.canPreview(uri);
+    if (can.getSuccess()) {
+      await PreviewUtil.previewImage(uri);
+    }
   }
 
   async sm416() {
@@ -625,6 +651,10 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Image(this.previewPath).width(100);
+        Button('canPreview测试').margin({ top: 20 }).onClick(() => {
+          this.resFileCanPreview();
+        })
         Button('testNDK').margin({ top: 20 }).onClick(() => {
           this.testNDK();
         })

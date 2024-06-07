@@ -1,5 +1,0 @@
-{
-  "libefndk.so": {
-    "source": "src/mock/libefndk.mock.ets"
-  }
-}
