@@ -8,12 +8,17 @@
 * 新增音频播放录制工具类AudioUtil
 * 新增Base64Util工具类
 * PreviewUtil新增判断是否uri可预览方法
+* 新增切面工具类AopUtil
+* 新增悬浮窗工具类PopWinUtil
+* 新增自定义底部tabBar工具类TabBarUtil
 
 ### 🐞功能优化
 
 * 优化WinDialogUtil弹窗支持同时弹出多个[issuesI9TC0S](https://gitee.com/yunkss/ef-tool/issues/I9TC0S)
 * 优化转json时候，数值转换错误[issuesI9V6JS](https://gitee.com/yunkss/ef-tool/issues/I9V6JS)
 * 优化SM4字符串key包含大写字母时加密报错[issuesI9V8P2](https://gitee.com/yunkss/ef-tool/issues/I9V8P2)
+* 优化沉浸式导航工具类挖孔
+* 优化通知工具类跳转到设置页面
 
 ## [v1.1.12-1] 2024-06
 

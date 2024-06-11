@@ -116,7 +116,7 @@ export { CameraUtil } from './src/main/ets/ui/base/CameraUtil';
 
 export { Cascade } from './src/main/ets/ui/select/Cascade';
 
-export { ImmersionUtil } from './src/main/ets/ui/base/ImmersionUtil';
+export { ImmersionUtil, TextMargin } from './src/main/ets/ui/base/ImmersionUtil';
 
 export { WindowUtil } from './src/main/ets/ui/base/WindowUtil';
 
