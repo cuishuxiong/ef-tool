@@ -8,6 +8,10 @@ import { BusinessError } from '@kit.BasicServicesKit';
  * @TODO ImmersionUtil  沉浸式导航工具类
  */
 export class ImmersionUtil {
+
+  //适配屏幕挖孔
+  //https://developer.huawei.com/consumer/cn/forum/topic/0201145617527203077?fid=0109140870620153026
+
   private static instance: ImmersionUtil;
   cacheWindowStage?: window.WindowStage;
 

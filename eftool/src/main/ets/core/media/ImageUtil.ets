@@ -10,6 +10,13 @@ import { FileUtil } from './FileUtil';
 import { resourceManager } from '@kit.LocalizationKit';
 
 export class ImageUtil {
+
+  //新增保存到图库或用户选择的目录下
+  //参考 https://developer.huawei.com/consumer/cn/forum/topic/0201150579990654020
+
+  //新增图片压缩
+  //参考 https://developer.huawei.com/consumer/cn/forum/topic/0203144584728486846?fid=0109140870620153026
+
   /**
    * 图片base64字符串转PixelMap
    * @param base64 图片base64字符串

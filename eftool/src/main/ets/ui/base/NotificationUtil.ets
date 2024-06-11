@@ -11,6 +11,10 @@ import { image } from '@kit.ImageKit';
  * @TODO NotificationUtil  通知工具列
  */
 export class NotificationUtil {
+
+  //添加跳转设置权限开启通知
+  //https://developer.huawei.com/consumer/cn/forum/topic/0208150584794898034
+
   /**
    * 校验是否已授权通知服务
    * @param callBack  回调函数
