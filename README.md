@@ -18,40 +18,42 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 `eftool`既是一个工具集，也是一个知识库，我从不自诩代码原创，大多数工具类都是**搬运**而来，因此：
 
-- 你可以引入使用，也可以**拷贝**和修改使用，而**不必标注任何信息**，只是希望能把bug及时反馈回来。
+- 你可以引入使用，也可以**拷贝**和修改使用，如需分享扩展**希望可以注明原出处即可**，也希望能把bug及时反馈回来。
 - 我努力健全**中文**注释，为源码学习者提供良好地学习环境，争取做到人人都能看得懂。
 
 -------------------------------------------------------------------------------
 
 ## 🛠️版本说明【重要】
 
-- 1.0.x版本系列兼容**API9**
-- 1.1.x版本系列兼容**API11**
+> - <span style='color:red;'>1.0.x版本系列兼容**API9**</span>
+
+> - <span style='color:red;'>1.1.x版本系列兼容**API11**</span>
 
 ## 🛠️包含组件
 
-一个OpenHarmony/HarmonyOS基础工具类，组成各种Util工具类，同时提供以下五部分组件：
+一个OpenHarmony/HarmonyOS基础工具类，组成各种工具类，同时提供以下六部分组件：
 
 ### 1.基础类组件
 
-| 模块         | 介绍              |
-|------------|-----------------|
-| IdCardUtil | 提供对身份证校验系列方法    |
-| IdUtil     | 提供生成ID的一系列方法    |
-| ArrayUtil  | 提供对集合的一些常用的方法   |
-| DateUtil   | 提供对日期的一系列封装     |
-| ObjectUtil | 提供对于对象的系列操作方法   |
-| RandomUtil | 提供随机数的系列方法      |
-| RegUtil    | 提供对于常用正则表达式的方法  |
-| StrUtil    | 提供对于字符串的操作方法    |
-| PhoneUtil  | 提供常用的手机座机等判断    |
-| OutDTO     | 提供常用的返回实体对象     |
-| CharUtil   | 提供常用的字符操作       |
-| CacheUtil  | 提缓存数据并且提取数据操作   |
-| Logger     | 提供常用的打印日志的方法    |
-| RegexConst | 提供常用的正则表达式常量    |
-| DateConst  | 提供常用的日期格式化表达式常量 |
-| AuthUtil   | 提供判断授权拉起授权的系列方法 |
+| 模块         | 介绍               |
+|------------|------------------|
+| IdCardUtil | 提供对身份证校验系列方法     |
+| IdUtil     | 提供生成ID的一系列方法     |
+| ArrayUtil  | 提供对集合的一些常用的方法    |
+| DateUtil   | 提供对日期的一系列封装      |
+| ObjectUtil | 提供对于对象的系列操作方法    |
+| RandomUtil | 提供随机数的系列方法       |
+| RegUtil    | 提供对于常用正则表达式的方法   |
+| StrUtil    | 提供对于字符串的操作方法     |
+| PhoneUtil  | 提供常用的手机座机等判断     |
+| OutDTO     | 提供常用的返回实体对象      |
+| CharUtil   | 提供常用的字符操作        |
+| CacheUtil  | 提缓存数据并且提取数据操作    |
+| Logger     | 提供常用的打印日志的方法     |
+| RegexConst | 提供常用的正则表达式常量     |
+| DateConst  | 提供常用的日期格式化表达式常量  |
+| AuthUtil   | 提供判断授权拉起授权的系列方法  |
+| Base64Util | 提供字符串与Base64转换方法 |
 
 ### 2.加密类组件
 
@@ -110,6 +112,14 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | CameraUtil       | 调起拍照工具类          |
 | WinDialogUtil    | 窗口方式弹框工具类        |
 | PreviewUtil      | 预览工具类            |
+
+### 6.媒体相关
+
+| 模块        | 介绍               |
+|-----------|------------------|
+| AudioUtil | 提供对音频的录制播放等一系列方法 |
+| FileUtil  | 提供对文件的一系列操作方法    |
+| ImageUtil | 提供对图片的一系列处理方法    |
 
 ## 📦安装
 
@@ -907,6 +917,36 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * getDataTable 获取多行数据
 
 * setDataTable 设置多行数据
+
+#### 15.Base64Util的方法(1.1.13+)
+
+* encodeToStr 将Uint8Array转化为字符串-异步
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
+
+* decode 将字符串转换为Uint8Array数组-异步
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
+
+* encodeToStrSync 将Uint8Array转化为字符串-同步
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
+
+* decodeSync 将字符串转换为Uint8Array数组-同步
+
+```
+    console.error(IdUtil.simpleUUID())
+    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+```
 
 ### 3.加密相关组件使用API
 
@@ -2028,7 +2068,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       }
 ```
 
-### 6.UI组件使用API
+### 6.UI组件相关使用API
 
 #### 1.ToastUtil的方法
 
@@ -3331,7 +3371,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   this.msg = res.getMsg();
 ```
 
-## star`eftool`希望您可以动一动小手点点小⭐⭐
+### 7.媒体相关类组件使用API(1.1.13+)
 
 ## 为了更好的共建鸿蒙生态,决定创建微信群相互学习,大家有需求也可以直接在群里圈我
 

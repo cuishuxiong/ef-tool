@@ -6,7 +6,7 @@
 
 * 新增图片处理工具类ImageUtil
 * 新增音频播放录制工具类AudioUtil
-* 新增DES加密
+* 新增Base64Util工具类
 * PreviewUtil新增判断是否uri可预览方法
 
 ### 🐞功能优化

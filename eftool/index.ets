@@ -70,6 +70,8 @@ export { CryptoUtil } from './src/main/ets/core/util/CryptoUtil';
 
 export { Logger } from './src/main/ets/core/util/Logger';
 
+export { Base64Util } from './src/main/ets/core/util/Base64Util';
+
 export { AudioCapturerUtil } from './src/main/ets/core/media/AudioUtil';
 
 export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';
