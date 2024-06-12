@@ -570,9 +570,14 @@ struct Welcome {
   }
 
   async aes() {
-    let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+
+    let encode = await AES.encodeCBC128("12345678909","TESTsdiloia20230","ass3[2K8%fw68sw7");
     this.msg = encode.getDataRow();
-    let decode = await AES.decodeECB(encode.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+
+
+    // let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    // this.msg = encode.getDataRow();
+    let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230","ass3[2K8%fw68sw7");
     this.msg = decode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {

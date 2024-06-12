@@ -1171,7 +1171,21 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
-    let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
+    let decode = await AES.decodeCBC(encode.getDataRow(),aes.getDataRow(), iv.getDataRow());
+    this.message = decode.getDataRow();
+```
+
+* encodeCBC128 加密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)(1.1.13+)
+
+```
+    let encode = await AES.encodeCBC128('测试CBC加密字符串Test!','TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC128 解密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)(1.1.13+)
+
+```
+    let decode = await AES.decodeCBC128(encode.getDataRow(),'TESTsdiloia20230','ass3[2K8%fw68sw7');
     this.message = decode.getDataRow();
 ```
 

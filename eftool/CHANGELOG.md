@@ -19,6 +19,7 @@
 * 优化SM4字符串key包含大写字母时加密报错[issuesI9V8P2](https://gitee.com/yunkss/ef-tool/issues/I9V8P2)
 * 优化沉浸式导航工具类挖孔
 * 优化通知工具类跳转到设置页面
+* 优化AES的CBC加解密支持128位
 
 ## [v1.1.12-1] 2024-06
 

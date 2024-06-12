@@ -103,6 +103,17 @@ export class AES {
   }
 
   /**
+   * 加密-CBC模式-128位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param iv   iv偏移量字符串
+   * @returns
+   */
+  static async encodeCBC128(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
+    return CryptoUtil.encodeCBC(str, aesKey, iv, 'AES128', 'AES128|CBC|PKCS7');
+  }
+
+  /**
    * 加密-ECB模式
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
@@ -157,6 +168,17 @@ export class AES {
   }
 
   /**
+   * 解密-CBC模式-128位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @param iv  iv偏移量字符串
+   * @returns
+   */
+  static async decodeCBC128(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
+    return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES128', 'AES128|CBC|PKCS7');
+  }
+
+  /**
    * 解密-ECB模式
    * @param str  加密的字符串
    * @param aesKey AES密钥
@@ -175,5 +197,4 @@ export class AES {
   static async decodeECB128(str: string, aesKey: string): Promise<OutDTO<string>> {
     return CryptoUtil.decodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7');
   }
-
 }
