@@ -4,12 +4,14 @@
 
 ### 🐣新特性(API11)
 
-* 新增图片处理工具类ImageUtil
-* 新增音频播放录制工具类AudioUtil
+* 新增图片处理工具类ImageUtil   
+
+[//]: # (* 新增音频播放录制工具类AudioUtil)
 * 新增Base64Util工具类
 * PreviewUtil新增判断是否uri可预览方法
 * 新增切面工具类AopUtil
 * 新增悬浮窗工具类PopWinUtil
+* 新增文件处理工具类FileUtil
 * 新增自定义底部tabBar工具类TabBarUtil
 
 ### 🐞功能优化

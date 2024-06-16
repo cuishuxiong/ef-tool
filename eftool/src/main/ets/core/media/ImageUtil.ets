@@ -1,3 +1,5 @@
+import fs from '@ohos.file.fs';
+
 /**
  * @Author csx
  * @DateTime 2024/6/6 00:17
@@ -10,7 +12,6 @@ import { FileUtil } from './FileUtil';
 import { resourceManager } from '@kit.LocalizationKit';
 
 export class ImageUtil {
-
   //新增保存到图库或用户选择的目录下
   //参考 https://developer.huawei.com/consumer/cn/forum/topic/0201150579990654020
 
@@ -67,14 +68,14 @@ export class ImageUtil {
    */
   static async savePixelMap(pixelMap: image.PixelMap, path: string, name: string, format: string = 'image/png'): Promise<string> {
     try {
-      if (!FileUtil.accessSync(path)) {
+      if (!fs.accessSync(path)) {
         FileUtil.mkdirSync(path) //如果文件夹不存在就创建
       }
       let filePath = path + FileUtil.separator + name;
-      let file = FileUtil.openSync(filePath)
+      let file = fs.openSync(filePath)
       let packOpts: image.PackingOption = { format: format, quality: 100 }
       await ImageUtil.packToFileFromPixelMap(pixelMap, file.fd, packOpts)
-      FileUtil.closeSync(file.fd) //关闭文件
+      fs.closeSync(file.fd) //关闭文件
       return filePath;
     } catch (err) {
       return '';
@@ -92,14 +93,14 @@ export class ImageUtil {
    */
   static async saveImageSource(source: image.ImageSource, path: string, name: string, format: string = 'image/png'): Promise<string> {
     try {
-      if (!FileUtil.accessSync(path)) {
-        FileUtil.mkdirSync(path) //如果文件夹不存在就创建
+      if (!fs.accessSync(path)) {
+        fs.mkdirSync(path) //如果文件夹不存在就创建
       }
       let filePath = path + FileUtil.separator + name;
-      let file = FileUtil.openSync(filePath)
+      let file = fs.openSync(filePath)
       let packOpts: image.PackingOption = { format: format, quality: 100 }
       await ImageUtil.packToFileFromImageSource(source, file.fd, packOpts)
-      FileUtil.closeSync(file.fd) //关闭文件
+      fs.closeSync(file.fd) //关闭文件
       return filePath;
     } catch (err) {
       return '';
