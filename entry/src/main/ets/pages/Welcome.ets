@@ -31,8 +31,6 @@ import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 import { cryptoFramework } from '@kit.CryptoArchitectureKit';
 
-import {  encodeCBC } from '@yunkss/efndk'
-
 
 class TestDDD {
   threeMonthRate?: string;
@@ -571,13 +569,13 @@ struct Welcome {
 
   async aes() {
 
-    let encode = await AES.encodeCBC128("12345678909","TESTsdiloia20230","ass3[2K8%fw68sw7");
+    let encode = await AES.encodeCBC128("12345678909", "TESTsdiloia20230", "ass3[2K8%fw68sw7");
     this.msg = encode.getDataRow();
 
 
     // let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
     // this.msg = encode.getDataRow();
-    let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230","ass3[2K8%fw68sw7");
+    let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
     this.msg = decode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {
@@ -595,7 +593,7 @@ struct Welcome {
   async testNDK() {
     // let key = await DES.generate3DESKey();
     // this.msg = add(12, 23) + "";
-    this.msg = encodeCBC('hello 字符串', 'secret key 123');
+    // this.msg = encodeCBC('hello 字符串', 'secret key 123');
 
     // this.msg = nDES.ndkEncodeCBC('hello 字符串', 'secret key 123');
     // let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key.getDataRow());
