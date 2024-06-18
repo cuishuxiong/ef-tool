@@ -72,8 +72,15 @@ export class PreviewUtil {
         uri: uri,
         mimeType: result.getDataRow()
       };
+      //悬浮窗口的属性值，包含了悬浮窗大小以及位置信息。2in1端不填写则展示默认大小窗口，手机和平板设备填写无效。
+      let displayInfo: filePreview.DisplayInfo = {
+        x: 100,
+        y: 100,
+        width: 800,
+        height: 800
+      };
       //打开预览
-      await filePreview.openPreview(uiContext, fileInfo, null);
+      await filePreview.openPreview(uiContext, fileInfo, displayInfo);
     } else {
       ToastUtil.showToast(result.getMsg());
     }
