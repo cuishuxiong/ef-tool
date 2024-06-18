@@ -90,6 +90,8 @@ export { AlertUtil } from './src/main/ets/ui/prompt/AlertUtil';
 
 export { WinDialogUtil } from './src/main/ets/ui/prompt/WinDialogUtil';
 
+export { WinLoadingUtil } from './src/main/ets/ui/prompt/WinLoadingUtil';
+
 export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
 
 export { ExceptionUtil } from './src/main/ets/ui/prompt/ExceptionUtil';

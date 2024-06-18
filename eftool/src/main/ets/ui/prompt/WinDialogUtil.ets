@@ -28,7 +28,7 @@ export class WinDialogUtil {
     let ctx = getContext() as common.UIAbilityContext;
     try {
       //当前窗口的编码
-      let winName = 'efLoading' + RandomUtil.randomNumber(1000, 1000000);
+      let winName = 'efDialog' + RandomUtil.randomNumber(1000, 1000000);
       //创建存储
       let efStorage = new LocalStorage();
       //存储

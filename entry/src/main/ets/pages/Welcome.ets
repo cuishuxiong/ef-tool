@@ -15,6 +15,7 @@ import {
   JSONArray,
   JSONArrayList,
   JSONObject,
+  LoadingUtil,
   PickerUtil,
   PreviewUtil,
   SHA,
@@ -24,12 +25,14 @@ import {
   StrUtil,
   ToastUtil,
   WinDialogUtil,
+  WinLoadingUtil,
 } from '@yunkss/eftool'
 import { ArrayList, buffer, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 import { cryptoFramework } from '@kit.CryptoArchitectureKit';
+import { efLoadingOptions } from '@yunkss/eftool/src/main/ets/ui/prompt/efLoading';
 
 
 class TestDDD {
@@ -85,6 +88,10 @@ struct Welcome {
   @State msg: string = 'csx';
   private alertWinName: string = '';
   @State previewPath: string = '';
+  @State loadingOps: efLoadingOptions = new efLoadingOptions();
+  @State showLoading: boolean = false;
+  @State content: string = '';
+  @State count: number = 0;
 
   /**
    * 初始化请求参数
@@ -312,6 +319,7 @@ struct Welcome {
       fs.readSync(file.fd, bufferImg);
       //关闭文件流
       fs.closeSync(file);
+      WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg, name);
       //下载
@@ -356,6 +364,7 @@ struct Welcome {
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
+        WinLoadingUtil.closeLoading();
       }
       this.process = progress;
     }, fileName, data);
@@ -621,6 +630,28 @@ struct Welcome {
     }
   }
 
+  testWinLoading() {
+    // let count = 0;
+    // setInterval(() => {
+    //   count++;
+    //   if (count > 10) {
+    //     WinLoadingUtil.closeLoading();
+    //     count = 0;
+    //   }
+    //   this.loadingOps.content = count.toString();
+    // }, 500);
+    // this.loadingOps.position = Alignment.Bottom;
+    // WinLoadingUtil.showLoading(this.loadingOps);
+    WinLoadingUtil.showLoading({ content: '客官请稍等,火力已全开...' });
+    setInterval(() => {
+      this.count++;
+      if (this.count > 3) {
+        WinLoadingUtil.closeLoading();
+        this.count = 0;
+      }
+    }, 1000);
+  }
+
   async sm416() {
     // let key =  await SM4.generateSM4Key();
     // this.msg = key.getDataRow();
@@ -658,8 +689,21 @@ struct Welcome {
         Button('canPreview测试').margin({ top: 20 }).onClick(() => {
           this.resFileCanPreview();
         })
-        Button('testNDK').margin({ top: 20 }).onClick(() => {
-          this.testNDK();
+        LoadingUtil({
+          options: { show: this.showLoading, alignment: DialogAlignment.Top, content: this.content }
+        });
+        Button('oldLoading').margin({ top: 20 }).onClick(() => {
+          this.showLoading = true;
+          setInterval(() => {
+            this.count++
+            this.content = this.count.toString()
+            if (this.count > 10) {
+              this.showLoading = false;
+            }
+          }, 500);
+        })
+        Button('loading').margin({ top: 20 }).onClick(() => {
+          this.testWinLoading();
         })
         Button('SM4-key-16').margin({ top: 20 }).onClick(() => {
           this.sm416();
