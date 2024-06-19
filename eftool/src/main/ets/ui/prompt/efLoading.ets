@@ -56,8 +56,25 @@ export class efLoadingOptions {
    * loading位置
    */
   @Track position?: Alignment;
+  /**
+   * 图片布局方式(right在文字右侧,bottom在文字下方,top在文字上方,left在文字左侧)
+   */
+  @Track imgLayout?: ImgLayout;
 
   constructor() {
     this.content = '小的正在努力加载中...';
   }
+}
+
+/**
+ * 图片文字布局枚举
+ */
+export declare enum ImgLayout {
+  TOP,
+  BOTTOM,
+  LEFT,
+  /**
+   * 图片在文字右侧
+   */
+  RIGHT
 }

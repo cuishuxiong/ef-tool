@@ -6,7 +6,7 @@
 import { display, window } from '@kit.ArkUI';
 import { common } from '@kit.AbilityKit';
 import { RandomUtil } from '../../core/util/RandomUtil';
-import { efLoadingOptions } from './efLoading';
+import { efLoadingOptions, ImgLayout } from './efLoading';
 import { ToastUtil } from './ToastUtil';
 
 import('./efLoading'); // 引入命名路由页面
@@ -42,6 +42,9 @@ export class WinLoadingUtil {
       if (options) {
         if (!options.content) {
           options.content = '小的正在努力加载中...';
+        }
+        if (!options.imgLayout) {
+          options.imgLayout = ImgLayout.RIGHT;
         }
         //存储数据
         efStorage.setOrCreate('efLoadingOptions', options);
