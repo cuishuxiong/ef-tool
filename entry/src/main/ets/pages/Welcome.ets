@@ -464,11 +464,7 @@ struct Welcome {
     let result = await SM2.generateSM2Key();
     let pubKey = result.getDataRow().publicKey;
 
-    let ecc = cryptoFramework.ECCKeyUtil.genECCCommonParamsSpec('NID_sm2');
-
-
-    let srr = buffer.from(pubKey, 'hex');
-
+    let encode = await SM2.encode('测试SM2加密格式转换~~', pubKey);
 
     let convert = new SM2Convert();
     let sm2PubKey = convert.d2i(pubKey);
@@ -578,14 +574,22 @@ struct Welcome {
 
   async aes() {
 
-    let encode = await AES.encodeCBC128("12345678909", "TESTsdiloia20230", "ass3[2K8%fw68sw7");
-    this.msg = encode.getDataRow();
+    //模拟s生成key
+    let key = await SM2.generateSM2Key();
+    //加密反会ASN1格式自付出
+    let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.getDataRow().publicKey);
+    //创建转换类
+    let convert = new SM2Convert();
+    //转换格式
+    let result = convert.d2i(encode.getDataRow());
 
 
+    let reConvert = convert.i2dSM2(result);
+    this.msg = reConvert;
     // let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
     // this.msg = encode.getDataRow();
-    let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
-    this.msg = decode.getDataRow();
+    // let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
+    // this.msg = decode.getDataRow();
     //关闭第一个窗体
     if (this.alertWinName) {
       WinDialogUtil.closeAlert(this.alertWinName);

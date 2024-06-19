@@ -69,7 +69,7 @@ export class efLoadingOptions {
 /**
  * 图片文字布局枚举
  */
-export declare enum ImgLayout {
+export enum ImgLayout {
   TOP,
   BOTTOM,
   LEFT,
