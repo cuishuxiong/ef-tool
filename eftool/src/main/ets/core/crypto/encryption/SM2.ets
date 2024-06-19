@@ -18,7 +18,6 @@ export class SM2 {
     return CryptoUtil.generateCryptoKey('SM2_256');
   }
 
-
   /**
    * 加密
    * @param encodeStr  待加密的字符串

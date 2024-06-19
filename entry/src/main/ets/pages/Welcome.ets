@@ -631,25 +631,16 @@ struct Welcome {
   }
 
   testWinLoading() {
-    // let count = 0;
-    // setInterval(() => {
-    //   count++;
-    //   if (count > 10) {
-    //     WinLoadingUtil.closeLoading();
-    //     count = 0;
-    //   }
-    //   this.loadingOps.content = count.toString();
-    // }, 500);
-    // this.loadingOps.position = Alignment.Bottom;
-    // WinLoadingUtil.showLoading(this.loadingOps);
-    WinLoadingUtil.showLoading({ content: '客官请稍等,火力已全开...' });
     setInterval(() => {
       this.count++;
-      if (this.count > 3) {
+      if (this.count >= 10) {
         WinLoadingUtil.closeLoading();
         this.count = 0;
       }
-    }, 1000);
+      this.loadingOps.content = this.count.toString();
+    }, 500);
+    this.loadingOps.position = Alignment.Bottom;
+    WinLoadingUtil.showLoading(this.loadingOps);
   }
 
   async sm416() {
