@@ -141,7 +141,7 @@ export class AES {
    */
   static async decodeGCM(str: string, aesKey: string): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
+    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
