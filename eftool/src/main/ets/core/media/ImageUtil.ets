@@ -11,7 +11,9 @@ import { StrUtil } from '../util/StrUtil';
 import { FileUtil } from './FileUtil';
 import { resourceManager } from '@kit.LocalizationKit';
 import { OutDTO } from '../base/OutDTO';
-import { picker } from '@kit.CoreFileKit';
+import { fileIo, picker } from '@kit.CoreFileKit';
+import { buffer } from '@kit.ArkTS';
+import { photoAccessHelper } from '@kit.MediaLibraryKit';
 
 export class ImageUtil {
   //新增保存到图库或用户选择的目录下
@@ -23,9 +25,9 @@ export class ImageUtil {
   /**
    * 图片base64字符串转PixelMap
    * @param base64 图片base64字符串
-   * @returns
+   * @returns 转换后的结果
    */
-  static base64ToPixelMap(base64: string): Promise<image.PixelMap> {
+  static async base64ToPixelMap(base64: string): Promise<OutDTO<image.PixelMap>> {
     //将原始图片base64字符串转变为通过base64字符串
     const base64Str = StrUtil.replace(base64, new RegExp('data:image/\\w+;base64,'), '');
     //将通用base64字符串转变为arrayBuffer
@@ -33,7 +35,10 @@ export class ImageUtil {
     //将arrayBuffer转变为pixelMap
     let imageSource = image.createImageSource(arrayBuffer);
     let opts: image.DecodingOptions = { editable: false }
-    return imageSource.createPixelMap(opts);
+    //创建PixelMap
+    let res = await imageSource.createPixelMap(opts);
+    //返回结果
+    return OutDTO.OKByDataRow<image.PixelMap>('图片base64字符串转PixelMap成功~', res);
   }
 
 
@@ -47,51 +52,82 @@ export class ImageUtil {
     let res = await imageSource.createPixelMap({
       editable: false
     });
-    return OutDTO.OKByDataRow<image.PixelMap>('成功转换~', res);
+    return OutDTO.OKByDataRow<image.PixelMap>('buffer转PixelMap成功~', res);
   }
 
   /**
-   * 将buffer图片保存到图库
-   * @param buffer
+   * 将buffer图片保存到选择路径
+   * @param buffer  图片buffer
+   * @returns 保存结果
    */
   static async pickerSave(buffer: ArrayBuffer): Promise<OutDTO<string>> {
-    const photoSaveOptions = new picker.PhotoSaveOptions(); // 创建文件管理器保存选项实例
-
-    photoSaveOptions.newFileNames = ['efPickerSave ' + new Date().getTime() + 'jpg'] // 保存文件名（可选）
-
+    // 创建文件管理器保存选项实例
+    const photoSaveOptions = new picker.PhotoSaveOptions();
+    //设置默认文件名
+    photoSaveOptions.newFileNames = ['efPickerSave' + new Date().getTime() + '.jpg'] // 保存文件名（可选）
+    //创建照片选择器
     const photoViewPicker = new picker.PhotoViewPicker;
-
+    //来气保存操作
     let photoSaveResult = await photoViewPicker.save(photoSaveOptions);
-
+    //获取选择保存路径
     let uri = photoSaveResult[0];
-
+    //打开文件
     let file = await fs.open(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
-
+    //写入
     await fs.write(file.fd, buffer);
-
+    //释放
     await fs.close(file.fd);
-
+    //返回结果
     return OutDTO.OK('保存图片成功~');
   }
 
   /**
-   * PixelMap转图片base64字符串
-   * @param pixelMap
-   * @param format 目标格式,默认png,当前只支持jpg、webp和png。当传入的格式与文件格式不匹配，可能会导致生成错误的Base64字符串。
+   * 保存图片到图库
+   * @param buffer
    * @returns
    */
-  static async pixelMap2Base64Str(pixelMap: image.PixelMap, format: string = 'image/png'): Promise<string> {
+  static async pickerSaveGallery(buffer: ArrayBuffer): Promise<OutDTO<string>> {
+    const context = getContext();
+    let helper = photoAccessHelper.getPhotoAccessHelper(context);
+    // onClick触发后10秒内通过createAsset接口创建图片文件，10秒后createAsset权限收回。
+    let uri = await helper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'png');
+    // 使用uri打开文件，可以持续写入内容，写入过程不受时间限制
+    let file = await fileIo.open(uri, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE);
+    // 写入文件
+    await fileIo.write(file.fd, buffer);
+    // 关闭文件
+    await fileIo.close(file.fd);
+    //返回结果
+    return OutDTO.OK('保存图片到图库成功~');
+  }
+
+
+  /**
+   * PixelMap转图片base64字符串
+   * @param pixelMap
+   * @param format 目标格式,默认png,只支持jpg、webp和png。
+   * @returns 转换后的结果
+   */
+  static async pixelMap2Base64Str(pixelMap: image.PixelMap, format: string = 'image/png'): Promise<OutDTO<string>> {
     try {
+      //创建操作对象
       let packOpts: image.PackingOption = { format: format, quality: 100 }
-      const arrayBuffer = await ImageUtil.packingFromPixelMap(pixelMap, packOpts);
-      let base64Str: string = Base64Util.encodeToStrSync(new Uint8Array(arrayBuffer));
-      let headStr = `data:${format};base64,`;
-      if (!base64Str.startsWith(headStr)) {
-        base64Str = headStr + base64Str
+      //pixelMap转arrayBuffer
+      const arrayBuffer = await ImageUtil.packingFromPixelMap(pixelMap, format);
+      if (arrayBuffer.getSuccess()) {
+        //转base64
+        let base64Str: string = Base64Util.encodeToStrSync(new Uint8Array(arrayBuffer.getDataRow()));
+        //头
+        let headStr = `data:${format};base64,`;
+        //如果没有头则拼接
+        if (!base64Str.startsWith(headStr)) {
+          base64Str = headStr + base64Str
+        }
+        return OutDTO.OKByDataRow('PixelMap转图片base64字符串成功', base64Str);
       }
-      return base64Str;
+      return OutDTO.Error('PixelMap转图片base64字符串失败~');
     } catch (err) {
-      return '';
+      return OutDTO.Error(err);
     }
   }
 
@@ -101,189 +137,178 @@ export class ImageUtil {
    * @param pixelMap PixelMap
    * @param path 文件夹路径
    * @param name 文件名
-   * @param format 目标格式。默认png。当前只支持jpg（image/jpeg）、webp和png（image/png）。
+   * @param format 目标格式。默认png。只支持jpg、webp、png
    * @returns
    */
-  static async savePixelMap(pixelMap: image.PixelMap, path: string, name: string, format: string = 'image/png'): Promise<string> {
+  static async savePixelMap(pixelMap: image.PixelMap, path: string, name: string, format: string = 'image/png'): Promise<OutDTO<string>> {
     try {
+      //如果文件夹不存在就创建
       if (!fs.accessSync(path)) {
-        FileUtil.mkdirSync(path) //如果文件夹不存在就创建
+        fs.mkdirSync(path)
       }
+      //拼接图片全路径
       let filePath = path + FileUtil.separator + name;
+      //打开图片
       let file = fs.openSync(filePath)
-      let packOpts: image.PackingOption = { format: format, quality: 100 }
-      await ImageUtil.packToFileFromPixelMap(pixelMap, file.fd, packOpts)
-      fs.closeSync(file.fd) //关闭文件
-      return filePath;
+      //保存图片
+      let result = await ImageUtil.pack2FileFromPixelMap(pixelMap, file.fd, format)
+      //关闭文件
+      fs.closeSync(file.fd)
+      //判断是否成功
+      if (result.getSuccess()) {
+        return OutDTO.OKByDataRow('保存图片成功~', filePath);
+      } else {
+        return OutDTO.Error('保存图片失败~');
+      }
     } catch (err) {
-      return '';
+      return OutDTO.Error('保存图片失败~' + err);
     }
   }
 
 
   /**
    * 保存ImageSource到本地
-   * @param pixelMap PixelMap
+   * @param pixelMap 图片
    * @param path 文件夹路径
    * @param name 文件名
-   * @param format 目标格式。默认png。当前只支持jpg（image/jpeg）、webp和png（image/png）。
+   * @param format 目标格式。默认png。只支持jpg、webp、png
    * @returns
    */
-  static async saveImageSource(source: image.ImageSource, path: string, name: string, format: string = 'image/png'): Promise<string> {
+  static async saveImageSource(source: image.ImageSource, path: string, name: string, format: string = 'image/png'): Promise<OutDTO<string>> {
     try {
+      //如果文件夹不存在就创建
       if (!fs.accessSync(path)) {
-        fs.mkdirSync(path) //如果文件夹不存在就创建
+        fs.mkdirSync(path)
       }
+      //拼接图片全路径
       let filePath = path + FileUtil.separator + name;
+      //打开图片
       let file = fs.openSync(filePath)
-      let packOpts: image.PackingOption = { format: format, quality: 100 }
-      await ImageUtil.packToFileFromImageSource(source, file.fd, packOpts)
-      fs.closeSync(file.fd) //关闭文件
-      return filePath;
+      //保存图片
+      let result = await ImageUtil.pack2FileFromImageSource(source, file.fd, format)
+      //关闭文件
+      fs.closeSync(file.fd)
+      //判断是否成功
+      if (result.getSuccess()) {
+        return OutDTO.OKByDataRow('保存图片成功~', filePath);
+      } else {
+        return OutDTO.Error('保存图片失败~');
+      }
     } catch (err) {
-      return '';
+      return OutDTO.Error('保存图片失败~' + err);
     }
   }
 
 
   /**
    * 创建图片源实例
-   * @param src（联合类型: string、number、ArrayBuffer、resourceManager.RawFileDescriptor）
-   *   path string 图片路径，当前仅支持应用沙箱路径。当前支持格式有：.jpg .png .gif .bmp .webp RAW SVG10+ .ico11+。
-   *   fd  number 文件描述符fd。
-   *   buf  ArrayBuffer  图像缓冲区数组。
-   *   rawfile resourceManager.RawFileDescriptor 图像资源文件的RawFileDescriptor。
+   * @param src
    * options SourceOptions  图片属性，包括图片像素密度、像素格式和图片尺寸。
-   *   sourceDensity  number ImageSource的密度。
-   *   sourcePixelFormat  PixelMapFormat 图片像素格式。
-   *   sourceSize  Size 图像像素大小。
    * @returns
    */
-  static createImageSource(src: string | number | ArrayBuffer | resourceManager.RawFileDescriptor, options?: image.SourceOptions): image.ImageSource {
-    if (typeof src === 'string') {
+  static createImageSource(target: string | number | ArrayBuffer | resourceManager.RawFileDescriptor, options?: image.SourceOptions): OutDTO<image.ImageSource> {
+    if (typeof target === 'string') {
       if (options) {
-        return image.createImageSource(src, options);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target, options));
       } else {
-        return image.createImageSource(src);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target));
       }
-    } else if (typeof src === 'number') {
+    } else if (typeof target === 'number') {
       if (options) {
-        return image.createImageSource(src, options);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target, options));
       } else {
-        return image.createImageSource(src);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target));
       }
-    } else if (src instanceof ArrayBuffer) {
+    } else if (target instanceof ArrayBuffer) {
       if (options) {
-        return image.createImageSource(src, options);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target, options));
       } else {
-        return image.createImageSource(src);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target));
       }
     } else {
       if (options) {
-        return image.createImageSource(src, options);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target, options));
       } else {
-        return image.createImageSource(src);
+        return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target));
       }
     }
   }
 
 
   /**
-   * 以增量的方式创建图片源实例
-   * @param buf ArrayBuffer  增量数据
-   * @param options SourceOptions  图片属性，包括图片像素密度、像素格式和图片尺寸。
-   *   sourceDensity  number ImageSource的密度。
-   *   sourcePixelFormat  PixelMapFormat 图片像素格式。
-   *   sourceSize  Size 图像像素大小。
+   * 将PixelMap图片写入文件
+   * @param source PixelMap图片
+   * @param fd 文件描述符
+   * @param format  目标格式。只支持jpeg、webp、png
    * @returns
    */
-  static createIncrementalSource(buf: ArrayBuffer, options?: image.SourceOptions): image.ImageSource {
-    if (options) {
-      return image.CreateIncrementalSource(buf, options);
-    } else {
-      return image.CreateIncrementalSource(buf);
-    }
-  }
-
-
-  /**
-   * 图片压缩或重新打包，使用Promise形式返回结果。
-   * @param source PixelMap-打包的PixelMap资源。
-   * @param options 设置打包参数:
-   *   format 目标格式。当前只支持jpg（image/jpeg）、webp 和 png（image/png）。
-   *   quality JPEG编码中设定输出图片质量的参数，取值范围为0-100。
-   *   bufferSize 接收编码数据的缓冲区大小，单位为Byte。默认为10MB。bufferSize需大于编码后图片大小。
-   * @returns
-   */
-  static packingFromPixelMap(source: image.PixelMap, options: image.PackingOption): Promise<ArrayBuffer> {
+  static async pack2FileFromPixelMap(source: image.PixelMap, fd: number, format: string = 'image/png'): Promise<OutDTO<string>> {
+    //创建图像编码ImagePacker对象
     const imagePacker: image.ImagePacker = image.createImagePacker();
-    return imagePacker.packing(source, options).finally(() => {
-      imagePacker.release(); //释放
-    });
+    //打包参数
+    let packOpts: image.PackingOption = { format: format, quality: 98 };
+    //打包
+    await imagePacker.packToFile(source, fd, packOpts);
+    //释放资源
+    imagePacker.release();
+    //返回
+    return OutDTO.OK('图片保存文件成功~');
   }
 
 
   /**
-   * 图片压缩或重新打包，使用Promise形式返回结果。
-   * @param source ImageSource-打包的图片源。
-   * @param options 设置打包参数:
-   *   format 目标格式。当前只支持jpg（image/jpeg）、webp 和 png（image/png）。
-   *   quality JPEG编码中设定输出图片质量的参数，取值范围为0-100。
-   *   bufferSize 接收编码数据的缓冲区大小，单位为Byte。默认为10MB。bufferSize需大于编码后图片大小。
+   * PixelMap转ArrayBuffer
+   * @param target PixelMap
+   * @param format 目标格式。只支持jpg、webp 、 png
    * @returns
    */
-  static packingFromImageSource(source: image.ImageSource, options: image.PackingOption): Promise<ArrayBuffer> {
+  static async packingFromPixelMap(target: image.PixelMap, format: string = 'image/png'): Promise<OutDTO<ArrayBuffer>> {
     const imagePacker: image.ImagePacker = image.createImagePacker();
-    return imagePacker.packing(source as image.ImageSource, options).finally(() => {
-      imagePacker.release(); //释放
-    });
+    //转换
+    let res = await imagePacker.packing(target, { format: format, quality: 98 });
+    //释放资源
+    imagePacker.release();
+    //返回
+    return OutDTO.OKByDataRow('PixelMap转ArrayBuffer成功~', res);
   }
 
 
   /**
-   * 将PixelMap图片源编码后直接打包进文件。
-   * @param source PixelMap-打包的PixelMap资源。
-   * @param fd 文件描述符。
-   * @param option 设置打包参数:
-   *   format 目标格式。当前只支持jpg（image/jpeg）、webp 和 png（image/png）。
-   *   quality JPEG编码中设定输出图片质量的参数，取值范围为0-100。
-   *   bufferSize 接收编码数据的缓冲区大小，单位为Byte。默认为10MB。bufferSize需大于编码后图片大小。
+   * 将ImageSource图片写入文件
+   * @param source ImageSource图片
+   * @param fd 文件描述符
+   * @param format  目标格式。只支持jpeg、webp、png
    * @returns
    */
-  static packToFileFromPixelMap(source: image.PixelMap, fd: number, options: image.PackingOption): Promise<void> {
+  static async pack2FileFromImageSource(source: image.ImageSource, fd: number, format: string = 'image/png'): Promise<OutDTO<string>> {
+    //创建图像编码ImagePacker对象
     const imagePacker: image.ImagePacker = image.createImagePacker();
-    return imagePacker.packToFile(source, fd, options).finally(() => {
-      imagePacker.release(); //释放
-    });
+    //打包参数
+    let packOpts: image.PackingOption = { format: format, quality: 98 };
+    //打包
+    await imagePacker.packToFile(source, fd, packOpts);
+    //释放资源
+    imagePacker.release();
+    //返回
+    return OutDTO.OK('图片保存文件成功~');
   }
 
 
   /**
-   * 将ImageSource图片源编码后直接打包进文件。
-   * @param source ImageSource-打包的图片源。
-   * @param fd 文件描述符。
-   * @param option 设置打包参数:
-   *   format 目标格式。当前只支持jpg（image/jpeg）、webp 和 png（image/png）。
-   *   quality JPEG编码中设定输出图片质量的参数，取值范围为0-100。
-   *   bufferSize 接收编码数据的缓冲区大小，单位为Byte。默认为10MB。bufferSize需大于编码后图片大小。
+   * 获取resource目录下media中的图片转换成PixelMap
+   * @param resource 资源
    * @returns
    */
-  static packToFileFromImageSource(source: image.ImageSource, fd: number, options: image.PackingOption): Promise<void> {
-    const imagePacker: image.ImagePacker = image.createImagePacker();
-    return imagePacker.packToFile(source, fd, options).finally(() => {
-      imagePacker.release(); //释放
-    });
-  }
-
-
-  /**
-   * 用户获取resource目录下的media中的图片PixelMap
-   * @param resource 例如：$r("app.media.icon"
-   * @returns
-   */
-  static async getPixelMapFromMedia(resource: Resource): Promise<image.PixelMap> {
+  static async getPixelMapFromMedia(resource: Resource): Promise<OutDTO<image.PixelMap>> {
+    //获取资源管理器
     let resourceManager = getContext().resourceManager;
+    //获取图片uint8数组
     let uint8Array = resourceManager.getMediaContentSync(resource);
-    return await ImageUtil.createImageSource(uint8Array.buffer).createPixelMap();
+    //转换
+    let pm = await ImageUtil.arrayBuffer2PixelMap(buffer.from(uint8Array).buffer);
+    if (pm.getSuccess()) {
+      return OutDTO.OKByDataRow('获取资源文件中图片成功~', pm.getDataRow());
+    }
+    return OutDTO.ErrorByDataRow('获取资源文件中图片失败~', pm.getDataRow());
   }
 }

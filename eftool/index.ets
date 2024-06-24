@@ -74,6 +74,10 @@ export { Base64Util } from './src/main/ets/core/util/Base64Util';
 
 export { AudioCapturerUtil } from './src/main/ets/core/media/AudioUtil';
 
+export { ImageUtil } from './src/main/ets/core/media/ImageUtil';
+
+export { FileUtil } from './src/main/ets/core/media/FileUtil';
+
 export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';
 
 export { DialogUtil } from './src/main/ets/ui/prompt/DialogUtil';

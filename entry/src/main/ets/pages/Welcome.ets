@@ -12,6 +12,7 @@ import {
   efAxiosParams,
   efClientApi,
   IdCardUtil,
+  ImageUtil,
   JSONArray,
   JSONArrayList,
   JSONObject,
@@ -613,6 +614,12 @@ struct Welcome {
     // this.msg = str;
   }
 
+  async save2photo() {
+    let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+    let res = await ImageUtil.pickerSave(buffer.from(array).buffer);
+    this.msg = res.getMsg();
+  }
+
   async resFileCanPreview() {
     //转换成数组
     let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
@@ -680,7 +687,27 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
-        Image(this.previewPath).width(100);
+        SaveButton({
+          icon: SaveIconStyle.FULL_FILLED,
+          buttonType: ButtonType.Capsule,
+          text: SaveDescription.SAVE_IMAGE
+        })
+          .onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) => {
+            if (result == SaveButtonOnClickResult.SUCCESS) {
+              try {
+                let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+                let result = await ImageUtil.pickerSaveGallery(buffer.from(array).buffer);
+                if (result.getSuccess()) {
+                  ToastUtil.showToast(result.getMsg());
+                }
+              } catch (error) {
+                console.error("error is " + JSON.stringify(error));
+              }
+            }
+          })
+        Button('保存图片到目录').margin({ top: 20 }).onClick(() => {
+          this.save2photo();
+        })
         Button('canPreview测试').margin({ top: 20 }).onClick(() => {
           this.resFileCanPreview();
         })
