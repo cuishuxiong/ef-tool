@@ -10,6 +10,8 @@ import { Base64Util } from '../util/Base64Util';
 import { StrUtil } from '../util/StrUtil';
 import { FileUtil } from './FileUtil';
 import { resourceManager } from '@kit.LocalizationKit';
+import { OutDTO } from '../base/OutDTO';
+import { picker } from '@kit.CoreFileKit';
 
 export class ImageUtil {
   //新增保存到图库或用户选择的目录下
@@ -31,10 +33,46 @@ export class ImageUtil {
     //将arrayBuffer转变为pixelMap
     let imageSource = image.createImageSource(arrayBuffer);
     let opts: image.DecodingOptions = { editable: false }
-    //注意：这里return的是Promise，因此使用时需要在业务侧拿到最终的PixelMap
     return imageSource.createPixelMap(opts);
   }
 
+
+  /**
+   * buffer转PixelMap
+   * @param buffer
+   * @returns
+   */
+  static async arrayBuffer2PixelMap(buffer: ArrayBuffer): Promise<OutDTO<image.PixelMap>> {
+    let imageSource: image.ImageSource = image.createImageSource(buffer);
+    let res = await imageSource.createPixelMap({
+      editable: false
+    });
+    return OutDTO.OKByDataRow<image.PixelMap>('成功转换~', res);
+  }
+
+  /**
+   * 将buffer图片保存到图库
+   * @param buffer
+   */
+  static async pickerSave(buffer: ArrayBuffer): Promise<OutDTO<string>> {
+    const photoSaveOptions = new picker.PhotoSaveOptions(); // 创建文件管理器保存选项实例
+
+    photoSaveOptions.newFileNames = ['efPickerSave ' + new Date().getTime() + 'jpg'] // 保存文件名（可选）
+
+    const photoViewPicker = new picker.PhotoViewPicker;
+
+    let photoSaveResult = await photoViewPicker.save(photoSaveOptions);
+
+    let uri = photoSaveResult[0];
+
+    let file = await fs.open(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+
+    await fs.write(file.fd, buffer);
+
+    await fs.close(file.fd);
+
+    return OutDTO.OK('保存图片成功~');
+  }
 
   /**
    * PixelMap转图片base64字符串
@@ -42,7 +80,7 @@ export class ImageUtil {
    * @param format 目标格式,默认png,当前只支持jpg、webp和png。当传入的格式与文件格式不匹配，可能会导致生成错误的Base64字符串。
    * @returns
    */
-  static async pixelMapToBase64Str(pixelMap: image.PixelMap, format: string = 'image/png'): Promise<string> {
+  static async pixelMap2Base64Str(pixelMap: image.PixelMap, format: string = 'image/png'): Promise<string> {
     try {
       let packOpts: image.PackingOption = { format: format, quality: 100 }
       const arrayBuffer = await ImageUtil.packingFromPixelMap(pixelMap, packOpts);
