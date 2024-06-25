@@ -29,7 +29,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 > - <span style='color:red;'>1.1.x版本系列兼容**API11**</span>
 
-> - <span style='color:red;'>1.3.x版本系列兼容**API12**</span>
+> - <span style='color:red;'>1.2.x版本系列兼容**API12**</span>
 
 ## 🛠️包含组件
 
