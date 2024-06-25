@@ -652,7 +652,7 @@ struct Welcome {
       this.count++;
       this.loadingOps.content = "小的努力加载"+this.count;
     }, 500);
-    this.loadingOps.position = Alignment.Top;
+    // this.loadingOps.position = Alignment.Top;
     this.loadingOps.layoutShape = LoadingShape.SQUARE;
     WinLoadingUtil.showLoading(this.loadingOps);
   }
