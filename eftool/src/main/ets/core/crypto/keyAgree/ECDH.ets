@@ -14,6 +14,6 @@ export class ECDH {
    * @returns ECC256共享密钥
    */
   static async ecdh(pubKey: string | Uint8Array, priKey: string | Uint8Array): Promise<OutDTO<string>> {
-    return DynamicUtil.dynamicKey(pubKey, priKey, 'ECC256');
+    return DynamicUtil.dynamicKey(pubKey, priKey, 'ECC256',256);
   }
 }

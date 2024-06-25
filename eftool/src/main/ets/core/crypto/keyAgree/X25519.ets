@@ -14,6 +14,6 @@ export class X25519 {
    * @returns 256位共享密钥字符串
    */
   static async x25519(pubKey: string | Uint8Array, priKey: string | Uint8Array): Promise<OutDTO<string>> {
-    return DynamicUtil.dynamicKey(pubKey, priKey, 'X25519');
+    return DynamicUtil.dynamicKey(pubKey, priKey, 'X25519', 256);
   }
 }

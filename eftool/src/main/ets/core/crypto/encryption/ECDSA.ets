@@ -23,7 +23,7 @@ export class ECDSA {
    * @returns OutDTO<string> 签名对象
    */
   static async sign(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.sign(str, priKey, 'ECC256', 'ECC256|SHA256');
+    return CryptoUtil.sign(str, priKey, 'ECC256', 'ECC256|SHA256', 256);
   }
 
   /**
@@ -34,6 +34,6 @@ export class ECDSA {
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
   static async verify(signStr: string, verifyStr: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.verify(signStr, verifyStr, pubKey, 'ECC256', 'ECC256|SHA256');
+    return CryptoUtil.verify(signStr, verifyStr, pubKey, 'ECC256', 'ECC256|SHA256', 256);
   }
 }

@@ -68,7 +68,7 @@ export class AES {
    */
   static async encodeGCM(str: string, aesKey: string): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
+    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256', 256);
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
@@ -99,7 +99,7 @@ export class AES {
    * @returns
    */
   static async encodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7');
+    return CryptoUtil.encodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7', 256);
   }
 
   /**
@@ -110,7 +110,7 @@ export class AES {
    * @returns
    */
   static async encodeCBC128(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeCBC(str, aesKey, iv, 'AES128', 'AES128|CBC|PKCS7');
+    return CryptoUtil.encodeCBC(str, aesKey, iv, 'AES128', 'AES128|CBC|PKCS7', 128);
   }
 
   /**
@@ -120,7 +120,7 @@ export class AES {
    * @returns
    */
   static async encodeECB(str: string, aesKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7');
+    return CryptoUtil.encodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7', 256);
   }
 
   /**
@@ -130,7 +130,7 @@ export class AES {
    * @returns
    */
   static async encodeECB128(str: string, aesKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7');
+    return CryptoUtil.encodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7', 128);
   }
 
 
@@ -141,7 +141,7 @@ export class AES {
    */
   static async decodeGCM(str: string, aesKey: string): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256');
+    let symKey = await CryptoUtil.convertKeyFromStr(aesKey, 'AES256', 256);
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
@@ -149,7 +149,7 @@ export class AES {
     //初始化加密
     await cipher.init(mode, symKey, AES.gcmParams);
     //解密
-    let updateOutput = await cipher.update({ data: StrAndUintUtil.stringToByteArray(str) });
+    let updateOutput = await cipher.update({ data: StrAndUintUtil.stringToByteArray(str, 256) });
     //判断是否完成
     let finalOutput = await cipher.doFinal(null);
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
@@ -164,7 +164,7 @@ export class AES {
    * @returns
    */
   static async decodeCBC(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7');
+    return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES256', 'AES256|CBC|PKCS7', 256);
   }
 
   /**
@@ -175,7 +175,7 @@ export class AES {
    * @returns
    */
   static async decodeCBC128(str: string, aesKey: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES128', 'AES128|CBC|PKCS7');
+    return CryptoUtil.decodeCBC(str, aesKey, iv, 'AES128', 'AES128|CBC|PKCS7', 128);
   }
 
   /**
@@ -185,7 +185,7 @@ export class AES {
    * @returns
    */
   static async decodeECB(str: string, aesKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7');
+    return CryptoUtil.decodeECB(str, aesKey, 'AES256', 'AES256|ECB|PKCS7', 256);
   }
 
   /**
@@ -195,6 +195,6 @@ export class AES {
    * @returns
    */
   static async decodeECB128(str: string, aesKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7');
+    return CryptoUtil.decodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7', 128);
   }
 }

@@ -577,25 +577,29 @@ struct Welcome {
   async aes() {
 
     //模拟s生成key
-    let key = await SM2.generateSM2Key();
+    // let key = await SM2.generateSM2Key();
     //加密反会ASN1格式自付出
-    let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.getDataRow().publicKey);
+    // let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.getDataRow().publicKey);
     //创建转换类
-    let convert = new SM2Convert();
+    // let convert = new SM2Convert();
     //转换格式
-    let result = convert.d2i(encode.getDataRow());
+    // let result = convert.d2i(encode.getDataRow());
 
 
-    let reConvert = convert.i2dSM2(result);
-    this.msg = reConvert;
-    // let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
-    // this.msg = encode.getDataRow();
-    // let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
-    // this.msg = decode.getDataRow();
+    // let reConvert = convert.i2dSM2(result);
+    // this.msg = reConvert;
+    let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    this.msg = encode.getDataRow();
+    let decode = await AES.decodeECB128(encode.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    this.msg = decode.getDataRow();
+    let encode1 = await AES.encodeCBC128("123456", "TESTsdiloia20230", "ass3[2K8%fw68sw7");
+    this.msg = encode1.getDataRow();
+    let decode1 = await AES.decodeCBC128(encode1.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
+    this.msg = decode1.getDataRow();
     //关闭第一个窗体
-    if (this.alertWinName) {
-      WinDialogUtil.closeAlert(this.alertWinName);
-    }
+    // if (this.alertWinName) {
+    //   WinDialogUtil.closeAlert(this.alertWinName);
+    // }
   }
 
   async stopRecording() {
@@ -650,7 +654,7 @@ struct Welcome {
         this.count = 0;
       }
       this.count++;
-      this.loadingOps.content = "小的努力加载"+this.count;
+      this.loadingOps.content = "小的努力加载" + this.count;
     }, 500);
     // this.loadingOps.position = Alignment.Top;
     this.loadingOps.layoutShape = LoadingShape.SQUARE;
