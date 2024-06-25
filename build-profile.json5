@@ -6,9 +6,9 @@
         "type": "HarmonyOS",
         "material": {
           "certpath": "C:\\Users\\cui\\.ohos\\config\\default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.cer",
-          "storePassword": "0000001A6B277114016DB4995053C0F1458D8C7EC3AB01BA36156957E287A4C6F8C5D5E31E30C989539F",
+          "storePassword": "0000001BE4EF96F13B6874437C2A064279AE45A3A9AB47C51969AA6E8DBABE59C95B990EC2620B7A04AA5E",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001AEBE71858988C7A7836307A743C9059B5332923A9E860661CD05EE224A2773D89A751415F2CB1",
+          "keyPassword": "0000001BA113F85B118BB54E39FA0438007FD9332E6A36B46CF8053EA356E3D65A3FD76B89411834CEA20D",
           "profile": "C:\\Users\\cui\\.ohos\\config\\default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "C:\\Users\\cui\\.ohos\\config\\default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.p12"
@@ -19,9 +19,8 @@
       {
         "name": "default",
         "signingConfig": "default",
-        "compileSdkVersion": "4.1.0(11)",
-        "compatibleSdkVersion": "4.1.0(11)",
-        "runtimeOS": "HarmonyOS",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS"
       }
     ],
     "buildModeSet": [

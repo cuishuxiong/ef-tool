@@ -1,12 +1,12 @@
 # <center>eftool</center>
 
-# <center>V1.1.12-1(API11)</center>
+# <center>V1.3.0(API12)</center>
 
 --------------------------------------------------------------------------------
 
 ## 📚简介
 
-`efTool`是一个功能丰富且易用的`兼容API11`的**OpenHarmony/HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
+`efTool`是一个功能丰富且易用的`兼容API12`的**HarmonyOS工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
 这些封装的工具涵盖了字符串、数字、集合、JSON等一系列操作，
 可以满足各种不同的开发需求。本人为Java开发,故封装思路借鉴Java的工具类Hutool，同时扩展了HarmonyOS的UI组件。
 
@@ -28,6 +28,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 > - <span style='color:red;'>1.0.x版本系列兼容**API9**</span>
 
 > - <span style='color:red;'>1.1.x版本系列兼容**API11**</span>
+
+> - <span style='color:red;'>1.3.x版本系列兼容**API12**</span>
 
 ## 🛠️包含组件
 
