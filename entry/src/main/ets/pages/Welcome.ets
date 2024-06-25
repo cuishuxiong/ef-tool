@@ -11,11 +11,14 @@ import {
   DownloadUtil,
   efAxiosParams,
   efClientApi,
+  efLoadingOptions,
   IdCardUtil,
   ImageUtil,
+  ImgLayout,
   JSONArray,
   JSONArrayList,
   JSONObject,
+  LoadingShape,
   LoadingUtil,
   PickerUtil,
   PreviewUtil,
@@ -32,8 +35,6 @@ import { ArrayList, buffer, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
-import { cryptoFramework } from '@kit.CryptoArchitectureKit';
-import { efLoadingOptions } from '@yunkss/eftool/src/main/ets/ui/prompt/efLoading';
 
 
 class TestDDD {
@@ -642,15 +643,17 @@ struct Welcome {
   }
 
   testWinLoading() {
+    this.loadingOps.imgLayout = ImgLayout.BOTTOM;
     setInterval(() => {
-      this.count++;
-      if (this.count >= 10) {
+      if (this.count > 10) {
         WinLoadingUtil.closeLoading();
         this.count = 0;
       }
-      this.loadingOps.content = this.count.toString();
+      this.count++;
+      this.loadingOps.content = "小的努力加载"+this.count;
     }, 500);
-    this.loadingOps.position = Alignment.Bottom;
+    this.loadingOps.position = Alignment.Top;
+    this.loadingOps.layoutShape = LoadingShape.SQUARE;
     WinLoadingUtil.showLoading(this.loadingOps);
   }
 

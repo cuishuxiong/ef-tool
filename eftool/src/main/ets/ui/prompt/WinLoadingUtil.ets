@@ -6,8 +6,8 @@
 import { display, window } from '@kit.ArkUI';
 import { common } from '@kit.AbilityKit';
 import { RandomUtil } from '../../core/util/RandomUtil';
-import { efLoadingOptions, ImgLayout } from './efLoading';
 import { ToastUtil } from './ToastUtil';
+import { efLoadingOptions, ImgLayout, LoadingShape } from './efLoading';
 
 import('./efLoading'); // 引入命名路由页面
 
@@ -43,8 +43,11 @@ export class WinLoadingUtil {
         if (!options.content) {
           options.content = '小的正在努力加载中...';
         }
-        if (!options.imgLayout) {
+        if (options.imgLayout == undefined) {
           options.imgLayout = ImgLayout.RIGHT;
+        }
+        if (options.layoutShape == undefined) {
+          options.layoutShape = LoadingShape.RECTANGLE;
         }
         //存储数据
         efStorage.setOrCreate('efLoadingOptions', options);
@@ -55,7 +58,7 @@ export class WinLoadingUtil {
       //设置窗口大小
       await windowClass.resize(d.width, d.height);
       // 设置窗口背景颜色
-      windowClass.setWindowBackgroundColor('#88000000');
+      windowClass.setWindowBackgroundColor('#22000000');
       //显示窗口
       await windowClass.showWindow();
     } catch (exception) {
