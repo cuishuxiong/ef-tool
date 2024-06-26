@@ -23,7 +23,7 @@ export class SM4 {
    * @returns
    */
   static async encodeECB(str: string, sm4Key: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeECB(str, sm4Key, 'SM4_128', 'SM4_128|ECB|PKCS7');
+    return CryptoUtil.encodeECB(str, sm4Key, 'SM4_128', 'SM4_128|ECB|PKCS7',128);
   }
 
 
@@ -33,7 +33,7 @@ export class SM4 {
    * @param sm4Key  SM4密钥
    */
   static async decodeECB(str: string, sm4Key: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeECB(str, sm4Key, 'SM4_128', 'SM4_128|ECB|PKCS7');
+    return CryptoUtil.decodeECB(str, sm4Key, 'SM4_128', 'SM4_128|ECB|PKCS7',128);
   }
 
   /**
@@ -44,7 +44,7 @@ export class SM4 {
    * @returns
    */
   static async encodeCBC(str: string, sm4Key: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeCBC(str, sm4Key, iv, 'SM4_128', 'SM4_128|CBC|PKCS7');
+    return CryptoUtil.encodeCBC(str, sm4Key, iv, 'SM4_128', 'SM4_128|CBC|PKCS7',128);
   }
 
   /**
@@ -55,6 +55,6 @@ export class SM4 {
    * @returns
    */
   static async decodeCBC(str: string, sm4Key: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeCBC(str, sm4Key, iv, 'SM4_128', 'SM4_128|CBC|PKCS7');
+    return CryptoUtil.decodeCBC(str, sm4Key, iv, 'SM4_128', 'SM4_128|CBC|PKCS7',128);
   }
 }

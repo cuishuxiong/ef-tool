@@ -22,38 +22,6 @@ export class ImageUtil {
   //新增图片压缩
   //参考 https://developer.huawei.com/consumer/cn/forum/topic/0203144584728486846?fid=0109140870620153026
 
-  /**
-   * 图片base64字符串转PixelMap
-   * @param base64 图片base64字符串
-   * @returns 转换后的结果
-   */
-  static async base64ToPixelMap(base64: string): Promise<OutDTO<image.PixelMap>> {
-    //将原始图片base64字符串转变为通过base64字符串
-    const base64Str = StrUtil.replace(base64, new RegExp('data:image/\\w+;base64,'), '');
-    //将通用base64字符串转变为arrayBuffer
-    let arrayBuffer = Base64Util.decodeSync(base64Str).buffer;
-    //将arrayBuffer转变为pixelMap
-    let imageSource = image.createImageSource(arrayBuffer);
-    let opts: image.DecodingOptions = { editable: false }
-    //创建PixelMap
-    let res = await imageSource.createPixelMap(opts);
-    //返回结果
-    return OutDTO.OKByDataRow<image.PixelMap>('图片base64字符串转PixelMap成功~', res);
-  }
-
-
-  /**
-   * buffer转PixelMap
-   * @param buffer
-   * @returns
-   */
-  static async arrayBuffer2PixelMap(buffer: ArrayBuffer): Promise<OutDTO<image.PixelMap>> {
-    let imageSource: image.ImageSource = image.createImageSource(buffer);
-    let res = await imageSource.createPixelMap({
-      editable: false
-    });
-    return OutDTO.OKByDataRow<image.PixelMap>('buffer转PixelMap成功~', res);
-  }
 
   /**
    * 将buffer图片保存到选择路径
@@ -83,8 +51,8 @@ export class ImageUtil {
 
   /**
    * 保存图片到图库
-   * @param buffer
-   * @returns
+   * @param buffer 图片buffer
+   * @returns 保存结果
    */
   static async pickerSaveGallery(buffer: ArrayBuffer): Promise<OutDTO<string>> {
     const context = getContext();
@@ -101,6 +69,37 @@ export class ImageUtil {
     return OutDTO.OK('保存图片到图库成功~');
   }
 
+  /**
+   * 图片base64字符串转PixelMap
+   * @param base64 图片base64字符串
+   * @returns 转换后的结果
+   */
+  static async base64ToPixelMap(base64: string): Promise<OutDTO<image.PixelMap>> {
+    //将原始图片base64字符串转变为通过base64字符串
+    const base64Str = StrUtil.replace(base64, new RegExp('data:image/\\w+;base64,'), '');
+    //将通用base64字符串转变为arrayBuffer
+    let arrayBuffer = Base64Util.decodeSync(base64Str).buffer;
+    //将arrayBuffer转变为pixelMap
+    let imageSource = image.createImageSource(arrayBuffer);
+    let opts: image.DecodingOptions = { editable: false }
+    //创建PixelMap
+    let res = await imageSource.createPixelMap(opts);
+    //返回结果
+    return OutDTO.OKByDataRow<image.PixelMap>('图片base64字符串转PixelMap成功~', res);
+  }
+
+  /**
+   * buffer转PixelMap
+   * @param buffer
+   * @returns
+   */
+  static async arrayBuffer2PixelMap(buffer: ArrayBuffer): Promise<OutDTO<image.PixelMap>> {
+    let imageSource: image.ImageSource = image.createImageSource(buffer);
+    let res = await imageSource.createPixelMap({
+      editable: false
+    });
+    return OutDTO.OKByDataRow<image.PixelMap>('buffer转PixelMap成功~', res);
+  }
 
   /**
    * PixelMap转图片base64字符串
@@ -130,7 +129,6 @@ export class ImageUtil {
       return OutDTO.Error(err);
     }
   }
-
 
   /**
    * 保存pixelMap到本地
@@ -165,7 +163,6 @@ export class ImageUtil {
     }
   }
 
-
   /**
    * 保存ImageSource到本地
    * @param pixelMap 图片
@@ -198,7 +195,6 @@ export class ImageUtil {
       return OutDTO.Error('保存图片失败~' + err);
     }
   }
-
 
   /**
    * 创建图片源实例
@@ -234,7 +230,6 @@ export class ImageUtil {
     }
   }
 
-
   /**
    * 将PixelMap图片写入文件
    * @param source PixelMap图片
@@ -255,7 +250,6 @@ export class ImageUtil {
     return OutDTO.OK('图片保存文件成功~');
   }
 
-
   /**
    * PixelMap转ArrayBuffer
    * @param target PixelMap
@@ -271,7 +265,6 @@ export class ImageUtil {
     //返回
     return OutDTO.OKByDataRow('PixelMap转ArrayBuffer成功~', res);
   }
-
 
   /**
    * 将ImageSource图片写入文件
@@ -292,7 +285,6 @@ export class ImageUtil {
     //返回
     return OutDTO.OK('图片保存文件成功~');
   }
-
 
   /**
    * 获取resource目录下media中的图片转换成PixelMap

@@ -97,7 +97,8 @@ class EfClientApi {
 
 
    */
-  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, fileName: string, data?: ArrayBuffer, uri?: string, keyName?: string) {
+  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, fileName: string,
+    data?: ArrayBuffer, uri?: string, keyName?: string) {
     let formData = new FormData();
     if (keyName) {
       if (isUri) {

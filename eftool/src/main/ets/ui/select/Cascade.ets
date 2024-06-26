@@ -7,6 +7,7 @@ import { UiConst } from '../../core/const/UiConst'
 import { util } from '@kit.ArkTS'
 import { BusinessError } from '@kit.BasicServicesKit';
 import { ToastUtil } from '../prompt/ToastUtil';
+import { FileUtil } from '../../core/media/FileUtil';
 
 /**
  * 下划线样式
@@ -72,21 +73,16 @@ export struct Cascade {
   private init() {
     try {
       //获取区域数据
-      getContext(this).resourceManager.getRawFileContent("area.json", (error: BusinessError, value: Uint8Array) => {
-        if (error != null) {
-          ToastUtil.showToast(`获取区域数据出错, 错误编码: ${error.code}, 原因: ${error.message}.`);
-        } else {
-          //转码
-          let textCoder = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-          let vStr = textCoder.decodeWithStream(value, { stream: false });
-          //获取数据
-          this.provinceList = JSON.parse(vStr) as Array<City>;
-          this.provinceList.forEach(province => {
-            //默认将省数据赋值给当前listview对应的数据
-            this.currentList.push(new City(province.name, province.code));
-          })
-        }
-      });
+      let jsonStr = FileUtil.getRawFileContentSync("area.json");
+      //转码
+      let textCoder = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+      let vStr = textCoder.decodeWithStream(jsonStr, { stream: false });
+      //获取数据
+      this.provinceList = JSON.parse(vStr) as Array<City>;
+      this.provinceList.forEach(province => {
+        //默认将省数据赋值给当前listview对应的数据
+        this.currentList.push(new City(province.name, province.code));
+      })
     } catch (error) {
       let code = (error as BusinessError).code;
       let message = (error as BusinessError).message;
@@ -170,13 +166,13 @@ export struct Cascade {
         Column() {
           if (this.selectIndex == 0 && !this.selectData.provinceName) {
             Text("请选择").txtColor(true)
-            Text("1").cascadeUnderLine(true)
+            Text(" ").cascadeUnderLine(true)
           } else {
             Text(this.selectData.provinceName).txtColor(false).onClick(() => {
               this.selectIndex = 0;
               this.currentList = this.getProvinceData();
             })
-            Text("1").cascadeUnderLine(this.selectIndex == 0)
+            Text(" ").cascadeUnderLine(this.selectIndex == 0)
           }
         }.margin({ right: UiConst.NUMBER_20 })
 
@@ -185,13 +181,13 @@ export struct Cascade {
           Column() {
             if (this.selectIndex === 1 && !this.selectData.cityName) {
               Text("请选择").txtColor(true)
-              Text("1").cascadeUnderLine(true)
+              Text(" ").cascadeUnderLine(true)
             } else {
               Text(this.selectData.cityName).txtColor(false).onClick(() => {
                 this.selectIndex = 1;
                 this.currentList = this.getCityData(this.selectData.provinceCode);
               })
-              Text("1").cascadeUnderLine(this.selectIndex == 1)
+              Text(" ").cascadeUnderLine(this.selectIndex == 1)
             }
           }.margin({ right: UiConst.NUMBER_20 })
         }
@@ -201,13 +197,13 @@ export struct Cascade {
           Column() {
             if (this.selectIndex === 2 && !this.selectData.areaName) {
               Text("请选择").txtColor(true)
-              Text("1").cascadeUnderLine(true)
+              Text(" ").cascadeUnderLine(true)
             } else {
               Text(this.selectData.areaName).txtColor(false).onClick(() => {
                 this.selectIndex = 2;
                 this.currentList = this.getAreaData(this.selectData.provinceCode, this.selectData.cityCode);
               })
-              Text("1").cascadeUnderLine(this.selectIndex == 2)
+              Text(" ").cascadeUnderLine(this.selectIndex == 2)
             }
           }
         }
@@ -283,7 +279,8 @@ export struct Cascade {
                 this.selectData.areaName = item.name;
                 this.selectData.areaCode = item.code;
                 //赋值
-                this.callCity = this.selectData.provinceName + "/" + this.selectData.cityName + "/" + this.selectData.areaName;
+                this.callCity =
+                  this.selectData.provinceName + "/" + this.selectData.cityName + "/" + this.selectData.areaName;
                 //赋值后初始化数据
                 this.reset()
               }

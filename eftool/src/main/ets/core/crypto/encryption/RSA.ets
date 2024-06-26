@@ -33,7 +33,7 @@ export class RSA {
    * @param pubKey  RSA公钥
    */
   static async encodePKCS1(str: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeAsym(str, pubKey, 'RSA1024', 'RSA1024|PKCS1');
+    return CryptoUtil.encodeAsym(str, pubKey, 'RSA1024', 'RSA1024|PKCS1', 1024);
   }
 
   /**
@@ -42,7 +42,7 @@ export class RSA {
    * @param pubKey  RSA公钥
    */
   static async encodePKCS1Segment(str: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeAsymSegment(str, pubKey, 'RSA1024', 'RSA1024|PKCS1');
+    return CryptoUtil.encodeAsymSegment(str, pubKey, 'RSA1024', 'RSA1024|PKCS1', 1024);
   }
 
   /**
@@ -51,7 +51,7 @@ export class RSA {
    * @param pubKey  2048位RSA公钥
    */
   static async encode2048PKCS1(str: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeAsym(str, pubKey, 'RSA2048', 'RSA2048|PKCS1');
+    return CryptoUtil.encodeAsym(str, pubKey, 'RSA2048', 'RSA2048|PKCS1', 2048);
   }
 
   /**
@@ -60,7 +60,7 @@ export class RSA {
    * @param pubKey  2048位RSA公钥
    */
   static async encode2048PKCS1Segment(str: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeAsymSegment(str, pubKey, 'RSA2048', 'RSA2048|PKCS1');
+    return CryptoUtil.encodeAsymSegment(str, pubKey, 'RSA2048', 'RSA2048|PKCS1', 2048);
   }
 
   /**
@@ -69,7 +69,7 @@ export class RSA {
    * @param priKey    RSA私钥
    */
   static async decodePKCS1(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeAsym(str, priKey, 'RSA1024', 'RSA1024|PKCS1');
+    return CryptoUtil.decodeAsym(str, priKey, 'RSA1024', 'RSA1024|PKCS1', 1024);
   }
 
   /**
@@ -78,7 +78,7 @@ export class RSA {
    * @param priKey    RSA私钥
    */
   static async decodePKCS1Segment(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeAsymSegment(str, priKey, 'RSA1024', 'RSA1024|PKCS1');
+    return CryptoUtil.decodeAsymSegment(str, priKey, 'RSA1024', 'RSA1024|PKCS1', 1024);
   }
 
   /**
@@ -87,7 +87,7 @@ export class RSA {
    * @param priKey    2048位RSA私钥
    */
   static async decode2048PKCS1(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeAsym(str, priKey, 'RSA2048', 'RSA2048|PKCS1');
+    return CryptoUtil.decodeAsym(str, priKey, 'RSA2048', 'RSA2048|PKCS1', 2048);
   }
 
   /**
@@ -96,7 +96,7 @@ export class RSA {
    * @param priKey    2048位RSA私钥
    */
   static async decode2048PKCS1Segment(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeAsymSegment(str, priKey, 'RSA2048', 'RSA2048|PKCS1');
+    return CryptoUtil.decodeAsymSegment(str, priKey, 'RSA2048', 'RSA2048|PKCS1', 2048);
   }
 
   /**
@@ -106,7 +106,7 @@ export class RSA {
    * @returns OutDTO<string> 签名对象
    */
   static async signPKCS1(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.sign(str, priKey, 'RSA1024', 'RSA1024|PKCS1|SHA256');
+    return CryptoUtil.sign(str, priKey, 'RSA1024', 'RSA1024|PKCS1|SHA256', 1024);
   }
 
   /**
@@ -116,7 +116,7 @@ export class RSA {
    * @returns OutDTO<string> 签名对象
    */
   static async sign2048PKCS1(str: string, priKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.sign(str, priKey, 'RSA2048', 'RSA2048|PKCS1|SHA256');
+    return CryptoUtil.sign(str, priKey, 'RSA2048', 'RSA2048|PKCS1|SHA256', 2048);
   }
 
   /**
@@ -127,7 +127,7 @@ export class RSA {
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
   static async verify2048PKCS1(signStr: string, verifyStr: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.verify(signStr, verifyStr, pubKey, 'RSA2048', 'RSA2048|PKCS1|SHA256');
+    return CryptoUtil.verify(signStr, verifyStr, pubKey, 'RSA2048', 'RSA2048|PKCS1|SHA256', 2048);
   }
 
   /**
@@ -138,7 +138,7 @@ export class RSA {
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
   static async verifyPKCS1(signStr: string, verifyStr: string, pubKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.verify(signStr, verifyStr, pubKey, 'RSA1024', 'RSA1024|PKCS1|SHA256');
+    return CryptoUtil.verify(signStr, verifyStr, pubKey, 'RSA1024', 'RSA1024|PKCS1|SHA256', 1024);
   }
 
   /**
@@ -154,7 +154,7 @@ export class RSA {
       options = util.Type.MIME;
     }
     //转码
-    let arr = Base64Util.decodeSync(base64Data,options);
+    let arr = Base64Util.decodeSync(base64Data, options);
     //返回字符串
     let result = StrAndUintUtil.unitArray2String(arr);
     return result;

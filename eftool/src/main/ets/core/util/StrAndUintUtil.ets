@@ -24,18 +24,6 @@ export class StrAndUintUtil {
   }
 
   /**
-   * 判断输入的字符串是否只有数字和字母
-   * @param inputString
-   * @returns
-   */
-  static hasSpecialCharacters(inputString: string): boolean {
-    // 定义特殊字符的正则表达式，这里包括除字母、数字外的所有字符
-    const pattern: RegExp = /^[a-z0-9]*$/;
-    return pattern.test(inputString);
-  }
-
-
-  /**
    * 字节流转成可理解的字符串
    * @param array Uint8Array数组
    * @param isC1C3C2  是否需要输出为C1C3C2格式的字符串，true需要
@@ -56,15 +44,16 @@ export class StrAndUintUtil {
   /**
    * 字符串转换为Uint8Array数组
    * @param str  字符串C1C3C2格式的,true为是
+   * @param keyName 密钥长度
    * @param isC1C3C2 传入的字符串是否为
    * @returns Uint8Array数组
    */
-  static stringToByteArray(str: string, isC1C3C2?: boolean): Uint8Array {
+  static stringToByteArray(str: string, keyName: number, isC1C3C2?: boolean): Uint8Array {
     if (isC1C3C2) {
       str = new SM2Convert().i2dSM2(str);
     }
     //判断是否为HarmonyOS自己生成的字符串,只包含小写a-z和数字
-    if (StrAndUintUtil.hasSpecialCharacters(str)) {
+    if (str.length != keyName / 8) {
       const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
       let arr = new Array<string>();
       hexString?.forEach((val) => {
