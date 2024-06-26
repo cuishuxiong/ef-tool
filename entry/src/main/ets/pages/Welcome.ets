@@ -639,6 +639,8 @@ struct Welcome {
     let can = await PreviewUtil.canPreview(uri);
     if (can.getSuccess()) {
       await PreviewUtil.previewImage(uri);
+    }else{
+      ToastUtil.showToast(can.getMsg());
     }
   }
 
