@@ -11,6 +11,9 @@ import { OutDTO } from '../base/OutDTO';
  */
 
 export class FileUtil {
+  /**
+   * 左斜杠
+   */
   static readonly separator: string = '/';
 
   /**
@@ -265,20 +268,20 @@ export class FileUtil {
    * @param path rawfile文件路径
    * @returns
    */
-  static getRawFileContentStrSync(path: string): string {
-    let resourceManager = getContext().resourceManager;
-    let uint8Array = resourceManager.getRawFileContentSync(path);
-    return StrAndUintUtil.unitArray2String(uint8Array);
-  }
+  // static getRawFileContentStrSync(path: string): string {
+  //   let resourceManager = getContext().resourceManager;
+  //   let uint8Array = resourceManager.getRawFileContentSync(path);
+  //   return StrAndUintUtil.unitArray2String(uint8Array);
+  // }
 
   /**
    * 获取resources/rawfile目录下对应的rawfile文件内容，使用Promise异步回调
    * @param path
    * @returns
    */
-  static async getRawFileContentStr(path: string): Promise<string> {
-    let resourceManager = getContext().resourceManager;
-    let uint8Array = await resourceManager.getRawFileContent(path);
-    return StrAndUintUtil.unitArray2String(uint8Array);
-  }
+  // static async getRawFileContentStr(path: string): Promise<string> {
+  //   let resourceManager = getContext().resourceManager;
+  //   let uint8Array = await resourceManager.getRawFileContent(path);
+  //   return StrAndUintUtil.unitArray2String(uint8Array);
+  // }
 }

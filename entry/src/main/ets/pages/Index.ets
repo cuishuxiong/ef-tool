@@ -34,10 +34,13 @@ import {
   efAxios,
   efAxiosParams,
   efClientApi,
-  RandomUtil
+  RandomUtil,
+  Base64Util
 } from '@yunkss/eftool'
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
+import { buffer } from '@kit.ArkTS';
+import { StrAndUintUtil } from '@yunkss/eftool/src/main/ets/core/util/StrAndUintUtil';
 
 class Message {
   msg: string = '';
@@ -296,7 +299,6 @@ struct Index {
   }
 
   async testCrypto() {
-
     //获取iv
     let iv = await RandomUtil.generateIV();
 

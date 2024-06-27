@@ -31,7 +31,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ## 🛠️包含组件
 
-一个OpenHarmony/HarmonyOS基础工具类，组成各种工具类，同时提供以下六部分组件：
+一个HarmonyOS基础工具类，组成各种工具类，同时提供以下六部分组件：
 
 ### 1.基础类组件
 
@@ -57,19 +57,20 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.加密类组件
 
-| 模块     | 介绍                                   |
-|--------|--------------------------------------|
-| RSA    | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
-| AES    | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
-| DES    | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
-| SM2    | 提供SM2生成密钥加解密等系列方法(基于HarmonyOS API)   |
-| SM3    | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
-| SM4    | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
-| SHA    | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
-| MD5    | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
-| ECDSA  | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
-| ECDH   | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
-| X25519 | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
+| 模块         | 介绍                                   |
+|------------|--------------------------------------|
+| RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AES        | 提供AES生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| DES        | 提供3DES生成密钥加解密等系列方法(基于HarmonyOS API)  |
+| SM2        | 提供SM2生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM3        | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| SM4        | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SHA        | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
+| ECDSA      | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
+| ECDH       | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
+| X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
+| SM2Convert | 提供SM2ASN1与C1C3C2转换类                  |
 
 ### 3.网络相关类组件
 
@@ -112,14 +113,14 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | CameraUtil       | 调起拍照工具类          |
 | WinDialogUtil    | 窗口方式弹框工具类        |
 | PreviewUtil      | 预览工具类            |
+| WinLoadingUtil   | 窗口方式全局加载工具类      |
 
 ### 6.媒体相关
 
-| 模块        | 介绍               |
-|-----------|------------------|
-| AudioUtil | 提供对音频的录制播放等一系列方法 |
-| FileUtil  | 提供对文件的一系列操作方法    |
-| ImageUtil | 提供对图片的一系列处理方法    |
+| 模块        | 介绍            |
+|-----------|---------------|
+| FileUtil  | 提供对文件的一系列操作方法 |
+| ImageUtil | 提供对图片的一系列处理方法 |
 
 ## 📦安装
 
@@ -918,34 +919,30 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * setDataTable 设置多行数据
 
-#### 15.Base64Util的方法(1.1.13+)
+#### 15.Base64Util的方法(1.1.13-rc.0+)
 
 * encodeToStr 将Uint8Array转化为字符串-异步
 
 ```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+    let a = await Base64Util.encodeToStr(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
 ```
 
 * decode 将字符串转换为Uint8Array数组-异步
 
 ```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+    let c = await Base64Util.decode(a);
 ```
 
 * encodeToStrSync 将Uint8Array转化为字符串-同步
 
 ```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+    let b = Base64Util.encodeToStrSync(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
 ```
 
 * decodeSync 将字符串转换为Uint8Array数组-同步
 
 ```
-    console.error(IdUtil.simpleUUID())
-    //输出   076bb3b9db6f4ecb885dbdbdd2c29080
+    let d = Base64Util.decodeSync(b);
 ```
 
 ### 3.加密相关组件使用API
@@ -3377,7 +3374,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     }
 ```
 
-* canPreview 判断传入uri是否可以预览(1.1.13+)
+* canPreview 判断传入uri是否可以预览
 
 ```
   let res = await PreviewUtil.canPreview('http://124.71.72.144:8801/mbank/dist/121.gif');
@@ -3385,7 +3382,290 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   this.msg = res.getMsg();
 ```
 
-### 7.媒体相关类组件使用API(1.1.13+)
+#### 20.WinLoadingUtil 窗口方式全局弹框(1.1.13-rc.0+)
+
+* ImgLayout 图片文字布局枚举
+
+```
+  export enum ImgLayout {
+  /**
+   * 图片在文字上方
+   */
+  TOP,
+  /**
+   * 图片在文字下方
+   */
+  BOTTOM,
+  /**
+   * 图片在文字左侧
+   */
+  LEFT,
+  /**
+   * 图片在文字右侧
+   */
+  RIGHT
+}
+```
+
+* LoadingShape 弹框形状布局
+
+```
+  export enum LoadingShape {
+    /**
+     * 正方形
+     */
+    SQUARE,
+    /**
+     * 矩形
+     */
+    RECTANGLE
+  }
+```
+
+* efLoadingOptions 窗口loading方式入参实体
+
+```
+  @Observed
+  export class efLoadingOptions {
+    /**
+     * 加载内容
+     */
+    @Track content: string = '';
+    /**
+     * loading位置
+     */
+    @Track position?: Alignment;
+    /**
+     * 图片布局方式
+     */
+    @Track imgLayout?: ImgLayout;
+    /**
+     * 弹框形状
+     */
+    @Track layoutShape?: LoadingShape;
+  
+    constructor() {
+      this.content = '小的正在努力加载中...';
+    }
+  }
+```
+
+* 打开弹窗
+
+```
+  WinLoadingUtil.showLoading(this.loadingOps);
+```
+
+* 关闭弹窗
+
+```
+  WinLoadingUtil.closeLoading();
+```
+
+* 使用示例
+
+```
+  
+  @State loadingOps: efLoadingOptions = new efLoadingOptions();
+  //设置图片与文字排布方式
+  this.loadingOps.imgLayout = ImgLayout.BOTTOM;
+  //设置文字内容
+  this.loadingOps.content = "小的努力加载" + this.count;
+  //设置弹框垂直位置
+  this.loadingOps.position = Alignment.Top;
+  //设置弹框形状
+  this.loadingOps.layoutShape = LoadingShape.SQUARE;
+  //打开弹窗
+  WinLoadingUtil.showLoading(this.loadingOps);
+  //业务处理完后关闭，如请求接口成功后
+  WinLoadingUtil.closeLoading();
+  
+```
+
+### 7.媒体相关类组件使用API(1.1.13-rc.0+)
+
+#### 1.FileUtil 文件处理工具类
+
+* getFilesDirPath 获取文件目录下的文件夹路径或文件路径
+
+```
+ //后续添加
+```
+
+* getCacheDirPath 获取缓存目录下的文件夹路径或文件路径
+
+```
+//后续添加
+```
+* getTempDirPath 获取临时目录下的文件夹路径或文件路径
+
+```
+//后续添加
+```
+* hasDirPath 判断是否是完整路径
+
+```
+//后续添加
+```
+* getFileName 通过URI或路径获取文件名
+
+```
+//后续添加
+```
+* getFilePath 通过URI或路径获取文件路径
+
+```
+//后续添加
+```
+* getParentUri 通过URI或路径获取对应文件父目录的URI
+
+```
+//后续添加
+```
+* getParentPath 通过URI或路径获取对应文件父目录的路径名
+
+```
+//后续添加
+```
+* getFileExtention 根据文件名获取文件后缀
+
+```
+//后续添加
+```
+* isFile 判断文件是否是普通文件
+
+```
+//后续添加
+```
+* isDirectory 判断文件是否是目录
+
+```
+//后续添加
+```
+* mkdir 创建目录
+
+```
+//后续添加
+```
+* mkdirSync 创建目录以同步方法
+
+```
+//后续添加
+```
+* writeEasy 将数据写入文件并关闭文件
+
+```
+//后续添加
+```
+* getFormatFileSize 格式化文件大小
+
+```
+//后续添加
+```
+* getRawFileContentSync 获取resources/rawfile目录下对应的rawfile文件内容
+
+```
+//后续添加
+```
+* getRawFileContent 获取resources/rawfile目录下对应的rawfile文件内容
+
+```
+//后续添加
+```
+
+#### 2.ImageUtil 图片处理工具类(返回类型均为OutDTO)
+
+* pickerSave 将buffer图片保存到选择路径
+
+```
+    let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+    let res = await ImageUtil.pickerSave(buffer.from(array).buffer);
+```
+
+* pickerSaveGallery 保存图片到图库
+
+```
+  //需要配合安全控件使用
+    SaveButton({
+      icon: SaveIconStyle.FULL_FILLED,
+      buttonType: ButtonType.Capsule,
+      text: SaveDescription.SAVE_IMAGE
+    })
+      .onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) => {
+        if (result == SaveButtonOnClickResult.SUCCESS) {
+          try {
+            let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+            let result = await ImageUtil.pickerSaveGallery(buffer.from(array).buffer);
+            if (result.getSuccess()) {
+              ToastUtil.showToast(result.getMsg());
+            }
+          } catch (error) {
+            console.error("error is " + JSON.stringify(error));
+          }
+        }
+      })
+```
+
+* base64ToPixelMap 图片base64字符串转PixelMap
+
+```
+//后续添加
+```
+
+* arrayBuffer2PixelMap buffer转PixelMap
+
+```
+//后续添加
+```
+
+* pixelMap2Base64Str PixelMap转图片base64字符串
+
+```
+//后续添加
+```
+
+* savePixelMap 保存pixelMap到本地
+
+```
+//后续添加
+```
+
+* saveImageSource 保存ImageSource到本地
+
+```
+//后续添加
+```
+
+* createImageSource 创建图片源实例
+
+```
+//后续添加
+```
+
+* pack2FileFromPixelMap 将PixelMap图片写入文件
+
+```
+//后续添加
+```
+
+* packingFromPixelMap PixelMap转ArrayBuffer
+
+```
+//后续添加
+```
+
+* pack2FileFromImageSource 将ImageSource图片写入文件
+
+```
+//后续添加
+```
+
+* getPixelMapFromMedia 获取resource目录下media中的图片转换成PixelMap
+
+```
+//后续添加
+```
+
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 

@@ -34,10 +34,13 @@ import {
   efAxios,
   efAxiosParams,
   efClientApi,
-  RandomUtil
+  RandomUtil,
+  Base64Util
 } from '@yunkss/eftool'
 import { image } from '@kit.ImageKit';
 import { common } from '@kit.AbilityKit';
+import { buffer } from '@kit.ArkTS';
+import { StrAndUintUtil } from '@yunkss/eftool/src/main/ets/core/util/StrAndUintUtil';
 
 class Message {
   msg: string = '';
@@ -48,7 +51,8 @@ class User {
   name?: string;
 
   constructor(id: string, name: string) {
-    super(id, name);
+    this.name = name;
+    this.id = id;
   }
 }
 
@@ -128,7 +132,7 @@ struct Index {
     efAxiosParams.isPartEncrypt = true;
     efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //关键字加密集合
-    efAxiosParams.keyWordsList = ['account','pwd'];
+    efAxiosParams.keyWordsList = ['account', 'pwd'];
     //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
     // efAxiosParams.isConvertDTO = false;
     // const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
@@ -295,7 +299,6 @@ struct Index {
   }
 
   async testCrypto() {
-
     //获取iv
     let iv = await RandomUtil.generateIV();
 
@@ -418,7 +421,7 @@ struct Index {
     //             -----END PUBLIC KEY-----`);
     // let encode = await RSA.encode2048PKCS1('测试2048位RSA-PKCS1加密字符串CSX~~', pubKey);
     // this.message = encode.getDataRow();
-    //2048位pem私钥
+    // 2048位pem私钥
     // let priKey = RSA.pemToStrKey(`-----BEGIN RSA PRIVATE KEY-----
     //             MIIEpAIBAAKCAQEA1nwHtqSbMNwjHKutrLUI+dMBCtoRb/SSY00ujBMsNPFdERxa
     //             izxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9Wk2nVLpPRtZNjwJgNRB4pYKf+RmL
@@ -481,13 +484,13 @@ struct Index {
 
 
     //SM2
-    let sm2 = await SM2.generateSM2Key();
-    this.message = sm2.getDataRow().publicKey;
-    this.message = sm2.getDataRow().privateKey;
-    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
-    this.message = encode.getDataRow();
-    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
-    this.message = decode.getDataRow();
+    // let sm2 = await SM2.generateSM2Key();
+    // this.message = sm2.getDataRow().publicKey;
+    // this.message = sm2.getDataRow().privateKey;
+    // let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    // this.message = encode.getDataRow();
+    // let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    // this.message = decode.getDataRow();
     // let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
     // this.message = sign.getDataRow();
     // let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
