@@ -17,21 +17,21 @@ export class DynamicUtil {
    * @param symAlgName 秘钥规格
    * @returns 共享密钥
    */
-  static async dynamicKey(pubKey: string | Uint8Array, priKey: string | Uint8Array, symAlgName: string): Promise<OutDTO<string>> {
+  static async dynamicKey(pubKey: string | Uint8Array, priKey: string | Uint8Array, symAlgName: string, keyName: number): Promise<OutDTO<string>> {
     //公钥数据
     let pubKeyArray: Uint8Array = new Uint8Array();
     //私钥数据
     let priKeyArray: Uint8Array = new Uint8Array();
     //转换公钥
     if (typeof pubKey === 'string') {
-      let pk = await CryptoUtil.convertPubKeyFromStr(pubKey as string, symAlgName);
+      let pk = await CryptoUtil.convertPubKeyFromStr(pubKey as string, symAlgName, keyName);
       pubKeyArray = pk.pubKey.getEncoded().data;
     } else {
       pubKeyArray = pubKey as Uint8Array;
     }
     //转换私钥
     if (typeof priKey === 'string') {
-      let pik = await CryptoUtil.convertPriKeyFromStr(priKey as string, symAlgName);
+      let pik = await CryptoUtil.convertPriKeyFromStr(priKey as string, symAlgName, keyName);
       priKeyArray = pik.priKey.getEncoded().data;
     } else {
       priKeyArray = priKey as Uint8Array;

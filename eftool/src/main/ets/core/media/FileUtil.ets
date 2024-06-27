@@ -1,6 +1,6 @@
 import { StrUtil } from '../util/StrUtil';
 import { fileUri } from '@kit.CoreFileKit';
-import fs, {  WriteOptions } from '@ohos.file.fs';
+import fs, { WriteOptions } from '@ohos.file.fs';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { OutDTO } from '../base/OutDTO';
 
@@ -9,8 +9,10 @@ import { OutDTO } from '../base/OutDTO';
  * @DateTime 2024/6/6 00:23
  * @TODO FileUtil  文件工具类
  */
-
 export class FileUtil {
+  /**
+   * 左斜杠
+   */
   static readonly separator: string = '/';
 
   /**
@@ -37,7 +39,6 @@ export class FileUtil {
     return filePath;
   }
 
-
   /**
    * 获取缓存目录下的文件夹路径或文件路径。
    * @param dirPath 文件路径,支持完整路径 和 相对路径（download/wps/doc）。dirPath传空表示根目录
@@ -61,7 +62,6 @@ export class FileUtil {
     }
     return filePath;
   }
-
 
   /**
    * 获取临时目录下的文件夹路径或文件路径。
@@ -87,7 +87,6 @@ export class FileUtil {
     return filePath;
   }
 
-
   /**
    * 判断是否是完整路径
    * @param path 文件路径
@@ -96,12 +95,12 @@ export class FileUtil {
     let filesDir = getContext().filesDir; //根目录
     let cacheDir = getContext().cacheDir; //根目录
     let tempDir = getContext().tempDir; //根目录
-    return StrUtil.startsWith(path, filesDir) || StrUtil.startsWith(path, cacheDir) || StrUtil.startsWith(path, tempDir);
+    return StrUtil.startsWith(path, filesDir) || StrUtil.startsWith(path, cacheDir) ||
+    StrUtil.startsWith(path, tempDir);
   }
 
-
   /**
-   * 通过URI或路径，获取文件名。
+   * 通过URI或路径获取文件名。
    * @param uriOrPath URI或路径
    * @returns
    */
@@ -110,7 +109,7 @@ export class FileUtil {
   }
 
   /**
-   * 通过URI或路径，获取文件路径
+   * 通过URI或路径获取文件路径
    * @param uriOrPath URI或路径
    * @returns
    */
@@ -118,9 +117,8 @@ export class FileUtil {
     return new fileUri.FileUri(uriOrPath).path;
   }
 
-
   /**
-   * 通过URI或路径，获取对应文件父目录的URI。
+   * 通过URI或路径获取对应文件父目录的URI。
    * @param uriOrPath URI或路径
    */
   static getParentUri(uriOrPath: string): string {
@@ -128,7 +126,7 @@ export class FileUtil {
   }
 
   /**
-   * 通过URI或路径，获取对应文件父目录的路径名。
+   * 通过URI或路径获取对应文件父目录的路径名。
    * @param uriOrPath URI或路径
    */
   static getParentPath(uriOrPath: string): string {
@@ -147,7 +145,6 @@ export class FileUtil {
     }
     return '';
   }
-
 
   /**
    * 判断文件是否是普通文件。
@@ -194,9 +191,8 @@ export class FileUtil {
     }
   }
 
-
   /**
-   * 将数据写入文件，并关闭文件。
+   * 将数据写入文件并关闭文件。
    * @param path string 文件的应用沙箱路径或URI。
    * @param buffer ArrayBuffer|string 待写入文件的数据，可来自缓冲区或字符串。
    * @param append 是否追加，true-追加，false-不追加（直接覆盖）
@@ -219,7 +215,6 @@ export class FileUtil {
     }
   }
 
-
   /**
    * 格式化文件大小
    * @param fileSize
@@ -238,7 +233,6 @@ export class FileUtil {
       return (fileSize / (1024 * 1024 * 1024 * 1024)).toFixed(1) + "TB";
     }
   }
-
 
   /**
    * 获取resources/rawfile目录下对应的rawfile文件内容，使用同步形式返回
@@ -265,20 +259,20 @@ export class FileUtil {
    * @param path rawfile文件路径
    * @returns
    */
-  static getRawFileContentStrSync(path: string): string {
-    let resourceManager = getContext().resourceManager;
-    let uint8Array = resourceManager.getRawFileContentSync(path);
-    return StrAndUintUtil.unitArray2String(uint8Array);
-  }
+  // static getRawFileContentStrSync(path: string): string {
+  //   let resourceManager = getContext().resourceManager;
+  //   let uint8Array = resourceManager.getRawFileContentSync(path);
+  //   return StrAndUintUtil.unitArray2String(uint8Array);
+  // }
 
   /**
    * 获取resources/rawfile目录下对应的rawfile文件内容，使用Promise异步回调
    * @param path
    * @returns
    */
-  static async getRawFileContentStr(path: string): Promise<string> {
-    let resourceManager = getContext().resourceManager;
-    let uint8Array = await resourceManager.getRawFileContent(path);
-    return StrAndUintUtil.unitArray2String(uint8Array);
-  }
+  // static async getRawFileContentStr(path: string): Promise<string> {
+  //   let resourceManager = getContext().resourceManager;
+  //   let uint8Array = await resourceManager.getRawFileContent(path);
+  //   return StrAndUintUtil.unitArray2String(uint8Array);
+  // }
 }

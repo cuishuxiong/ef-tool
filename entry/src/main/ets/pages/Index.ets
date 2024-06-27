@@ -125,11 +125,11 @@ struct Index {
 
   async sendRequest() {
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://192.168.0.104:18088';
-    efAxiosParams.isPartEncrypt = true;
+    efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
+    efAxiosParams.isAllEncrypt = true;
     efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //关键字加密集合
-    efAxiosParams.keyWordsList = ['account','pwd'];
+    // efAxiosParams.keyWordsList = ['account','pwd'];
     //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
     // efAxiosParams.isConvertDTO = false;
     // const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
@@ -909,7 +909,7 @@ struct Index {
           })
         }
         .width('100%')
-        .padding({ top: 20 })
+        .padding({ top: 60 })
       }
       .scrollable(ScrollDirection.Vertical)
 

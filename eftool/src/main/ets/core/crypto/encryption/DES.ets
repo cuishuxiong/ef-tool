@@ -24,7 +24,7 @@ export class DES {
    * @returns
    */
   static async encodeECB(str: string, desKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeECB(str,desKey,'3DES192','3DES192|ECB|PKCS7');
+    return CryptoUtil.encodeECB(str, desKey, '3DES192', '3DES192|ECB|PKCS7', 192);
   }
 
   /**
@@ -35,7 +35,7 @@ export class DES {
    * @returns
    */
   static async encodeCBC(str: string, desKey: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.encodeCBC(str, desKey, iv, '3DES192', '3DES192|CBC|PKCS7');
+    return CryptoUtil.encodeCBC(str, desKey, iv, '3DES192', '3DES192|CBC|PKCS7', 192);
   }
 
 
@@ -45,7 +45,7 @@ export class DES {
    * @param desKey  3DES密钥
    */
   static async decodeECB(str: string, desKey: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeECB(str,desKey,'3DES192','3DES192|ECB|PKCS7');
+    return CryptoUtil.decodeECB(str, desKey, '3DES192', '3DES192|ECB|PKCS7', 192);
   }
 
   /**
@@ -56,6 +56,6 @@ export class DES {
    * @returns
    */
   static async decodeCBC(str: string, desKey: string, iv: string): Promise<OutDTO<string>> {
-    return CryptoUtil.decodeCBC(str, desKey, iv, '3DES192', '3DES192|CBC|PKCS7');
+    return CryptoUtil.decodeCBC(str, desKey, iv, '3DES192', '3DES192|CBC|PKCS7', 192);
   }
 }

@@ -113,7 +113,7 @@ export class efLoadingOptions {
 
 
 /**
- * 图片文字布局枚举
+ * 弹框形状布局
  */
 export enum LoadingShape {
   /**

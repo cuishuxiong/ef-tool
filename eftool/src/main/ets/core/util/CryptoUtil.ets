@@ -13,10 +13,12 @@ export class CryptoUtil {
    * 将非对称加密字符串pubKey转换为symKey对象
    * @param publicKey字符串key
    * @param symAlgName 秘钥规格
+   * @param keyName 密钥长度
+   * @returns
    * @returns
    */
-  static async convertPubKeyFromStr(publicKey: string, symAlgName: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(publicKey) };
+  static async convertPubKeyFromStr(publicKey: string, symAlgName: string, keyName: number) {
+    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(publicKey, keyName) };
     let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
     let symKey = await aesGenerator.convertKey(symKeyBlob, null);
     return symKey;
@@ -28,8 +30,8 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @returns
    */
-  static async convertPriKeyFromStr(privateKey: string, symAlgName: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(privateKey) };
+  static async convertPriKeyFromStr(privateKey: string, symAlgName: string, keyName: number) {
+    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(privateKey, keyName) };
     let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
     let symKey = await aesGenerator.convertKey(null, symKeyBlob);
     return symKey;
@@ -41,8 +43,8 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @returns
    */
-  static async convertKeyFromStr(aesKey: string, symAlgName: string) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(aesKey) };
+  static async convertKeyFromStr(aesKey: string, symAlgName: string, keyName: number) {
+    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(aesKey, keyName) };
     let aesGenerator = crypto.createSymKeyGenerator(symAlgName);
     let symKey = await aesGenerator.convertKey(symKeyBlob);
     return symKey;
@@ -53,8 +55,8 @@ export class CryptoUtil {
    * @param ivStr
    * @returns
    */
-  static genIvParamsSpec(ivStr: string): crypto.IvParamsSpec {
-    let ivBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(ivStr) };
+  static genIvParamsSpec(ivStr: string, keyName: number): crypto.IvParamsSpec {
+    let ivBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(ivStr, keyName) };
     let ivParamsSpec: crypto.IvParamsSpec = {
       algName: "IvParamsSpec",
       iv: ivBlob
@@ -103,15 +105,15 @@ export class CryptoUtil {
    * @param symEncryptName  加密规格
    * @returns
    */
-  static async encodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async encodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName);
+    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName, keyName);
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化加密
-    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv, keyName));
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
@@ -130,9 +132,9 @@ export class CryptoUtil {
    * @param symEncryptName  加密规格
    * @returns
    */
-  static async encodeECB(str: string, key: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async encodeECB(str: string, key: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //转换key
-    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName);
+    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName, keyName);
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
@@ -158,17 +160,17 @@ export class CryptoUtil {
    * @param symEncryptName  加密规格
    * @returns
    */
-  static async decodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async decodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName);
+    let symKey = await CryptoUtil.convertKeyFromStr(key, symAlgName, keyName);
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化解密
-    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv));
+    await cipher.init(mode, symKey, CryptoUtil.genIvParamsSpec(iv, keyName));
     //解密
-    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
+    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str, keyName) });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     return OutDTO.OKByDataRow(symAlgName + '-CBC解密成功~', decode.decodeWithStream(updateOutput.data));
   }
@@ -180,9 +182,9 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    */
-  static async decodeECB(str: string, sm4Key: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async decodeECB(str: string, sm4Key: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //转换密钥
-    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, symAlgName);
+    let symKey = await CryptoUtil.convertKeyFromStr(sm4Key, symAlgName, keyName);
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
@@ -190,7 +192,7 @@ export class CryptoUtil {
     //初始化解密
     await cipher.init(mode, symKey, null);
     //解密
-    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str) });
+    let updateOutput = await cipher.doFinal({ data: StrAndUintUtil.stringToByteArray(str, keyName) });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     return OutDTO.OKByDataRow(symAlgName + '-ECB解密成功~', decode.decodeWithStream(updateOutput.data));
   }
@@ -202,9 +204,9 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    */
-  static async encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
@@ -230,9 +232,9 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    */
-  static async encodeAsymSegment(str: string, pubKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async encodeAsymSegment(str: string, pubKey: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
@@ -269,9 +271,9 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    */
-  static async decodeAsymSegment(str: string, priKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async decodeAsymSegment(str: string, priKey: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName, keyName);
     //生成解密器
     let encoder = crypto.createCipher(symEncryptName);
     //定义分段字节
@@ -281,7 +283,7 @@ export class CryptoUtil {
     //分段加密后的数据
     let decryptText = new Uint8Array();
     //待解密的数据
-    let strArray = StrAndUintUtil.stringToByteArray(str);
+    let strArray = StrAndUintUtil.stringToByteArray(str, keyName);
     //开始循环解密
     for (let i = 0; i < strArray.length; i += strSplitLen) {
       let updateMessage = strArray.subarray(i, i + strSplitLen);
@@ -304,14 +306,14 @@ export class CryptoUtil {
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    */
-  static async decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName, keyName);
     //生成解密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化解密环境
     await encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
-    let cryptoArr = StrAndUintUtil.stringToByteArray(str);
+    let cryptoArr = StrAndUintUtil.stringToByteArray(str, keyName);
     // if (symAlgName.indexOf('SM2') >= 0 || symEncryptName.indexOf('SM2') >= 0) {
     //   cryptoArr = StrAndUintUtil.stringToByteArray(str, true);
     // } else {
@@ -331,9 +333,9 @@ export class CryptoUtil {
    * @param symEncryptName  加密规格
    * @returns OutDTO<string> 签名对象
    */
-  static async sign(str: string, priKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async sign(str: string, priKey: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //将私钥转换
-    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName);
+    let priPair = await CryptoUtil.convertPriKeyFromStr(priKey, symAlgName, keyName);
     //创建签名器
     let signer = crypto.createSign(symEncryptName);
     //初始化签名器
@@ -356,9 +358,9 @@ export class CryptoUtil {
    * @param symEncryptName  加密规格
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
-  static async verify(signStr: string, verifyStr: string, pubKey: string, symAlgName: string, symEncryptName: string): Promise<OutDTO<string>> {
+  static async verify(signStr: string, verifyStr: string, pubKey: string, symAlgName: string, symEncryptName: string, keyName: number): Promise<OutDTO<string>> {
     //将公钥转换
-    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName);
+    let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
     //验签器
     let verifyer = crypto.createVerify(symEncryptName);
     //初始化验签器
@@ -367,7 +369,7 @@ export class CryptoUtil {
     //验签的字符串
     let verify: crypto.DataBlob = { data: encode.encodeInto(verifyStr) };
     await verifyer.update(verify);
-    let sign: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(signStr) };
+    let sign: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(signStr, keyName) };
     let result = await verifyer.verify(verify, sign);
     if (result) {
       return OutDTO.OK("验签成功,签名正确");

@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\cui\\.ohos\\config\\default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.cer",
-          "storePassword": "0000001BE4EF96F13B6874437C2A064279AE45A3A9AB47C51969AA6E8DBABE59C95B990EC2620B7A04AA5E",
+          "certpath": "/Users/csx/.ohos/config/default_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.cer",
+          "storePassword": "0000001BF9E31D0C4074F7F27FB3962AAEABEC933A05442BE55FC313C95C92ABF666BCBF0B03E9E323BABA",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BA113F85B118BB54E39FA0438007FD9332E6A36B46CF8053EA356E3D65A3FD76B89411834CEA20D",
-          "profile": "C:\\Users\\cui\\.ohos\\config\\default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.p7b",
+          "keyPassword": "0000001B747C18E4C128E9184D367F5A778E25AE9F8BA84F0F22652D44B31FF84293AB24E45943CA05DEAA",
+          "profile": "/Users/csx/.ohos/config/default_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\cui\\.ohos\\config\\default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.p12"
+          "storeFile": "/Users/csx/.ohos/config/default_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p12"
         }
       }
     ],

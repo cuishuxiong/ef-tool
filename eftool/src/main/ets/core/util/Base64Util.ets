@@ -6,7 +6,6 @@
 import { util } from '@kit.ArkTS';
 
 export class Base64Util {
-
   /**
    * 将Uint8Array转化为字符串-异步
    * @param array Uint8Array数组
@@ -48,5 +47,4 @@ export class Base64Util {
     let result = base64.decodeSync(str, options);
     return result;
   }
-
 }

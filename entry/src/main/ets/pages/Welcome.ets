@@ -6,6 +6,7 @@
 import {
   AES,
   AudioCapturerUtil,
+  Base64Util,
   CameraUtil,
   DES,
   DownloadUtil,
@@ -104,7 +105,8 @@ struct Welcome {
     //是否开启传输整体加密
     efAxiosParams.isAllEncrypt = true;
     //加密的SM2key
-    efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    efAxiosParams.sm2PubKey =
+      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
   }
 
   testJSONArrayList() {
@@ -135,7 +137,8 @@ struct Welcome {
     // let jsArr = JSONArrayList.parse(s);
     // this.msg = jsArr.length + "";
 
-    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
+    let str1 =
+      '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
 
     let array = JSONArrayList.parseArrayList<TestDDD>(str1);
 
@@ -194,7 +197,8 @@ struct Welcome {
 
     let list = JSONArray.parseArray<Person>(str);
 
-    let str1 = '[{"threeMonthRate":null,"moduleName":"loan","productName":"111111","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"2024-06-05T16:00:34.859Z","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"24:91:bb","labelLocation":false}}}]';
+    let str1 =
+      '[{"threeMonthRate":null,"moduleName":"loan","productName":"111111","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"2024-06-05T16:00:34.859Z","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"24:91:bb","labelLocation":false}}}]';
 
     let array = JSONArray.parseArray<TestDDD>(str1);
 
@@ -395,7 +399,8 @@ struct Welcome {
     }
     if (suffix === 'txt') {
       await PreviewUtil.previewTxt(uri);
-    } else if (['png', 'gif', 'webp', 'bmp'].includes(suffix) || suffix === 'jpg' || suffix === 'jpeg' || suffix === 'svg') {
+    } else if (['png', 'gif', 'webp', 'bmp'].includes(suffix) || suffix === 'jpg' || suffix === 'jpeg' ||
+      suffix === 'svg') {
       await PreviewUtil.previewImage(uri);
     } else if (suffix === 'mp4' || suffix === 'mkv' || suffix === 'ts') {
       await PreviewUtil.previewVideo(uri);
@@ -577,25 +582,29 @@ struct Welcome {
   async aes() {
 
     //模拟s生成key
-    let key = await SM2.generateSM2Key();
+    // let key = await SM2.generateSM2Key();
     //加密反会ASN1格式自付出
-    let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.getDataRow().publicKey);
+    // let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.getDataRow().publicKey);
     //创建转换类
-    let convert = new SM2Convert();
+    // let convert = new SM2Convert();
     //转换格式
-    let result = convert.d2i(encode.getDataRow());
+    // let result = convert.d2i(encode.getDataRow());
 
 
-    let reConvert = convert.i2dSM2(result);
-    this.msg = reConvert;
-    // let encode = await AES.encodeECB('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
-    // this.msg = encode.getDataRow();
-    // let decode = await AES.decodeCBC128(encode.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
-    // this.msg = decode.getDataRow();
+    // let reConvert = convert.i2dSM2(result);
+    // this.msg = reConvert;
+    let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    this.msg = encode.getDataRow();
+    let decode = await AES.decodeECB128(encode.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    this.msg = decode.getDataRow();
+    let encode1 = await AES.encodeCBC128("123456", "TESTsdiloia20230", "ass3[2K8%fw68sw7");
+    this.msg = encode1.getDataRow();
+    let decode1 = await AES.decodeCBC128(encode1.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
+    this.msg = decode1.getDataRow();
     //关闭第一个窗体
-    if (this.alertWinName) {
-      WinDialogUtil.closeAlert(this.alertWinName);
-    }
+    // if (this.alertWinName) {
+    //   WinDialogUtil.closeAlert(this.alertWinName);
+    // }
   }
 
   async stopRecording() {
@@ -613,6 +622,13 @@ struct Welcome {
     // this.msg = nDES.ndkEncodeCBC('hello 字符串', 'secret key 123');
     // let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key.getDataRow());
     // this.msg = str;
+  }
+
+  async testBase64() {
+    let a = await Base64Util.encodeToStr(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
+    let b = Base64Util.encodeToStrSync(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
+    let c = await Base64Util.decode(a);
+    let d = Base64Util.decodeSync(b);
   }
 
   async save2photo() {
@@ -652,7 +668,7 @@ struct Welcome {
         this.count = 0;
       }
       this.count++;
-      this.loadingOps.content = "小的努力加载"+this.count;
+      this.loadingOps.content = "小的努力加载" + this.count;
     }, 500);
     // this.loadingOps.position = Alignment.Top;
     this.loadingOps.layoutShape = LoadingShape.SQUARE;
@@ -712,6 +728,9 @@ struct Welcome {
           })
         Button('保存图片到目录').margin({ top: 20 }).onClick(() => {
           this.save2photo();
+        })
+        Button('base64工具类').margin({ top: 20 }).onClick(() => {
+          this.testBase64();
         })
         Button('canPreview测试').margin({ top: 20 }).onClick(() => {
           this.resFileCanPreview();
