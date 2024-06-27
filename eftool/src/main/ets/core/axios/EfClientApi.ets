@@ -40,8 +40,18 @@ class EfClientApi {
    * @param url  请求URL附带参数
    * @returns 响应结果
    */
-  async get<E>(url: string): Promise<E> {
-    return await efAxios.get<E, AxiosResponse<E>, null>(url).then((response: AxiosResponse<E>) => {
+  async get<E>(url: string, headers?: Record<string, Object>): Promise<E> {
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
+    return await efAxios.get<E, AxiosResponse<E>, null>(url,{
+      headers:addHead
+    }).then((response: AxiosResponse<E>) => {
       return response.data
     });
   }
@@ -52,9 +62,18 @@ class EfClientApi {
    * @param params
    * @returns
    */
-  async getByParams<E>(url: string, params: Record<string, Object>): Promise<E> {
+  async getByParams<E>(url: string, params: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
     return await efAxios.get<E, AxiosResponse<E>, null>(url, {
-      params: params
+      params: params,
+      headers:addHead
     }).then((response: AxiosResponse<E>) => {
       return response.data
     });
