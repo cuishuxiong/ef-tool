@@ -162,7 +162,9 @@ struct Index {
         ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
       }
       //模拟测试get请求
-      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111',{
+        'testHeader':'csxAdd'
+      });
       if (get.getSuccess()) {
         ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
       }
