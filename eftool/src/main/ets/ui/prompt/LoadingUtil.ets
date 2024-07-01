@@ -28,7 +28,7 @@ export struct LoadingUtil {
     customStyle: true,
     gridCount: 10,
     maskRect: { x: 0, y: 0, width: '100%', height: '100%' },
-    maskColor: UiConst.DIALOG_CANCEL_COLOR,
+    // maskColor: UiConst.DIALOG_CANCEL_COLOR,
     openAnimation: { duration: 500, tempo: 0.7, curve: Curve.EaseInOut },
     closeAnimation: { duration: 500, tempo: 0.7, curve: Curve.FastOutLinearIn },
     showInSubWindow: this.options.showInSubWindow != undefined ? this.options.showInSubWindow : false,
