@@ -10,6 +10,8 @@
 * 新增文件处理工具类FileUtil
 * 新增WinLoadingUtil以窗口方式实现全局loading工具类
 * 新增AES的CBC加解密支持128位
+* MD5新增散列算法以及HMAC算法
+* 新增SHA1散列算法类
 
 ### 🐞功能优化
 

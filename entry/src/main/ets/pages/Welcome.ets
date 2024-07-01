@@ -21,9 +21,12 @@ import {
   JSONObject,
   LoadingShape,
   LoadingUtil,
+  MD5,
   PickerUtil,
   PreviewUtil,
+  RandomUtil,
   SHA,
+  SHA1,
   SM2,
   SM2Convert,
   SM4,
@@ -631,6 +634,35 @@ struct Welcome {
     let d = Base64Util.decodeSync(b);
   }
 
+  testMD5() {
+    let hash = MD5.hash('测试MD5散列算法hex~~~');
+    if (hash.getSuccess()) {
+      this.msg = hash.getDataRow();
+    }
+    let hash64 = MD5.hash('测试MD5散列算法base64~~~', 'base64');
+    if (hash64.getSuccess()) {
+      this.msg = hash64.getDataRow();
+    }
+
+    let key = RandomUtil.generateIV();
+
+    let hmac = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~');
+    if (hmac.getSuccess()) {
+      this.msg = hmac.getDataRow();
+    }
+    let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~', 'base64');
+    if (hmac64.getSuccess()) {
+      this.msg = hmac64.getDataRow();
+    }
+  }
+
+  testSHA1() {
+    let sha1 = SHA1.hash('测试SHA1散列算法~~~~~~~');
+    if (sha1.getSuccess()) {
+      this.msg = sha1.getDataRow();
+    }
+  }
+
   async save2photo() {
     let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
     let res = await ImageUtil.pickerSave(buffer.from(array).buffer);
@@ -655,7 +687,7 @@ struct Welcome {
     let can = await PreviewUtil.canPreview(uri);
     if (can.getSuccess()) {
       await PreviewUtil.previewImage(uri);
-    }else{
+    } else {
       ToastUtil.showToast(can.getMsg());
     }
   }
@@ -708,6 +740,12 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('MD5工具类').margin({ top: 20 }).onClick(() => {
+          this.testMD5();
+        })
+        Button('SHA1工具类').margin({ top: 20 }).onClick(() => {
+          this.testSHA1();
+        })
         SaveButton({
           icon: SaveIconStyle.FULL_FILLED,
           buttonType: ButtonType.Capsule,

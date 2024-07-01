@@ -62,6 +62,8 @@ export { JSONValue } from './src/main/ets/core/json/JSONValue';
 
 export { MD5 } from './src/main/ets/core/crypto/encryption/MD5';
 
+export { SHA1 } from './src/main/ets/core/crypto/encryption/SHA1';
+
 export { ECDH } from './src/main/ets/core/crypto/keyAgree/ECDH';
 
 export { X25519 } from './src/main/ets/core/crypto/keyAgree/X25519';
@@ -96,7 +98,7 @@ export { WinDialogUtil } from './src/main/ets/ui/prompt/WinDialogUtil';
 
 export { WinLoadingUtil } from './src/main/ets/ui/prompt/WinLoadingUtil';
 
-export { ImgLayout,LoadingShape,efLoadingOptions } from './src/main/ets/ui/prompt/efLoading';
+export { ImgLayout, LoadingShape, efLoadingOptions } from './src/main/ets/ui/prompt/efLoading';
 
 export { SelectUtil } from './src/main/ets/ui/select/SelectUtil';
 
