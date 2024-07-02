@@ -291,7 +291,7 @@ struct Welcome {
       //关闭文件流
       fs.closeSync(file);
       //上传选择的的照片
-      let upName = await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg);
       //下载
       this.testDownload(upName, name);
     }
@@ -330,7 +330,7 @@ struct Welcome {
       fs.closeSync(file);
       WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
       //上传选择的的照片
-      let upName = await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg);
       //下载
       this.testDownload(upName, name);
     }
@@ -349,7 +349,7 @@ struct Welcome {
       let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
       fs.closeSync(file);
       //上传
-      let upName = await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg);
       //下载
       await this.testDownload(upName, name);
     }
@@ -365,10 +365,10 @@ struct Welcome {
     let ctx = getContext() as common.UIAbilityContext;
     let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
     let imageResource = imageArray.buffer as ArrayBuffer;
-    await this.testUpload(imageResource, 'notice.png');
+    await this.testUpload(imageResource);
   }
 
-  async testUpload(data: ArrayBuffer, fileName: string): Promise<string> {
+  async testUpload(data: ArrayBuffer): Promise<string> {
     this.showDownBtn = Visibility.Visible;
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
@@ -376,7 +376,7 @@ struct Welcome {
         WinLoadingUtil.closeLoading();
       }
       this.process = progress;
-    }, fileName, data);
+    }, data);
     this.msg = res ? res["dataRow"] : '';
     return this.msg;
   }
@@ -453,7 +453,7 @@ struct Welcome {
       //关闭文件流
       fs.closeSync(file);
       //上传选择的的照片
-      let upName = await this.testUpload(bufferImg, name);
+      let upName = await this.testUpload(bufferImg);
       //下载
       await this.testDownload(upName, name);
     }

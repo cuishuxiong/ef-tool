@@ -49,8 +49,8 @@ class EfClientApi {
         addHead.set(row[0], row[1] as string, true);
       });
     }
-    return await efAxios.get<E, AxiosResponse<E>, null>(url,{
-      headers:addHead
+    return await efAxios.get<E, AxiosResponse<E>, null>(url, {
+      headers: addHead
     }).then((response: AxiosResponse<E>) => {
       return response.data
     });
@@ -73,7 +73,7 @@ class EfClientApi {
     }
     return await efAxios.get<E, AxiosResponse<E>, null>(url, {
       params: params,
-      headers:addHead
+      headers: addHead
     }).then((response: AxiosResponse<E>) => {
       return response.data
     });
@@ -116,20 +116,20 @@ class EfClientApi {
 
 
    */
-  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, fileName: string,
+  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,
     data?: ArrayBuffer, uri?: string, keyName?: string) {
     let formData = new FormData();
     if (keyName) {
       if (isUri) {
-        formData.append(keyName, 'internal://cache/' + uri, { fileName: fileName });
+        formData.append(keyName, 'internal://cache/' + uri);
       } else {
-        formData.append(keyName, data, { fileName: fileName });
+        formData.append(keyName, data);
       }
     } else {
       if (isUri) {
-        formData.append('file', 'internal://cache/' + uri, { fileName: fileName });
+        formData.append('file', 'internal://cache/' + uri);
       } else {
-        formData.append('file', data, { fileName: fileName });
+        formData.append('file', data);
       }
     }
     //需要添加的header对象

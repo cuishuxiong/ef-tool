@@ -39,7 +39,7 @@ function cityTxtColor() {
   .fontSize(UiConst.FONT_16)
   .textAlign(TextAlign.Start)
   .padding({ top: UiConst.NUMBER_3, bottom: UiConst.NUMBER_3 })
-  .backgroundColor("#f7f8fa")
+  // .backgroundColor("#f7f8fa")
 }
 
 
@@ -304,8 +304,8 @@ export struct Cascade {
     .dragBar(false)
     .height(PanelHeight.WRAP_CONTENT)
     .customHeight(600)
-    .backgroundColor("#f7f8fa")
-    .backgroundMask(UiConst.DIALOG_CANCEL_COLOR)
+    // .backgroundColor("#22000000")
+    // .backgroundMask(UiConst.DIALOG_CANCEL_COLOR)
     .position({ x: 0, y: 0 })
   }
 }
