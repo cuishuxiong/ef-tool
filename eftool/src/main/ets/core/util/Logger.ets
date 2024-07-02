@@ -8,6 +8,9 @@ import fs from '@ohos.file.fs';
  * @TODO Logger   日志工具类
  */
 export class Logger {
+
+  //优化日志   https://gitee.com/harmonyos_samples/logger
+
   private static domain: number;
   private static prefix: string;
   private static format: string = '%{public}s%{public}s';
