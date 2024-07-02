@@ -23,6 +23,10 @@ export class ImageUtil {
   //参考 https://developer.huawei.com/consumer/cn/forum/topic/0203144584728486846?fid=0109140870620153026
 
 
+  //背景颜色根据图片颜色更改  https://gitee.com/harmonyos_samples/effect-kit
+
+  //水印  https://gitee.com/harmonyos_samples/watermark
+
   /**
    * 将buffer图片保存到选择路径
    * @param buffer  图片buffer

@@ -9,6 +9,9 @@ import { OutDTO } from '../base/OutDTO';
  * @TODO AudioCapturerUtil  音频工具类
  */
 export class AudioCapturerUtil {
+
+  //视频 https://gitee.com/harmonyos_samples/video-show
+
   /**
    * 音频捕捉器
    */

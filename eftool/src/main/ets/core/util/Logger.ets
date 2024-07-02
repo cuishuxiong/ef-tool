@@ -10,6 +10,7 @@ import fs from '@ohos.file.fs';
 export class Logger {
 
   //优化日志   https://gitee.com/harmonyos_samples/logger
+  //获取内存信息  https://gitee.com/harmonyos_samples/debug
 
   private static domain: number;
   private static prefix: string;

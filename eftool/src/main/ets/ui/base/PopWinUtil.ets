@@ -5,4 +5,6 @@
  * 参考链接 https://developer.huawei.com/consumer/cn/forum/topic/0207150581926669044
  */
 export class PopWinUtil {
+
+  //子窗口实现悬浮  https://gitee.com/harmonyos_samples/sub-window-floating-window
 }
