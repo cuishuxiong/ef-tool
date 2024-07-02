@@ -650,7 +650,7 @@ struct Welcome {
     if (hmac.getSuccess()) {
       this.msg = hmac.getDataRow();
     }
-    let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~', 'base64');
+    let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法base64~~~~~', 'base64');
     if (hmac64.getSuccess()) {
       this.msg = hmac64.getDataRow();
     }

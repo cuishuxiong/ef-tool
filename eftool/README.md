@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.2.0(API12)</center>
+# <center>V1.2.1-rc.0(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -73,6 +73,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | ECDH       | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
 | X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
 | SM2Convert | 提供SM2ASN1与C1C3C2转换类                  |
+| SHA1       | 提供SHA1的散列哈希算法                        |
 
 ### 3.网络相关类组件
 
@@ -1419,6 +1420,39 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = md5.getDataRow();
 ```
 
+* hash 散列哈希算法(1.2.1-rc.0+)
+
+```
+   //默认不传编码格式为hex
+   let hash = MD5.hash('测试MD5散列算法hex~~~');
+   if (hash.getSuccess()) {
+     this.msg = hash.getDataRow();
+   }
+   //传入base64表示生成的为base64的散列值
+   let hash64 = MD5.hash('测试MD5散列算法base64~~~', 'base64');
+   if (hash64.getSuccess()) {
+     this.msg = hash64.getDataRow();
+   }
+```
+
+* hmac hmac(1.2.1-rc.0+)
+
+```
+  //生成16位的key
+  let key = RandomUtil.generateIV();
+
+  //默认不传编码格式为hex
+  let hmac = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~');
+  if (hmac.getSuccess()) {
+    this.msg = hmac.getDataRow();
+  }
+  //传入base64表示生成的为base64的hmac值
+  let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法base64~~~~~', 'base64');
+  if (hmac64.getSuccess()) {
+    this.msg = hmac64.getDataRow();
+  }
+```
+
 #### 9.ECDSA的方法【返回结果均为OutDTO对象】
 
 * generateECDSAKey 生成ECDSA的非对称密钥
@@ -1513,6 +1547,17 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     //对称解密
     let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
     this.message = decode.getDataRow();
+```
+
+#### 12.SHA1的方法【返回结果均为OutDTO对象】(1.2.1-rc.0+)
+
+* hash 散列哈希算法
+
+```
+  let sha1 = SHA1.hash('测试SHA1散列算法~~~~~~~');
+  if (sha1.getSuccess()) {
+    this.msg = sha1.getDataRow();
+  }
 ```
 
 ### 4.JSON相关组件使用API
@@ -3667,7 +3712,6 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 //后续添加
 ```
-
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 

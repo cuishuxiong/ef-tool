@@ -14,7 +14,7 @@ export class SHA1 {
 
 
   /**
-   * 散列算法
+   * 散列哈希算法
    * @param value
    * @returns
    */

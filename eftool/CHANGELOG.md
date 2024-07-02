@@ -1,26 +1,16 @@
 # Changelog
 
-## [v1.2.1] 2024-06
+## [v1.2.1-rc.0] 2024-06
 
 ### 🐣新特性(API12)
 
-* 新增自定义弹框工具类CustomDialog
-* 新增底部导航TabBarUtil
-* 新增悬浮框工具类PopWinUtil
-* 新增切片工具类AopUtil
-* 新增音频工具类AudioUtil
-* 新增ImgPreviewUtil图片预览工具
-* 优化DateUtil工具类
-* 新增时间选中工具类DatePickerUtil
 * 升级axios为2.2.1-rc.2
 * MD5新增散列算法以及hmac算法
 * 新增SHA1的散列算法
 
 ### 🐞功能优化
 
-* 优化支持所有加解密可自定义返回编码方式[issuesIA5Z7Q](https://gitee.com/yunkss/ef-tool/issues/IA5Z7Q)
-* 优化efAxios返回错误码以及错误信息[issuesIA8DSD](https://gitee.com/yunkss/ef-tool/issues/IA8DSD)
-* 优化efAxios中Query和入参不一致也可请求成功[issuesIA8NWU](https://gitee.com/yunkss/ef-tool/issues/IA8NWU)
+* 优化UI组件中弹出类型的背景色为透明,如Alert,Confirm,Loading,Tips等
 
 ## [v1.2.0] 2024-06
 

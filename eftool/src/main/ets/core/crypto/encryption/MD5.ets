@@ -20,7 +20,7 @@ export class MD5 {
   }
 
   /**
-   * 散列算法
+   * 散列哈希算法
    * @param value 待处理字符
    * @param enCoding 编码格式hex/base64
    * @returns
