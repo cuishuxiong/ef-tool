@@ -18,7 +18,7 @@
   "description": "一款高效的兼容API12的HarmonyOS工具包.封装了常用工具类如字符串、正则、加解密、图片处理、axios、json等和常用UI组件如Dialog,Loading,Cascade,通知,位置,窗口等,提供一系列快捷操作方法.",
   "main": "index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
-  "version": "1.2.1-rc.0",
+  "version": "1.2.1-rc.1",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
     "@ohos/axios": "^2.2.1-rc.2"
