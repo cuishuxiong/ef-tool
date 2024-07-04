@@ -59,7 +59,10 @@ export class StrAndUintUtil {
       hexString?.forEach((val) => {
         arr.push(val);
       })
-      const byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+      let byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+      if (byteArray.length == 0) {
+        byteArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      }
       return new Uint8Array(byteArray);
     } else {
       return new Uint8Array(buffer.from(str, 'utf-8').buffer);
