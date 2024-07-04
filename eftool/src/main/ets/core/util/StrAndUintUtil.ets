@@ -3,9 +3,9 @@
  * @DateTime 2024/3/18 21:29
  * @TODO StrAndUintUtil 字符串和Uint8Array工具类
  */
-import { SM2Convert } from '../../../../..';
 import { StringBuilder } from '../base/StringBuilder';
 import { buffer } from '@kit.ArkTS';
+import { SM2Convert } from '../crypto/encryption/sm2/SM2Convert';
 
 export class StrAndUintUtil {
   /**
