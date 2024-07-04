@@ -112,12 +112,13 @@ class EfClientApi {
    * @param data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
    * @param uri   isUri=true时传入  表示上传的文件为uri格式
    * @param keyName  上传时后端接收的key,默认为file
+   * @param headers 自定义请求头
    * @returns 上传结果
 
 
    */
   async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,
-    data?: ArrayBuffer, uri?: string, keyName?: string) {
+    data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>) {
     let formData = new FormData();
     if (keyName) {
       if (isUri) {
@@ -137,6 +138,12 @@ class EfClientApi {
     addHead.set('Content-Type', 'multipart/form-data', true);
     addHead.set('Accept', '*/*', true);
     addHead.set('Req-Type', 'uploadOrDownload', true);
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
     return await efAxios.post<string, AxiosResponse<string>, FormData>(url, formData, {
       headers: addHead,
       context: getContext(this) as common.UIAbilityContext,
@@ -159,9 +166,10 @@ class EfClientApi {
    * @param url 下载URL
    * @param filePath  下载文件全路径
    * @param progressCallBack  下载进度回调方法
+   * @param headers 自定义请求头
    * @returns
    */
-  async download(url: string, filePath: string, progressCallBack: (process: number) => void) {
+  async download(url: string, filePath: string, progressCallBack: (process: number) => void, headers?: Record<string, Object>) {
     //获取上下文
     let context = getContext(this) as common.UIAbilityContext;
     let filesDir = context.filesDir;
@@ -180,6 +188,12 @@ class EfClientApi {
     //需要添加的header对象
     let addHead: AxiosHeaders = new AxiosHeaders();
     addHead.set('Req-Type', 'uploadOrDownload', true);
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
     //下载
     return await efAxios({
       url: url,

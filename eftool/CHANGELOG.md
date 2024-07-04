@@ -8,6 +8,9 @@
 * 升级所有加解密相关为同步
 * 新增自定义键盘
 
+### 🐞功能优化
+
+* efClientApi中上传下载支持传入header[issuesIAA5PI](https://gitee.com/yunkss/ef-tool/issues/IAA5PI)
 
 ## [v1.2.1-rc.0] 2024-06
 
