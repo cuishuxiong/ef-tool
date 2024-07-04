@@ -14,6 +14,8 @@ export { RandomUtil } from './src/main/ets/core/util/RandomUtil';
 
 export { StrUtil } from './src/main/ets/core/util/StrUtil';
 
+export { StringBuilder } from './src/main/ets/core/base/StringBuilder';
+
 export { StrAndUintUtil } from './src/main/ets/core/util/StrAndUintUtil';
 
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
