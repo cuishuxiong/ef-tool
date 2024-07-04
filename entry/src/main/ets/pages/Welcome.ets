@@ -277,6 +277,7 @@ struct Welcome {
       //获取选中照片uri
       let item = list[0];
       //创建文件信息
+      //创建文件信息
       let fileUriObject = new fileUri.FileUri(item);
       //获取文件名
       let name = fileUriObject.name;
@@ -628,10 +629,23 @@ struct Welcome {
   }
 
   async testBase64() {
-    let a = await Base64Util.encodeToStr(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
-    let b = Base64Util.encodeToStrSync(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
-    let c = await Base64Util.decode(a);
-    let d = Base64Util.decodeSync(b);
+    // let a = await Base64Util.encodeToStr(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
+    // let b = Base64Util.encodeToStrSync(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
+    // let c = await Base64Util.decode(a);
+    // let d = Base64Util.decodeSync(b);
+
+    let encodeCBCResponse = await AES.encodeCBC128("Aa1234567", "MRZs0XSKKEjvtnsI", "1234567890123458");
+    if (!encodeCBCResponse.getSuccess()) {
+      console.error("CBC加密失败:", encodeCBCResponse.getMsg());
+    }
+    let hexStr = encodeCBCResponse.getDataRow();
+    let b =  Base64Util.encodeHexStr2base64(hexStr);
+    console.log("112313123131")
+    console.log(hexStr)
+    console.log(b)
+    console.log("112313123131")
+
+
   }
 
   testMD5() {

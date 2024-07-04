@@ -3,7 +3,7 @@
  * @DateTime 2024/6/6 00:19
  * @TODO Base64Util  base64工具类
  */
-import { util } from '@kit.ArkTS';
+import { buffer, util } from '@kit.ArkTS';
 
 export class Base64Util {
   /**
@@ -46,5 +46,15 @@ export class Base64Util {
     let base64 = new util.Base64Helper();
     let result = base64.decodeSync(str, options);
     return result;
+  }
+
+  /**
+   * hex格式字符串转base64
+   * @param hexStr  16进制字符串
+   * @param options
+   * @returns
+   */
+  static encodeHexStr2base64(hexStr: string, options?: util.Type): string {
+    return Base64Util.encodeToStrSync(new Uint8Array(buffer.from(hexStr).buffer), options);
   }
 }
