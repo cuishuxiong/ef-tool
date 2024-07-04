@@ -61,7 +61,11 @@ export class StrAndUintUtil {
       })
       let byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
       if (byteArray.length == 0) {
-        byteArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let emptyArr = new Array<number>();
+        for (let i = 0; i < keyName / 8; i++) {
+          emptyArr.push(0);
+        }
+        byteArray = emptyArr;
       }
       return new Uint8Array(byteArray);
     } else {

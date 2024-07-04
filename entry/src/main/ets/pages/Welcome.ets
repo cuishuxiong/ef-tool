@@ -634,12 +634,19 @@ struct Welcome {
     // let c = await Base64Util.decode(a);
     // let d = Base64Util.decodeSync(b);
 
-    let encodeCBCResponse = await AES.encodeCBC128("Aa1234567", "MRZs0XSKKEjvtnsI", "1234567890123458");
+    let encodeCBCResponse = await AES.encodeCBC128("Aa1234567", "MRZs0XSKKEjvtnsI", "");
     if (!encodeCBCResponse.getSuccess()) {
       console.error("CBC加密失败:", encodeCBCResponse.getMsg());
     }
     let hexStr = encodeCBCResponse.getDataRow();
-    let b =  Base64Util.encodeHexStr2base64(hexStr);
+
+    const hexString = hexStr.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+    let arr = new Array<string>();
+    hexString?.forEach((val) => {
+      arr.push(val);
+    })
+    const byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+    let b = Base64Util.encodeToStrSync(new Uint8Array(byteArray));
     console.log("112313123131")
     console.log(hexStr)
     console.log(b)
