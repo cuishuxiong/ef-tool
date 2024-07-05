@@ -2,7 +2,6 @@ import { FunctionalButton, functionalButtonComponentManager } from '@kit.Scenari
 import { BusinessError } from '@kit.BasicServicesKit';
 import { ToastUtil } from '../prompt/ToastUtil';
 import { JSONObject } from '../../core/json/JSONObject';
-import { JSON } from '@kit.ArkTS';
 
 /**
  * 场景按钮UI
