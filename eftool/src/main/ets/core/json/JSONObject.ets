@@ -53,7 +53,8 @@ export class JSONObject extends HashMap<string, JSONValue> {
         if (nestedJson[key[0]] instanceof Date) {
           nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
         } else if (Array.isArray(nestedJson[key[0]])) {
-          nestedData[key[0]] = (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
+          nestedData[key[0]] =
+            (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
         } else {
           nestedData[key[0]] = JSONObject.parseNestedObject(nestedJson[key[0]] as Record<string, JSONValue>);
         }
@@ -87,6 +88,15 @@ export class JSONObject extends HashMap<string, JSONValue> {
    * @returns JSON字符串
    */
   public static toJSONString(object: Object): string {
+    if (object instanceof Map) {
+      let map = new HashMap<string, JSONValue>();
+      (object as Map<string, JSONValue>).forEach((val, key) => {
+        map.set(key,val);
+      })
+      //获取key迭代器
+      let iter: IterableIterator<string> = map.keys();
+      return new JSONObject().convertString(iter, map);
+    }
     //转换成字符串
     let str = JSON.stringify(object);
     //转换成json对象
@@ -179,7 +189,8 @@ export class JSONObject extends HashMap<string, JSONValue> {
       } else if (val instanceof JSONArrayList) {
         sb.append(Const.quot + key + Const.quot + Const.mh + (val as JSONArrayList).toString());
       } else if (val instanceof Date) {
-        sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + DateUtil.format((val as Date), DateConst.YMD_HLINE_HMS) + Const.quot);
+        sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot +
+        DateUtil.format((val as Date), DateConst.YMD_HLINE_HMS) + Const.quot);
       } else if (val instanceof Object) {
         //转换成字符串
         let str = JSON.stringify(val);
@@ -194,7 +205,8 @@ export class JSONObject extends HashMap<string, JSONValue> {
         sb.append(Const.quot + key + Const.quot + Const.mh + jo.toString());
       } else if (typeof val === 'string') {
         if (DateUtil.isDate(val)) {
-          sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + DateUtil.formatDate(val, DateConst.YMD_HLINE_HMS) + Const.quot);
+          sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot +
+          DateUtil.formatDate(val, DateConst.YMD_HLINE_HMS) + Const.quot);
         } else {
           sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
         }

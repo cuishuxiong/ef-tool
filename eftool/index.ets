@@ -126,6 +126,8 @@ export { PickerUtil } from './src/main/ets/ui/base/PickerUtil';
 
 export { CameraUtil } from './src/main/ets/ui/base/CameraUtil';
 
+export { ButtonUtil,BtnOptions } from './src/main/ets/ui/base/ButtonUtil';
+
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
 
 export { Cascade } from './src/main/ets/ui/select/Cascade';

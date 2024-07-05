@@ -7,6 +7,8 @@ import {
   AES,
   AudioCapturerUtil,
   Base64Util,
+  BtnOptions,
+  ButtonUtil,
   CameraUtil,
   DES,
   DownloadUtil,
@@ -39,6 +41,7 @@ import { ArrayList, buffer, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
+import { functionalButtonComponentManager } from '@kit.ScenarioFusionKit';
 
 
 class TestDDD {
@@ -757,14 +760,22 @@ struct Welcome {
     }
   }
 
+  @State btnOptions: BtnOptions = {
+    label: '打开设置',
+    type: functionalButtonComponentManager.OpenType.OPEN_SETTING
+  };
+
   build() {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        ButtonUtil({
+          btnOptions: this.btnOptions
+        })
         Button('MD5工具类').margin({ top: 20 }).onClick(() => {
           this.testMD5();
         })
-        Button('SHA1工具类').margin({ top: 20 }).onClick(() => {
+        Button('SHA1工具类').margin({ top: 20, bottom: 20 }).onClick(() => {
           this.testSHA1();
         })
         SaveButton({
