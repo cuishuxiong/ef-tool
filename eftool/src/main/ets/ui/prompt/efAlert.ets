@@ -41,14 +41,16 @@ struct efAlert {
               //当前窗体名称
               let winName = LocalStorage.getShared().get<string>("efDialogName");
               //确定点击事件
-              if (this.options.okCallBack) {
-                //如果非自动关闭回调函数返回当前窗体名称
-                if (this.options.isAutoClose == false) {
-                  this.options.okCallBack(winName);
-                } else {
-                  this.options.okCallBack();
+              this.getUIContext().runScopedTask(() => {
+                if (this.options.okCallBack) {
+                  //如果非自动关闭回调函数返回当前窗体名称
+                  if (this.options.isAutoClose == false) {
+                    this.options.okCallBack(winName);
+                  } else {
+                    this.options.okCallBack();
+                  }
                 }
-              }
+              })
               if (this.options.isAutoClose) {
                 if (winName) {
                   //关闭弹窗
@@ -63,14 +65,16 @@ struct efAlert {
               //当前窗体名称
               let winName = LocalStorage.getShared().get<string>("efDialogName");
               //取消点击事件
-              if (this.options.cancelCallBack) {
-                //如果非自动关闭回调函数返回当前窗体名称
-                if (this.options.isAutoClose == false) {
-                  this.options.cancelCallBack(winName);
-                } else {
-                  this.options.cancelCallBack();
+              this.getUIContext().runScopedTask(() => {
+                if (this.options.cancelCallBack) {
+                  //如果非自动关闭回调函数返回当前窗体名称
+                  if (this.options.isAutoClose == false) {
+                    this.options.cancelCallBack(winName);
+                  } else {
+                    this.options.cancelCallBack();
+                  }
                 }
-              }
+              });
               if (this.options.isAutoClose) {
                 if (winName) {
                   //关闭弹窗
@@ -86,8 +90,18 @@ struct efAlert {
       }
       .backgroundColor('#fff')
       .borderRadius(UiConst.NUMBER_10)
-      .margin({ top: UiConst.NUMBER_20, bottom: UiConst.NUMBER_20, left: UiConst.NUMBER_20, right: UiConst.NUMBER_20 })
-      .padding({ top: UiConst.NUMBER_20, bottom: UiConst.NUMBER_20, left: UiConst.NUMBER_20, right: UiConst.NUMBER_20 })
+      .margin({
+        top: UiConst.NUMBER_20,
+        bottom: UiConst.NUMBER_20,
+        left: UiConst.NUMBER_20,
+        right: UiConst.NUMBER_20
+      })
+      .padding({
+        top: UiConst.NUMBER_20,
+        bottom: UiConst.NUMBER_20,
+        left: UiConst.NUMBER_20,
+        right: UiConst.NUMBER_20
+      })
     }
     .width('100%')
     .height('100%')

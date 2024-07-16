@@ -569,16 +569,16 @@ struct Welcome {
   }
 
   async openAlert() {
-    let _that = this;
+    // let _that = this;
     await WinDialogUtil.showAlert({
       title: 'ef温馨提示',
       content: '只设置了内容，其他都默认~~~~~',
       isAutoClose: false,
       okCallBack: (winName?: string) => {
-        _that.openAlertTwo(winName)
+        this.openAlertTwo(winName)
       },
       cancelCallBack: (winName?: string) => {
-        _that.testJSONObject();
+        this.testJSONObject();
         if (winName) {
           WinDialogUtil.closeAlert(winName);
         }
