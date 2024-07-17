@@ -5,6 +5,7 @@
  */
 import { OutDTO } from '../base/OutDTO';
 import { StrAndUintUtil } from './StrAndUintUtil';
+import { buffer } from '@kit.ArkTS';
 
 export class RandomUtil {
   /**
@@ -64,12 +65,12 @@ export class RandomUtil {
    * @param size
    * @returns
    */
-  static randomStrBySize(size: number): string {
-    let randArray:number[] = [];
+  static randomStrBySize(size: number, coding: buffer.BufferEncoding): string {
+    let randArray: number[] = [];
     for (let i = 0; i < size; i++) {
       randArray[i] = Math.floor(Math.random() * 256);
     }
-    let str = StrAndUintUtil.unitArray2String(new Uint8Array(randArray));
+    let str = StrAndUintUtil.unitArray2StrCoding(new Uint8Array(randArray), coding);
     return str;
   }
 
@@ -90,8 +91,7 @@ export class RandomUtil {
    * 生成CBC模式的iv
    * @returns iv字符串
    */
-  static generateIV(): OutDTO<string> {
-    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16));
+  static generateIV(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16, coding));
   }
-
 }

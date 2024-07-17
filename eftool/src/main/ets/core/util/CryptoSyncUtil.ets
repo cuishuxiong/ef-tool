@@ -43,8 +43,8 @@ export class CryptoSyncUtil {
    * @param symAlgName 秘钥规格
    * @returns
    */
-  static convertKeyFromStr(aesKey: string, symAlgName: string, keyName: number) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(aesKey, keyName) };
+  static convertKeyFromStr(aesKey: string, symAlgName: string, keyName: number, keyCoding: buffer.BufferEncoding) {
+    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.strKey2Uint8Array(aesKey, keyName, keyCoding) };
     let aesGenerator = crypto.createSymKeyGenerator(symAlgName);
     let symKey = aesGenerator.convertKeySync(symKeyBlob);
     return symKey;
@@ -55,8 +55,8 @@ export class CryptoSyncUtil {
    * @param ivStr
    * @returns
    */
-  static genIvParamsSpec(ivStr: string, keyName: number): crypto.IvParamsSpec {
-    let ivBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(ivStr, keyName) };
+  static genIvParamsSpec(ivStr: string, ivCoding: buffer.BufferEncoding): crypto.IvParamsSpec {
+    let ivBlob: crypto.DataBlob = { data: StrAndUintUtil.strKey2Uint8Array(ivStr, 128, ivCoding) };
     let ivParamsSpec: crypto.IvParamsSpec = {
       algName: "IvParamsSpec",
       iv: ivBlob
@@ -65,17 +65,17 @@ export class CryptoSyncUtil {
   }
 
   /**
-   * 生成对称密钥
+   * 生成对称密钥-指定密钥生成格式(默认base64)
    * @param symAlgName 秘钥规格
    * @returns 指定秘钥规格的对称密钥
    */
-  static generateSymKey(symAlgName: string): OutDTO<string> {
+  static generateSymKey(symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     // 创建对称密钥生成器
     let symKeyGenerator = crypto.createSymKeyGenerator(symAlgName);
     // 通过非对称密钥生成器，随机生成非对称密钥
     let promiseSymKey = symKeyGenerator.generateSymKeySync();
     //转换成可以读懂的字符串
-    let key = StrAndUintUtil.unitArray2String(promiseSymKey.getEncoded().data);
+    let key = StrAndUintUtil.unitArray2StrCoding(promiseSymKey.getEncoded().data, resultCoding);
     // 获取对称密钥的二进制数据
     return OutDTO.OKByDataRow<string>('生成' + symAlgName + '密钥成功~', key);
   }
@@ -85,14 +85,14 @@ export class CryptoSyncUtil {
    * @param symAlgName 秘钥规格
    * @returns 指定秘钥规格的非对称公私
    */
-  static generateCryptoKey(symAlgName: string): OutDTO<CryptoKey> {
+  static generateCryptoKey(symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<CryptoKey> {
     // 创建非对称密钥生成器
     let rsaGenerator = crypto.createAsyKeyGenerator(symAlgName);
     // 通过非对称密钥生成器，随机生成非对称密钥
     let promiseKeyPair = rsaGenerator.generateKeyPairSync();
     // 转换成可以读懂的公私钥字符串
-    let pubKey = StrAndUintUtil.unitArray2String(promiseKeyPair.pubKey.getEncoded().data);
-    let priKey = StrAndUintUtil.unitArray2String(promiseKeyPair.priKey.getEncoded().data);
+    let pubKey = StrAndUintUtil.unitArray2StrCoding(promiseKeyPair.pubKey.getEncoded().data, resultCoding);
+    let priKey = StrAndUintUtil.unitArray2StrCoding(promiseKeyPair.priKey.getEncoded().data, resultCoding);
     return OutDTO.OKByDataRow<CryptoKey>('生成' + symAlgName + '公私钥成功~', new CryptoKey(pubKey, priKey));
   }
 
@@ -106,21 +106,21 @@ export class CryptoSyncUtil {
    * @returns
    */
   static encodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     //转换key
-    let symKey = CryptoSyncUtil.convertKeyFromStr(key, symAlgName, keyName);
+    let symKey = CryptoSyncUtil.convertKeyFromStr(key, symAlgName, keyName, keyCoding);
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化加密
-    cipher.initSync(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyName));
+    cipher.initSync(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyCoding));
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
     let updateOutput = cipher.doFinalSync({ data: encode.encodeInto(str) });
     //转换字符串
-    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, resultCoding);
     //返回
     return OutDTO.OKByDataRow<string>(symAlgName + '-CBC加密成功~', result);
   }
@@ -134,9 +134,9 @@ export class CryptoSyncUtil {
    * @returns
    */
   static encodeECB(str: string, key: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     //转换key
-    let symKey = CryptoSyncUtil.convertKeyFromStr(key, symAlgName, keyName);
+    let symKey = CryptoSyncUtil.convertKeyFromStr(key, symAlgName, keyName, keyCoding);
     // 初始化加解密操作环境
     let mode = crypto.CryptoMode.ENCRYPT_MODE;
     //创建加密器
@@ -148,7 +148,7 @@ export class CryptoSyncUtil {
     //开始加密
     let updateOutput = cipher.doFinalSync({ data: encode.encodeInto(str) });
     //转换字符串
-    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
+    let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, resultCoding);
     //返回
     return OutDTO.OKByDataRow<string>(symAlgName + '-ECB加密成功~', result);
   }
@@ -163,19 +163,21 @@ export class CryptoSyncUtil {
    * @returns
    */
   static decodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
     //转换密钥
-    let symKey = CryptoSyncUtil.convertKeyFromStr(key, symAlgName, keyName);
+    let symKey = CryptoSyncUtil.convertKeyFromStr(key, symAlgName, keyName, keyCoding);
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化解密
-    cipher.init(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyName));
+    cipher.init(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyCoding));
     //解密
-    let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.stringToByteArray(str, keyName) });
-    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    return OutDTO.OKByDataRow(symAlgName + '-CBC解密成功~', decode.decodeWithStream(updateOutput.data));
+    let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
+    // let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    // decode.decodeWithStream(updateOutput.data)
+    let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, 'utf8');
+    return OutDTO.OKByDataRow(symAlgName + '-CBC解密成功~', result);
   }
 
   /**
@@ -186,9 +188,9 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    */
   static decodeECB(str: string, sm4Key: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
     //转换密钥
-    let symKey = CryptoSyncUtil.convertKeyFromStr(sm4Key, symAlgName, keyName);
+    let symKey = CryptoSyncUtil.convertKeyFromStr(sm4Key, symAlgName, keyName, keyCoding);
     // 初始化加解密操作环境:开始解密
     let mode = crypto.CryptoMode.DECRYPT_MODE;
     //创建解密器
@@ -196,9 +198,11 @@ export class CryptoSyncUtil {
     //初始化解密
     cipher.init(mode, symKey, null);
     //解密
-    let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.stringToByteArray(str, keyName) });
-    let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    return OutDTO.OKByDataRow(symAlgName + '-ECB解密成功~', decode.decodeWithStream(updateOutput.data));
+    let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
+    // let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    // decode.decodeWithStream(updateOutput.data)
+    let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, 'utf8');
+    return OutDTO.OKByDataRow(symAlgName + '-ECB解密成功~', result);
   }
 
   /**
@@ -321,7 +325,7 @@ export class CryptoSyncUtil {
     let encoder = crypto.createCipher(symEncryptName);
     //初始化解密环境
     encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
-    let cryptoArr = StrAndUintUtil.stringToByteArray(str, keyName);
+    let cryptoArr = StrAndUintUtil.strContent2Uint8Array(str, 'utf8');
     // if (symAlgName.indexOf('SM2') >= 0 || symEncryptName.indexOf('SM2') >= 0) {
     //   cryptoArr = StrAndUintUtil.stringToByteArray(str, true);
     // } else {

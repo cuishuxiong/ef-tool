@@ -4,7 +4,10 @@
  * @TODO StrUtil   字符串工具类
  */
 import { ArrayUtil } from './ArrayUtil';
+import { Base64Util } from './Base64Util';
 import { CharUtil } from './CharUtil'
+import { util } from '@kit.ArkTS';
+import { it } from '@ohos/hypium';
 
 export class StrUtil {
   /**
@@ -236,6 +239,39 @@ export class StrUtil {
       }
     }
     return string.slice(0, options.length) + options.omission;
+  }
+
+  static isBase64String(str: string): boolean {
+    let isOK = false;
+    try {
+      let arr = Base64Util.decodeSync(str);
+      let decoder = new util.TextDecoder();
+      let newArr = decoder.decodeWithStream(arr)
+      if (str.length != newArr.length) {
+        return true;
+      }
+      for (let i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) !== newArr.charCodeAt(i)) {
+          return true; // 字符不同，不是UTF-8格式的文本
+        }
+      }
+    } catch (e) {
+      return isOK;
+    }
+    return isOK;
+  }
+
+  static isUTF8String(str: string): boolean {
+    // UTF-8 编码的字符串通常包含 ASCII 可打印字符和特定的 UTF-8 字符
+    // 这里使用一个简单的正则表达式来判断
+    const utf8Regex = /^[\x00-\x7F\xC2-\xFD]*$/;
+    return utf8Regex.test(str);
+  }
+
+  static isHexString(str: string): boolean {
+    // 十六进制字符串通常包含 0-9 和 a-f 或 A-F
+    const hexRegex = /^[0-9a-fA-F]*$/;
+    return hexRegex.test(str);
   }
 }
 

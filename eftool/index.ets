@@ -24,6 +24,8 @@ export { JSONUtil } from './src/main/ets/core/json/JSONUtil';
 
 export { RegexConst } from './src/main/ets/core/const/RegexConst';
 
+export { UiConst } from './src/main/ets/core/const/UiConst';
+
 export { OutDTO } from './src/main/ets/core/base/OutDTO';
 
 export { DateConst } from './src/main/ets/core/const/DateConst';
@@ -41,6 +43,8 @@ export { PageResult } from './src/main/ets/core/page/PageResult';
 export { RSA } from './src/main/ets/core/crypto/encryption/RSA';
 
 export { AES } from './src/main/ets/core/crypto/encryption/AES';
+
+export { AESSync } from './src/main/ets/core/crypto/encryption/AESSync';
 
 export { SM2 } from './src/main/ets/core/crypto/encryption/sm2/SM2';
 
@@ -126,7 +130,7 @@ export { PickerUtil } from './src/main/ets/ui/base/PickerUtil';
 
 export { CameraUtil } from './src/main/ets/ui/base/CameraUtil';
 
-export { ButtonUtil,BtnOptions } from './src/main/ets/ui/base/ButtonUtil';
+export { ButtonUtil, BtnOptions } from './src/main/ets/ui/base/ButtonUtil';
 
 // export { ExceptionDialogUtil } from './src/main/ets/ui/prompt/ExceptionDialogUtil';
 
@@ -139,3 +143,9 @@ export { WindowUtil } from './src/main/ets/ui/base/WindowUtil';
 export { AuthUtil } from './src/main/ets/core/auth/AuthUtil';
 
 export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
+
+export { ImgPreviewUtil } from './src/main/ets/core/media/ImgPreviewUtil';
+
+export { TypeWritingUtil } from './src/main/ets/device/keyboard/TypeWritingUtil';
+
+export { PrefUtil } from './src/main/ets/device/PrefUtil';

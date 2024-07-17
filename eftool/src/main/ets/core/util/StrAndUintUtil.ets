@@ -6,8 +6,21 @@
 import { StringBuilder } from '../base/StringBuilder';
 import { buffer } from '@kit.ArkTS';
 import { SM2Convert } from '../crypto/encryption/sm2/SM2Convert';
+import { Base64Util } from './Base64Util';
+import { StrUtil } from './StrUtil';
 
 export class StrAndUintUtil {
+  /**
+   * 字符串转uint8Array
+   * @param str  待转换字符串
+   * @param coding  转换结果编码
+   * @returns
+   */
+  static str2Uint8Array(str: string, coding: buffer.BufferEncoding) {
+    return new Uint8Array(buffer.from(str, coding).buffer);
+  }
+
+
   /**
    * 将字节流以16进制字符串输出
    * @param arr  Uint8Array数组
@@ -21,6 +34,16 @@ export class StrAndUintUtil {
       asn1Str = new SM2Convert().d2i(asn1Str);
     }
     return asn1Str;
+  }
+
+  /**
+   * 将字节流以16进制字符串输出-入参编码格式
+   * @param arr  Uint8Array数组
+   * @param coding
+   * @returns 字符串
+   */
+  static unitArray2StrCoding(arr: Uint8Array, coding: buffer.BufferEncoding): string {
+    return buffer.from(arr).toString(coding);
   }
 
   /**
@@ -40,6 +63,105 @@ export class StrAndUintUtil {
     }
     return asn1Str;
   }
+
+  /**
+   * 将字符串转换成uint8Array-加解密key
+   * @param str  字符串
+   * @param keyLen  编码长度
+   * @param keyCoding key的编码格式
+   * @returns
+   */
+  static strKey2Uint8Array(str: string, keyLen: number, keyCoding: buffer.BufferEncoding): Uint8Array {
+    //判断编码类型
+    if (keyCoding === 'base64') {
+      //base64
+      let base64Arr = Base64Util.decodeSync(str);
+      if (base64Arr.length != keyLen / 8) {
+        //需要
+        //转换成hex字符串
+        let str1 = buffer.from(base64Arr).toString('hex');
+        const hexString = str1.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+        let arr = new Array<string>();
+        hexString?.forEach((val) => {
+          arr.push(val);
+        })
+        let byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+        if (byteArray.length === base64Arr.length) {
+          //说明是utf8字符串
+          str1 = buffer.from(base64Arr).toString('utf8');
+          const hexString = str1.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+          arr = new Array<string>();
+          hexString?.forEach((val) => {
+            arr.push(val);
+          })
+          byteArray = arr.map(byte => parseInt(byte, 16));
+        }
+        return new Uint8Array(byteArray);
+      }
+      return base64Arr;
+    }
+    if (keyCoding === 'hex') {
+      let arr = StrAndUintUtil.str2Uint8Array(str, 'hex');
+      return StrAndUintUtil.arrNeedSplit(arr, str, keyLen);
+    }
+    if (keyCoding === 'utf8') {
+      let arr = StrAndUintUtil.str2Uint8Array(str, 'utf8');
+      return StrAndUintUtil.arrNeedSplit(arr, str, keyLen);
+    }
+    return new Uint8Array(buffer.from(str).buffer);
+  }
+
+
+  /**
+   * 将字符串转换成uint8Array-加解密内容
+   * @param str  字符串
+   * @param keyLen  编码长度
+   * @returns
+   */
+  static strContent2Uint8Array(str: string, coding: buffer.BufferEncoding): Uint8Array {
+    //判断编码类型
+    if (coding === 'base64') {
+      //base64
+      return Base64Util.decodeSync(str);
+    }
+    if (coding === 'hex') {
+      return StrAndUintUtil.str2Uint8Array(str, 'hex');
+    }
+    if (coding === 'utf8') {
+      return StrAndUintUtil.str2Uint8Array(str, 'utf8');
+    }
+    return new Uint8Array(buffer.from(str).buffer);
+  }
+
+
+  /**
+   * 判断数组是否需要截取
+   * @param arr  判断的数组
+   * @param str  源字符串
+   * @param keyLen  编码长度
+   * @returns
+   */
+  static arrNeedSplit(arr: Uint8Array, str: string, keyLen: number): Uint8Array {
+    if (arr.length != keyLen / 8) {
+      //需要截取
+      const hexString = str.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+      let arr = new Array<string>();
+      hexString?.forEach((val) => {
+        arr.push(val);
+      })
+      let byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+      if (byteArray.length == 0) {
+        let emptyArr = new Array<number>();
+        for (let i = 0; i < keyLen / 8; i++) {
+          emptyArr.push(0);
+        }
+        byteArray = emptyArr;
+      }
+      return new Uint8Array(byteArray);
+    }
+    return arr;
+  }
+
 
   /**
    * 字符串转换为Uint8Array数组

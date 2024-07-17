@@ -4,7 +4,7 @@
  * @TODO ButtonUtil  场景化按钮工具类
  */
 @Component
-export struct inputting {
+export struct TypeWritingUtil {
   @Link text: string
   @State curIndex: number = 0
   @State placeholderText: string = '请输入值'
@@ -206,7 +206,7 @@ export struct inputting {
         .onAction(() => {
           if (this.showNum) {
             this.popText = item.key.toString()
-          }else{
+          } else {
             this.popText = item.value.toString()
           }
           this.showPopup = true
@@ -252,10 +252,11 @@ export struct inputting {
             }
           }.width('100%').height('50%')
           .scrollable(ScrollDirection.Horizontal)
-          .padding({bottom:5})
+          .padding({ bottom: 5 })
         }
         .layoutWeight(1).height('100%')
         .alignItems(HorizontalAlign.Start)
+
         //隐藏按钮
         Column() {
           Image($r('app.media.loading'))

@@ -11,6 +11,7 @@ import { CommonConst as Const } from '../const/CommonConst';
 import { DateUtil } from '../util/DateUtil';
 import { DateConst } from '../const/DateConst';
 import { JSONArrayList } from './JSONArrayList';
+import { StrUtil } from '../util/StrUtil';
 
 export class JSONObject extends HashMap<string, JSONValue> {
   /**
@@ -20,6 +21,8 @@ export class JSONObject extends HashMap<string, JSONValue> {
    */
   public static parse(jsonStr: string): JSONObject {
     let json = new JSONObject();
+    //去除字符串中的换行符
+    jsonStr = StrUtil.replace(StrUtil.replace(jsonStr, '\n/g', ''), '\r/g', '');
     //转换成json对象
     let jVal: Record<string, JSONValue> = JSON.parse(jsonStr);
     //循环赋值
@@ -53,8 +56,7 @@ export class JSONObject extends HashMap<string, JSONValue> {
         if (nestedJson[key[0]] instanceof Date) {
           nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
         } else if (Array.isArray(nestedJson[key[0]])) {
-          nestedData[key[0]] =
-            (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
+          nestedData[key[0]] = (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
         } else {
           nestedData[key[0]] = JSONObject.parseNestedObject(nestedJson[key[0]] as Record<string, JSONValue>);
         }

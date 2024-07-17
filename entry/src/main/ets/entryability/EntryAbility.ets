@@ -20,7 +20,7 @@ export default class EntryAbility extends UIAbility {
 
     //初始化
     let imm = new ImmersionUtil();
-    windowStage.loadContent('pages/Index', (err, data) => {
+    windowStage.loadContent('pages/Crypto', (err, data) => {
       //调用沉浸式设置方法
       imm.immersiveWindow(windowStage);
       if (err.code) {

@@ -50,7 +50,7 @@ export class AxiosUtil {
       config.baseURL = efAxiosParams.baseURL;
     }
     //防篡改字段的随机数因子
-    let nonce = RandomUtil.randomStrBySize(16);
+    let nonce = RandomUtil.randomStrBySize(16, 'hex');
     //防篡改字段的随机数因子
     config.headers.nonce = nonce;
     //防重放的随机数因子
@@ -67,7 +67,8 @@ export class AxiosUtil {
     //sm3完整性校验所需sm3Params
     let sm3Params = "";
     //是否全局加密或者是局部加密 并且是post/put请求
-    if ((efAxiosParams.isAllEncrypt || efAxiosParams.isPartEncrypt) && (config.method === 'post' || config.method === 'put')) {
+    if ((efAxiosParams.isAllEncrypt || efAxiosParams.isPartEncrypt) &&
+      (config.method === 'post' || config.method === 'put')) {
       sm3Params = JSON.stringify(config.data);
       //每次请求都重新生成sm4的秘钥
       let sm4Key = await SM4.generateSM4Key();
@@ -76,7 +77,8 @@ export class AxiosUtil {
       //需要将服务器端的公钥转换成前端所需的公钥
       let finalSM2 = await SM2.convertSM2PubKey(efAxiosParams.sm2PubKey);
       //将SM4的密钥用SM2加密存入header
-      config.headers.ef_random_key = (await SM2.encode(sm4IV.getDataRow() + sm4Key.getDataRow(), finalSM2.getDataRow())).getDataRow();
+      config.headers.ef_random_key =
+        (await SM2.encode(sm4IV.getDataRow() + sm4Key.getDataRow(), finalSM2.getDataRow())).getDataRow();
       //整体加密(上传下载不加密请求头Req-Type为uploadOrDownload的请求)
       if (efAxiosParams.isAllEncrypt && config.headers["Req-Type"] != "uploadOrDownload") {
         //判断如果有不加解密的接口则跳过加密
@@ -111,7 +113,7 @@ export class AxiosUtil {
         sm3Params = sm3Params.substring(0, 32);
       }
       //校验因子
-      let enCodeKey = RandomUtil.randomStrBySize(32);
+      let enCodeKey = RandomUtil.randomStrBySize(32, 'hex');
       let sm3 = await SM3.digest(sm3Params + enCodeKey + config.headers.timestamp);
       config.headers.sign = sm3.getDataRow();
     }
@@ -173,7 +175,8 @@ export class AxiosUtil {
    */
   static async convertResponseInfo(response: AxiosResponse) {
     //判断如果有不加解密的接口则跳过加密
-    let lastUrl: string = response.config.url?.slice(response.config.url?.lastIndexOf("/") + 1, response.config.url.length).trim() || "";
+    let lastUrl: string =
+      response.config.url?.slice(response.config.url?.lastIndexOf("/") + 1, response.config.url.length).trim() || "";
     if (response.status === 200) {
       //整体解密
       if (efAxiosParams.isAllEncrypt) {
@@ -244,7 +247,8 @@ export class AxiosUtil {
    * @param iv  sm4的偏移量
    * @returns 查找后的结果
    */
-  private static async convertResponseData(data: Record<string, Object>, key: string, iv: string): Promise<Record<string, Object>> {
+  private static async convertResponseData(data: Record<string, Object>, key: string,
+    iv: string): Promise<Record<string, Object>> {
     if (typeof data === "object") {
       for (let item of Object.entries(data)) {
         if (typeof item[1] === "object") {
@@ -308,7 +312,8 @@ export class AxiosUtil {
    * @param type  请求类型
    * @returns 加密后的对象
    */
-  private static async encryptRequestData(data: Record<string, Object>, sm4key: string, sm4Iv: string, type: string): Promise<Record<string, Object>> {
+  private static async encryptRequestData(data: Record<string, Object>, sm4key: string, sm4Iv: string,
+    type: string): Promise<Record<string, Object>> {
     let params = '';
     let obj: Record<string, Object>;
     if (!data) {
