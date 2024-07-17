@@ -42,6 +42,7 @@ import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
 import { functionalButtonComponentManager } from '@kit.ScenarioFusionKit';
+import { router } from '@kit.ArkUI';
 
 
 class TestDDD {
@@ -560,7 +561,7 @@ struct Welcome {
       title: '测试第二个弹框',
       content: '第二个弹框内容',
       okCallBack: () => {
-        this.aes()
+        router.back({ url: 'pages/Index' })
       },
       cancelCallBack: () => {
         this.testJSONArray()
@@ -769,6 +770,9 @@ struct Welcome {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('跳转页面').margin({ top: 20, bottom: 20 }).onClick(() => {
+          router.pushUrl({ url: 'pages/Three' })
+        })
         ButtonUtil({
           btnOptions: this.btnOptions
         })

@@ -21,7 +21,7 @@
   "version": "1.2.1-rc.1",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    "@ohos/axios": "^2.2.1-rc.2"
+    "@ohos/axios": "2.2.1"
   },
   "dynamicDependencies": {}
 }
