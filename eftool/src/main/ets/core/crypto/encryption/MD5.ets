@@ -28,7 +28,11 @@ export class MD5 {
   static hash(value: string, enCoding?: string): OutDTO<string> {
     let md = new MD5();
     if (enCoding && enCoding == 'base64') {
-      return OutDTO.OKByDataRow('MD5散列算法Base64成功~', md.b64_md5(value));
+      let md5 = md.b64_md5(value);
+      if (!md5.endsWith('==')) {
+        md5 += '==';
+      }
+      return OutDTO.OKByDataRow('MD5散列算法Base64成功~', md5);
     }
     return OutDTO.OKByDataRow('MD5散列算法成功~', md.hex_md5(value));
   }
@@ -43,7 +47,11 @@ export class MD5 {
   static hmac(key: string, data: string, enCoding?: string): OutDTO<string> {
     let md = new MD5();
     if (enCoding && enCoding == 'base64') {
-      return OutDTO.OKByDataRow('MD5-hmac算法Base64成功~', md.b64_hmac_md5(key, data));
+      let md5 = md.b64_hmac_md5(key, data);
+      if (!md5.endsWith('==')) {
+        md5 += '==';
+      }
+      return OutDTO.OKByDataRow('MD5-hmac算法Base64成功~', md5);
     }
     return OutDTO.OKByDataRow('MD5-hmac算法成功~', md.hex_hmac_md5(key, data));
   }

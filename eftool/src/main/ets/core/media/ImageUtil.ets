@@ -142,7 +142,8 @@ export class ImageUtil {
    * @param format 目标格式。默认png。只支持jpg、webp、png
    * @returns
    */
-  static async savePixelMap(pixelMap: image.PixelMap, path: string, name: string, format: string = 'image/png'): Promise<OutDTO<string>> {
+  static async savePixelMap(pixelMap: image.PixelMap, path: string, name: string,
+    format: string = 'image/png'): Promise<OutDTO<string>> {
     try {
       //如果文件夹不存在就创建
       if (!fs.accessSync(path)) {
@@ -151,7 +152,7 @@ export class ImageUtil {
       //拼接图片全路径
       let filePath = path + FileUtil.separator + name;
       //打开图片
-      let file = fs.openSync(filePath)
+      let file = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
       //保存图片
       let result = await ImageUtil.pack2FileFromPixelMap(pixelMap, file.fd, format)
       //关闭文件
@@ -175,7 +176,8 @@ export class ImageUtil {
    * @param format 目标格式。默认png。只支持jpg、webp、png
    * @returns
    */
-  static async saveImageSource(source: image.ImageSource, path: string, name: string, format: string = 'image/png'): Promise<OutDTO<string>> {
+  static async saveImageSource(source: image.ImageSource, path: string, name: string,
+    format: string = 'image/png'): Promise<OutDTO<string>> {
     try {
       //如果文件夹不存在就创建
       if (!fs.accessSync(path)) {
@@ -184,7 +186,7 @@ export class ImageUtil {
       //拼接图片全路径
       let filePath = path + FileUtil.separator + name;
       //打开图片
-      let file = fs.openSync(filePath)
+      let file = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
       //保存图片
       let result = await ImageUtil.pack2FileFromImageSource(source, file.fd, format)
       //关闭文件
@@ -206,7 +208,8 @@ export class ImageUtil {
    * options SourceOptions  图片属性，包括图片像素密度、像素格式和图片尺寸。
    * @returns
    */
-  static createImageSource(target: string | number | ArrayBuffer | resourceManager.RawFileDescriptor, options?: image.SourceOptions): OutDTO<image.ImageSource> {
+  static createImageSource(target: string | number | ArrayBuffer | resourceManager.RawFileDescriptor,
+    options?: image.SourceOptions): OutDTO<image.ImageSource> {
     if (typeof target === 'string') {
       if (options) {
         return OutDTO.OKByDataRow('创建图片资源成功~', image.createImageSource(target, options));
@@ -241,7 +244,8 @@ export class ImageUtil {
    * @param format  目标格式。只支持jpeg、webp、png
    * @returns
    */
-  static async pack2FileFromPixelMap(source: image.PixelMap, fd: number, format: string = 'image/png'): Promise<OutDTO<string>> {
+  static async pack2FileFromPixelMap(source: image.PixelMap, fd: number,
+    format: string = 'image/png'): Promise<OutDTO<string>> {
     //创建图像编码ImagePacker对象
     const imagePacker: image.ImagePacker = image.createImagePacker();
     //打包参数
@@ -277,7 +281,8 @@ export class ImageUtil {
    * @param format  目标格式。只支持jpeg、webp、png
    * @returns
    */
-  static async pack2FileFromImageSource(source: image.ImageSource, fd: number, format: string = 'image/png'): Promise<OutDTO<string>> {
+  static async pack2FileFromImageSource(source: image.ImageSource, fd: number,
+    format: string = 'image/png'): Promise<OutDTO<string>> {
     //创建图像编码ImagePacker对象
     const imagePacker: image.ImagePacker = image.createImagePacker();
     //打包参数

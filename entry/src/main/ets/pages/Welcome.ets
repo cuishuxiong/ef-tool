@@ -664,7 +664,7 @@ struct Welcome {
     if (hash.getSuccess()) {
       this.msg = hash.getDataRow();
     }
-    let hash64 = MD5.hash('测试MD5散列算法base64~~~', 'base64');
+    let hash64 = MD5.hash('Aa1234', 'base64');
     if (hash64.getSuccess()) {
       this.msg = hash64.getDataRow();
     }

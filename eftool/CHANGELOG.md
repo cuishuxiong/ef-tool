@@ -13,6 +13,9 @@
 ### 🐞功能优化
 
 * efClientApi中上传下载支持传入header[issuesIAA5PI](https://gitee.com/yunkss/ef-tool/issues/IAA5PI)
+* 优化WinDialogUtil中this指向问题[issuesIAAAUQ](https://gitee.com/yunkss/ef-tool/issues/IAAAUQ)
+* 优化MD5的base64格式hash补充符问题[issuesIABMQI](https://gitee.com/yunkss/ef-tool/issues/IABMQI)
+* 优化ImageUtil中打开文件方式[issuesIAB6EG](https://gitee.com/yunkss/ef-tool/issues/IAB6EG)
 
 ## [v1.2.1-rc.0] 2024-06
 

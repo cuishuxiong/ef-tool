@@ -127,7 +127,8 @@ struct Index {
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
     efAxiosParams.isAllEncrypt = true;
-    efAxiosParams.sm2PubKey = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    efAxiosParams.sm2PubKey =
+      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //关键字加密集合
     // efAxiosParams.keyWordsList = ['account','pwd'];
     //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
@@ -162,8 +163,8 @@ struct Index {
         ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
       }
       //模拟测试get请求
-      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111',{
-        'testHeader':'csxAdd'
+      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111', {
+        'testHeader': 'csxAdd'
       });
       if (get.getSuccess()) {
         ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
@@ -272,7 +273,7 @@ struct Index {
   }
 
   ok() {
-    ToastUtil.showToast('点击了确定')
+    this.testJSONObject();
   }
 
   async geoLocation() {
@@ -528,7 +529,8 @@ struct Index {
     //
     // Logger.debug('1111', '111');
 
-    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    let pk =
+      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
 
     let s = await SM2.convertSM2PubKey(pk);
 
@@ -774,8 +776,16 @@ struct Index {
           Button("action").margin({ bottom: '10vp' }).onClick(() => {
             ActionUtil.showActionMenu({
               title: '修改后的标题', btn: [
-                { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
-                { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
+                {
+                  text: '测试1', color: '#cdcdcd', btnCallBack: () => {
+                  this.ok()
+                }
+                },
+                {
+                  text: '测试2', color: '#108ee9', btnCallBack: () => {
+                  this.cancel()
+                }
+                }
               ]
             });
           })
