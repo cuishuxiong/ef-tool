@@ -11,7 +11,7 @@ import { buffer } from '@kit.ArkTS';
 export class DESSync {
   /**
    * 生成3DES的对称密钥
-   * @param coding 生成3DES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成3DES秘钥的字符串格式-默认不传为base64格式
    * @returns 3DES密钥
    */
   static generate3DESKey(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
