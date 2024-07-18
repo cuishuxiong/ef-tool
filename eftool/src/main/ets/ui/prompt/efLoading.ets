@@ -68,7 +68,7 @@ struct efAlert {
           .justifyContent(FlexAlign.Start)
         }
       }
-      .backgroundColor('#cc000000')
+      .backgroundColor('#88000000')
       .borderRadius(UiConst.NUMBER_10)
       .margin({
         top: this.options.position === Alignment.Top ? UiConst.NUMBER_40 : UiConst.NUMBER_20,

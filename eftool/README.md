@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.2.1-rc.0(API12)</center>
+# <center>V1.2.1-rc.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ## 🛠️包含组件
 
-一个HarmonyOS基础工具类，组成各种工具类，同时提供以下六部分组件：
+一个HarmonyOS基础工具类，组成各种工具类，同时提供以下五部分组件：
 
 ### 1.基础类组件
 
@@ -146,10 +146,20 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 🍊ohpm
 
-执行安装命令
+* 执行安装命令
 
 ```
 ohpm install @yunkss/eftool
+```
+
+* 配套axios版本说明
+
+```
+    "dependencies": {
+        "@yunkss/eftool":"1.2.1-rc.1",
+        "@ohos/axios" :"2.2.1"
+    }
+    //当前eftool为1.2.1-rc.1版本,内部使用的axios为2.2.1,使用时需注意项目中的axios与eftool中的版本对应关系
 ```
 
 ## 📦使用
@@ -867,13 +877,15 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 14.OutDTO的方法
 
-* 该对象有四个私有成员变量
+* 该对象有五个私有成员变量
 
 ```
   //成功失败标识
   private success: boolean;
   //返回提示信息
   private msg: string;
+  //响应编码
+  private code: string | number;
   //返回单行数据
   private dataRow?: T;
   //返回数据集合
@@ -1528,7 +1540,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 3.2 同步方式(v1.2.1-rc.1+)
 
-##### 1.RSA的方法【返回结果均为OutDTO对象】
+##### 1.RSASync的方法【返回结果均为OutDTO对象】
 
 * generateRSAKey 生成1024位RSA的非对称密钥
 
@@ -1709,7 +1721,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
 ```
 
-##### 2.AES的方法【返回结果均为OutDTO对象】
+##### 2.AESSync的方法【返回结果均为OutDTO对象】
 
 * generateAESKey 生成AES的对称密钥
 
@@ -1795,7 +1807,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-##### 3.3DES的方法【返回结果均为OutDTO对象】
+##### 3.3DESSync的方法【返回结果均为OutDTO对象】
 
 * generate3DESKey 生成3DES的对称密钥
 
@@ -1832,7 +1844,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-##### 4.SM2的方法【返回结果均为OutDTO对象】
+##### 4.SM2Sync的方法【返回结果均为OutDTO对象】
 
 * generateSM2Key 生成SM2的非对称密钥
 
@@ -1892,7 +1904,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = aaaa.getDataRow();
 ```
 
-##### 5.SM3的方法【返回结果均为OutDTO对象】
+##### 5.SM3Sync的方法【返回结果均为OutDTO对象】
 
 * digest SM3摘要
 
@@ -1908,7 +1920,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac1.getDataRow();
 ```
 
-##### 6.SM4的方法【返回结果均为OutDTO对象】
+##### 6.SM4Sync的方法【返回结果均为OutDTO对象】
 
 * generateSM4Key 生成SM4的对称密钥
 
@@ -1945,7 +1957,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-##### 7.SHA的方法【返回结果均为OutDTO对象】
+##### 7.SHASync的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -2031,7 +2043,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   }
 ```
 
-##### 9.ECDSA的方法【返回结果均为OutDTO对象】
+##### 9.ECDSASync的方法【返回结果均为OutDTO对象】
 
 * generateECDSAKey 生成ECDSA的非对称密钥
 
@@ -2055,7 +2067,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-##### 10.ECDH的方法【返回结果均为OutDTO对象】
+##### 10.ECDHSync的方法【返回结果均为OutDTO对象】
 
 * ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -2092,7 +2104,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-##### 11.X25519的方法【返回结果均为OutDTO对象】
+##### 11.X25519Sync的方法【返回结果均为OutDTO对象】
 
 * x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -2424,6 +2436,8 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 #### 前言
 
 > efAxios封装需要大家共建和提出建议与需求,已完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见
+
+> 接到大部分开发者反馈需要有一个统一的请求全局加载loading,故在本版本默认集成,后续可能会有样式优化(V1.2.1-rc.1+)
 
 > 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
 
@@ -3283,11 +3297,12 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   入参  
   show  是否显示级联框(TRUE显示FALSE关闭)  
   callCity 反回选择的省市区数据
+  titleFontSize 顶部已选择省市区的字体大小-默认为16(V1.2.1-rc.1+)
   //使用demo
   Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
       this.show = !this.show;
   })
-  Cascade({ show: $show, callCity: $callCity })
+  Cascade({ show: $show, callCity: $callCity, titleFontSize: 12 }).zIndex(999)
   //$callCity为调用页面传入给子组件的用于接收返回的值
 ```
 

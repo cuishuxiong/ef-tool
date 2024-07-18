@@ -43,7 +43,9 @@ export class SM2Convert {
     let C1y_title: string = (Number.parseInt("0x" + sm2_sequence.C1y.slice(0, 2)) > 127) ? "022100" : "0220";
     let C3_title: string = "0420";
     let C2_title: string = "04" + this.genLenHex(sm2_sequence.C2);
-    let sequence_message: string = C1x_title + sm2_sequence.C1x + C1y_title + sm2_sequence.C1y + C3_title + sm2_sequence.C3 + C2_title + sm2_sequence.C2;
+    let sequence_message: string =
+      C1x_title + sm2_sequence.C1x + C1y_title + sm2_sequence.C1y + C3_title + sm2_sequence.C3 + C2_title +
+      sm2_sequence.C2;
     let sequence_lenHex: string = this.genLenHex(sequence_message);
 
     let standard_data = "30" + sequence_lenHex + sequence_message;
@@ -162,8 +164,7 @@ export class SM2Convert {
         ToastUtil.showToast('SM2字符串中的C2长度不正确~');
       }
       sm2_sequence.C2 = data;
-    }
-    else {
+    } else {
       ToastUtil.showToast('读取SM2字符串中的C2出错~');
     }
     return data;
@@ -179,8 +180,7 @@ export class SM2Convert {
     if (data.startsWith("0420")) {
       sm2_sequence.C3 = data.slice(4, 68);
       data = data.slice(68, data.length);
-    }
-    else {
+    } else {
       ToastUtil.showToast('读取SM2字符串中的C3出错~');
     }
     return data;

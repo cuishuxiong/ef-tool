@@ -12,17 +12,23 @@
 * 新增SM2Sync工具类,SM2操作更改为同步,并且支持灵活指定密钥以及加密输出的字符格式(hex/base64)等
 * 新增SM3Sync工具类,SM3操作更改为同步,并且支持灵活指定密钥以及加密输出的字符格式(hex/base64)等
 * 新增SM4Sync工具类,SM4操作更改为同步,并且支持灵活指定密钥以及加密输出的字符格式(hex/base64)等
-* 新增自定义键盘
+* 新增ECDHSync工具类,ECDH操作更改为同步,并且支持灵活指定密钥以及加密输出的字符格式(hex/base64)等
+* 新增X25519Sync工具类,X25519操作更改为同步,并且支持灵活指定密钥以及加密输出的字符格式(hex/base64)等
 * Base64Util新增hex字符串转base64方法
-* 新增首选项工具类PrefUtil
+* 新增自定义键盘(由幻凡提供)
+* 新增首选项工具类PrefUtil(由幻凡提供)
+* 新增图片预览工具类(由幻凡提供)
 * AESSync新增192位加解密
 
 ### 🐞功能优化
 
 * efClientApi中上传下载支持传入header[issuesIAA5PI](https://gitee.com/yunkss/ef-tool/issues/IAA5PI)
+* 优化efAxios响应拦截后将响应code和异常消息返回
 * 优化WinDialogUtil中this指向问题[issuesIAAAUQ](https://gitee.com/yunkss/ef-tool/issues/IAAAUQ)
 * 优化MD5的base64格式hash补充符问题[issuesIABMQI](https://gitee.com/yunkss/ef-tool/issues/IABMQI)
 * 优化ImageUtil中打开文件方式[issuesIAB6EG](https://gitee.com/yunkss/ef-tool/issues/IAB6EG)
+* 优化Cascade选择器可传入字体大小[issuesIADJ86](https://gitee.com/yunkss/ef-tool/issues/IADJ86)
+* efAxios的请求响应中添加全局loading弹框
 
 ## [v1.2.1-rc.0] 2024-06
 

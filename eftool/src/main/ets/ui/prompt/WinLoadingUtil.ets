@@ -58,7 +58,7 @@ export class WinLoadingUtil {
       //设置窗口大小
       await windowClass.resize(d.width, d.height);
       // 设置窗口背景颜色
-      windowClass.setWindowBackgroundColor('#22000000');
+      windowClass.setWindowBackgroundColor('#00000000');
       //显示窗口
       await windowClass.showWindow();
     } catch (exception) {

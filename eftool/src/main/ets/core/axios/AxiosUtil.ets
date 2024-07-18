@@ -11,6 +11,8 @@ import { SM4 } from '../crypto/encryption/SM4';
 import { RandomUtil } from '../util/RandomUtil';
 import { ArrayList } from '@kit.ArkTS';
 import { JSONUtil } from '../json/JSONUtil';
+import { WinLoadingUtil } from '../../ui/prompt/WinLoadingUtil';
+import { ImgLayout, LoadingShape } from '../../ui/prompt/efLoading';
 
 /**
  * @Author csx
@@ -73,7 +75,7 @@ export class AxiosUtil {
       //每次请求都重新生成sm4的秘钥
       let sm4Key = await SM4.generateSM4Key();
       //每次请求都生成iv
-      let sm4IV = RandomUtil.generateIV();
+      let sm4IV = RandomUtil.generateIV('hex');
       //需要将服务器端的公钥转换成前端所需的公钥
       let finalSM2 = await SM2.convertSM2PubKey(efAxiosParams.sm2PubKey);
       //将SM4的密钥用SM2加密存入header
@@ -129,9 +131,9 @@ export class AxiosUtil {
     let success: boolean = true;
     if (response.config.headers["Req-Type"]) {
       if (response.data && response.data.dataRow) {
-        return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array());
+        return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array(), response.status);
       }
-      return new OutDTO(true, '下载文件成功~', '', new Array());
+      return new OutDTO(true, '下载文件成功~', '', new Array(), response.status);
     }
     if (response.data && response.data.success != undefined) {
       success = response.data.success;
@@ -146,6 +148,9 @@ export class AxiosUtil {
     }
     if (response.data && response.data.message) {
       message = response.data.message;
+    }
+    if (response.status != 200) {
+      message = response.statusText;
     }
     //3.返回的单行数据
     let dataRow: Record<string, Object> = {};
@@ -166,7 +171,9 @@ export class AxiosUtil {
     if (response.data && response.data.arr) {
       dataTable = response.data.arr;
     }
-    return new OutDTO(success, message, dataRow, dataTable);
+    //5.返回请求状态码
+    let code = response.status;
+    return new OutDTO(success, message, dataRow, dataTable, code);
   }
 
   /**
@@ -177,24 +184,21 @@ export class AxiosUtil {
     //判断如果有不加解密的接口则跳过加密
     let lastUrl: string =
       response.config.url?.slice(response.config.url?.lastIndexOf("/") + 1, response.config.url.length).trim() || "";
-    if (response.status === 200) {
-      //整体解密
-      if (efAxiosParams.isAllEncrypt) {
-        //判断如果有不加解密的接口则跳过加密
-        if (efAxiosParams.ignoreEncryptList.indexOf(lastUrl) < 0) {
-          response.data = await AxiosUtil.decryptResponseData(response.data);
-        }
+    //整体解密
+    if (efAxiosParams.isAllEncrypt) {
+      //判断如果有不加解密的接口则跳过加密
+      if (efAxiosParams.ignoreEncryptList.indexOf(lastUrl) < 0) {
+        response.data = await AxiosUtil.decryptResponseData(response.data);
       }
-      //关键字解密
-      if (efAxiosParams.isPartEncrypt) {
-        response.data = await AxiosUtil.decryptPartResponseData(response.data);
-      }
-      if (efAxiosParams.isConvertDTO) {
-        //将响应数据转换
-        response.data = AxiosUtil.convertResponseDTO(response);
-      }
-    } else {
-      ToastUtil.showToast('接口返回错误~');
+    }
+    //关键字解密
+    if (efAxiosParams.isPartEncrypt) {
+      response.data = await AxiosUtil.decryptPartResponseData(response.data);
+    }
+    //如果开启转换数据
+    if (efAxiosParams.isConvertDTO) {
+      //将响应数据转换
+      response.data = AxiosUtil.convertResponseDTO(response);
     }
   }
 
@@ -418,6 +422,12 @@ export const efAxios = new AxiosUtil().efAxios;
  * 设置统一的请求拦截
  */
 efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+  //显示全局加载框
+  await WinLoadingUtil.showLoading({
+    content: '努力请求接口中,请稍后...',
+    imgLayout: ImgLayout.TOP,
+    layoutShape: LoadingShape.SQUARE
+  });
   await AxiosUtil.convertRequestInfo(config);
   return config;
 }, (error: AxiosError) => {
@@ -431,6 +441,8 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
 efAxios.interceptors.response.use(async (response: AxiosResponse) => {
   // 处理响应数据
   await AxiosUtil.convertResponseInfo(response);
+  //关闭全局加载框
+  await WinLoadingUtil.closeLoading();
   return response;
 }, (error: AxiosError) => {
   ToastUtil.showToast("发生错误了,原因为:" + error.message);

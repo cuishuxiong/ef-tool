@@ -8,6 +8,8 @@ export class OutDTO<T> {
   private success: boolean;
   //返回提示信息
   private msg: string;
+  //响应编码
+  private code: string | number;
   //返回单行数据
   private dataRow: T;
   //返回数据集合
@@ -20,9 +22,10 @@ export class OutDTO<T> {
    * @param dataRow  单行数据
    * @param dataTable   多行数据集合
    */
-  constructor(success: boolean, msg: string, dataRow: T, dataTable: Array<T>) {
+  constructor(success: boolean, msg: string, dataRow: T, dataTable: Array<T>, code: string | number) {
     this.msg = msg;
     this.success = success;
+    this.code = code;
     this.dataRow = dataRow;
     this.dataTable = dataTable;
   }
@@ -32,7 +35,7 @@ export class OutDTO<T> {
    * @returns
    */
   static create(): OutDTO<string> {
-    let outDTO = new OutDTO<string>(true, '', '', []);
+    let outDTO = new OutDTO<string>(true, '', '', [], 200);
     return outDTO;
   }
 
@@ -43,7 +46,7 @@ export class OutDTO<T> {
    * @returns
    */
   static OK(msg: string): OutDTO<string> {
-    let outDTO = new OutDTO<string>(true, msg, '', []);
+    let outDTO = new OutDTO<string>(true, msg, '', [], 200);
     return outDTO;
   }
 
@@ -54,7 +57,7 @@ export class OutDTO<T> {
    * @returns
    */
   static OKByDataRow<T>(msg: string, dataRow: T): OutDTO<T> {
-    let dto = new OutDTO<T>(true, msg, dataRow, []);
+    let dto = new OutDTO<T>(true, msg, dataRow, [], 200);
     return dto;
   }
 
@@ -69,7 +72,7 @@ export class OutDTO<T> {
     if (!dataRow) {
       dataRow = Object as T;
     }
-    let dto = new OutDTO<T>(true, msg, dataRow, dataTable);
+    let dto = new OutDTO<T>(true, msg, dataRow, dataTable, 200);
     return dto;
   }
 
@@ -79,7 +82,7 @@ export class OutDTO<T> {
    * @returns
    */
   static Error(msg: string): OutDTO<string> {
-    let dto = new OutDTO<string>(false, msg, '', []);
+    let dto = new OutDTO<string>(false, msg, '', [], 400);
     return dto;
   }
 
@@ -90,7 +93,7 @@ export class OutDTO<T> {
    * @returns
    */
   static ErrorByDataRow<T>(msg: string, dataRow: T): OutDTO<T> {
-    let dto = new OutDTO<T>(false, msg, dataRow, []);
+    let dto = new OutDTO<T>(false, msg, dataRow, [], 400);
     return dto;
   }
 
@@ -100,6 +103,15 @@ export class OutDTO<T> {
 
   public getSuccess(): boolean {
     return this.success;
+  }
+
+
+  public getCode(): string | number {
+    return this.code;
+  }
+
+  public setCode(code: string | number) {
+    this.code = code;
   }
 
 

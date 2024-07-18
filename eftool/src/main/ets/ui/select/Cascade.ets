@@ -25,8 +25,8 @@ function cascadeUnderLine(selected: boolean) {
  * @param selected
  */
 @Extend(Text)
-function txtColor(selected: boolean) {
-  .fontSize(UiConst.FONT_16)
+function txtColor(selected: boolean, fontSize: number | string) {
+  .fontSize(fontSize)
   .fontColor(selected ? "#969799" : "#000")
   .fontWeight(selected ? FontWeight.Normal : FontWeight.Bold)
 }
@@ -60,6 +60,8 @@ export struct Cascade {
   @State private currentList: Array<City> = new Array();
   //当前省市区选择的下标
   @State private selectIndex: number = 0;
+  //顶部已选择省市区字体大小
+  @State titleFontSize: number | string = UiConst.FONT_16;
 
   aboutToAppear() {
     if (this.provinceList.length == 0) {
@@ -165,10 +167,10 @@ export struct Cascade {
         //省市区
         Column() {
           if (this.selectIndex == 0 && !this.selectData.provinceName) {
-            Text("请选择").txtColor(true)
+            Text("请选择").txtColor(true, this.titleFontSize)
             Text(" ").cascadeUnderLine(true)
           } else {
-            Text(this.selectData.provinceName).txtColor(false).onClick(() => {
+            Text(this.selectData.provinceName).txtColor(false, this.titleFontSize).onClick(() => {
               this.selectIndex = 0;
               this.currentList = this.getProvinceData();
             })
@@ -180,10 +182,10 @@ export struct Cascade {
         if (this.showCity) {
           Column() {
             if (this.selectIndex === 1 && !this.selectData.cityName) {
-              Text("请选择").txtColor(true)
+              Text("请选择").txtColor(true, this.titleFontSize)
               Text(" ").cascadeUnderLine(true)
             } else {
-              Text(this.selectData.cityName).txtColor(false).onClick(() => {
+              Text(this.selectData.cityName).txtColor(false, this.titleFontSize).onClick(() => {
                 this.selectIndex = 1;
                 this.currentList = this.getCityData(this.selectData.provinceCode);
               })
@@ -196,10 +198,10 @@ export struct Cascade {
           //区域
           Column() {
             if (this.selectIndex === 2 && !this.selectData.areaName) {
-              Text("请选择").txtColor(true)
+              Text("请选择").txtColor(true, this.titleFontSize)
               Text(" ").cascadeUnderLine(true)
             } else {
-              Text(this.selectData.areaName).txtColor(false).onClick(() => {
+              Text(this.selectData.areaName).txtColor(false, this.titleFontSize).onClick(() => {
                 this.selectIndex = 2;
                 this.currentList = this.getAreaData(this.selectData.provinceCode, this.selectData.cityCode);
               })

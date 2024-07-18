@@ -39,29 +39,29 @@ export class AESSync {
 
   /**
    * 生成AES的对称密钥-默认base64
-   * @param coding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成AES秘钥的字符串格式-默认不传为base64格式
    * @returns AES密钥
    */
-  static generateAESKey(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.generateSymKey('AES256', coding);
+  static generateAESKey(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.generateSymKey('AES256', resultCoding);
   }
 
   /**
    * 生成AES的对称密钥-128位-默认base64
-   * @param coding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成AES秘钥的字符串格式-默认不传为base64格式
    * @returns AES密钥-128位
    */
-  static generateAESKey128(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.generateSymKey('AES128', coding);
+  static generateAESKey128(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.generateSymKey('AES128', resultCoding);
   }
 
   /**
    * 生成AES的对称密钥-192位-默认base64
-   * @param coding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成AES秘钥的字符串格式-默认不传为base64格式
    * @returns AES密钥-192位
    */
-  static generateAESKey192(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.generateSymKey('AES192', coding);
+  static generateAESKey192(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.generateSymKey('AES192', resultCoding);
   }
 
   /**

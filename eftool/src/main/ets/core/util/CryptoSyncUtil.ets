@@ -26,6 +26,18 @@ export class CryptoSyncUtil {
   }
 
   /**
+   * 将非对称加密pem格式字符串pubKey转换为symKey对象
+   * @param publicKey字符串key-pem格式
+   * @param symAlgName 秘钥规格
+   * @returns
+   */
+  static convertPemPubKeyFromStr(publicKey: string, symAlgName: string) {
+    let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
+    let symKey = aesGenerator.convertPemKeySync(publicKey, null);
+    return symKey;
+  }
+
+  /**
    * 将非对称加密字符串priKey转换为symKey对象
    * @param privateKey字符串key
    * @param symAlgName 秘钥规格
@@ -38,6 +50,18 @@ export class CryptoSyncUtil {
     let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.strKey2Uint8Array(privateKey, keyName, keyCoding) };
     let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
     let symKey = aesGenerator.convertKeySync(null, symKeyBlob);
+    return symKey;
+  }
+
+  /**
+   * 将非对称加密pem格式字符串priKey转换为symKey对象
+   * @param privateKey字符串key-pem格式
+   * @param symAlgName 秘钥规格
+   * @returns
+   */
+  static convertPemPriKeyFromStr(privateKey: string, symAlgName: string) {
+    let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
+    let symKey = aesGenerator.convertPemKeySync(null, privateKey);
     return symKey;
   }
 

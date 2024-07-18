@@ -333,7 +333,7 @@ struct Welcome {
       fs.readSync(file.fd, bufferImg);
       //关闭文件流
       fs.closeSync(file);
-      WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
+      // WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg);
       //下载
@@ -378,7 +378,7 @@ struct Welcome {
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
-        WinLoadingUtil.closeLoading();
+        // WinLoadingUtil.closeLoading();
       }
       this.process = progress;
     }, data);

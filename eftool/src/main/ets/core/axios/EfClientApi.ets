@@ -15,8 +15,7 @@ class EfClientApi {
    * post请求
    * @param url 请求url
    * @param query 请求参数
-   * @param headers 请求参数
-   * @returns
+   * @param headers 请求头
    * @returns 响应结果
    */
   async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
@@ -38,6 +37,7 @@ class EfClientApi {
   /**
    * get请求 -rest 风格
    * @param url  请求URL附带参数
+   * @param headers 请求头
    * @returns 响应结果
    */
   async get<E>(url: string, headers?: Record<string, Object>): Promise<E> {
@@ -58,8 +58,9 @@ class EfClientApi {
 
   /**
    * get请求 - json格式
-   * @param url
-   * @param params
+   * @param url 请求URL
+   * @param params 请求参数
+   * @param headers 请求头
    * @returns
    */
   async getByParams<E>(url: string, params: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
@@ -83,10 +84,22 @@ class EfClientApi {
    * put  请求
    * @param url  请求url
    * @param query  请求参数
+   * @param headers 请求头
    * @returns
    */
-  async put<F, E>(url: string, query: Record<string, Object>): Promise<E> {
-    return await efAxios.put<E, AxiosResponse<E>, F>(url, query as F).then((response: AxiosResponse<E>) => {
+  async put<F, E>(url: string, query: Record<string, Object>,
+    headers?: Record<string, Object>): Promise<E> {
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
+    return await efAxios.put<E, AxiosResponse<E>, F>(url, query as F, {
+      headers: addHead
+    }).then((response: AxiosResponse<E>) => {
       return response.data
     });
   }
@@ -94,10 +107,21 @@ class EfClientApi {
   /**
    * delete请求
    * @param url  请求url
+   * @param headers 请求头
    * @returns
    */
-  async delete<E>(url: string): Promise<E> {
-    return await efAxios.delete<E, AxiosResponse<E>, null>(url).then((response: AxiosResponse<E>) => {
+  async delete<E>(url: string, headers?: Record<string, Object>): Promise<E> {
+    //需要添加的header对象
+    let addHead: AxiosHeaders = new AxiosHeaders();
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
+    return await efAxios.delete<E, AxiosResponse<E>, null>(url, {
+      headers: addHead
+    }).then((response: AxiosResponse<E>) => {
       return response.data
     });
   }
@@ -114,8 +138,6 @@ class EfClientApi {
    * @param keyName  上传时后端接收的key,默认为file
    * @param headers 自定义请求头
    * @returns 上传结果
-
-
    */
   async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,
     data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>) {
@@ -169,7 +191,8 @@ class EfClientApi {
    * @param headers 自定义请求头
    * @returns
    */
-  async download(url: string, filePath: string, progressCallBack: (process: number) => void, headers?: Record<string, Object>) {
+  async download(url: string, filePath: string, progressCallBack: (process: number) => void,
+    headers?: Record<string, Object>) {
     //获取上下文
     let context = getContext(this) as common.UIAbilityContext;
     let filesDir = context.filesDir;

@@ -15,24 +15,27 @@ export class DynamicSyncUtil {
    * @param pubKey  符合格式的非对称密钥的公钥字符串或Uint8Array字节流
    * @param priKey  符合格式的非对称密钥的私钥字符串或Uint8Array字节流
    * @param symAlgName 秘钥规格
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
    * @returns 共享密钥
    */
   static dynamicKey(pubKey: string | Uint8Array, priKey: string | Uint8Array, symAlgName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding,
+    resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
     //公钥数据
     let pubKeyArray: Uint8Array = new Uint8Array();
     //私钥数据
     let priKeyArray: Uint8Array = new Uint8Array();
     //转换公钥
     if (typeof pubKey === 'string') {
-      let pk = CryptoSyncUtil.convertPubKeyFromStr(pubKey as string, symAlgName, keyName);
+      let pk = CryptoSyncUtil.convertPubKeyFromStr(pubKey as string, symAlgName, keyName, keyCoding);
       pubKeyArray = pk.pubKey.getEncoded().data;
     } else {
       pubKeyArray = pubKey as Uint8Array;
     }
     //转换私钥
     if (typeof priKey === 'string') {
-      let pik = CryptoSyncUtil.convertPriKeyFromStr(priKey as string, symAlgName, keyName);
+      let pik = CryptoSyncUtil.convertPriKeyFromStr(priKey as string, symAlgName, keyName, keyCoding);
       priKeyArray = pik.priKey.getEncoded().data;
     } else {
       priKeyArray = priKey as Uint8Array;
@@ -48,7 +51,8 @@ export class DynamicSyncUtil {
     let secret1 = eccKeyAgreement.generateSecretSync(keyPairB.priKey, keyPairA.pubKey);
     // 两种协商的结果应当一致
     if (secret1.data) {
-      return OutDTO.OKByDataRow<string>('生成共享密钥成功', StrAndUintUtil.unitArray2String(secret1.data));
+      return OutDTO.OKByDataRow<string>('生成共享密钥成功',
+        StrAndUintUtil.unitArray2StrCoding(secret1.data, resultCoding));
     } else {
       return OutDTO.ErrorByDataRow<string>('生成共享密钥失败', '动态协商交换结果不相等,请检查公私钥是否正确！');
     }
@@ -59,9 +63,11 @@ export class DynamicSyncUtil {
    * 消息认证码计算
    * @param str  计算字符串
    * @param symAlgName  秘钥规格
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
    * @returns
    */
-  static hmac(str: string, symAlgName: string): OutDTO<string> {
+  static hmac(str: string, symAlgName: string,
+    resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
     //创建消息认证码计算器
     let mac = crypto.createMac(symAlgName);
     let messageData = new Uint8Array(buffer.from(str, 'utf-8').buffer);
@@ -78,6 +84,6 @@ export class DynamicSyncUtil {
     }
     let macOutput = mac.doFinalSync();
     return OutDTO.OKByDataRow<string>(symAlgName + '消息认证码计算数据成功！',
-      StrAndUintUtil.unitArray2String(macOutput.data));
+      StrAndUintUtil.unitArray2StrCoding(macOutput.data, resultCoding));
   }
 }

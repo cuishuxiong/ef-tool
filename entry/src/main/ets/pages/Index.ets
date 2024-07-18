@@ -925,7 +925,7 @@ struct Index {
       }
       .scrollable(ScrollDirection.Vertical)
 
-      Cascade({ show: $show, callCity: $callCity }).zIndex(999)
+      Cascade({ show: $show, callCity: $callCity, titleFontSize: 12 }).zIndex(999)
       ExceptionUtil({
         options: {
           show: this.showException,

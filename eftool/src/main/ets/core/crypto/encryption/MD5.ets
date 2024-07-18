@@ -4,7 +4,8 @@
  * @TODO MD5  工具类 源码来自官方库  https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fchecksum
  */
 import { OutDTO } from '../../base/OutDTO';
-import { CryptoUtil } from '../../util/CryptoUtil';
+import { CryptoSyncUtil } from '../../util/CryptoSyncUtil';
+import { buffer } from '@kit.ArkTS';
 
 export class MD5 {
   hexcase = 0;
@@ -13,10 +14,11 @@ export class MD5 {
   /**
    * MD5摘要
    * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-不传默认为base64
    * @returns 摘要后的字符串
    */
-  static async digest(str: string): Promise<OutDTO<string>> {
-    return CryptoUtil.digest(str, 'MD5');
+  static digest(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.digest(str, 'MD5', resultCoding);
   }
 
   /**
