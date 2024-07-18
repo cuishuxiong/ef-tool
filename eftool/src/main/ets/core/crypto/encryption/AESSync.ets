@@ -9,7 +9,7 @@ import { CryptoSyncUtil } from '../../util/CryptoSyncUtil';
 /**
  * @Author csx
  * @DateTime 2024/3/18 10:39:03
- * @TODO AES
+ * @TODO AES 同步类
  */
 export class AESSync {
   /**
@@ -39,6 +39,7 @@ export class AESSync {
 
   /**
    * 生成AES的对称密钥-默认base64
+   * @param coding 生成AES秘钥的字符串格式-默认不传为base64格式
    * @returns AES密钥
    */
   static generateAESKey(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -47,17 +48,28 @@ export class AESSync {
 
   /**
    * 生成AES的对称密钥-128位-默认base64
+   * @param coding 生成AES秘钥的字符串格式-默认不传为base64格式
    * @returns AES密钥-128位
    */
   static generateAESKey128(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
     return CryptoSyncUtil.generateSymKey('AES128', coding);
   }
 
+  /**
+   * 生成AES的对称密钥-192位-默认base64
+   * @param coding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @returns AES密钥-192位
+   */
+  static generateAESKey192(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.generateSymKey('AES192', coding);
+  }
 
   /**
    * 加密-GCM模式
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
   static encodeGCM(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -90,6 +102,8 @@ export class AESSync {
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
    * @param iv   iv偏移量字符串
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
   static encodeCBC(str: string, aesKey: string, iv: string,
@@ -102,6 +116,8 @@ export class AESSync {
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
    * @param iv   iv偏移量字符串
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
   static encodeCBC128(str: string, aesKey: string, iv: string,
@@ -110,9 +126,25 @@ export class AESSync {
   }
 
   /**
+   * 加密-CBC模式-192位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param iv   iv偏移量字符串
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @returns
+   */
+  static encodeCBC192(str: string, aesKey: string, iv: string,
+    keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.encodeCBC(str, aesKey, iv, 'AES192', 'AES192|CBC|PKCS7', 192, keyCoding, resultCoding);
+  }
+
+  /**
    * 加密-ECB模式
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
   static encodeECB(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -124,6 +156,8 @@ export class AESSync {
    * 加密-ECB模式-128位
    * @param str  待加密的字符串
    * @param aesKey   AES密钥-128位
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
   static encodeECB128(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -131,11 +165,26 @@ export class AESSync {
     return CryptoSyncUtil.encodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7', 128, keyCoding, resultCoding);
   }
 
+  /**
+   * 加密-ECB模式-192位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥-192位
+   * @param keyCoding key的编码方式
+   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @returns
+   */
+  static encodeECB192(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
+    resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.encodeECB(str, aesKey, 'AES192', 'AES192|ECB|PKCS7', 192, keyCoding, resultCoding);
+  }
+
 
   /**
    * 解密-GCM模式
    * @param str  加密的字符串
    * @param aesKey  AES密钥
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
    */
   static decodeGCM(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
     dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -160,6 +209,8 @@ export class AESSync {
    * @param str  加密的字符串
    * @param aesKey AES密钥
    * @param iv  iv偏移量字符串
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
    * @returns
    */
   static decodeCBC(str: string, aesKey: string, iv: string,
@@ -172,6 +223,8 @@ export class AESSync {
    * @param str  加密的字符串
    * @param aesKey AES密钥
    * @param iv  iv偏移量字符串
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
    * @returns
    */
   static decodeCBC128(str: string, aesKey: string, iv: string,
@@ -180,9 +233,25 @@ export class AESSync {
   }
 
   /**
+   * 解密-CBC模式-192位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @param iv  iv偏移量字符串
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
+   * @returns
+   */
+  static decodeCBC192(str: string, aesKey: string, iv: string,
+    keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.decodeCBC(str, aesKey, iv, 'AES192', 'AES192|CBC|PKCS7', 192, keyCoding, dataCoding);
+  }
+
+  /**
    * 解密-ECB模式
    * @param str  加密的字符串
    * @param aesKey AES密钥
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
    * @returns
    */
   static decodeECB(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -194,10 +263,25 @@ export class AESSync {
    * 解密-ECB模式-128位
    * @param str  加密的字符串
    * @param aesKey AES密钥-128位
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
    * @returns
    */
   static decodeECB128(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
     dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
     return CryptoSyncUtil.decodeECB(str, aesKey, 'AES128', 'AES128|ECB|PKCS7', 128, keyCoding, dataCoding);
+  }
+
+  /**
+   * 解密-ECB模式-192位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥-192位
+   * @param keyCoding key的编码方式
+   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
+   * @returns
+   */
+  static decodeECB192(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
+    dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return CryptoSyncUtil.decodeECB(str, aesKey, 'AES192', 'AES192|ECB|PKCS7', 192, keyCoding, dataCoding);
   }
 }

@@ -1,10 +1,10 @@
+import { OutDTO } from '../../base/OutDTO';
+
 /**
  * @Author csx
  * @DateTime 2024/3/20 21:43
  * @TODO SHA1  工具类 源码来自官方库  https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fchecksum
  */
-import { OutDTO } from '../../base/OutDTO';
-
 export class SHA1 {
   hexcase = 0;
   /* hex output format. 0 - lowercase; 1 - uppercase */

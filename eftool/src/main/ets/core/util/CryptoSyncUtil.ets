@@ -14,11 +14,12 @@ export class CryptoSyncUtil {
    * @param publicKey字符串key
    * @param symAlgName 秘钥规格
    * @param keyName 密钥长度
-   * @returns
+   * @param keyCoding 公钥的编码方式(utf8/hex/base64)
    * @returns
    */
-  static convertPubKeyFromStr(publicKey: string, symAlgName: string, keyName: number) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(publicKey, keyName) };
+  static convertPubKeyFromStr(publicKey: string, symAlgName: string, keyName: number,
+    keyCoding: buffer.BufferEncoding) {
+    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.strKey2Uint8Array(publicKey, keyName, keyCoding) };
     let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
     let symKey = aesGenerator.convertKeySync(symKeyBlob, null);
     return symKey;
@@ -28,10 +29,13 @@ export class CryptoSyncUtil {
    * 将非对称加密字符串priKey转换为symKey对象
    * @param privateKey字符串key
    * @param symAlgName 秘钥规格
+   * @param keyName 密钥长度
+   * @param keyCoding 私钥的编码方式(utf8/hex/base64)
    * @returns
    */
-  static convertPriKeyFromStr(privateKey: string, symAlgName: string, keyName: number) {
-    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(privateKey, keyName) };
+  static convertPriKeyFromStr(privateKey: string, symAlgName: string, keyName: number,
+    keyCoding: buffer.BufferEncoding) {
+    let symKeyBlob: crypto.DataBlob = { data: StrAndUintUtil.strKey2Uint8Array(privateKey, keyName, keyCoding) };
     let aesGenerator = crypto.createAsyKeyGenerator(symAlgName);
     let symKey = aesGenerator.convertKeySync(null, symKeyBlob);
     return symKey;
@@ -41,6 +45,8 @@ export class CryptoSyncUtil {
    * 将对称加密字符串AESKey转换为symKey对象
    * @param aesKey字符串key
    * @param symAlgName 秘钥规格
+   * @param keyName 密钥长度
+   * @param keyCoding 秘钥的编码方式(utf8/hex/base64)
    * @returns
    */
   static convertKeyFromStr(aesKey: string, symAlgName: string, keyName: number, keyCoding: buffer.BufferEncoding) {
@@ -53,6 +59,7 @@ export class CryptoSyncUtil {
   /**
    * 根据传入的iv字符串转换iv对象
    * @param ivStr
+   * @param ivCoding 偏移量的编码方式(utf8/hex/base64)
    * @returns
    */
   static genIvParamsSpec(ivStr: string, ivCoding: buffer.BufferEncoding): crypto.IvParamsSpec {
@@ -67,6 +74,7 @@ export class CryptoSyncUtil {
   /**
    * 生成对称密钥-指定密钥生成格式(默认base64)
    * @param symAlgName 秘钥规格
+   * @param resultCoding 生成对称秘钥的编码方式(utf8/hex/base64)
    * @returns 指定秘钥规格的对称密钥
    */
   static generateSymKey(symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<string> {
@@ -84,6 +92,7 @@ export class CryptoSyncUtil {
    * 生成非对称密钥
    * @param symAlgName 秘钥规格
    * @returns 指定秘钥规格的非对称公私
+   * @param resultCoding 生成非对称秘钥的编码方式(utf8/hex/base64)
    */
   static generateCryptoKey(symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<CryptoKey> {
     // 创建非对称密钥生成器
@@ -103,6 +112,9 @@ export class CryptoSyncUtil {
    * @param iv   iv偏移量字符串
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
    * @returns
    */
   static encodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string,
@@ -131,6 +143,9 @@ export class CryptoSyncUtil {
    * @param key   给定秘钥规格密钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
    * @returns
    */
   static encodeECB(str: string, key: string, symAlgName: string, symEncryptName: string,
@@ -160,6 +175,9 @@ export class CryptoSyncUtil {
    * @param iv  iv偏移量字符串
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
    * @returns
    */
   static decodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string,
@@ -186,6 +204,9 @@ export class CryptoSyncUtil {
    * @param key  给定秘钥规格密钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
    */
   static decodeECB(str: string, sm4Key: string, symAlgName: string, symEncryptName: string,
     keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
@@ -211,11 +232,14 @@ export class CryptoSyncUtil {
    * @param pubKey  给定秘钥规格公钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
    */
   static encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     //将公钥转换
-    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
+    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
@@ -225,12 +249,7 @@ export class CryptoSyncUtil {
     //开始加密
     let updateOutput = encoder.doFinalSync({ data: encode.encodeInto(str) });
     //转换字符串
-    let result = StrAndUintUtil.unitArray2String(updateOutput.data);
-    // if (symAlgName.indexOf('SM2') >= 0 || symEncryptName.indexOf('SM2') >= 0) {
-    //   result = StrAndUintUtil.unitArray2String(updateOutput.data, true);
-    // } else {
-    //   result = StrAndUintUtil.unitArray2String(updateOutput.data);
-    // }
+    let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, resultCoding);
     return OutDTO.OKByDataRow(symAlgName + '加密成功~', result);
   }
 
@@ -240,11 +259,14 @@ export class CryptoSyncUtil {
    * @param pubKey  给定秘钥规格公钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
    */
   static encodeAsymSegment(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     //将公钥转换
-    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
+    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
@@ -270,7 +292,7 @@ export class CryptoSyncUtil {
       cipherText = mergeText;
     }
     //转换字符串
-    let result = StrAndUintUtil.unitArray2String(cipherText);
+    let result = StrAndUintUtil.unitArray2StrCoding(cipherText, resultCoding);
     return OutDTO.OKByDataRow(symAlgName + '分段加密成功~', result);
   }
 
@@ -280,11 +302,14 @@ export class CryptoSyncUtil {
    * @param priKey    给定秘钥规格私钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
    */
   static decodeAsymSegment(str: string, priKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
     //将私钥转换
-    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName);
+    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
     //生成解密器
     let encoder = crypto.createCipher(symEncryptName);
     //定义分段字节
@@ -294,7 +319,7 @@ export class CryptoSyncUtil {
     //分段加密后的数据
     let decryptText = new Uint8Array();
     //待解密的数据
-    let strArray = StrAndUintUtil.stringToByteArray(str, keyName);
+    let strArray = StrAndUintUtil.strContent2Uint8Array(str, dataCoding);
     //开始循环解密
     for (let i = 0; i < strArray.length; i += strSplitLen) {
       let updateMessage = strArray.subarray(i, i + strSplitLen);
@@ -316,21 +341,20 @@ export class CryptoSyncUtil {
    * @param priKey    给定秘钥规格私钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
    */
   static decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
     //将私钥转换
-    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName);
+    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
     //生成解密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化解密环境
     encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
-    let cryptoArr = StrAndUintUtil.strContent2Uint8Array(str, 'utf8');
-    // if (symAlgName.indexOf('SM2') >= 0 || symEncryptName.indexOf('SM2') >= 0) {
-    //   cryptoArr = StrAndUintUtil.stringToByteArray(str, true);
-    // } else {
-    //   cryptoArr = StrAndUintUtil.stringToByteArray(str);
-    // }
+    //转码
+    let cryptoArr = StrAndUintUtil.strContent2Uint8Array(str, dataCoding);
     //封装加密所需数据
     let updateOutput = encoder.doFinalSync({ data: cryptoArr });
     let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
@@ -343,12 +367,16 @@ export class CryptoSyncUtil {
    * @param priKey  给定秘钥规格私钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
    * @returns OutDTO<string> 签名对象
    */
   static sign(str: string, priKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     //将私钥转换
-    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName);
+    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
     //创建签名器
     let signer = crypto.createSign(symEncryptName);
     //初始化签名器
@@ -358,7 +386,7 @@ export class CryptoSyncUtil {
     let input: crypto.DataBlob = { data: encode.encodeInto(str) };
     signer.update(input);
     let sign = signer.signSync(input);
-    let signStr = StrAndUintUtil.unitArray2String(sign.data);
+    let signStr = StrAndUintUtil.unitArray2StrCoding(sign.data, resultCoding);
     return OutDTO.OKByDataRow(symAlgName + '签名成功~', signStr);
   }
 
@@ -369,12 +397,15 @@ export class CryptoSyncUtil {
    * @param pubKey  给定秘钥规格公钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param keyName  密钥长度
+   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
   static verify(signStr: string, verifyStr: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
     //将公钥转换
-    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
+    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
     //验签器
     let verifyer = crypto.createVerify(symEncryptName);
     //初始化验签器
@@ -383,7 +414,7 @@ export class CryptoSyncUtil {
     //验签的字符串
     let verify: crypto.DataBlob = { data: encode.encodeInto(verifyStr) };
     verifyer.update(verify);
-    let sign: crypto.DataBlob = { data: StrAndUintUtil.stringToByteArray(signStr, keyName) };
+    let sign: crypto.DataBlob = { data: StrAndUintUtil.strContent2Uint8Array(signStr, dataCoding) };
     let result = verifyer.verifySync(verify, sign);
     if (result) {
       return OutDTO.OK("验签成功,签名正确");
@@ -396,9 +427,10 @@ export class CryptoSyncUtil {
    * 摘要
    * @param str 带摘要的字符串
    * @param symAlgName 秘钥规格
+   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
    * @returns 摘要后的字符串
    */
-  static digest(str: string, symAlgName: string): OutDTO<string> {
+  static digest(str: string, symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<string> {
     //摘要对象
     let md = crypto.createMd(symAlgName);
     //字符串转换的字节流对象
@@ -410,7 +442,8 @@ export class CryptoSyncUtil {
       md.update(updateMessageBlob);
     }
     let mdOutput = md.digestSync();
-    return OutDTO.OKByDataRow<string>(symAlgName + '摘要数据成功！', StrAndUintUtil.unitArray2String(mdOutput.data));
+    return OutDTO.OKByDataRow<string>(symAlgName + '摘要数据成功！',
+      StrAndUintUtil.unitArray2StrCoding(mdOutput.data, resultCoding));
   }
 }
 

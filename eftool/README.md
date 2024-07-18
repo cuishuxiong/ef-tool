@@ -59,6 +59,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.加密类组件
 
+#### 2.1异步方式
+
 | 模块         | 介绍                                   |
 |------------|--------------------------------------|
 | RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
@@ -68,12 +70,27 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | SM3        | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
 | SM4        | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
 | SHA        | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
-| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
 | ECDSA      | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
 | ECDH       | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
 | X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
 | SM2Convert | 提供SM2ASN1与C1C3C2转换类                  |
-| SHA1       | 提供SHA1的散列哈希算法                        |
+
+#### 2.2同步方式(V1.2.1-rc.1+)
+
+| 模块         | 介绍                                       |
+|------------|------------------------------------------|
+| RSASync    | 提供RSA同步方式生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AESSync    | 提供AES同步方式生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| DESSync    | 提供3DES同步方式生成密钥加解密等系列方法(基于HarmonyOS API)  |
+| SM2Sync    | 提供SM2同步方式生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM3Sync    | 提供SM3同步方式生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| SM4Sync    | 提供SM4同步方式生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SHASync    | 提供SHA同步方式生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)          |
+| ECDSASync  | 提供ECDSA同步方式签名验签等系列方法(基于HarmonyOS API)    |
+| ECDHSync   | 提供ecdh同步方式动态协商密钥系列方法(基于HarmonyOS API)    |
+| X25519Sync | 提供x25519同步方式动态协商密钥等系列方法(基于HarmonyOS API) |
+| SHA1       | 提供SHA1的散列哈希算法                            |
 
 ### 3.网络相关类组件
 
@@ -950,7 +967,9 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ### 3.加密相关组件使用API
 
-#### 1.RSA的方法【返回结果均为OutDTO对象】
+#### 3.1 异步方式
+
+##### 1.RSA的方法【返回结果均为OutDTO对象】
 
 * generateRSAKey 生成1024位RSA的非对称密钥
 
@@ -1131,7 +1150,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
 ```
 
-#### 2.AES的方法【返回结果均为OutDTO对象】
+##### 2.AES的方法【返回结果均为OutDTO对象】
 
 * generateAESKey 生成AES的对称密钥
 
@@ -1217,7 +1236,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 3.3DES的方法【返回结果均为OutDTO对象】
+##### 3.3DES的方法【返回结果均为OutDTO对象】
 
 * generate3DESKey 生成3DES的对称密钥
 
@@ -1254,7 +1273,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-#### 4.SM2的方法【返回结果均为OutDTO对象】
+##### 4.SM2的方法【返回结果均为OutDTO对象】
 
 * generateSM2Key 生成SM2的非对称密钥
 
@@ -1314,7 +1333,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = aaaa.getDataRow();
 ```
 
-#### 5.SM3的方法【返回结果均为OutDTO对象】
+##### 5.SM3的方法【返回结果均为OutDTO对象】
 
 * digest SM3摘要
 
@@ -1330,7 +1349,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac1.getDataRow();
 ```
 
-#### 6.SM4的方法【返回结果均为OutDTO对象】
+##### 6.SM4的方法【返回结果均为OutDTO对象】
 
 * generateSM4Key 生成SM4的对称密钥
 
@@ -1367,7 +1386,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-#### 7.SHA的方法【返回结果均为OutDTO对象】
+##### 7.SHA的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -1411,7 +1430,566 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac2.getDataRow();
 ```
 
-#### 8.MD5的方法【返回结果均为OutDTO对象】
+##### 8.ECDSA的方法【返回结果均为OutDTO对象】
+
+* generateECDSAKey 生成ECDSA的非对称密钥
+
+```
+    let ecdsa = await ECDSA.generateECDSAKey();
+    console.error("generateECDSAKey:" + ecdsa.getSuccess() + "---" + ecdsa.getMsg()
+    + "\n" + "公钥:" + ecdsa.getDataRow().publicKey + "私钥:" + ecdsa.getDataRow().privateKey)
+```
+
+* sign 签名
+
+```
+    let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+##### 9.ECDH的方法【返回结果均为OutDTO对象】
+
+* ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let ecdsa = await ECDSA.generateECDSAKey();
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+    
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    // 创建非对称密钥生成器
+    let rsaGenerator = crypto.createAsyKeyGenerator('ECC256');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    //获取到贡献密钥
+    let symKey = await ECDH.ecdh(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+##### 10.X25519的方法【返回结果均为OutDTO对象】
+
+* x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    this.message = x25519.getDataRow();
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    let rsaGenerator = crypto.createAsyKeyGenerator('X25519');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    let x25519 = await X25519.x25519(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+#### 3.2 同步方式(v1.2.1-rc.1+)
+
+##### 1.RSA的方法【返回结果均为OutDTO对象】
+
+* generateRSAKey 生成1024位RSA的非对称密钥
+
+```
+    const rsa = await RSA.generateRSAKey();
+    console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
+    + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
+```
+
+* generate2048RSAKey 生成2048位RSA的非对称密钥
+
+```
+    const rsa = await RSA.generate2048RSAKey();
+    console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
+    + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
+```
+
+* encodePKCS1 1024位加密
+
+```
+    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encodePKCS1Segment 1024位分段加密
+
+```
+    let encode = await RSA.encodePKCS1Segment('测试RSA-PKCS1分段加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encode2048PKCS1 2048位加密
+
+```
+    let encode = await RSA.encode2048PKCS1('测试RSA-PKCS12048位加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* encode2048PKCS1Segment 2048位分段加密
+
+```
+    let encode = await RSA.encode2048PKCS1Segment('测试RSA-PKCS12048位分段加密字符串CSX~~', rsa.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decodePKCS1 1024位解密
+
+```
+    let decode = await RSA.decodePKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decodePKCS1Segment 1024位分段解密
+
+```
+    let decode = await RSA.decodePKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decode2048PKCS1 2048位解密
+
+```
+    let decode = await RSA.decode2048PKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* decode2048PKCS1Segment 2048位分段解密
+
+```
+    let decode = await RSA.decode2048PKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* signPKCS1 1024位签名
+
+```
+    let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* sign2048PKCS1 2048位签名
+
+```
+    let sign = await RSA.sign2048PKCS1('这个是RSA的2048位验签字符串~~', rsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verifyPKCS1 1024位验签
+
+```
+    let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* verify2048PKCS1 2048位验签
+
+```
+    let verify = await RSA.verify2048PKCS1(sign.getDataRow(), '这个是RSA的2048位验签字符串~~', rsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* pemToStrKey 将pem文件中的数据转换成公钥字符串支持1024/2048字节
+
+```
+    //1024位示例
+    //pem中数据支持没有回车符、换行符也支持每行以'\r\n'符结束
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhoZDHUVp7y2zw7T7SQYDiUQCn
+                  ImnsKogqWOF3hBfaBr8xK/7I/PfbLcPV/MrWKPi2uaiXkhmITX+24ZWVBInxELBa
+                  4kccFJeZReMRmu7rKZgkVzU6JKyfaH8zMxipEBh0TyS6JVHHjPd4eezzzVDHc59O
+                  fYyzs3kM3Z6oczwTDwIDAQAB
+                  -----END PUBLIC KEY-----`);
+    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', pubKey);
+    this.message = encode.getDataRow();
+    let priKey = RSA.pemToStrKey(`-----BEGIN PRIVATE KEY-----
+                MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAOGhkMdRWnvLbPDt
+                PtJBgOJRAKciaewqiCpY4XeEF9oGvzEr/sj899stw9X8ytYo+La5qJeSGYhNf7bh
+                lZUEifEQsFriRxwUl5lF4xGa7uspmCRXNTokrJ9ofzMzGKkQGHRPJLolUceM93h5
+                7PPNUMdzn059jLOzeQzdnqhzPBMPAgMBAAECgYEAjJjm5Kz3G0kJ25+ak94pd91N
+                8Nfq9TUToH++D4GKc1vc68EkhQ3NTRDZhZB+vLDPOt26BqkNq/fO66DqWu93HEra
+                jBE4pZzCxmVmLanuimxiA45Td1DalL0mmd9ab2cusqwXo6LDs3mSU/t7gSBRUCnt
+                kv4MBZMgIDA92QSadHECQQD1HZKBIbWQtZ4nDxgaP1MOQC7dKmXlIkCsDbuwaZhj
+                RM8/+iqBBtgSkviwOCDWNiFcpzf+nUM1+ba9OE9iTOqTAkEA66Z/ifnKVCNbHiW8
+                i6E2K/2NcJH4qsxRrIMs+eyxqC/yEjkxol26OVmemxu22Fjkx/xIOKg6zFJRstXy
+                i6P3FQJBAKZ7xINCwxCb2uSKowNI2X/HZk0/u9+qqSRzW3TR8/gQx3eb0fy7Ck1r
+                V9BQ/zSfpX9J8IVWiU0C4/SXZ4vL1FMCQQCPaQh9I7NqeQne0wBnyXh6VRhaxbsb
+                1rRt1Hbusol73ZHoXT5Dnd7TQCMyKi+ggpjYzEP3lwoRhpeJyoKNUP/xAkB+//w9
+                SyKHWOZOCLj47/1/7YZGzKv/Ttb4NVFtqDPl2QtbXqDcP8d5ZI4p37rJIq1XZ0sT
+                l2UgKQV+KZkPdL1n
+                -----END PRIVATE KEY-----
+                `)
+    let decode = await RSA.decodePKCS1(encode.getDataRow(), priKey);
+    this.message = decode.getDataRow();
+```
+
+```
+    //2048位示例
+    //pem中数据支持没有回车符、换行符也支持每行以'\r\n'符结束
+    let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
+                +dMBCtoRb/SSY00ujBMsNPFdERxaizxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9
+                Wk2nVLpPRtZNjwJgNRB4pYKf+RmLn35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dv
+                xqVheO+S6IOLiN6XGbkNZM2VBNtmAhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7Cs
+                JE+Go5tb3BZjUYiF8fJ5ZKYCATkK4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S8
+                0S3LFHcOyP7UoNfQ+cbV/z+72sYJV4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg
+                4QIDAQAB
+                -----END PUBLIC KEY-----`);
+    let encode = await RSA.encode2048PKCS1('测试2048位RSA-PKCS1加密字符串CSX~~', pubKey);
+    this.message = encode.getDataRow();
+    //2048位pem私钥
+    let priKey = RSA.pemToStrKey(`-----BEGIN RSA PRIVATE KEY-----
+                MIIEpAIBAAKCAQEA1nwHtqSbMNwjHKutrLUI+dMBCtoRb/SSY00ujBMsNPFdERxa
+                izxgWVZbypVqgj3/4ZsZw9R65OyQu6oLqjA9Wk2nVLpPRtZNjwJgNRB4pYKf+RmL
+                n35UdpIQC9/1+UUeoelboLEMCamCeXPCT5dvxqVheO+S6IOLiN6XGbkNZM2VBNtm
+                AhIUVDLct2yH5YbD6plC8Tg+iMbiigG7r7CsJE+Go5tb3BZjUYiF8fJ5ZKYCATkK
+                4lO39rsXU8AAnw0duAq7LHk6xacwjyUA57S80S3LFHcOyP7UoNfQ+cbV/z+72sYJ
+                V4RwO6AeE2Muz8jYR1GlcCW1wYBGNOpyRVKg4QIDAQABAoIBAB2ckhQNNb/RJKfY
+                q+mkNNEI6KPu52llgrBi/4InQ3srt4WdPILsmwC6g4G8jy/cD2++UhhPRYhFgNXn
+                7CRa9J17CxcPgdJt09dipJWu6HkxR5TEihpC/rZABCcfjH4VpN0FsrjEuLy8wl6y
+                NKl4Zt4uBv8DVGz1fFYxJPtQKSE5YBSbvMD1thhViKOSyYp/pQfu00oz7/XK6iDE
+                oHAhcdTBcBl9YW2WaXCnuX02FQkO5h8kjJbQd6pW4EfLLUxKjwcxcJ61DswcAaPw
+                PN4+bgiwMak8H3IFrZVP24qs4ZOT3Yh7dl75OZXw7XcuBxsR/eCDlIe5VSSS+MId
+                JCc42uECgYEA8jbvO07ESaVYvdij21knF+5Tdjg5rG2q0qsocWlxsE+8IkjzRAgF
+                oovXqwoyDkhFJ/1N/PEnBqiQngbUhRSst49ICCQVv+fzRX2WjUNg4k2FtLO0jwgL
+                Z+E6grMkMkv7VDIxyWlY5rYUC1yw6USFjgyMGQaWps8o4+JLsGJd9PsCgYEA4rER
+                ecoYZndLRGmqMtmGZATDyNh6jGXzGF4XgHahnbhqgw3+7aTDXpA9W1TdGeBI4cQ9
+                HQMjroJ+X/yx2JWysimnFxMXuU4eXZo3vMuebXB3lRe2QcloO1HobeSdUCosJ3qa
+                Ks+f3UtN9Q8ZiPb5P0tA/fIbe6cwwQTQ1FLbQtMCgYEA0DpD3lOv0bRRHxygeVEi
+                l6Muo0Jg6oh5Q5UbNqy0rSNPFJZsc/8FgSEBrqwcLkUZFvDf2+UhbMr7UK+Egkgs
+                171Y6o7DF/D7JbF6/USAhOyqVpfrUM9UpuBs4bHKG2dQ0Kg6PvHPGMBNaRsth8x9
+                mInW4yjT2OHdQFPqR9+48IMCgYBJXXkEa21+K/mGCJR2pIOj9w7N/5GZwpzsM/dz
+                MfGYM8j05SCuFHbOMexJlKuB5l5wAqysqQlxPvZbZlLAf6I3mtdi1mEFLc0SCgkj
+                5to9HPr2m5f2rpI3MIkCl8x510w28qzWUh+w5OA0AVEITLXZ0CcWiLZwTGmw7jgP
+                n0kq1QKBgQDWDHZaEGCAYPxytix3tTCG3EIly8+fQJGt1lc0vgiiFcS0cW2pBbko
+                rVvbu1gSJnmvj0dIObp55wwFBs30xEiMfli+83srOur6nxYUDgn9rqGcufn6hOeH
+                ++y1uOHhOenfUTy51Gy1Dlv+maJ3LZ0ZnqPnbBdhZ1RtXFnczVKeFg==
+                -----END RSA PRIVATE KEY-----`)
+    let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
+```
+
+##### 2.AES的方法【返回结果均为OutDTO对象】
+
+* generateAESKey 生成AES的对称密钥
+
+```
+    const aes = await  AES.generateAESKey();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* generateAESKey128 生成128位AES的对称密钥(1.1.12+)
+
+```
+    const aes = await  AES.generateAESKey128();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* encodeGCM 加密-GCM模式
+
+```
+    let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
+    this.message = encodeGCM.getDataRow();
+```
+
+* decodeGCM 解密-GCM模式
+
+```
+    let decodeGCM = await AES.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
+    this.message = decodeGCM.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decode = await AES.decodeCBC(encode.getDataRow(),aes.getDataRow(), iv.getDataRow());
+    this.message = decode.getDataRow();
+```
+
+* encodeCBC128 加密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)(1.1.13+)
+
+```
+    let encode = await AES.encodeCBC128('测试CBC加密字符串Test!','TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC128 解密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)(1.1.13+)
+
+```
+    let decode = await AES.decodeCBC128(encode.getDataRow(),'TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = decode.getDataRow();
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+* encodeECB128 加密-ECB模式-128位(1.1.12+)
+
+```
+    let encode = await AES.encodeECB128('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB128 解密-ECB模式-128位(1.1.12+)
+
+```
+    let decode = await AES.decodeECB128(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+##### 3.3DES的方法【返回结果均为OutDTO对象】
+
+* generate3DESKey 生成3DES的对称密钥
+
+```
+    let des = await DES.generate3DESKey();
+    console.error("是否成功:" + des.getSuccess() + "消息===:" + des.getMsg() + "密钥======:", des.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+##### 4.SM2的方法【返回结果均为OutDTO对象】
+
+* generateSM2Key 生成SM2的非对称密钥
+
+```
+    let sm2 = await SM2.generateSM2Key();
+    console.error("generateSM2Key:" + sm2.getSuccess() + "---" + sm2.getMsg()
+    + "\n" + "公钥:" + sm2.getDataRow().publicKey + "私钥:" + sm2.getDataRow().privateKey)
+```
+
+* encode 加密
+
+```
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decode 解密
+
+```
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* sign 签名
+
+```
+    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN (1.1.9+)
+
+```
+    //C1C3C2格式的公钥字符串
+    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    //转换后的ASN.1格式的字符串
+    let s = await SM2.convertSM2PubKey(pk);
+    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+    let ddd = code.getDataRow();
+```
+
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN (1.1.9+)
+
+```
+    //C1C3C2格式的私钥字符串
+    let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
+    //转换后的ASN.1格式的字符串
+    let dc = await SM2.convertSM2PriKey(pik);
+    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+    this.message = aaaa.getDataRow();
+```
+
+##### 5.SM3的方法【返回结果均为OutDTO对象】
+
+* digest SM3摘要
+
+```
+    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
+    this.message = sm3.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
+    this.message = hmac1.getDataRow();
+```
+
+##### 6.SM4的方法【返回结果均为OutDTO对象】
+
+* generateSM4Key 生成SM4的对称密钥
+
+```
+    let sm4 = await SM4.generateSM4Key();
+    console.error("是否成功:" + sm4.getSuccess() + "消息===:" + sm4.getMsg() + "密钥======:", sm4.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+##### 7.SHA的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    let digest = await SHA.digest('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA1 SHA1摘要
+
+```
+    let digest = await SHA.digestSHA1('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA224 SHA224摘要
+
+```
+    let digest = await SHA.digestSHA224('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA384 SHA384摘要
+
+```
+    let digest = await SHA.digestSHA384('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA512 SHA512摘要
+
+```
+    let digest = await SHA.digestSHA512('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    this.message = hmac2.getDataRow();
+```
+
+##### 8.MD5的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -1453,7 +2031,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   }
 ```
 
-#### 9.ECDSA的方法【返回结果均为OutDTO对象】
+##### 9.ECDSA的方法【返回结果均为OutDTO对象】
 
 * generateECDSAKey 生成ECDSA的非对称密钥
 
@@ -1477,7 +2055,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-#### 10.ECDH的方法【返回结果均为OutDTO对象】
+##### 10.ECDH的方法【返回结果均为OutDTO对象】
 
 * ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -1514,7 +2092,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 11.X25519的方法【返回结果均为OutDTO对象】
+##### 11.X25519的方法【返回结果均为OutDTO对象】
 
 * x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -1549,7 +2127,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 12.SHA1的方法【返回结果均为OutDTO对象】(1.2.1-rc.0+)
+##### 12.SHA1的方法【返回结果均为OutDTO对象】(1.2.1-rc.0+)
 
 * hash 散列哈希算法
 
@@ -3736,6 +4314,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * 提供自定义键盘工具类
 * 提供首选项工具类
+* 提供图片预览工具类
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 
