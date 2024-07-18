@@ -4,13 +4,12 @@
  * @TODO Three
  */
 import { WinDialogUtil } from '@yunkss/eftool';
-import { router } from '@kit.ArkUI';
+import { promptAction, router } from '@kit.ArkUI';
 
 @Entry
 @Component
 export struct Three {
-
-  @State draw:DrawModifier = new DrawModifier();
+  @State draw: DrawModifier = new DrawModifier();
 
   async openAlert() {
     await WinDialogUtil.showAlert({
@@ -23,13 +22,36 @@ export struct Three {
     });
   }
 
+  @Builder
+  dialog() {
+    Row() {
+      Text('xxxxxxxxxxxxxxxx')
+    }.height('100%')
+  }
+
   build() {
     Column() {
       Tabs({ barPosition: BarPosition.Start }) {
         TabContent() {
-          Button('打开弹窗').margin({ top: 20 }).onClick(() => {
-            this.openAlert();
-          })
+          Column() {
+            Button('打开弹窗').margin({ top: 20 }).onClick(() => {
+              this.openAlert();
+            })
+            Button('打开自定义弹框').margin({ top: 20 }).onClick(() => {
+              promptAction.openCustomDialog({
+                builder:()=>{
+                  this.dialog()
+                },
+                maskRect: {
+                  x: 0,
+                  y: 0,
+                  width: '100%',
+                  height: '100%'
+                },
+                isModal:true
+              })
+            })
+          }
         }.tabBar('我的')
 
         TabContent() {
@@ -52,7 +74,7 @@ export struct Three {
       .drawModifier(this.draw)
     }
     .width('100%')
-    .padding({ top: 60 })
+    .padding({ top: 40 })
     .backgroundColor('#ffffff')
   }
 }
