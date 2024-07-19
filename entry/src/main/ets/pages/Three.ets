@@ -26,7 +26,15 @@ export struct Three {
   dialog() {
     Row() {
       Text('xxxxxxxxxxxxxxxx')
-    }.height('100%')
+    }
+    .height('100%')
+    .width('100%')
+    .margin({
+      bottom:-100
+    })
+    .padding({
+      bottom: -100
+    })
   }
 
   build() {
@@ -39,7 +47,7 @@ export struct Three {
             })
             Button('打开自定义弹框').margin({ top: 20 }).onClick(() => {
               promptAction.openCustomDialog({
-                builder:()=>{
+                builder: () => {
                   this.dialog()
                 },
                 maskRect: {
@@ -48,7 +56,10 @@ export struct Three {
                   width: '100%',
                   height: '100%'
                 },
-                isModal:true
+                isModal: true,
+                width: '100%',
+                height: '100%',
+                offset: { dx: 0, dy: -50 }
               })
             })
           }

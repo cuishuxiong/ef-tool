@@ -181,7 +181,7 @@ export class CryptoSyncUtil {
     //创建加密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化加密
-    cipher.init(mode, symKey, null);
+    cipher.initSync(mode, symKey, null);
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
@@ -213,7 +213,7 @@ export class CryptoSyncUtil {
     //创建解密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化解密
-    cipher.init(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyCoding));
+    cipher.initSync(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyCoding));
     //解密
     let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
     // let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
@@ -241,7 +241,7 @@ export class CryptoSyncUtil {
     //创建解密器
     let cipher = crypto.createCipher(symEncryptName);
     //初始化解密
-    cipher.init(mode, symKey, null);
+    cipher.initSync(mode, symKey, null);
     //解密
     let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
     // let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
@@ -259,15 +259,18 @@ export class CryptoSyncUtil {
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param isPem 是否为pem格式的key  - 默认为false
    */
   static encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding,
+    isPem: boolean): OutDTO<string> {
     //将公钥转换
-    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
+    let pubPair = isPem ? CryptoSyncUtil.convertPemPubKeyFromStr(pubKey, symAlgName) :
+    CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
-    encoder.init(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
+    encoder.initSync(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
@@ -294,7 +297,7 @@ export class CryptoSyncUtil {
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
-    encoder.init(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
+    encoder.initSync(crypto.CryptoMode.ENCRYPT_MODE, pubPair.pubKey, null);
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //定义分段字节
@@ -339,7 +342,7 @@ export class CryptoSyncUtil {
     //定义分段字节
     let strSplitLen = symAlgName.indexOf('2048') >= 0 ? 256 : 128;
     //初始化解密环境
-    encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
+    encoder.initSync(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
     //分段加密后的数据
     let decryptText = new Uint8Array();
     //待解密的数据
@@ -368,15 +371,18 @@ export class CryptoSyncUtil {
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param isPem 是否为pem格式的key  - 默认为false
    */
   static decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding,
+    isPem: boolean): OutDTO<string> {
     //将私钥转换
-    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
+    let priPair = isPem ? CryptoSyncUtil.convertPemPriKeyFromStr(priKey, symAlgName) :
+    CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
     //生成解密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化解密环境
-    encoder.init(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
+    encoder.initSync(crypto.CryptoMode.DECRYPT_MODE, priPair.priKey, null);
     //转码
     let cryptoArr = StrAndUintUtil.strContent2Uint8Array(str, dataCoding);
     //封装加密所需数据
@@ -404,7 +410,7 @@ export class CryptoSyncUtil {
     //创建签名器
     let signer = crypto.createSign(symEncryptName);
     //初始化签名器
-    signer.init(priPair.priKey);
+    signer.initSync(priPair.priKey);
     let encode = new util.TextEncoder();
     //签名的字符串
     let input: crypto.DataBlob = { data: encode.encodeInto(str) };
@@ -433,7 +439,7 @@ export class CryptoSyncUtil {
     //验签器
     let verifyer = crypto.createVerify(symEncryptName);
     //初始化验签器
-    verifyer.init(pubPair.pubKey);
+    verifyer.initSync(pubPair.pubKey);
     let encode = new util.TextEncoder();
     //验签的字符串
     let verify: crypto.DataBlob = { data: encode.encodeInto(verifyStr) };

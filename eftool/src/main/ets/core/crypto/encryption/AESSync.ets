@@ -81,7 +81,7 @@ export class AESSync {
     //创建加密器
     let cipher = crypto.createCipher('AES256|GCM|PKCS7');
     //初始化加密
-    cipher.init(mode, symKey, AESSync.gcmParams);
+    cipher.initSync(mode, symKey, AESSync.gcmParams);
     //封装加密所需数据
     let encode = new util.TextEncoder();
     //开始加密
@@ -195,7 +195,7 @@ export class AESSync {
     //创建解密器
     let cipher = crypto.createCipher('AES256|GCM|PKCS7');
     //初始化加密
-    cipher.init(mode, symKey, AESSync.gcmParams);
+    cipher.initSync(mode, symKey, AESSync.gcmParams);
     //解密
     let updateOutput = cipher.updateSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
     //判断是否完成

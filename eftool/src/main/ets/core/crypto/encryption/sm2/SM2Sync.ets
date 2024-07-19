@@ -30,7 +30,7 @@ export class SM2Sync {
    */
   static encode(str: string, pubKey: string, keyCoding: buffer.BufferEncoding,
     resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.encodeAsym(str, pubKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, resultCoding);
+    return CryptoSyncUtil.encodeAsym(str, pubKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, resultCoding, false);
   }
 
   /**
@@ -42,7 +42,7 @@ export class SM2Sync {
    */
   static decode(str: string, priKey: string, keyCoding: buffer.BufferEncoding,
     dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.decodeAsym(str, priKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, dataCoding);
+    return CryptoSyncUtil.decodeAsym(str, priKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, dataCoding, false);
   }
 
   /**

@@ -42,23 +42,49 @@ export { PageResult } from './src/main/ets/core/page/PageResult';
 
 export { RSA } from './src/main/ets/core/crypto/encryption/RSA';
 
+export { RSASync } from './src/main/ets/core/crypto/encryption/RSASync';
+
 export { AES } from './src/main/ets/core/crypto/encryption/AES';
 
 export { AESSync } from './src/main/ets/core/crypto/encryption/AESSync';
 
 export { SM2 } from './src/main/ets/core/crypto/encryption/sm2/SM2';
 
+export { SM2Sync } from './src/main/ets/core/crypto/encryption/sm2/SM2Sync';
+
 export { SM2Convert } from './src/main/ets/core/crypto/encryption/sm2/SM2Convert';
 
 export { SM3 } from './src/main/ets/core/crypto/encryption/SM3';
 
+export { SM3Sync } from './src/main/ets/core/crypto/encryption/SM3Sync';
+
 export { SM4 } from './src/main/ets/core/crypto/encryption/SM4';
+
+export { SM4Sync } from './src/main/ets/core/crypto/encryption/SM4Sync';
 
 export { DES } from './src/main/ets/core/crypto/encryption/DES';
 
+export { DESSync } from './src/main/ets/core/crypto/encryption/DESSync';
+
 export { ECDSA } from './src/main/ets/core/crypto/encryption/ECDSA';
 
+export { ECDSASync } from './src/main/ets/core/crypto/encryption/ECDSASync';
+
 export { SHA } from './src/main/ets/core/crypto/encryption/SHA';
+
+export { SHASync } from './src/main/ets/core/crypto/encryption/SHASync';
+
+export { MD5 } from './src/main/ets/core/crypto/encryption/MD5';
+
+export { SHA1 } from './src/main/ets/core/crypto/encryption/SHA1';
+
+export { ECDH } from './src/main/ets/core/crypto/keyAgree/ECDH';
+
+export { ECDHSync } from './src/main/ets/core/crypto/keyAgree/ECDHSync';
+
+export { X25519 } from './src/main/ets/core/crypto/keyAgree/X25519';
+
+export { X25519Sync } from './src/main/ets/core/crypto/keyAgree/X25519Sync';
 
 export { JSONObject } from './src/main/ets/core/json/JSONObject';
 
@@ -67,14 +93,6 @@ export { JSONArray } from './src/main/ets/core/json/JSONArray';
 export { JSONArrayList } from './src/main/ets/core/json/JSONArrayList';
 
 export { JSONValue } from './src/main/ets/core/json/JSONValue';
-
-export { MD5 } from './src/main/ets/core/crypto/encryption/MD5';
-
-export { SHA1 } from './src/main/ets/core/crypto/encryption/SHA1';
-
-export { ECDH } from './src/main/ets/core/crypto/keyAgree/ECDH';
-
-export { X25519 } from './src/main/ets/core/crypto/keyAgree/X25519';
 
 export { CryptoUtil } from './src/main/ets/core/util/CryptoUtil';
 

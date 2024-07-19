@@ -29,6 +29,7 @@
 * 优化ImageUtil中打开文件方式[issuesIAB6EG](https://gitee.com/yunkss/ef-tool/issues/IAB6EG)
 * 优化Cascade选择器可传入字体大小[issuesIADJ86](https://gitee.com/yunkss/ef-tool/issues/IADJ86)
 * efAxios的请求响应中添加全局loading弹框
+* 升级axios版本为2.2.1正式版
 
 ## [v1.2.1-rc.0] 2024-06
 

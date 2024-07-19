@@ -75,30 +75,31 @@ export class StrAndUintUtil {
     //判断编码类型
     if (keyCoding === 'base64') {
       //base64
-      let base64Arr = Base64Util.decodeSync(str);
-      if (base64Arr.length != keyLen / 8) {
-        //需要
-        //转换成hex字符串
-        let str1 = buffer.from(base64Arr).toString('hex');
-        const hexString = str1.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
-        let arr = new Array<string>();
-        hexString?.forEach((val) => {
-          arr.push(val);
-        })
-        let byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
-        if (byteArray.length === base64Arr.length) {
-          //说明是utf8字符串
-          str1 = buffer.from(base64Arr).toString('utf8');
-          const hexString = str1.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
-          arr = new Array<string>();
-          hexString?.forEach((val) => {
-            arr.push(val);
-          })
-          byteArray = arr.map(byte => parseInt(byte, 16));
-        }
-        return new Uint8Array(byteArray);
-      }
-      return base64Arr;
+      // let base64Arr = Base64Util.decodeSync(str);
+      return Base64Util.decodeSync(str);
+      // if (base64Arr.length != keyLen / 8) {
+      //需要
+      //转换成hex字符串
+      // let str1 = buffer.from(base64Arr).toString('hex');
+      // const hexString = str1.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+      // let arr = new Array<string>();
+      // hexString?.forEach((val) => {
+      //   arr.push(val);
+      // })
+      // let byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+      // if (byteArray.length === base64Arr.length) {
+      //   //说明是utf8字符串
+      //   str1 = buffer.from(base64Arr).toString('utf8');
+      //   const hexString = str1.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+      //   arr = new Array<string>();
+      //   hexString?.forEach((val) => {
+      //     arr.push(val);
+      //   })
+      //   byteArray = arr.map(byte => parseInt(byte, 16));
+      // }
+      // return new Uint8Array(byteArray);
+      // }
+      // return base64Arr;
     }
     if (keyCoding === 'hex') {
       let arr = StrAndUintUtil.str2Uint8Array(str, 'hex');
