@@ -259,7 +259,7 @@ export class CryptoSyncUtil {
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param resultCoding  返回结果编码方式(utf8/hex/base64)
-   * @param isPem 是否为pem格式的key  - 默认为false
+   * @param isPem 是否为pem格式的key
    */
   static encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
     keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding,
@@ -289,11 +289,14 @@ export class CryptoSyncUtil {
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param isPem 是否为pem格式的key
    */
   static encodeAsymSegment(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding,
+    isPem: boolean): OutDTO<string> {
     //将公钥转换
-    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
+    let pubPair = isPem ? CryptoSyncUtil.convertPemPubKeyFromStr(pubKey, symAlgName) :
+    CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
     //生成加密器
     let encoder = crypto.createCipher(symEncryptName);
     //初始化加密环境
@@ -325,18 +328,21 @@ export class CryptoSyncUtil {
 
   /**
    * 非对称分段解密
-   * @param decodeStr  待解密的字符串
+   * @param str  待解密的字符串
    * @param priKey    给定秘钥规格私钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param isPem 是否为pem格式的key
    */
   static decodeAsymSegment(str: string, priKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding,
+    isPem: boolean): OutDTO<string> {
     //将私钥转换
-    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
+    let priPair = isPem ? CryptoSyncUtil.convertPemPriKeyFromStr(priKey, symAlgName) :
+    CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
     //生成解密器
     let encoder = crypto.createCipher(symEncryptName);
     //定义分段字节
@@ -371,7 +377,7 @@ export class CryptoSyncUtil {
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
-   * @param isPem 是否为pem格式的key  - 默认为false
+   * @param isPem 是否为pem格式的key
    */
   static decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string,
     keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding,

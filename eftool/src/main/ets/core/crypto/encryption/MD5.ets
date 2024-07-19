@@ -14,7 +14,7 @@ export class MD5 {
   /**
    * MD5摘要
    * @param str 带摘要的字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-不传默认为base64
+   * @param resultCoding  返回结果编码方式(hex/base64)-不传默认为base64
    * @returns 摘要后的字符串
    */
   static digest(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {

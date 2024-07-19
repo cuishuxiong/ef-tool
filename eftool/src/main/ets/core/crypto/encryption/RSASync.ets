@@ -45,22 +45,24 @@ export class RSASync {
 
   /**
    * 加密-分段
-   * @param encodeStr  待加密的字符串
+   * @param str  待加密的字符串
    * @param pubKey  RSA公钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
    */
   static encodePKCS1Segment(str: string, pubKey: string, keyCoding: buffer.BufferEncoding,
-    resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.encodeAsymSegment(str, pubKey, 'RSA1024', 'RSA1024|PKCS1', 1024, keyCoding, resultCoding);
+    resultCoding: buffer.BufferEncoding = 'base64', isPem: boolean = false): OutDTO<string> {
+    return CryptoSyncUtil.encodeAsymSegment(str, pubKey, 'RSA1024', 'RSA1024|PKCS1', 1024, keyCoding, resultCoding,
+      isPem);
   }
 
   /**
    * 2048位加密
-   * @param encodeStr  待加密的字符串
+   * @param str  待加密的字符串
    * @param pubKey  2048位RSA公钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @param isPem 秘钥是否为pem格式 - 默认为false
    */
   static encode2048PKCS1(str: string, pubKey: string, keyCoding: buffer.BufferEncoding,
@@ -70,14 +72,16 @@ export class RSASync {
 
   /**
    * 2048位加密-分段
-   * @param encodeStr  待加密的字符串
+   * @param str  待加密的字符串
    * @param pubKey  2048位RSA公钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
    */
   static encode2048PKCS1Segment(str: string, pubKey: string, keyCoding: buffer.BufferEncoding,
-    resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.encodeAsymSegment(str, pubKey, 'RSA2048', 'RSA2048|PKCS1', 2048, keyCoding, resultCoding);
+    resultCoding: buffer.BufferEncoding = 'base64', isPem: boolean = false): OutDTO<string> {
+    return CryptoSyncUtil.encodeAsymSegment(str, pubKey, 'RSA2048', 'RSA2048|PKCS1', 2048, keyCoding, resultCoding,
+      isPem);
   }
 
   /**
@@ -99,10 +103,12 @@ export class RSASync {
    * @param priKey    RSA私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param dataCoding  待解密字符串编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
    */
   static decodePKCS1Segment(str: string, priKey: string, keyCoding: buffer.BufferEncoding,
-    dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.decodeAsymSegment(str, priKey, 'RSA1024', 'RSA1024|PKCS1', 1024, keyCoding, dataCoding);
+    dataCoding: buffer.BufferEncoding = 'base64', isPem: boolean = false): OutDTO<string> {
+    return CryptoSyncUtil.decodeAsymSegment(str, priKey, 'RSA1024', 'RSA1024|PKCS1', 1024, keyCoding, dataCoding,
+      isPem);
   }
 
   /**
@@ -124,10 +130,12 @@ export class RSASync {
    * @param priKey    2048位RSA私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
    * @param dataCoding  待解密字符串编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
    */
   static decode2048PKCS1Segment(str: string, priKey: string, keyCoding: buffer.BufferEncoding,
-    dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.decodeAsymSegment(str, priKey, 'RSA2048', 'RSA2048|PKCS1', 2048, keyCoding, dataCoding);
+    dataCoding: buffer.BufferEncoding = 'base64', isPem: boolean = false): OutDTO<string> {
+    return CryptoSyncUtil.decodeAsymSegment(str, priKey, 'RSA2048', 'RSA2048|PKCS1', 2048, keyCoding, dataCoding,
+      isPem);
   }
 
   /**
@@ -135,7 +143,7 @@ export class RSASync {
    * @param str  需要签名的字符串
    * @param priKey  私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns OutDTO<string> 签名对象
    */
   static signPKCS1(str: string, priKey: string, keyCoding: buffer.BufferEncoding,
@@ -148,7 +156,7 @@ export class RSASync {
    * @param str  需要签名的字符串
    * @param priKey  2048位私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns OutDTO<string> 签名对象
    */
   static sign2048PKCS1(str: string, priKey: string, keyCoding: buffer.BufferEncoding,

@@ -26,7 +26,7 @@ export class SM2Sync {
    * @param encodeStr  待加密的字符串
    * @param pubKey  SM2公钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    */
   static encode(str: string, pubKey: string, keyCoding: buffer.BufferEncoding,
     resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -50,7 +50,7 @@ export class SM2Sync {
    * @param str  需要签名的字符串
    * @param priKey  私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns OutDTO<string> 签名对象
    */
   static sign(str: string, priKey: string, keyCoding: buffer.BufferEncoding,

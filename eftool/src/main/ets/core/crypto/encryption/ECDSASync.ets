@@ -23,7 +23,7 @@ export class ECDSASync {
    * @param str  需要签名的字符串
    * @param priKey  私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64) - 不传默认为base64
+   * @param resultCoding  返回结果编码方式(hex/base64) - 不传默认为base64
    * @returns OutDTO<string> 签名对象
    */
   static sign(str: string, priKey: string, keyCoding: buffer.BufferEncoding,

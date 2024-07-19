@@ -16,7 +16,7 @@ export class DynamicSyncUtil {
    * @param priKey  符合格式的非对称密钥的私钥字符串或Uint8Array字节流
    * @param symAlgName 秘钥规格
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 共享密钥
    */
   static dynamicKey(pubKey: string | Uint8Array, priKey: string | Uint8Array, symAlgName: string,
@@ -63,7 +63,7 @@ export class DynamicSyncUtil {
    * 消息认证码计算
    * @param str  计算字符串
    * @param symAlgName  秘钥规格
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns
    */
   static hmac(str: string, symAlgName: string,

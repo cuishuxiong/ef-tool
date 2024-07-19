@@ -12,7 +12,7 @@ export class SHASync {
   /**
    * SHA1摘要
    * @param str 带摘要的字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
   static digestSHA1(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -22,7 +22,7 @@ export class SHASync {
   /**
    * SHA224摘要
    * @param str 带摘要的字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
   static digestSHA224(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -32,7 +32,7 @@ export class SHASync {
   /**
    * SHA256摘要
    * @param str 带摘要的字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
   static digest(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -42,7 +42,7 @@ export class SHASync {
   /**
    * SHA384摘要
    * @param str 带摘要的字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
   static digestSHA384(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -52,7 +52,7 @@ export class SHASync {
   /**
    * SHA512摘要
    * @param str 带摘要的字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
   static digestSHA512(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -62,7 +62,7 @@ export class SHASync {
   /**
    * 消息认证码计算
    * @param str  计算字符串
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns
    */
   static hmac(str: string, resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
