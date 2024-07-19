@@ -13,7 +13,7 @@ import { CryptoKey, CryptoSyncUtil } from '../../util/CryptoSyncUtil';
 export class RSASync {
   /**
    * 生成RSA的非对称密钥
-   * @param resultCoding 生成RSA秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成RSA秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns RSA密钥{publicKey:公钥,privateKey:私钥}
    */
   static generateRSAKey(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<CryptoKey> {
@@ -22,7 +22,7 @@ export class RSASync {
 
   /**
    * 生成2048位RSA的非对称密钥
-   * @param resultCoding 生成RSA秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成RSA秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns 2048位RSA密钥{publicKey:2048位公钥,privateKey:2048位私钥}
    */
   static generate2048RSAKey(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<CryptoKey> {

@@ -3544,76 +3544,91 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 //后续添加
 ```
+
 * getTempDirPath 获取临时目录下的文件夹路径或文件路径
 
 ```
 //后续添加
 ```
+
 * hasDirPath 判断是否是完整路径
 
 ```
 //后续添加
 ```
+
 * getFileName 通过URI或路径获取文件名
 
 ```
 //后续添加
 ```
+
 * getFilePath 通过URI或路径获取文件路径
 
 ```
 //后续添加
 ```
+
 * getParentUri 通过URI或路径获取对应文件父目录的URI
 
 ```
 //后续添加
 ```
+
 * getParentPath 通过URI或路径获取对应文件父目录的路径名
 
 ```
 //后续添加
 ```
+
 * getFileExtention 根据文件名获取文件后缀
 
 ```
 //后续添加
 ```
+
 * isFile 判断文件是否是普通文件
 
 ```
 //后续添加
 ```
+
 * isDirectory 判断文件是否是目录
 
 ```
 //后续添加
 ```
+
 * mkdir 创建目录
 
 ```
 //后续添加
 ```
+
 * mkdirSync 创建目录以同步方法
 
 ```
 //后续添加
 ```
+
 * writeEasy 将数据写入文件并关闭文件
 
 ```
 //后续添加
 ```
+
 * getFormatFileSize 格式化文件大小
 
 ```
 //后续添加
 ```
+
 * getRawFileContentSync 获取resources/rawfile目录下对应的rawfile文件内容
 
 ```
 //后续添加
 ```
+
 * getRawFileContent 获取resources/rawfile目录下对应的rawfile文件内容
 
 ```
@@ -3712,9 +3727,5 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 //后续添加
 ```
-
-## 为了更好的共建鸿蒙生态,决定创建微信群相互学习,大家有需求也可以直接在群里圈我
-
-![qrcode.jpg](img/qrcode.jpg)
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化

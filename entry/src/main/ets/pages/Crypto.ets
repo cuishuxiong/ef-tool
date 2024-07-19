@@ -3,7 +3,20 @@
  * @DateTime 2024/6/28 21:54
  * @TODO Crypto
  */
-import { RandomUtil, AESSync, UiConst, RSASync, RSA, SHASync } from '@yunkss/eftool';
+import {
+  RandomUtil,
+  AESSync,
+  UiConst,
+  RSASync,
+  RSA,
+  SHASync,
+  SM3Sync,
+  SM2Sync,
+  SM2Convert,
+  SM4Sync,
+  ECDHSync
+} from '@yunkss/eftool';
+import { CryptoSyncUtil } from '@yunkss/eftool/src/main/ets/core/util/CryptoSyncUtil';
 
 @Entry
 @Component
@@ -76,7 +89,7 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode = AESSync.decodeCBC(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
     // this.msg = decode.getDataRow();
 
-    let ivHex = RandomUtil.generateIV('hex');
+    // let ivHex = RandomUtil.generateIV('hex');
     // let keyHex = AESSync.generateAESKey('hex');
     // let encodeHex = AESSync.encodeCBC('测试AES-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
     // let decodeHex = AESSync.decodeCBC(encodeHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
@@ -114,12 +127,12 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // this.msg = decode1.getDataRow();
 
 
-    let key128 = AESSync.generateAESKey128();
-    let key128Hex = AESSync.generateAESKey128('hex');
+    // let key128 = AESSync.generateAESKey128();
+    // let key128Hex = AESSync.generateAESKey128('hex');
 
-    let encodeCBC128 = AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', key128.getDataRow(), iv.getDataRow(), 'base64');
-    let decodeCBC128 = AESSync.decodeCBC128(encodeCBC128.getDataRow(), key128.getDataRow(), iv.getDataRow(), 'base64');
-    this.msg = decodeCBC128.getDataRow();
+    // let encodeCBC128 = AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', key128.getDataRow(), iv.getDataRow(), 'base64');
+    // let decodeCBC128 = AESSync.decodeCBC128(encodeCBC128.getDataRow(), key128.getDataRow(), iv.getDataRow(), 'base64');
+    // this.msg = decodeCBC128.getDataRow();
 
     // let encodeCBC128 =
     //   AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', key128Hex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
@@ -150,12 +163,113 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8', 'hex');
     // this.msg = decode2.getDataRow();
 
+    let key = AESSync.generateAESKey192();
+
+    // let encode192 = AESSync.encodeCBC192('测试AES-192-CBC加密~~~', key.getDataRow(), iv.getDataRow(), 'base64');
+    // let decode192 = AESSync.decodeCBC192(encode192.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+    // this.msg = decode192.getDataRow();
+
+    let encode192Ecb = AESSync.encodeECB192('测试AES-192-ECB加密~~~', key.getDataRow(), 'base64');
+    let decode192Ecb = AESSync.decodeECB192(encode192Ecb.getDataRow(), key.getDataRow(), 'base64');
+    this.msg = decode192Ecb.getDataRow();
+
 
   }
 
   testSHA() {
     let digest = SHASync.digest('测试SHASync~~~~~');
     this.msg = digest.getDataRow();
+  }
+
+  testSM2() {
+    let key = SM2Sync.generateSM2Key();
+    // let encode = SM2Sync.encode('测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
+    // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64');
+    // this.msg = decode.getDataRow();
+
+    // let encode = SM2Sync.encode('测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64', 'hex');
+    // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
+    // this.msg = decode.getDataRow();
+
+    let sign = SM2Sync.sign('测试SM2的加密~~~~', key.getDataRow().privateKey, 'base64');
+    this.msg = sign.getDataRow();
+    let verify = SM2Sync.verify(sign.getDataRow(), '测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
+    this.msg = verify.getMsg();
+
+  }
+
+  testSM3() {
+
+    let digest = SM3Sync.digest('测试SM3的digest~~~~');
+    this.msg = digest.getDataRow();
+
+    let hmac = SM3Sync.hmac('测试SM3的hmac~~~~');
+    this.msg = hmac.getDataRow();
+
+  }
+
+  testSM4() {
+    // let iv = RandomUtil.generateIV();
+    let key = SM4Sync.generateSM4Key();
+    // let encode = SM4Sync.encodeCBC('测试SM4-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
+    // let decode = SM4Sync.decodeCBC(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+    // this.msg = decode.getDataRow();
+
+    // let ivHex = RandomUtil.generateIV('hex');
+    let keyHex = SM4Sync.generateSM4Key('hex');
+    // let encodeHex = SM4Sync.encodeCBC('测试SM4-CBC加密-hex~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+    // let decodeHex = SM4Sync.decodeCBC(encodeHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+    // this.msg = decodeHex.getDataRow();
+
+
+    // let encodeBase64 = SM4Sync.encodeCBC('测试SM4-CBC加密-base64~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+    // let decodeBase64 = SM4Sync.decodeCBC(encodeBase64.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+    // this.msg = decodeBase64.getDataRow();
+
+    // let encode2 = SM4Sync.encodeCBC("测试SM4外部传入key/iv加密~~~", "TESTsdiloia20230ass3[2K8%fw68sw7",
+    //   "ass3[2K8%fw68sw7", 'utf8');
+    // let decode2 =
+    //   SM4Sync.decodeCBC(encode2.getDataRow(), "TESTsdiloia20230ass3[2K8%fw68sw7", "ass3[2K8%fw68sw7", 'utf8');
+    // this.msg = decode2.getDataRow();
+
+
+    // let ecbEncode = SM4Sync.encodeECB('测试SM4-ECB加密-base64~', key.getDataRow(), 'base64');
+    // let ecbDecode = SM4Sync.decodeECB(ecbEncode.getDataRow(), key.getDataRow(), 'base64');
+    // this.msg = ecbDecode.getDataRow();
+
+    // let ecbEncodeHex = SM4Sync.encodeECB('测试SM4-ECB加密-hex~', keyHex.getDataRow(), 'hex', 'hex');
+    // let ecbDecodeHex = SM4Sync.decodeECB(ecbEncodeHex.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
+    // this.msg = ecbDecodeHex.getDataRow();
+
+    // let ecbEncodeBase64 = SM4Sync.encodeECB('测试SM4-ECB加密-hex-base64~', keyHex.getDataRow(), 'hex');
+    // let ecbDecodBase64 = SM4Sync.decodeECB(ecbEncodeBase64.getDataRow(), keyHex.getDataRow(), 'hex');
+    // this.msg = ecbDecodBase64.getDataRow();
+
+
+    let encode1 = SM4Sync.encodeECB('测试SM4外部传入key加密~~~~', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
+    let decode1 = SM4Sync.decodeECB(encode1.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
+    this.msg = decode1.getDataRow();
+
+
+  }
+
+  testECDH() {
+    //模拟当前项目的公钥
+    let sm2Key = CryptoSyncUtil.generateCryptoKey('ECC256', 'base64');
+    //模拟外部传入的私钥
+    let eccKey = CryptoSyncUtil.generateCryptoKey('ECC256', 'base64');
+    //动态协商
+    let shareKey = ECDHSync.ecdh(sm2Key.getDataRow().publicKey, eccKey.getDataRow().privateKey, 'base64', 'base64');
+    this.msg = "生成的共享密钥为:" + shareKey.getDataRow();
+
+    //模拟加密
+    let shareEncode = AESSync.encodeECB('使用ECDH共享密钥加密数据测试~~~~', shareKey.getDataRow(), 'base64');
+    this.msg = shareEncode.getDataRow();
+    //动态协商解密key
+    let decodeKey = ECDHSync.ecdh(eccKey.getDataRow().publicKey, sm2Key.getDataRow().privateKey, 'base64', 'base64');
+    //解密
+    let shareDecode = AESSync.decodeECB(shareEncode.getDataRow(), decodeKey.getDataRow(), 'base64');
+    this.msg = "共享密钥解密结果为:" + shareDecode.getDataRow();
   }
 
   build() {
@@ -176,6 +290,22 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
         Button('测试SHA各种编码签名').margin({ top: 20 }).onClick(() => {
           this.testSHA();
+        })
+
+        Button('测试SM2各种编码签名').margin({ top: 20 }).onClick(() => {
+          this.testSM2();
+        })
+
+        Button('测试SM3各种编码签名').margin({ top: 20 }).onClick(() => {
+          this.testSM3();
+        })
+
+        Button('测试SM4各种编码签名').margin({ top: 20 }).onClick(() => {
+          this.testSM4();
+        })
+
+        Button('测试ECDH各种编码签名').margin({ top: 20 }).onClick(() => {
+          this.testECDH();
         })
 
       }

@@ -1553,7 +1553,12 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * generateRSAKey 生成1024位RSA的非对称密钥
 
 ```
-    const rsa = await RSA.generateRSAKey();
+   /**
+   * 生成RSA的非对称密钥
+   * @param resultCoding 生成RSA秘钥的字符串格式(hex/base64)-默认不传为base64格式
+   * @returns RSA密钥{publicKey:公钥,privateKey:私钥}
+   */
+    const rsa = RSASync.generateRSAKey();
     console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
     + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
 ```
@@ -1561,7 +1566,12 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * generate2048RSAKey 生成2048位RSA的非对称密钥
 
 ```
-    const rsa = await RSA.generate2048RSAKey();
+   /**
+   * 生成2048位RSA的非对称密钥
+   * @param resultCoding 生成RSA秘钥的字符串格式(hex/base64)-默认不传为base64格式
+   * @returns 2048位RSA密钥{publicKey:2048位公钥,privateKey:2048位私钥}
+   */
+    const rsa =  RSASync.generate2048RSAKey();
     console.error("generateRSAKey:" + rsa.getSuccess() + "---" + rsa.getMsg()
     + "\n" + "公钥:" + rsa.getDataRow().publicKey + "私钥:" + rsa.getDataRow().privateKey)
 ```
@@ -1569,13 +1579,29 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * encodePKCS1 1024位加密
 
 ```
-    let encode = await RSA.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
+   /**
+   * 1024位加密
+   * @param str  待加密的字符串
+   * @param pubKey  RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+    let encode = RSASync.encodePKCS1('测试RSA-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
     this.message = encode.getDataRow();
 ```
 
 * encodePKCS1Segment 1024位分段加密
 
 ```
+   /**
+   * 加密-分段
+   * @param str  待加密的字符串
+   * @param pubKey  RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
     let encode = await RSA.encodePKCS1Segment('测试RSA-PKCS1分段加密字符串CSX~~', rsa.getDataRow().publicKey);
     this.message = encode.getDataRow();
 ```
@@ -1583,6 +1609,14 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 * encode2048PKCS1 2048位加密
 
 ```
+   /**
+   * 2048位加密
+   * @param str  待加密的字符串
+   * @param pubKey  2048位RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
     let encode = await RSA.encode2048PKCS1('测试RSA-PKCS12048位加密字符串CSX~~', rsa.getDataRow().publicKey);
     this.message = encode.getDataRow();
 ```
