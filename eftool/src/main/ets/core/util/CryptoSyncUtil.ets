@@ -83,7 +83,7 @@ export class CryptoSyncUtil {
   /**
    * 根据传入的iv字符串转换iv对象
    * @param ivStr
-   * @param ivCoding 偏移量的编码方式(utf8/hex/base64)
+   * @param ivCoding 偏移量的编码方式(hex/base64)
    * @returns
    */
   static genIvParamsSpec(ivStr: string, ivCoding: buffer.BufferEncoding): crypto.IvParamsSpec {
@@ -98,7 +98,7 @@ export class CryptoSyncUtil {
   /**
    * 生成对称密钥-指定密钥生成格式(默认base64)
    * @param symAlgName 秘钥规格
-   * @param resultCoding 生成对称秘钥的编码方式(utf8/hex/base64)
+   * @param resultCoding 生成对称秘钥的编码方式(hex/base64)
    * @returns 指定秘钥规格的对称密钥
    */
   static generateSymKey(symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<string> {
@@ -116,7 +116,7 @@ export class CryptoSyncUtil {
    * 生成非对称密钥
    * @param symAlgName 秘钥规格
    * @returns 指定秘钥规格的非对称公私
-   * @param resultCoding 生成非对称秘钥的编码方式(utf8/hex/base64)
+   * @param resultCoding 生成非对称秘钥的编码方式(hex/base64)
    */
   static generateCryptoKey(symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<CryptoKey> {
     // 创建非对称密钥生成器
@@ -138,7 +138,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(hex/base64)
    * @returns
    */
   static encodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string,
@@ -169,7 +169,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(hex/base64)
    * @returns
    */
   static encodeECB(str: string, key: string, symAlgName: string, symEncryptName: string,
@@ -201,7 +201,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(hex/base64)
    * @returns
    */
   static decodeCBC(str: string, key: string, iv: string, symAlgName: string, symEncryptName: string,
@@ -216,8 +216,6 @@ export class CryptoSyncUtil {
     cipher.initSync(mode, symKey, CryptoSyncUtil.genIvParamsSpec(iv, keyCoding));
     //解密
     let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
-    // let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    // decode.decodeWithStream(updateOutput.data)
     let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, 'utf8');
     return OutDTO.OKByDataRow(symAlgName + '-CBC解密成功~', result);
   }
@@ -230,7 +228,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(hex/base64)
    */
   static decodeECB(str: string, sm4Key: string, symAlgName: string, symEncryptName: string,
     keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
@@ -244,8 +242,6 @@ export class CryptoSyncUtil {
     cipher.initSync(mode, symKey, null);
     //解密
     let updateOutput = cipher.doFinalSync({ data: StrAndUintUtil.strContent2Uint8Array(str, dataCoding) });
-    // let decode = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    // decode.decodeWithStream(updateOutput.data)
     let result = StrAndUintUtil.unitArray2StrCoding(updateOutput.data, 'utf8');
     return OutDTO.OKByDataRow(symAlgName + '-ECB解密成功~', result);
   }
@@ -258,7 +254,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(hex/base64)
    * @param isPem 是否为pem格式的key
    */
   static encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
@@ -288,7 +284,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(hex/base64)
    * @param isPem 是否为pem格式的key
    */
   static encodeAsymSegment(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
@@ -334,7 +330,7 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(hex/base64)
    * @param isPem 是否为pem格式的key
    */
   static decodeAsymSegment(str: string, priKey: string, symAlgName: string, symEncryptName: string,
@@ -370,13 +366,13 @@ export class CryptoSyncUtil {
 
   /**
    * 非对称解密
-   * @param decodeStr  待解密的字符串
+   * @param str  待解密的字符串
    * @param priKey    给定秘钥规格私钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(hex/base64)
    * @param isPem 是否为pem格式的key
    */
   static decodeAsym(str: string, priKey: string, symAlgName: string, symEncryptName: string,
@@ -406,13 +402,16 @@ export class CryptoSyncUtil {
    * @param keyName  密钥长度
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(hex/base64)
+   * @param isPem 是否为pem格式的key
    * @returns OutDTO<string> 签名对象
    */
   static sign(str: string, priKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, resultCoding: buffer.BufferEncoding,
+    isPem: boolean): OutDTO<string> {
     //将私钥转换
-    let priPair = CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
+    let priPair = isPem ? CryptoSyncUtil.convertPemPriKeyFromStr(priKey, symAlgName) :
+    CryptoSyncUtil.convertPriKeyFromStr(priKey, symAlgName, keyName, keyCoding);
     //创建签名器
     let signer = crypto.createSign(symEncryptName);
     //初始化签名器
@@ -420,7 +419,7 @@ export class CryptoSyncUtil {
     let encode = new util.TextEncoder();
     //签名的字符串
     let input: crypto.DataBlob = { data: encode.encodeInto(str) };
-    signer.update(input);
+    signer.updateSync(input);
     let sign = signer.signSync(input);
     let signStr = StrAndUintUtil.unitArray2StrCoding(sign.data, resultCoding);
     return OutDTO.OKByDataRow(symAlgName + '签名成功~', signStr);
@@ -435,13 +434,16 @@ export class CryptoSyncUtil {
    * @param symEncryptName  加密规格
    * @param keyName  密钥长度
    * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  入参字符串编码方式(utf8/hex/base64)
+   * @param dataCoding  入参字符串编码方式(hex/base64)
+   * @param isPem 是否为pem格式的key
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
   static verify(signStr: string, verifyStr: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding): OutDTO<string> {
+    keyName: number, keyCoding: buffer.BufferEncoding, dataCoding: buffer.BufferEncoding,
+    isPem: boolean): OutDTO<string> {
     //将公钥转换
-    let pubPair = CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
+    let pubPair = isPem ? CryptoSyncUtil.convertPemPubKeyFromStr(pubKey, symAlgName) :
+    CryptoSyncUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName, keyCoding);
     //验签器
     let verifyer = crypto.createVerify(symEncryptName);
     //初始化验签器
@@ -449,7 +451,7 @@ export class CryptoSyncUtil {
     let encode = new util.TextEncoder();
     //验签的字符串
     let verify: crypto.DataBlob = { data: encode.encodeInto(verifyStr) };
-    verifyer.update(verify);
+    verifyer.updateSync(verify);
     let sign: crypto.DataBlob = { data: StrAndUintUtil.strContent2Uint8Array(signStr, dataCoding) };
     let result = verifyer.verifySync(verify, sign);
     if (result) {
@@ -463,7 +465,7 @@ export class CryptoSyncUtil {
    * 摘要
    * @param str 带摘要的字符串
    * @param symAlgName 秘钥规格
-   * @param resultCoding  返回结果编码方式(utf8/hex/base64)
+   * @param resultCoding  返回结果编码方式(hex/base64)
    * @returns 摘要后的字符串
    */
   static digest(str: string, symAlgName: string, resultCoding: buffer.BufferEncoding): OutDTO<string> {
@@ -475,7 +477,7 @@ export class CryptoSyncUtil {
     for (let i = 0; i < messageData.length; i += updateLength) {
       let updateMessage = messageData.subarray(i, i + updateLength);
       let updateMessageBlob: crypto.DataBlob = { data: updateMessage };
-      md.update(updateMessageBlob);
+      md.updateSync(updateMessageBlob);
     }
     let mdOutput = md.digestSync();
     return OutDTO.OKByDataRow<string>(symAlgName + '摘要数据成功！',

@@ -3,7 +3,7 @@
  * @DateTime 2024/6/28 21:54
  * @TODO Crypto
  */
-import { RandomUtil, AESSync, UiConst, RSASync, RSA } from '@yunkss/eftool';
+import { RandomUtil, AESSync, UiConst, RSASync, RSA, SHASync } from '@yunkss/eftool';
 
 @Entry
 @Component
@@ -58,8 +58,12 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decodePem = RSASync.decodePKCS1Segment(encodePem.getDataRow(), pemPriKey, 'base64', 'hex', true);
     // this.msg = decodePem.getDataRow();
 
+    let sign = RSASync.signPKCS1('待签名的RSA的pem格式的字符串~', pemPriKey, 'base64', 'base64', true);
 
+    let verify =
+      RSASync.verifyPKCS1(sign.getDataRow(), '待签名的RSA的pem格式的字符串~', pemPubKey, 'base64', 'base64', true);
 
+    this.msg = verify.getMsg();
 
 
   }
@@ -149,6 +153,11 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
   }
 
+  testSHA() {
+    let digest = SHASync.digest('测试SHASync~~~~~');
+    this.msg = digest.getDataRow();
+  }
+
   build() {
 
     Scroll(this.scroller) {
@@ -163,6 +172,10 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
         Button('测试RSA各种编码加解密').margin({ top: 20 }).onClick(() => {
           this.testRSA();
+        })
+
+        Button('测试SHA各种编码签名').margin({ top: 20 }).onClick(() => {
+          this.testSHA();
         })
 
       }

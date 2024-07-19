@@ -23,7 +23,7 @@ export class DESSync {
    * 加密-ECB模式
    * @param str  待加密的字符串
    * @param desKey   3DES密钥
-   * @param keyCoding key的编码方式
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
@@ -37,7 +37,7 @@ export class DESSync {
    * @param str  待加密的字符串
    * @param aesKey   3DES密钥
    * @param iv   iv偏移量字符串
-   * @param keyCoding key的编码方式
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param resultCoding  加密后数据的编码方式-不传默认为base64
    * @returns
    */
@@ -51,8 +51,8 @@ export class DESSync {
    * 解密-ECB模式
    * @param str  加密的字符串
    * @param desKey  3DES密钥
-   * @param keyCoding key的编码方式
-   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    */
   static decodeECB(str: string, desKey: string, keyCoding: buffer.BufferEncoding,
     dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -64,8 +64,8 @@ export class DESSync {
    * @param str  加密的字符串
    * @param aesKey 3DES密钥
    * @param iv  iv偏移量字符串
-   * @param keyCoding key的编码方式
-   * @param dataCoding  待解密的数据的编码方式-不传默认为base64
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
   static decodeCBC(str: string, desKey: string, iv: string,

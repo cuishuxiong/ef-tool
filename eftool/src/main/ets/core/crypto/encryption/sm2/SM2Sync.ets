@@ -13,7 +13,7 @@ import { buffer } from '@kit.ArkTS';
 export class SM2Sync {
   /**
    * 生成SM2的非对称密钥
-   * @param resultCoding 生成RSA秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns SM2密钥{publicKey:公钥,privateKey:私钥}
    */
   static generateSM2Key(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<CryptoKey> {
@@ -25,7 +25,7 @@ export class SM2Sync {
    * 加密
    * @param encodeStr  待加密的字符串
    * @param pubKey  SM2公钥
-   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    */
   static encode(str: string, pubKey: string, keyCoding: buffer.BufferEncoding,
@@ -37,8 +37,8 @@ export class SM2Sync {
    * 解密
    * @param decodeStr  待解密的字符串
    * @param priKey    SM2私钥
-   * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  待解密字符串编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    */
   static decode(str: string, priKey: string, keyCoding: buffer.BufferEncoding,
     dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -49,13 +49,13 @@ export class SM2Sync {
    * 签名
    * @param str  需要签名的字符串
    * @param priKey  私钥
-   * @param keyCoding  密钥编码方式(utf8/hex/base64)
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns OutDTO<string> 签名对象
    */
   static sign(str: string, priKey: string, keyCoding: buffer.BufferEncoding,
     resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.sign(str, priKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, resultCoding);
+    return CryptoSyncUtil.sign(str, priKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, resultCoding,false);
   }
 
   /**
@@ -63,13 +63,13 @@ export class SM2Sync {
    * @param signStr  已签名的字符串
    * @param verifyStr  需要验签的字符串
    * @param pubKey  SM2公钥
-   * @param keyCoding  密钥编码方式(utf8/hex/base64)
-   * @param dataCoding  返回结果编码方式(utf8/hex/base64)-默认不传为base64格式
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
   static verify(signStr: string, verifyStr: string, pubKey: string, keyCoding: buffer.BufferEncoding,
     dataCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return CryptoSyncUtil.verify(signStr, verifyStr, pubKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, dataCoding);
+    return CryptoSyncUtil.verify(signStr, verifyStr, pubKey, 'SM2_256', 'SM2_256|SM3', 256, keyCoding, dataCoding,false);
   }
 
   /**
