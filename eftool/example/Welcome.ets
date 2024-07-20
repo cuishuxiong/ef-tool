@@ -7,6 +7,8 @@ import {
   AES,
   AudioCapturerUtil,
   Base64Util,
+  BtnOptions,
+  ButtonUtil,
   CameraUtil,
   DES,
   DownloadUtil,
@@ -39,6 +41,8 @@ import { ArrayList, buffer, util } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import fileUri from "@ohos.file.fileuri";
+import { functionalButtonComponentManager } from '@kit.ScenarioFusionKit';
+import { router } from '@kit.ArkUI';
 
 
 class TestDDD {
@@ -277,6 +281,7 @@ struct Welcome {
       //获取选中照片uri
       let item = list[0];
       //创建文件信息
+      //创建文件信息
       let fileUriObject = new fileUri.FileUri(item);
       //获取文件名
       let name = fileUriObject.name;
@@ -328,7 +333,7 @@ struct Welcome {
       fs.readSync(file.fd, bufferImg);
       //关闭文件流
       fs.closeSync(file);
-      WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
+      // WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
       //上传选择的的照片
       let upName = await this.testUpload(bufferImg);
       //下载
@@ -373,7 +378,7 @@ struct Welcome {
     let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
       if (progress >= 100) {
         this.showDownBtn = Visibility.None;
-        WinLoadingUtil.closeLoading();
+        // WinLoadingUtil.closeLoading();
       }
       this.process = progress;
     }, data);
@@ -556,7 +561,7 @@ struct Welcome {
       title: '测试第二个弹框',
       content: '第二个弹框内容',
       okCallBack: () => {
-        this.aes()
+        router.back({ url: 'pages/Index' })
       },
       cancelCallBack: () => {
         this.testJSONArray()
@@ -565,16 +570,16 @@ struct Welcome {
   }
 
   async openAlert() {
-    let _that = this;
+    // let _that = this;
     await WinDialogUtil.showAlert({
       title: 'ef温馨提示',
       content: '只设置了内容，其他都默认~~~~~',
       isAutoClose: false,
       okCallBack: (winName?: string) => {
-        _that.openAlertTwo(winName)
+        this.openAlertTwo(winName)
       },
       cancelCallBack: (winName?: string) => {
-        _that.testJSONObject();
+        this.testJSONObject();
         if (winName) {
           WinDialogUtil.closeAlert(winName);
         }
@@ -628,10 +633,30 @@ struct Welcome {
   }
 
   async testBase64() {
-    let a = await Base64Util.encodeToStr(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
-    let b = Base64Util.encodeToStrSync(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
-    let c = await Base64Util.decode(a);
-    let d = Base64Util.decodeSync(b);
+    // let a = await Base64Util.encodeToStr(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
+    // let b = Base64Util.encodeToStrSync(new Uint8Array(buffer.from([12, 32, 54, 65, 74]).buffer));
+    // let c = await Base64Util.decode(a);
+    // let d = Base64Util.decodeSync(b);
+
+    let encodeCBCResponse = await AES.encodeCBC128("Aa1234567", "MRZs0XSKKEjvtnsI", "");
+    if (!encodeCBCResponse.getSuccess()) {
+      console.error("CBC加密失败:", encodeCBCResponse.getMsg());
+    }
+    let hexStr = encodeCBCResponse.getDataRow();
+
+    const hexString = hexStr.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
+    let arr = new Array<string>();
+    hexString?.forEach((val) => {
+      arr.push(val);
+    })
+    const byteArray: number[] = arr.map(byte => parseInt(byte, 16)); // 将每个十六进制字节转换为整数
+    let b = Base64Util.encodeToStrSync(new Uint8Array(byteArray));
+    console.log("112313123131")
+    console.log(hexStr)
+    console.log(b)
+    console.log("112313123131")
+
+
   }
 
   testMD5() {
@@ -639,7 +664,7 @@ struct Welcome {
     if (hash.getSuccess()) {
       this.msg = hash.getDataRow();
     }
-    let hash64 = MD5.hash('测试MD5散列算法base64~~~', 'base64');
+    let hash64 = MD5.hash('Aa1234', 'base64');
     if (hash64.getSuccess()) {
       this.msg = hash64.getDataRow();
     }
@@ -693,9 +718,9 @@ struct Welcome {
   }
 
   testWinLoading() {
-    this.loadingOps.imgLayout = ImgLayout.BOTTOM;
+    this.loadingOps.imgLayout = ImgLayout.TOP;
     setInterval(() => {
-      if (this.count > 10) {
+      if (this.count >= 10) {
         WinLoadingUtil.closeLoading();
         this.count = 0;
       }
@@ -704,6 +729,7 @@ struct Welcome {
     }, 500);
     // this.loadingOps.position = Alignment.Top;
     this.loadingOps.layoutShape = LoadingShape.SQUARE;
+    this.loadingOps.fontSize = 14;
     WinLoadingUtil.showLoading(this.loadingOps);
   }
 
@@ -736,14 +762,25 @@ struct Welcome {
     }
   }
 
+  @State btnOptions: BtnOptions = {
+    label: '打开设置',
+    type: functionalButtonComponentManager.OpenType.OPEN_SETTING
+  };
+
   build() {
     Scroll() {
       Column() {
         Text(this.msg).fontColor('#ff4400')
+        Button('跳转页面').margin({ top: 20, bottom: 20 }).onClick(() => {
+          router.pushUrl({ url: 'pages/Three' })
+        })
+        ButtonUtil({
+          btnOptions: this.btnOptions
+        })
         Button('MD5工具类').margin({ top: 20 }).onClick(() => {
           this.testMD5();
         })
-        Button('SHA1工具类').margin({ top: 20 }).onClick(() => {
+        Button('SHA1工具类').margin({ top: 20, bottom: 20 }).onClick(() => {
           this.testSHA1();
         })
         SaveButton({
