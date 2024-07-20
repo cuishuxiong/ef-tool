@@ -14,7 +14,8 @@ import {
   SM2Sync,
   SM2Convert,
   SM4Sync,
-  ECDHSync
+  ECDHSync,
+  DESSync
 } from '@yunkss/eftool';
 import { CryptoSyncUtil } from '@yunkss/eftool/src/main/ets/core/util/CryptoSyncUtil';
 
@@ -73,7 +74,8 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
     let sign = RSASync.signPKCS1('待签名的RSA的pem格式的字符串~', pemPriKey, 'base64', 'base64', true);
 
-    let verify =RSASync.verifyPKCS1(sign.getDataRow(), '待签名的RSA的pem格式的字符串~', pemPubKey, 'base64', 'base64', true);
+    let verify =
+      RSASync.verifyPKCS1(sign.getDataRow(), '待签名的RSA的pem格式的字符串~', pemPubKey, 'base64', 'base64', true);
 
     this.msg = verify.getMsg();
 
@@ -178,6 +180,37 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
   testSHA() {
     let digest = SHASync.digest('测试SHASync~~~~~');
     this.msg = digest.getDataRow();
+  }
+
+  test3DES() {
+
+    let iv = RandomUtil.generateIV();
+    let ivHex = RandomUtil.generateIV('hex');
+
+    let key = DESSync.generate3DESKey();
+    let keyHex = DESSync.generate3DESKey('hex');
+
+    let encodeEcb = DESSync.encodeECB('', key.getDataRow(), 'base64');
+    let encodeEcbH = DESSync.encodeECB('', key.getDataRow(), 'base64', 'hex');
+    let encodeEcbHex = DESSync.encodeECB('', keyHex.getDataRow(), 'hex');
+    let encodeEcbHexH = DESSync.encodeECB('', keyHex.getDataRow(), 'hex', 'hex');
+
+    let decodeEcb = DESSync.decodeECB(encodeEcb.getDataRow(), key.getDataRow(), 'base64');
+    let decodeEcbH = DESSync.decodeECB(encodeEcbH.getDataRow(), key.getDataRow(), 'base64', 'hex');
+    let decodeEcbHex = DESSync.decodeECB(encodeEcbHex.getDataRow(), keyHex.getDataRow(), 'hex');
+    let decodeEcbHexH = DESSync.decodeECB(encodeEcbHexH.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
+
+    let encodeCbc = DESSync.encodeCBC('', key.getDataRow(), iv.getDataRow(), 'base64');
+    let encodeCbcH = DESSync.encodeCBC('', key.getDataRow(), iv.getDataRow(), 'base64', 'hex');
+    let encodeCbcHex = DESSync.encodeCBC('', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+    let encodeCbcHexH = DESSync.encodeCBC('', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+
+    let decodeCbc = DESSync.decodeCBC(encodeCbc.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+    let decodeCbcH = DESSync.decodeCBC(encodeCbcH.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64', 'hex');
+    let decodeCbcHex = DESSync.decodeCBC(encodeCbcHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+    let decodeCbcHexH =
+      DESSync.decodeCBC(encodeCbcHexH.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+
   }
 
   testSM2() {
@@ -289,6 +322,10 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
         Button('测试SHA各种编码签名').margin({ top: 20 }).onClick(() => {
           this.testSHA();
+        })
+
+        Button('测试3DES各种编码加解密').margin({ top: 20 }).onClick(() => {
+          this.test3DES();
         })
 
         Button('测试SM2各种编码签名').margin({ top: 20 }).onClick(() => {

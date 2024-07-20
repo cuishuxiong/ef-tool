@@ -1343,7 +1343,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN (1.1.9+)
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN
 
 ```
     //C1C3C2格式的公钥字符串
@@ -1354,7 +1354,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let ddd = code.getDataRow();
 ```
 
-* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN (1.1.9+)
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN
 
 ```
     //C1C3C2格式的私钥字符串
@@ -2020,8 +2020,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
     * @returns AES密钥
     */
-    const aes = AESSync.generateAESKey();
-    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+    //默认生成base64格式
+    let key = AESSync.generateAESKey();
+    //生成hex格式
+    let keyHex = AESSync.generateAESKey('hex');
 ```
 
 * generateAESKey128 生成128位AES的对称密钥
@@ -2032,8 +2034,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
     * @returns AES密钥-128位
     */ 
-    const aes = AESSync.generateAESKey128();
-    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+    //默认生成base64格式
+    let key = AESSync.generateAESKey128();
+    //生成hex格式
+    let keyHex = AESSync.generateAESKey128('hex');
 ```
 
 * generateAESKey192 生成192位AES的对称密钥
@@ -2044,8 +2048,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
     * @returns AES密钥-192位
     */ 
-    const aes = AESSync.generateAESKey192();
-    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+    //默认生成base64格式
+    let key = AESSync.generateAESKey192();
+    //生成hex格式
+    let keyHex = AESSync.generateAESKey192('hex');
 ```
 
 * encodeGCM 加密-GCM模式
@@ -2059,8 +2065,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encodeGCM = AESSync.encodeGCM('测试加密字符串Test!', aes.getDataRow());
-    this.message = encodeGCM.getDataRow();
+   //key为base64格式,返回结果格式不传默认为base64
+    let gcmEncode = AESSync.encodeGCM('测试AES-GCM加密~~~~', key.getDataRow(), 'base64');
 ```
 
 * decodeGCM 解密-GCM模式
@@ -2073,8 +2079,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    */
-    let decodeGCM = AESSync.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
-    this.message = decodeGCM.getDataRow();
+   //key为base64格式,待解密数据格式不传默认为base64
+   let gcmDecode = AESSync.decodeGCM(gcmEncode.getDataRow(), key.getDataRow(), 'base64');
 ```
 
 * encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2089,8 +2095,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encode = AESSync.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
-    this.message = encode.getDataRow();
+   //key为base64格式,返回格式默认不传为base64
+   let encodeCBC = AESSync.encodeCBC('测试AES-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
+   //key为hex格式，返回格式为hex
+   let encodeCBC = AESSync.encodeCBC('测试AES-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   //key为hex格式,返回格式默认不传为base64
+   let encodeCBC = AESSync.encodeCBC('测试AES-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   //key为普通字符串utf8格式,返回格式默认不传为base64
+   let encode2 = AESSync.encodeCBC("测试AES外部传入key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8');
+   //key为普通字符串utf8格式,返回格式为hex
+   let encode2 = AESSync.encodeCBC("测试AES外部传入key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8', 'hex');
 ```
 
 * decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2105,8 +2119,15 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decode = AESSync.decodeCBC(encode.getDataRow(),aes.getDataRow(), iv.getDataRow());
-    this.message = decode.getDataRow();
+   //key为base64,待解密格式不传默认为base64
+   let decode = AESSync.decodeCBC(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+   //key为hex格式,待解密格式为hex
+   let decodeHex = AESSync.decodeCBC(encodeHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   //key为hex,待解密格式不传默认为base64
+   let decodeBase64 = AESSync.decodeCBC(encodeBase64.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,待解密格式不传默认为base64
+   let decode2 = AESSync.decodeCBC(encode2.getDataRow(), "TESTsdiloia20230ass3[2K8%fw68sw7", "ass3[2K8%fw68sw7", 'utf8');
+   
 ```
 
 * encodeCBC128 加密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2121,8 +2142,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encode = AESSync.encodeCBC128('测试CBC加密字符串Test!','TESTsdiloia20230','ass3[2K8%fw68sw7');
-    this.message = encode.getDataRow();
+   //key为base64格式,返回格式默认不传为base64
+   let encodeCBC = AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
+   //key为hex格式，返回格式为hex
+   let encodeCBC = AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   //key为hex格式,返回格式默认不传为base64
+   let encodeCBC = AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   //key为普通字符串utf8格式,返回格式默认不传为base64
+   let encode2 = AESSync.encodeCBC128("测试AES外部传入-128key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8');
+   //key为普通字符串utf8格式,返回格式为hex
+   let encode2 = AESSync.encodeCBC128("测试AES外部传入-128key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8', 'hex');
 ```
 
 * decodeCBC128 解密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2137,8 +2166,15 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decode = AESSync.decodeCBC128(encode.getDataRow(),'TESTsdiloia20230','ass3[2K8%fw68sw7');
-    this.message = decode.getDataRow();
+   //key为base64,待解密格式不传默认为base64
+   let decode = AESSync.decodeCBC128(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+   //key为hex格式,待解密格式为hex
+   let decodeHex = AESSync.decodeCBC128(encodeHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   //key为hex,待解密格式不传默认为base64
+   let decodeBase64 = AESSync.decodeCBC128(encodeBase64.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,待解密格式不传默认为base64
+   let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230ass3[2K8%fw68sw7", "ass3[2K8%fw68sw7", 'utf8');
+  
 ```
 
 * encodeCBC192 加密-CBC模式-192位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2153,8 +2189,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encode = AESSync.encodeCBC192('测试CBC加密字符串Test!','TESTsdiloia20230','ass3[2K8%fw68sw7');
-    this.message = encode.getDataRow();
+   //key为base64格式,返回格式默认不传为base64
+   let encodeCBC = AESSync.encodeCBC192('测试AES-192-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
+   //key为hex格式，返回格式为hex
+   let encodeCBC = AESSync.encodeCBC192('测试AES-192-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   //key为hex格式,返回格式默认不传为base64
+   let encodeCBC = AESSync.encodeCBC192('测试AES-192-CBC加密~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   //key为普通字符串utf8格式,返回格式默认不传为base64
+   let encode2 = AESSync.encodeCBC192("测试AES外部传入-192key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8');
+   //key为普通字符串utf8格式,返回格式为hex
+   let encode2 = AESSync.encodeCBC192("测试AES外部传入-192key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8', 'hex');
 ```
 
 * decodeCBC192 解密-CBC模式-192位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2169,8 +2213,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decode = AESSync.decodeCBC192(encode.getDataRow(),'TESTsdiloia20230','ass3[2K8%fw68sw7');
-    this.message = decode.getDataRow();
+   
+   //key为base64,待解密格式不传默认为base64
+   let decode = AESSync.decodeCBC192(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+   //key为hex格式,待解密格式为hex
+   let decodeHex = AESSync.decodeCBC192(encodeHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   //key为hex,待解密格式不传默认为base64
+   let decodeBase64 = AESSync.decodeCBC192(encodeBase64.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,待解密格式不传默认为base64
+   let decode2 = AESSync.decodeCBC192(encode2.getDataRow(), "TESTsdiloia20230ass3[2K8%fw68sw7", "ass3[2K8%fw68sw7", 'utf8');
+  
 ```
 
 * encodeECB 加密-ECB模式
@@ -2184,8 +2236,15 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encode = AESSync.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
-    this.message = encode.getDataRow();
+   //key为base64,输出格式不传默认为base64
+   let ecbEncode = AESSync.encodeECB('测试AES-ECB加密~', keyHex.getDataRow(), 'base64');
+   //key为hex,输出格式为hex
+   let ecbEncodeHex = AESSync.encodeECB('测试AES-ECB加密~', keyHex.getDataRow(), 'hex', 'hex');
+   //key为hex,输出格式不传默认为base64
+   let ecbEncodeBase64 = AESSync.encodeECB('测试AES-ECB加密~', keyHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,输出格式不传默认为base64
+   let encode1 = AESSync.encodeECB('测试AES外部传入key加密~~~~', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
+   
 ```
 
 * decodeECB 解密-ECB模式
@@ -2199,8 +2258,14 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decode = AESSync.decodeECB(encode.getDataRow(), aesKey);
-    this.message = decode.getDataRow();
+   //key为base64,待解密数据格式不传默认为base64
+   let ecbDecode = AESSync.decodeECB(ecbEncode.getDataRow(), keyHex.getDataRow(), 'base64');
+   //key为hex,待解密数据格式为hex
+   let ecbDecodeHex = AESSync.decodeECB(ecbEncodeHex.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
+   //key为hex,待解密数据格式不传默认为base64
+   let ecbDecodBase64 = AESSync.decodeECB(ecbEncodeBase64.getDataRow(), keyHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,待解密数据格式不传默认为base64
+   let decode1 = AESSync.decodeECB(encode1.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
 ```
 
 * encodeECB128 加密-ECB模式-128位
@@ -2214,8 +2279,15 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encode = AESSync.encodeECB128('此处为共享密钥加密的数据~~~~~~', aesKey);
-    this.message = encode.getDataRow();
+   //key为base64,输出格式不传默认为base64
+   let ecbEncode = AESSync.encodeECB128('测试AES-ECB加密~', keyHex.getDataRow(), 'base64');
+   //key为hex,输出格式为hex
+   let ecbEncodeHex = AESSync.encodeECB128('测试AES-ECB加密~', keyHex.getDataRow(), 'hex', 'hex');
+   //key为hex,输出格式不传默认为base64
+   let ecbEncodeBase64 = AESSync.encodeECB128('测试AES-ECB加密~', keyHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,输出格式不传默认为base64
+   let encode1 = AESSync.encodeECB128('测试AES外部传入key加密~~~~', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
+   
 ```
 
 * decodeECB128 解密-ECB模式-128位
@@ -2229,8 +2301,14 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decode = AESSync.decodeECB128(encode.getDataRow(), aesKey);
-    this.message = decode.getDataRow();
+   //key为base64,待解密数据格式不传默认为base64
+   let ecbDecode = AESSync.decodeECB128(ecbEncode.getDataRow(), keyHex.getDataRow(), 'base64');
+   //key为hex,待解密数据格式为hex
+   let ecbDecodeHex = AESSync.decodeECB128(ecbEncodeHex.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
+   //key为hex,待解密数据格式不传默认为base64
+   let ecbDecodBase64 = AESSync.decodeECB128(ecbEncodeBase64.getDataRow(), keyHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,待解密数据格式不传默认为base64
+   let decode1 = AESSync.decodeECB128(encode1.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
 ```
 
 * encodeECB192 加密-ECB模式-192位
@@ -2244,8 +2322,15 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encode = AESSync.encodeECB192('此处为共享密钥加密的数据~~~~~~', aesKey);
-    this.message = encode.getDataRow();
+   //key为base64,输出格式不传默认为base64
+   let ecbEncode = AESSync.encodeECB192('测试AES-ECB加密~', keyHex.getDataRow(), 'base64');
+   //key为hex,输出格式为hex
+   let ecbEncodeHex = AESSync.encodeECB192('测试AES-ECB加密~', keyHex.getDataRow(), 'hex', 'hex');
+   //key为hex,输出格式不传默认为base64
+   let ecbEncodeBase64 = AESSync.encodeECB192('测试AES-ECB加密~', keyHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,输出格式不传默认为base64
+   let encode1 = AESSync.encodeECB192('测试AES外部传入key加密~~~~', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
+   
 ```
 
 * decodeECB192 解密-ECB模式-192位
@@ -2259,8 +2344,14 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decode = AESSync.decodeECB192(encode.getDataRow(), aesKey);
-    this.message = decode.getDataRow();
+   //key为base64,待解密数据格式不传默认为base64
+   let ecbDecode = AESSync.decodeECB192(ecbEncode.getDataRow(), keyHex.getDataRow(), 'base64');
+   //key为hex,待解密数据格式为hex
+   let ecbDecodeHex = AESSync.decodeECB192(ecbEncodeHex.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
+   //key为hex,待解密数据格式不传默认为base64
+   let ecbDecodBase64 = AESSync.decodeECB192(ecbEncodeBase64.getDataRow(), keyHex.getDataRow(), 'hex');
+   //key为普通字符串utf8,待解密数据格式不传默认为base64
+   let decode1 = AESSync.decodeECB192(encode1.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
 ```
 
 ##### 3.3DESSync的方法【返回结果均为OutDTO对象】
@@ -2273,14 +2364,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding 生成3DES秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns 3DES密钥
    */
-    let des = await DES.generate3DESKey();
-    console.error("是否成功:" + des.getSuccess() + "消息===:" + des.getMsg() + "密钥======:", des.getDataRow());
+   //默认生成base64格式
+   let key = DESSync.generate3DESKey();
+   //生成hex格式
+   let keyHex = DESSync.generate3DESKey('hex');
 ```
 
 * encodeECB 加密-ECB模式
 
 ```
-    /**
+   /**
    * 加密-ECB模式
    * @param str  待加密的字符串
    * @param desKey   3DES密钥
@@ -2288,8 +2381,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
-    this.message = encodeECB.getDataRow();
+   let encodeEcb = DESSync.encodeECB('', key.getDataRow(), 'base64');
+   let encodeEcbH = DESSync.encodeECB('', key.getDataRow(), 'base64', 'hex');
+   let encodeEcbHex = DESSync.encodeECB('', keyHex.getDataRow(), 'hex');
+   let encodeEcbHexH = DESSync.encodeECB('', keyHex.getDataRow(), 'hex', 'hex');
 ```
 
 * decodeECB 解密-ECB模式
@@ -2302,8 +2397,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    */
-    let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
-    this.message = decodeECB.getDataRow();
+   let decodeEcb = DESSync.decodeECB(encodeEcb.getDataRow(), key.getDataRow(), 'base64');
+   let decodeEcbH = DESSync.decodeECB(encodeEcbH.getDataRow(), key.getDataRow(), 'base64', 'hex');
+   let decodeEcbHex = DESSync.decodeECB(encodeEcbHex.getDataRow(), keyHex.getDataRow(), 'hex');
+   let decodeEcbHexH = DESSync.decodeECB(encodeEcbHexH.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
 ```
 
 * encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2318,8 +2415,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
-    let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
-    this.message = encodeCBC.getDataRow();
+   let encodeCbc = DESSync.encodeCBC('', key.getDataRow(), iv.getDataRow(), 'base64');
+   let encodeCbcH = DESSync.encodeCBC('', key.getDataRow(), iv.getDataRow(), 'base64', 'hex');
+   let encodeCbcHex = DESSync.encodeCBC('', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   let encodeCbcHexH = DESSync.encodeCBC('', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
 ```
 
 * decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
@@ -2334,8 +2433,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
-    this.message = decodeCBC.getDataRow();
+   let decodeCbc = DESSync.decodeCBC(encodeCbc.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+    let decodeCbcH = DESSync.decodeCBC(encodeCbcH.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64', 'hex');
+    let decodeCbcHex = DESSync.decodeCBC(encodeCbcHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+    let decodeCbcHexH = DESSync.decodeCBC(encodeCbcHexH.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
 ```
 
 ##### 4.SM2Sync的方法【返回结果均为OutDTO对象】
@@ -2343,48 +2444,46 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * generateSM2Key 生成SM2的非对称密钥
 
 ```
-    /**
+   /**
    * 生成SM2的非对称密钥
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns SM2密钥{publicKey:公钥,privateKey:私钥}
    */
-    let sm2 = await SM2.generateSM2Key();
-    console.error("generateSM2Key:" + sm2.getSuccess() + "---" + sm2.getMsg()
-    + "\n" + "公钥:" + sm2.getDataRow().publicKey + "私钥:" + sm2.getDataRow().privateKey)
+   let key = SM2Sync.generateSM2Key();
 ```
 
 * encode 加密
 
 ```
-    /**
+   /**
    * 加密
    * @param encodeStr  待加密的字符串
    * @param pubKey  SM2公钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    */
-    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
-    this.message = encode.getDataRow();
+   let encode = SM2Sync.encode('测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
+   let encode = SM2Sync.encode('测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64', 'hex');
 ```
 
 * decode 解密
 
 ```
-    /**
+   /**
    * 解密
    * @param decodeStr  待解密的字符串
    * @param priKey    SM2私钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    */
-    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
-    this.message = decode.getDataRow();
+   let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64');
+   let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
 ```
 
 * sign 签名
 
 ```
-    /**
+   /**
    * 签名
    * @param str  需要签名的字符串
    * @param priKey  私钥
@@ -2392,14 +2491,13 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns OutDTO<string> 签名对象
    */
-    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
-    this.message = sign.getDataRow();
+   let sign = SM2Sync.sign('测试SM2的加密~~~~', key.getDataRow().privateKey, 'base64');
 ```
 
 * verify 验签
 
 ```
-    /**
+   /**
    * 验签
    * @param signStr  已签名的字符串
    * @param verifyStr  需要验签的字符串
@@ -2408,11 +2506,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
-    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
-    this.message = verify.getMsg();
+   let verify = SM2Sync.verify(sign.getDataRow(), '测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
 ```
 
-* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN (1.1.9+)
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN
 
 ```
     //C1C3C2格式的公钥字符串
@@ -2423,7 +2520,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     let ddd = code.getDataRow();
 ```
 
-* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN (1.1.9+)
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN
 
 ```
     //C1C3C2格式的私钥字符串
@@ -2439,27 +2536,25 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * digest SM3摘要
 
 ```
-    /**
+   /**
    * SM3摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
-    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
-    this.message = sm3.getDataRow();
+   let digest = SM3Sync.digest('测试SM3的digest~~~~');
 ```
 
 * hmac 消息认证码计算
 
 ```
-    /**
+   /**
    * 消息认证码计算
    * @param str  计算字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns
    */
-    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
-    this.message = hmac1.getDataRow();
+   let hmac = SM3Sync.hmac('测试SM3的hmac~~~~');
 ```
 
 ##### 6.SM4Sync的方法【返回结果均为OutDTO对象】
@@ -2467,19 +2562,19 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * generateSM4Key 生成SM4的对称密钥
 
 ```
-    /**
+   /**
    * 生成SM4的对称密钥
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns SM4密钥
    */
-    let sm4 = await SM4.generateSM4Key();
-    console.error("是否成功:" + sm4.getSuccess() + "消息===:" + sm4.getMsg() + "密钥======:", sm4.getDataRow());
+   let key = SM4Sync.generateSM4Key();
+   let keyHex = SM4Sync.generateSM4Key('hex');
 ```
 
 * encodeECB 加密-ECB模式
 
 ```
-    /**
+   /**
    * 加密-ECB模式
    * @param str  待加密的字符串
    * @param sm4Key   SM4密钥
@@ -2487,28 +2582,32 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns
    */
-    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
-    this.message = encodeECB.getDataRow();
+   let ecbEncode = SM4Sync.encodeECB('测试SM4-ECB加密-base64~', key.getDataRow(), 'base64');
+   let ecbEncodeHex = SM4Sync.encodeECB('测试SM4-ECB加密-hex~', keyHex.getDataRow(), 'hex', 'hex');
+   let ecbEncodeBase64 = SM4Sync.encodeECB('测试SM4-ECB加密-hex-base64~', keyHex.getDataRow(), 'hex');
+   let encode1 = SM4Sync.encodeECB('测试SM4外部传入key加密~~~~', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
 ```
 
 * decodeECB 解密-ECB模式
 
 ```
-    /**
+   /**
    * 解密-ECB模式
    * @param str  加密的字符串
    * @param sm4Key  SM4密钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
    * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    */
-    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
-    this.message = decodeECB.getDataRow();
+   let ecbDecode = SM4Sync.decodeECB(ecbEncode.getDataRow(), key.getDataRow(), 'base64');
+   let ecbDecodeHex = SM4Sync.decodeECB(ecbEncodeHex.getDataRow(), keyHex.getDataRow(), 'hex', 'hex');
+   let ecbDecodBase64 = SM4Sync.decodeECB(ecbEncodeBase64.getDataRow(), keyHex.getDataRow(), 'hex');
+   decode1 = SM4Sync.decodeECB(encode1.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588', 'utf8');
 ```
 
 * encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
-    /**
+   /**
    * 加密-CBC模式
    * @param str  待加密的字符串
    * @param aesKey   SM4密钥
@@ -2517,14 +2616,17 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns
    */
-    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
-    this.message = encodeCBC.getDataRow();
+   let encode = SM4Sync.encodeCBC('测试SM4-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
+   let encodeHex = SM4Sync.encodeCBC('测试SM4-CBC加密-hex~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   let encodeBase64 = SM4Sync.encodeCBC('测试SM4-CBC加密-base64~~~~', keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   let encode2 = SM4Sync.encodeCBC("测试SM4外部传入key/iv加密~~~", "TESTsdiloia20230ass3[2K8%fw68sw7","ass3[2K8%fw68sw7", 'utf8');
+   
 ```
 
 * decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
 
 ```
-    /**
+   /**
    * 解密-CBC模式
    * @param str  加密的字符串
    * @param aesKey SM4密钥
@@ -2533,8 +2635,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns
    */
-    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
-    this.message = decodeCBC.getDataRow();
+   let decode = SM4Sync.decodeCBC(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
+   let decodeHex = SM4Sync.decodeCBC(encodeHex.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex', 'hex');
+   let decodeBase64 = SM4Sync.decodeCBC(encodeBase64.getDataRow(), keyHex.getDataRow(), ivHex.getDataRow(), 'hex');
+   let decode2 = SM4Sync.decodeCBC(encode2.getDataRow(), "TESTsdiloia20230ass3[2K8%fw68sw7", "ass3[2K8%fw68sw7", 'utf8');
 ```
 
 ##### 7.SHASync的方法【返回结果均为OutDTO对象】
@@ -2542,79 +2646,78 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * digest 摘要方法
 
 ```
-    /**
+   /**
    * SHA256摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
-    let digest = await SHA.digest('这个是SHA的摘要方法~~');
-    this.message = digest.getDataRow();
+   let digest = SHASync.digest('测试SHASync~~~~~');
 ```
 
 * digestSHA1 SHA1摘要
 
 ```
-    /**
+   /**
    * SHA1摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
-    let digest = await SHA.digestSHA1('这个是SHA的摘要方法~~');
-    this.message = digest.getDataRow();
+   let digest = SHASync.digestSHA1('这个是SHA的摘要方法~~');
+   this.message = digest.getDataRow();
 ```
 
 * digestSHA224 SHA224摘要
 
 ```
-    /**
+   /**
    * SHA224摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
-    let digest = await SHA.digestSHA224('这个是SHA的摘要方法~~');
-    this.message = digest.getDataRow();
+   let digest = SHASync.digestSHA224('这个是SHA的摘要方法~~');
+   this.message = digest.getDataRow();
 ```
 
 * digestSHA384 SHA384摘要
 
 ```
-    /**
+   /**
    * SHA384摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
-    let digest = await SHA.digestSHA384('这个是SHA的摘要方法~~');
-    this.message = digest.getDataRow();
+   let digest = SHASync.digestSHA384('这个是SHA的摘要方法~~');
+   this.message = digest.getDataRow();
 ```
 
 * digestSHA512 SHA512摘要
 
 ```
-    /**
+   /**
    * SHA512摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns 摘要后的字符串
    */
-    let digest = await SHA.digestSHA512('这个是SHA的摘要方法~~');
-    this.message = digest.getDataRow();
+   let digest = SHASync.digestSHA512('这个是SHA的摘要方法~~');
+   this.message = digest.getDataRow();
 ```
 
 * hmac 消息认证码计算
 
 ```
-    /**
+   /**
    * 消息认证码计算
    * @param str  计算字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
    * @returns
    */
-    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
-    this.message = hmac2.getDataRow();
+   let hmac2 = SHASync.hmac('这个是SHA的HMAC');
+   this.message = hmac2.getDataRow();
 ```
 
 ##### 8.MD5的方法【返回结果均为OutDTO对象】
@@ -2622,14 +2725,14 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * digest 摘要方法
 
 ```
-    /**
+   /**
    * MD5摘要
    * @param str 带摘要的字符串
    * @param resultCoding  返回结果编码方式(hex/base64)-不传默认为base64
    * @returns 摘要后的字符串
    */
-    let md5 = await MD5.digest('使用MD5进行摘要~~~');
-    this.message = md5.getDataRow();
+   let md5 = MD5Sync.digest('使用MD5进行摘要~~~');
+   this.message = md5.getDataRow();
 ```
 
 * hash 散列哈希算法
@@ -2670,20 +2773,20 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * generateECDSAKey 生成ECDSA的非对称密钥
 
 ```
-    /**
+   /**
    * 生成ECDSA的非对称密钥
    * @param resultCoding 生成ECDSA秘钥的字符串格式-默认不传为base64格式
    * @returns ECDSA密钥{publicKey:公钥,privateKey:私钥}
    */
-    let ecdsa = await ECDSA.generateECDSAKey();
-    console.error("generateECDSAKey:" + ecdsa.getSuccess() + "---" + ecdsa.getMsg()
-    + "\n" + "公钥:" + ecdsa.getDataRow().publicKey + "私钥:" + ecdsa.getDataRow().privateKey)
+   let ecdsa = ECDSASync.generateECDSAKey();
+   console.error("generateECDSAKey:" + ecdsa.getSuccess() + "---" + ecdsa.getMsg()
+   + "\n" + "公钥:" + ecdsa.getDataRow().publicKey + "私钥:" + ecdsa.getDataRow().privateKey)
 ```
 
 * sign 签名
 
 ```
-    /**
+   /**
    * 签名
    * @param str  需要签名的字符串
    * @param priKey  私钥
@@ -2691,14 +2794,14 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param resultCoding  返回结果编码方式(hex/base64) - 不传默认为base64
    * @returns OutDTO<string> 签名对象
    */
-    let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
-    this.message = sign.getDataRow();
+   let sign = ECDSASync.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
+   this.message = sign.getDataRow();
 ```
 
 * verify 验签
 
 ```
-    /**
+   /**
    * 验签
    * @param signStr  已签名的字符串
    * @param verifyStr  需要验签的字符串
@@ -2707,8 +2810,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
    * @returns 验签结果OutDTO对象,其中Msg为验签结果
    */
-    let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
-    this.message = verify.getMsg();
+   let verify = ECDSASync.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+   this.message = verify.getMsg();
 ```
 
 ##### 10.ECDHSync的方法【返回结果均为OutDTO对象】
@@ -2716,7 +2819,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
 
 ```
-    /**
+   /**
    * ecdh动态协商密钥,要求密钥长度为256位的非对称密钥
    * @param pubKey  符合256位的非对称密钥的公钥字符串或Uint8Array字节流  【一般为外部传入】
    * @param priKey  符合256位的非对称密钥的私钥字符串或Uint8Array字节流  【一般为本项目】
@@ -2728,15 +2831,22 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 ```
     //1.测试随机生成的一种256长度的字符串公私钥秘钥
-    let ecdsa = await ECDSA.generateECDSAKey();
-    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
-    let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
-    //可以进行对称加密 注意对称加解密也需要为256位
-    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    this.message = encode.getDataRow();
-    //对称解密
-    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    this.message = decode.getDataRow();
+    //模拟当前项目的公钥
+    let sm2Key = CryptoSyncUtil.generateCryptoKey('ECC256', 'base64');
+    //模拟外部传入的私钥
+    let eccKey = CryptoSyncUtil.generateCryptoKey('ECC256', 'base64');
+    //动态协商
+    let shareKey = ECDHSync.ecdh(sm2Key.getDataRow().publicKey, eccKey.getDataRow().privateKey, 'base64', 'base64');
+    this.msg = "生成的共享密钥为:" + shareKey.getDataRow();
+
+    //模拟加密
+    let shareEncode = AESSync.encodeECB('使用ECDH共享密钥加密数据测试~~~~', shareKey.getDataRow(), 'base64');
+    this.msg = shareEncode.getDataRow();
+    //动态协商解密key
+    let decodeKey = ECDHSync.ecdh(eccKey.getDataRow().publicKey, sm2Key.getDataRow().privateKey, 'base64', 'base64');
+    //解密
+    let shareDecode = AESSync.decodeECB(shareEncode.getDataRow(), decodeKey.getDataRow(), 'base64');
+    this.msg = "共享密钥解密结果为:" + shareDecode.getDataRow();
     
 ```
 
@@ -2750,13 +2860,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     let pubKey = promiseKeyPair.pubKey.getEncoded().data;
     let priKey = promiseKeyPair.priKey.getEncoded().data;
     //获取到贡献密钥
-    let symKey = await ECDH.ecdh(pubKey, priKey);
-    //可以进行对称加密 注意对称加解密也需要为256位
-    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    this.message = encode.getDataRow();
-    //对称解密
-    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    this.message = decode.getDataRow();
+    let shareKey = ECDHSync.ecdh(pubKey, priKey);
+    
+    //模拟加密
+    let shareEncode = AESSync.encodeECB('使用ECDH共享密钥加密数据测试~~~~', shareKey.getDataRow(), 'base64');
+    this.msg = shareEncode.getDataRow();
+    
+    //解密
+    let shareDecode = AESSync.decodeECB(shareEncode.getDataRow(), decodeKey.getDataRow(), 'base64');
+    this.msg = "共享密钥解密结果为:" + shareDecode.getDataRow();
+    
 ```
 
 ##### 11.X25519Sync的方法【返回结果均为OutDTO对象】
@@ -2778,7 +2891,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     //1.测试随机生成的一种256长度的字符串公私钥秘钥
     let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
     //将对方的公钥和自己的私钥传入生成256位的共享秘钥
-    let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    let x25519 = X25519Sync.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
     this.message = x25519.getDataRow();
     //可以进行对称加密 注意对称加解密也需要为256位
     let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
@@ -2796,7 +2909,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     // 转换成可以读懂的公私钥字符串
     let pubKey = promiseKeyPair.pubKey.getEncoded().data;
     let priKey = promiseKeyPair.priKey.getEncoded().data;
-    let x25519 = await X25519.x25519(pubKey, priKey);
+    let x25519 = await X25519Sync.x25519(pubKey, priKey);
     //可以进行对称加密 注意对称加解密也需要为256位
     let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
     this.message = encode.getDataRow();
@@ -3148,7 +3261,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    */
   static ignoreEncryptList: Array<string> = new Array<string>();
   /**
-   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭(1.1.9+)
+   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
    */
   static isConvertDTO: boolean = true;
 ```
@@ -3208,7 +3321,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
 
-* getByParams请求 async/await 方式 (1.1.9+)
+* getByParams请求 async/await 方式
 
 ```
     //参数说明   参数为json格式
