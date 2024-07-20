@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.2.1-rc.0(API12)</center>
+# <center>V1.2.1-rc.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ## 🛠️包含组件
 
-一个HarmonyOS基础工具类，组成各种工具类，同时提供以下六部分组件：
+一个HarmonyOS基础工具类，组成各种工具类，同时提供以下七部分组件：
 
 ### 1.基础类组件
 
@@ -59,6 +59,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 2.加密类组件
 
+#### 2.1异步方式
+
 | 模块         | 介绍                                   |
 |------------|--------------------------------------|
 | RSA        | 提RSA供生成密钥加解密验签等系列方法(基于HarmonyOS API) |
@@ -68,12 +70,27 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | SM3        | 提供SM3生成摘要,HMAC等系列方法(基于HarmonyOS API) |
 | SM4        | 提供SM4生成密钥加解密等系列方法(基于HarmonyOS API)   |
 | SHA        | 提供SHA生成摘要,HMAC等系列方法(基于HarmonyOS API) |
-| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)      |
 | ECDSA      | 提供ECDSA签名验签等系列方法(基于HarmonyOS API)    |
 | ECDH       | 提供ecdh动态协商密钥系列方法(基于HarmonyOS API)    |
 | X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
 | SM2Convert | 提供SM2ASN1与C1C3C2转换类                  |
-| SHA1       | 提供SHA1的散列哈希算法                        |
+
+#### 2.2同步方式(V1.2.1-rc.1+)
+
+| 模块         | 介绍                                       |
+|------------|------------------------------------------|
+| RSASync    | 提供RSA同步方式生成密钥加解密验签等系列方法(基于HarmonyOS API) |
+| AESSync    | 提供AES同步方式生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| DESSync    | 提供3DES同步方式生成密钥加解密等系列方法(基于HarmonyOS API)  |
+| SM2Sync    | 提供SM2同步方式生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SM3Sync    | 提供SM3同步方式生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| SM4Sync    | 提供SM4同步方式生成密钥加解密等系列方法(基于HarmonyOS API)   |
+| SHASync    | 提供SHA同步方式生成摘要,HMAC等系列方法(基于HarmonyOS API) |
+| MD5        | 提供MD5生成摘要等系列方法(基于HarmonyOS API)          |
+| ECDSASync  | 提供ECDSA同步方式签名验签等系列方法(基于HarmonyOS API)    |
+| ECDHSync   | 提供ecdh同步方式动态协商密钥系列方法(基于HarmonyOS API)    |
+| X25519Sync | 提供x25519同步方式动态协商密钥等系列方法(基于HarmonyOS API) |
+| SHA1       | 提供SHA1的散列哈希算法                            |
 
 ### 3.网络相关类组件
 
@@ -120,19 +137,37 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 6.媒体相关
 
-| 模块        | 介绍            |
-|-----------|---------------|
-| FileUtil  | 提供对文件的一系列操作方法 |
-| ImageUtil | 提供对图片的一系列处理方法 |
+| 模块             | 介绍            |
+|----------------|---------------|
+| FileUtil       | 提供对文件的一系列操作方法 |
+| ImageUtil      | 提供对图片的一系列处理方法 |
+| ImgPreviewUtil | 图片预览工具类       |
+
+### 7.设备相关
+
+| 模块              | 介绍       |
+|-----------------|----------|
+| PreUtil         | 首选项工具类   |
+| TypeWritingUtil | 自定义键盘工具类 |
 
 ## 📦安装
 
 ### 🍊ohpm
 
-执行安装命令
+* 执行安装命令
 
 ```
 ohpm install @yunkss/eftool
+```
+
+* 配套axios版本说明
+
+```
+    "dependencies": {
+        "@yunkss/eftool":"1.2.1-rc.1",
+        "@ohos/axios" :"2.2.1"
+    }
+    //当前eftool为1.2.1-rc.1版本,内部使用的axios为2.2.1,使用时需注意项目中的axios与eftool中的版本对应关系
 ```
 
 ## 📦使用
@@ -592,10 +627,16 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     RandomUtil.randomUnitBySize(16);
 ```
 
-* generateIV 生成CBC模式的iv
+* generateIV 生成CBC模式的iv(1.2.1-rc.1+有变动)
 
 ```
-    let iv = await RandomUtil.generateIV();
+   /**
+   * 生成CBC模式的iv
+   * @param resultCoding  返回结果的编码格式(hex/base64)-不传默认为base64
+   * @returns iv字符串
+   */
+    let iv = await RandomUtil.generateIV();  //生成为base64格式
+    let iv = await RandomUtil.generateIV('hex');  //生成为16进制hex格式
 ```
 
 * randomBoolean 随机生成一个布尔值
@@ -850,13 +891,15 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 #### 14.OutDTO的方法
 
-* 该对象有四个私有成员变量
+* 该对象有五个私有成员变量
 
 ```
   //成功失败标识
   private success: boolean;
   //返回提示信息
   private msg: string;
+  //响应编码
+  private code: string | number;
   //返回单行数据
   private dataRow?: T;
   //返回数据集合
@@ -922,7 +965,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * setDataTable 设置多行数据
 
-#### 15.Base64Util的方法(1.2.0+)
+#### 15.Base64Util的方法
 
 * encodeToStr 将Uint8Array转化为字符串-异步
 
@@ -948,9 +991,17 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let d = Base64Util.decodeSync(b);
 ```
 
+* encodeHexStr2base64 hex格式字符串转base64-同步(1.2.1-rc.1+)
+
+```
+    let d = Base64Util.encodeHexStr2base64(b);
+```
+
 ### 3.加密相关组件使用API
 
-#### 1.RSA的方法【返回结果均为OutDTO对象】
+#### 3.1 异步方式
+
+##### 1.RSA的方法【返回结果均为OutDTO对象】
 
 * generateRSAKey 生成1024位RSA的非对称密钥
 
@@ -1131,7 +1182,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
 ```
 
-#### 2.AES的方法【返回结果均为OutDTO对象】
+##### 2.AES的方法【返回结果均为OutDTO对象】
 
 * generateAESKey 生成AES的对称密钥
 
@@ -1140,7 +1191,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
 ```
 
-* generateAESKey128 生成128位AES的对称密钥(1.1.12+)
+* generateAESKey128 生成128位AES的对称密钥
 
 ```
     const aes = await  AES.generateAESKey128();
@@ -1203,21 +1254,21 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-* encodeECB128 加密-ECB模式-128位(1.1.12+)
+* encodeECB128 加密-ECB模式-128位
 
 ```
     let encode = await AES.encodeECB128('此处为共享密钥加密的数据~~~~~~', aesKey);
     this.message = encode.getDataRow();
 ```
 
-* decodeECB128 解密-ECB模式-128位(1.1.12+)
+* decodeECB128 解密-ECB模式-128位
 
 ```
     let decode = await AES.decodeECB128(encode.getDataRow(), aesKey);
     this.message = decode.getDataRow();
 ```
 
-#### 3.3DES的方法【返回结果均为OutDTO对象】
+##### 3.3DES的方法【返回结果均为OutDTO对象】
 
 * generate3DESKey 生成3DES的对称密钥
 
@@ -1254,7 +1305,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-#### 4.SM2的方法【返回结果均为OutDTO对象】
+##### 4.SM2的方法【返回结果均为OutDTO对象】
 
 * generateSM2Key 生成SM2的非对称密钥
 
@@ -1314,7 +1365,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = aaaa.getDataRow();
 ```
 
-#### 5.SM3的方法【返回结果均为OutDTO对象】
+##### 5.SM3的方法【返回结果均为OutDTO对象】
 
 * digest SM3摘要
 
@@ -1330,7 +1381,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac1.getDataRow();
 ```
 
-#### 6.SM4的方法【返回结果均为OutDTO对象】
+##### 6.SM4的方法【返回结果均为OutDTO对象】
 
 * generateSM4Key 生成SM4的对称密钥
 
@@ -1367,7 +1418,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decodeCBC.getDataRow();
 ```
 
-#### 7.SHA的方法【返回结果均为OutDTO对象】
+##### 7.SHA的方法【返回结果均为OutDTO对象】
 
 * digest 摘要方法
 
@@ -1411,49 +1462,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = hmac2.getDataRow();
 ```
 
-#### 8.MD5的方法【返回结果均为OutDTO对象】
-
-* digest 摘要方法
-
-```
-    let md5 = await MD5.digest('使用MD5进行摘要~~~');
-    this.message = md5.getDataRow();
-```
-
-* hash 散列哈希算法(1.2.1-rc.0+)
-
-```
-   //默认不传编码格式为hex
-   let hash = MD5.hash('测试MD5散列算法hex~~~');
-   if (hash.getSuccess()) {
-     this.msg = hash.getDataRow();
-   }
-   //传入base64表示生成的为base64的散列值
-   let hash64 = MD5.hash('测试MD5散列算法base64~~~', 'base64');
-   if (hash64.getSuccess()) {
-     this.msg = hash64.getDataRow();
-   }
-```
-
-* hmac hmac(1.2.1-rc.0+)
-
-```
-  //生成16位的key
-  let key = RandomUtil.generateIV();
-
-  //默认不传编码格式为hex
-  let hmac = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~');
-  if (hmac.getSuccess()) {
-    this.msg = hmac.getDataRow();
-  }
-  //传入base64表示生成的为base64的hmac值
-  let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法base64~~~~~', 'base64');
-  if (hmac64.getSuccess()) {
-    this.msg = hmac64.getDataRow();
-  }
-```
-
-#### 9.ECDSA的方法【返回结果均为OutDTO对象】
+##### 8.ECDSA的方法【返回结果均为OutDTO对象】
 
 * generateECDSAKey 生成ECDSA的非对称密钥
 
@@ -1477,7 +1486,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = verify.getMsg();
 ```
 
-#### 10.ECDH的方法【返回结果均为OutDTO对象】
+##### 9.ECDH的方法【返回结果均为OutDTO对象】
 
 * ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -1514,7 +1523,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 11.X25519的方法【返回结果均为OutDTO对象】
+##### 10.X25519的方法【返回结果均为OutDTO对象】
 
 * x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
 
@@ -1549,7 +1558,1254 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 12.SHA1的方法【返回结果均为OutDTO对象】(1.2.1-rc.0+)
+#### 3.2 同步方式(v1.2.1-rc.1+)
+
+##### 1.RSASync的方法【返回结果均为OutDTO对象】
+
+* generateRSAKey 生成1024位RSA的非对称密钥
+
+```
+   /**
+   * 生成RSA的非对称密钥
+   * @param resultCoding 生成RSA秘钥的字符串格式(hex/base64)-默认不传为base64格式
+   * @returns RSA密钥{publicKey:公钥,privateKey:私钥}
+   */
+   let key = RSASync.generateRSAKey();  //base64格式
+   let keyHex = RSASync.generateRSAKey('hex');   //hex格式
+
+```
+
+* generate2048RSAKey 生成2048位RSA的非对称密钥
+
+```
+   /**
+   * 生成2048位RSA的非对称密钥
+   * @param resultCoding 生成RSA秘钥的字符串格式(hex/base64)-默认不传为base64格式
+   * @returns 2048位RSA密钥{publicKey:2048位公钥,privateKey:2048位私钥}
+   */
+   let key = RSASync.generate2048RSAKey();  //base64格式
+   let keyHex = RSASync.generate2048RSAKey('hex');   //hex格式
+```
+
+* encodePKCS1 1024位加密
+
+```
+   /**
+   * 1024位加密
+   * @param str  待加密的字符串
+   * @param pubKey  RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+   
+   //key为base64格式，加密后生成为base64
+   let encode1024 = RSASync.encodePKCS1('测试RSA1024加密~~~', key.getDataRow().publicKey, 'base64');
+   //key为hex格式,加密后生成默认为base64
+   let encodeHex = RSASync.encodePKCS1('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex');
+   //key为hex格式,加密后生成格式为hex
+   let encodeHex = RSASync.encodePKCS1('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex', 'hex');
+   
+   //pem格式的key
+   let pemPubKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOKeI9M56EDZ7yLJB56lKWb180
+eGfPrYiAG9IbjEEK8FfNvZuDrCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQC
+HMy+lrOq3rpeDfFiiT7zwvXft2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1
+eTXVu7hjXEqmrGXmgwIDAQAB
+-----END PUBLIC KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+   let encodePem = RSASync.encodePKCS1('测试pem格式的1024位RSA加密~~', pemPubKey, 'base64', 'hex', true);
+   
+```
+
+* encodePKCS1Segment 1024位分段加密
+
+```
+   /**
+   * 加密-分段
+   * @param str  待加密的字符串
+   * @param pubKey  RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+   
+   //key为base64格式，加密后生成为base64
+   let encode1024 = RSASync.encodePKCS1Segment('测试RSA1024加密~~~', key.getDataRow().publicKey, 'base64');
+   //key为hex格式,加密后生成默认为base64
+   let encodeHex = RSASync.encodePKCS1Segment('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex');
+   //key为hex格式,加密后生成格式为hex
+   let encodeHex = RSASync.encodePKCS1Segment('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex', 'hex');
+   
+   //pem格式的key
+   let pemPubKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOKeI9M56EDZ7yLJB56lKWb180
+eGfPrYiAG9IbjEEK8FfNvZuDrCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQC
+HMy+lrOq3rpeDfFiiT7zwvXft2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1
+eTXVu7hjXEqmrGXmgwIDAQAB
+-----END PUBLIC KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+   let encodePem = RSASync.encodePKCS1Segment('测试pem格式的1024位RSA加密~~', pemPubKey, 'base64', 'hex', true);
+   
+```
+
+* encode2048PKCS1 2048位加密
+
+```
+   /**
+   * 2048位加密
+   * @param str  待加密的字符串
+   * @param pubKey  2048位RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+   
+   //key为base64格式，加密后生成为base64
+   let encode1024 = RSASync.encode2048PKCS1('测试RSA1024加密~~~', key.getDataRow().publicKey, 'base64');
+   //key为hex格式,加密后生成默认为base64
+   let encodeHex = RSASync.encode2048PKCS1('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex');
+   //key为hex格式,加密后生成格式为hex
+   let encodeHex = RSASync.encode2048PKCS1('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex', 'hex');
+   
+   //pem格式的key
+   let pemPubKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOKeI9M56EDZ7yLJB56lKWb180
+eGfPrYiAG9IbjEEK8FfNvZuDrCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQC
+HMy+lrOq3rpeDfFiiT7zwvXft2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1
+eTXVu7hjXEqmrGXmgwIDAQAB
+-----END PUBLIC KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+   let encodePem = RSASync.encode2048PKCS1('测试pem格式的1024位RSA加密~~', pemPubKey, 'base64', 'hex', true);
+   
+```
+
+* encode2048PKCS1Segment 2048位分段加密
+
+```
+   /**
+   * 2048位加密-分段
+   * @param str  待加密的字符串
+   * @param pubKey  2048位RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+    
+    //key为base64格式，加密后生成为base64
+   let encode1024 = RSASync.encode2048PKCS1Segment('测试RSA1024加密~~~', key.getDataRow().publicKey, 'base64');
+   //key为hex格式,加密后生成默认为base64
+   let encodeHex = RSASync.encode2048PKCS1Segment('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex');
+   //key为hex格式,加密后生成格式为hex
+   let encodeHex = RSASync.encode2048PKCS1Segment('测试RSA1024-HEX加密~~~', keyHex.getDataRow().publicKey, 'hex', 'hex');
+   
+   //pem格式的key
+   let pemPubKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOKeI9M56EDZ7yLJB56lKWb180
+eGfPrYiAG9IbjEEK8FfNvZuDrCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQC
+HMy+lrOq3rpeDfFiiT7zwvXft2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1
+eTXVu7hjXEqmrGXmgwIDAQAB
+-----END PUBLIC KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+   let encodePem = RSASync.encode2048PKCS1Segment('测试pem格式的1024位RSA加密~~', pemPubKey, 'base64', 'hex', true);
+```
+
+* decodePKCS1 1024位解密
+
+```
+   /**
+   * 解密
+   * @param decodeStr  待解密的字符串
+   * @param priKey    RSA私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+    
+    //key为base64,待解密内容不传默认为base64格式
+    let decode1024 = RSASync.decodePKCS1(encode1024.getDataRow(), key1024.getDataRow().privateKey, 'base64');
+    //key为hex,待解密内容不传默认为base64格式
+    let decode1024Hex = RSASync.decodePKCS1(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex');
+    //key为hex,待解密内容为hex格式
+    let decode1024Hex = RSASync.decodePKCS1(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex', 'hex');
+    
+    //pem格式的key
+    let pemPriKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDOKeI9M56EDZ7yLJB56lKWb180eGfPrYiAG9IbjEEK8FfNvZuD
+rCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQCHMy+lrOq3rpeDfFiiT7zwvXf
+t2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1eTXVu7hjXEqmrGXmgwIDAQAB
+AoGAS/36S67kRi6zIPc2RgoOaS8iO7gKI+4GO5qFpuva6cpPwyGZ2j4vpnooLlgC
+GqBe+Z7AhGzB90D45TQXlexwJ6xrXDN/9w0mCPItTfe5QxtvK2i0z9unoYXJcNwN
+rSbbv1mBzJHybXcZgt9J2zFnsohAFPWGKVZrhDfyiecS0pkCQQD3WMY+hZVX5CLD
+ojfUrfiSXDh+qd+aeo6dMYDYaOhW23oJ0OHNm6vYKZ+xiEf3OB0BduZofSWHALim
+qVFF1bg1AkEA1WBGYd+/FHku+t17G6xRnWuDWI6A3ZyVuGv3wfRL5W8hKiJ1Urk3
+ftllxQ4YVEIgaeET/0xSQ9H5KB2px+Gq1wJAGjJHxMVnHMjnuaqLmTXXtsCXpyqc
+qQLD6fgdOk5aFSDnmvSJhbowCBPYevgBDzjdMZODMZvXhqXX6KbUGb5Z5QJBAJ+R
+OdEjtA+peFqemtvdB8PDjRwCpZgU61pZU5S2DrPrYU/TKQ3N+RRhm1u76LHKKddE
+POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
+8xL+hatfA2Ls3Wg/P3gfm8raHbWzC3ge/JSk/LC/ygk=
+-----END RSA PRIVATE KEY-----`;
+    //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+    let decodePem = RSASync.decodePKCS1(encodePem.getDataRow(), pemPriKey, 'base64', 'hex', true);
+```
+
+* decodePKCS1Segment 1024位分段解密
+
+```
+   /**
+   * 解密-分段
+   * @param decodeStr  待解密的字符串
+   * @param priKey    RSA私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+   
+   //key为base64,待解密内容不传默认为base64格式
+    let decode1024 = RSASync.decodePKCS1Segment(encode1024.getDataRow(), key1024.getDataRow().privateKey, 'base64');
+    //key为hex,待解密内容不传默认为base64格式
+    let decode1024Hex = RSASync.decodePKCS1Segment(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex');
+    //key为hex,待解密内容为hex格式
+    let decode1024Hex = RSASync.decodePKCS1Segment(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex', 'hex');
+    
+    //pem格式的key
+    let pemPriKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDOKeI9M56EDZ7yLJB56lKWb180eGfPrYiAG9IbjEEK8FfNvZuD
+rCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQCHMy+lrOq3rpeDfFiiT7zwvXf
+t2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1eTXVu7hjXEqmrGXmgwIDAQAB
+AoGAS/36S67kRi6zIPc2RgoOaS8iO7gKI+4GO5qFpuva6cpPwyGZ2j4vpnooLlgC
+GqBe+Z7AhGzB90D45TQXlexwJ6xrXDN/9w0mCPItTfe5QxtvK2i0z9unoYXJcNwN
+rSbbv1mBzJHybXcZgt9J2zFnsohAFPWGKVZrhDfyiecS0pkCQQD3WMY+hZVX5CLD
+ojfUrfiSXDh+qd+aeo6dMYDYaOhW23oJ0OHNm6vYKZ+xiEf3OB0BduZofSWHALim
+qVFF1bg1AkEA1WBGYd+/FHku+t17G6xRnWuDWI6A3ZyVuGv3wfRL5W8hKiJ1Urk3
+ftllxQ4YVEIgaeET/0xSQ9H5KB2px+Gq1wJAGjJHxMVnHMjnuaqLmTXXtsCXpyqc
+qQLD6fgdOk5aFSDnmvSJhbowCBPYevgBDzjdMZODMZvXhqXX6KbUGb5Z5QJBAJ+R
+OdEjtA+peFqemtvdB8PDjRwCpZgU61pZU5S2DrPrYU/TKQ3N+RRhm1u76LHKKddE
+POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
+8xL+hatfA2Ls3Wg/P3gfm8raHbWzC3ge/JSk/LC/ygk=
+-----END RSA PRIVATE KEY-----`;
+    //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+    let decodePem = RSASync.decodePKCS1Segment(encodePem.getDataRow(), pemPriKey, 'base64', 'hex', true);
+```
+
+* decode2048PKCS1 2048位解密
+
+```
+   /**
+   * 2048位解密
+   * @param decodeStr  待解密的字符串
+   * @param priKey    2048位RSA私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+   
+   //key为base64,待解密内容不传默认为base64格式
+    let decode1024 = RSASync.decode2048PKCS1(encode1024.getDataRow(), key1024.getDataRow().privateKey, 'base64');
+    //key为hex,待解密内容不传默认为base64格式
+    let decode1024Hex = RSASync.decode2048PKCS1(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex');
+    //key为hex,待解密内容为hex格式
+    let decode1024Hex = RSASync.decode2048PKCS1(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex', 'hex');
+    
+    //pem格式的key
+    let pemPriKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDOKeI9M56EDZ7yLJB56lKWb180eGfPrYiAG9IbjEEK8FfNvZuD
+rCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQCHMy+lrOq3rpeDfFiiT7zwvXf
+t2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1eTXVu7hjXEqmrGXmgwIDAQAB
+AoGAS/36S67kRi6zIPc2RgoOaS8iO7gKI+4GO5qFpuva6cpPwyGZ2j4vpnooLlgC
+GqBe+Z7AhGzB90D45TQXlexwJ6xrXDN/9w0mCPItTfe5QxtvK2i0z9unoYXJcNwN
+rSbbv1mBzJHybXcZgt9J2zFnsohAFPWGKVZrhDfyiecS0pkCQQD3WMY+hZVX5CLD
+ojfUrfiSXDh+qd+aeo6dMYDYaOhW23oJ0OHNm6vYKZ+xiEf3OB0BduZofSWHALim
+qVFF1bg1AkEA1WBGYd+/FHku+t17G6xRnWuDWI6A3ZyVuGv3wfRL5W8hKiJ1Urk3
+ftllxQ4YVEIgaeET/0xSQ9H5KB2px+Gq1wJAGjJHxMVnHMjnuaqLmTXXtsCXpyqc
+qQLD6fgdOk5aFSDnmvSJhbowCBPYevgBDzjdMZODMZvXhqXX6KbUGb5Z5QJBAJ+R
+OdEjtA+peFqemtvdB8PDjRwCpZgU61pZU5S2DrPrYU/TKQ3N+RRhm1u76LHKKddE
+POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
+8xL+hatfA2Ls3Wg/P3gfm8raHbWzC3ge/JSk/LC/ygk=
+-----END RSA PRIVATE KEY-----`;
+    //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+    let decodePem = RSASync.decode2048PKCS1(encodePem.getDataRow(), pemPriKey, 'base64', 'hex', true);
+```
+
+* decode2048PKCS1Segment 2048位分段解密
+
+```
+   /**
+   * 2048位解密-分段
+   * @param decodeStr  待解密的字符串
+   * @param priKey    2048位RSA私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   */
+   
+   //key为base64,待解密内容不传默认为base64格式
+    let decode1024 = RSASync.decode2048PKCS1Segment(encode1024.getDataRow(), key1024.getDataRow().privateKey, 'base64');
+    //key为hex,待解密内容不传默认为base64格式
+    let decode1024Hex = RSASync.decode2048PKCS1Segment(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex');
+    //key为hex,待解密内容为hex格式
+    let decode1024Hex = RSASync.decode2048PKCS1Segment(encode1024Hex.getDataRow(), key1024Hex.getDataRow().privateKey, 'hex', 'hex');
+    
+    //pem格式的key
+    let pemPriKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDOKeI9M56EDZ7yLJB56lKWb180eGfPrYiAG9IbjEEK8FfNvZuD
+rCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQCHMy+lrOq3rpeDfFiiT7zwvXf
+t2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1eTXVu7hjXEqmrGXmgwIDAQAB
+AoGAS/36S67kRi6zIPc2RgoOaS8iO7gKI+4GO5qFpuva6cpPwyGZ2j4vpnooLlgC
+GqBe+Z7AhGzB90D45TQXlexwJ6xrXDN/9w0mCPItTfe5QxtvK2i0z9unoYXJcNwN
+rSbbv1mBzJHybXcZgt9J2zFnsohAFPWGKVZrhDfyiecS0pkCQQD3WMY+hZVX5CLD
+ojfUrfiSXDh+qd+aeo6dMYDYaOhW23oJ0OHNm6vYKZ+xiEf3OB0BduZofSWHALim
+qVFF1bg1AkEA1WBGYd+/FHku+t17G6xRnWuDWI6A3ZyVuGv3wfRL5W8hKiJ1Urk3
+ftllxQ4YVEIgaeET/0xSQ9H5KB2px+Gq1wJAGjJHxMVnHMjnuaqLmTXXtsCXpyqc
+qQLD6fgdOk5aFSDnmvSJhbowCBPYevgBDzjdMZODMZvXhqXX6KbUGb5Z5QJBAJ+R
+OdEjtA+peFqemtvdB8PDjRwCpZgU61pZU5S2DrPrYU/TKQ3N+RRhm1u76LHKKddE
+POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
+8xL+hatfA2Ls3Wg/P3gfm8raHbWzC3ge/JSk/LC/ygk=
+-----END RSA PRIVATE KEY-----`;
+    //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //加密后生成内容为hex格式
+    let decodePem = RSASync.decode2048PKCS1Segment(encodePem.getDataRow(), pemPriKey, 'base64', 'hex', true);
+```
+
+* signPKCS1 1024位签名
+
+```
+   /**
+   * 签名-PKCS1
+   * @param str  需要签名的字符串
+   * @param priKey  私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   * @returns OutDTO<string> 签名对象
+   */
+   
+   //pem格式的key
+   let pemPriKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDOKeI9M56EDZ7yLJB56lKWb180eGfPrYiAG9IbjEEK8FfNvZuD
+rCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQCHMy+lrOq3rpeDfFiiT7zwvXf
+t2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1eTXVu7hjXEqmrGXmgwIDAQAB
+AoGAS/36S67kRi6zIPc2RgoOaS8iO7gKI+4GO5qFpuva6cpPwyGZ2j4vpnooLlgC
+GqBe+Z7AhGzB90D45TQXlexwJ6xrXDN/9w0mCPItTfe5QxtvK2i0z9unoYXJcNwN
+rSbbv1mBzJHybXcZgt9J2zFnsohAFPWGKVZrhDfyiecS0pkCQQD3WMY+hZVX5CLD
+ojfUrfiSXDh+qd+aeo6dMYDYaOhW23oJ0OHNm6vYKZ+xiEf3OB0BduZofSWHALim
+qVFF1bg1AkEA1WBGYd+/FHku+t17G6xRnWuDWI6A3ZyVuGv3wfRL5W8hKiJ1Urk3
+ftllxQ4YVEIgaeET/0xSQ9H5KB2px+Gq1wJAGjJHxMVnHMjnuaqLmTXXtsCXpyqc
+qQLD6fgdOk5aFSDnmvSJhbowCBPYevgBDzjdMZODMZvXhqXX6KbUGb5Z5QJBAJ+R
+OdEjtA+peFqemtvdB8PDjRwCpZgU61pZU5S2DrPrYU/TKQ3N+RRhm1u76LHKKddE
+POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
+8xL+hatfA2Ls3Wg/P3gfm8raHbWzC3ge/JSk/LC/ygk=
+-----END RSA PRIVATE KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //签名后的内容格式为base64
+   let sign = RSASync.signPKCS1('待签名的RSA的pem格式的字符串~', pemPriKey, 'base64', 'base64', true);
+
+```
+
+* sign2048PKCS1 2048位签名
+
+```
+   /**
+   * 2048位签名-PKCS1
+   * @param str  需要签名的字符串
+   * @param priKey  2048位私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   * @returns OutDTO<string> 签名对象
+   */
+   
+   //pem格式的key
+   let pemPriKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDOKeI9M56EDZ7yLJB56lKWb180eGfPrYiAG9IbjEEK8FfNvZuD
+rCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQCHMy+lrOq3rpeDfFiiT7zwvXf
+t2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1eTXVu7hjXEqmrGXmgwIDAQAB
+AoGAS/36S67kRi6zIPc2RgoOaS8iO7gKI+4GO5qFpuva6cpPwyGZ2j4vpnooLlgC
+GqBe+Z7AhGzB90D45TQXlexwJ6xrXDN/9w0mCPItTfe5QxtvK2i0z9unoYXJcNwN
+rSbbv1mBzJHybXcZgt9J2zFnsohAFPWGKVZrhDfyiecS0pkCQQD3WMY+hZVX5CLD
+ojfUrfiSXDh+qd+aeo6dMYDYaOhW23oJ0OHNm6vYKZ+xiEf3OB0BduZofSWHALim
+qVFF1bg1AkEA1WBGYd+/FHku+t17G6xRnWuDWI6A3ZyVuGv3wfRL5W8hKiJ1Urk3
+ftllxQ4YVEIgaeET/0xSQ9H5KB2px+Gq1wJAGjJHxMVnHMjnuaqLmTXXtsCXpyqc
+qQLD6fgdOk5aFSDnmvSJhbowCBPYevgBDzjdMZODMZvXhqXX6KbUGb5Z5QJBAJ+R
+OdEjtA+peFqemtvdB8PDjRwCpZgU61pZU5S2DrPrYU/TKQ3N+RRhm1u76LHKKddE
+POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
+8xL+hatfA2Ls3Wg/P3gfm8raHbWzC3ge/JSk/LC/ygk=
+-----END RSA PRIVATE KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //签名后的内容格式为base64
+   let sign = RSASync.sign2048PKCS1('待签名的RSA的pem格式的字符串~', pemPriKey, 'base64', 'base64', true);
+```
+
+* verifyPKCS1 1024位验签
+
+```
+   /**
+   * 验签-PKCS1
+   * @param signStr  已签名的字符串
+   * @param verifyStr  需要验签的字符串
+   * @param pubKey  RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   * @returns 验签结果OutDTO对象,其中Msg为验签结果
+   */
+   
+   //pem格式的key
+   let pemPubKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOKeI9M56EDZ7yLJB56lKWb180
+eGfPrYiAG9IbjEEK8FfNvZuDrCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQC
+HMy+lrOq3rpeDfFiiT7zwvXft2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1
+eTXVu7hjXEqmrGXmgwIDAQAB
+-----END PUBLIC KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //待验签的内容为base64 
+   let verify =RSASync.verifyPKCS1(sign.getDataRow(), '待签名的RSA的pem格式的字符串~', pemPubKey, 'base64', 'base64', true);
+
+```
+
+* verify2048PKCS1 2048位验签
+
+```
+   /**
+   * 2048位验签-PKCS1
+   * @param signStr  已签名的字符串
+   * @param verifyStr  需要验签的字符串
+   * @param pubKey  2048位RSA公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @param isPem 秘钥是否为pem格式 - 默认为false
+   * @returns 验签结果OutDTO对象,其中Msg为验签结果
+   */
+   
+   //pem格式的key
+   let pemPubKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOKeI9M56EDZ7yLJB56lKWb180
+eGfPrYiAG9IbjEEK8FfNvZuDrCGqCEXc7L/W/kojj9Fnxae5aRMAvd7PLaTD3UQC
+HMy+lrOq3rpeDfFiiT7zwvXft2IGTlWYn29vA5g2elb0x7+WIhwQBByubor+YAr1
+eTXVu7hjXEqmrGXmgwIDAQAB
+-----END PUBLIC KEY-----`;
+   //key为pem格式时最后一个参数isPem需要为true
+   //key为base64格式
+   //待验签的内容为base64 
+   let verify =RSASync.verify2048PKCS1(sign.getDataRow(), '待签名的RSA的pem格式的字符串~', pemPubKey, 'base64', 'base64', true);
+```
+
+* <s>pemToStrKey 将pem文件中的数据转换成公钥字符串支持1024/2048字节(RSASync中的加解密方法已经支持pem格式密钥)</s>
+
+##### 2.AESSync的方法【返回结果均为OutDTO对象】
+
+* generateAESKey 生成AES的对称密钥
+
+```
+    /**
+    * 生成AES的对称密钥-默认base64
+    * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
+    * @returns AES密钥
+    */
+    const aes = AESSync.generateAESKey();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* generateAESKey128 生成128位AES的对称密钥
+
+```
+    /**
+    * 生成AES的对称密钥-128位-默认base64
+    * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
+    * @returns AES密钥-128位
+    */ 
+    const aes = AESSync.generateAESKey128();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* generateAESKey192 生成192位AES的对称密钥
+
+```
+    /**
+    * 生成AES的对称密钥-192位-默认base64
+    * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
+    * @returns AES密钥-192位
+    */ 
+    const aes = AESSync.generateAESKey192();
+    console.error("是否成功:" + aes.getSuccess() + "消息===:" + aes.getMsg() + "密钥======:", aes.getDataRow());
+```
+
+* encodeGCM 加密-GCM模式
+
+```
+   /**
+   * 加密-GCM模式
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encodeGCM = AESSync.encodeGCM('测试加密字符串Test!', aes.getDataRow());
+    this.message = encodeGCM.getDataRow();
+```
+
+* decodeGCM 解密-GCM模式
+
+```
+   /**
+   * 解密-GCM模式
+   * @param str  加密的字符串
+   * @param aesKey  AES密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   */
+    let decodeGCM = AESSync.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
+    this.message = decodeGCM.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+   /**
+   * 加密-CBC模式
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param iv   iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encode = AESSync.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+   /**
+   * 解密-CBC模式
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @param iv  iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decode = AESSync.decodeCBC(encode.getDataRow(),aes.getDataRow(), iv.getDataRow());
+    this.message = decode.getDataRow();
+```
+
+* encodeCBC128 加密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+   /**
+   * 加密-CBC模式-128位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param iv   iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encode = AESSync.encodeCBC128('测试CBC加密字符串Test!','TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC128 解密-CBC模式-128位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+   /**
+   * 解密-CBC模式-128位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @param iv  iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decode = AESSync.decodeCBC128(encode.getDataRow(),'TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = decode.getDataRow();
+```
+
+* encodeCBC192 加密-CBC模式-192位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+   /**
+   * 加密-CBC模式-192位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param iv   iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encode = AESSync.encodeCBC192('测试CBC加密字符串Test!','TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = encode.getDataRow();
+```
+
+* decodeCBC192 解密-CBC模式-192位 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+   /**
+   * 解密-CBC模式-192位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @param iv  iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decode = AESSync.decodeCBC192(encode.getDataRow(),'TESTsdiloia20230','ass3[2K8%fw68sw7');
+    this.message = decode.getDataRow();
+```
+
+* encodeECB 加密-ECB模式
+
+```
+   /**
+   * 加密-ECB模式
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encode = AESSync.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    /**
+   * 解密-ECB模式
+   * @param str  加密的字符串
+   * @param aesKey AES密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decode = AESSync.decodeECB(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+* encodeECB128 加密-ECB模式-128位
+
+```
+    /**
+   * 加密-ECB模式-128位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥-128位
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encode = AESSync.encodeECB128('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB128 解密-ECB模式-128位
+
+```
+   /**
+   * 解密-ECB模式-128位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥-128位
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decode = AESSync.decodeECB128(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+* encodeECB192 加密-ECB模式-192位
+
+```
+   /**
+   * 加密-ECB模式-192位
+   * @param str  待加密的字符串
+   * @param aesKey   AES密钥-192位
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encode = AESSync.encodeECB192('此处为共享密钥加密的数据~~~~~~', aesKey);
+    this.message = encode.getDataRow();
+```
+
+* decodeECB192 解密-ECB模式-192位
+
+```
+   /**
+   * 解密-ECB模式-192位
+   * @param str  加密的字符串
+   * @param aesKey AES密钥-192位
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decode = AESSync.decodeECB192(encode.getDataRow(), aesKey);
+    this.message = decode.getDataRow();
+```
+
+##### 3.3DESSync的方法【返回结果均为OutDTO对象】
+
+* generate3DESKey 生成3DES的对称密钥
+
+```
+   /**
+   * 生成3DES的对称密钥
+   * @param resultCoding 生成3DES秘钥的字符串格式(hex/base64)-默认不传为base64格式
+   * @returns 3DES密钥
+   */
+    let des = await DES.generate3DESKey();
+    console.error("是否成功:" + des.getSuccess() + "消息===:" + des.getMsg() + "密钥======:", des.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    /**
+   * 加密-ECB模式
+   * @param str  待加密的字符串
+   * @param desKey   3DES密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+   /**
+   * 解密-ECB模式
+   * @param str  加密的字符串
+   * @param desKey  3DES密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   */
+    let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    /**
+   * 加密-CBC模式
+   * @param str  待加密的字符串
+   * @param aesKey   3DES密钥
+   * @param iv   iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
+   * @returns
+   */
+    let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    /**
+   * 解密-CBC模式
+   * @param str  加密的字符串
+   * @param aesKey 3DES密钥
+   * @param iv  iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+##### 4.SM2Sync的方法【返回结果均为OutDTO对象】
+
+* generateSM2Key 生成SM2的非对称密钥
+
+```
+    /**
+   * 生成SM2的非对称密钥
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns SM2密钥{publicKey:公钥,privateKey:私钥}
+   */
+    let sm2 = await SM2.generateSM2Key();
+    console.error("generateSM2Key:" + sm2.getSuccess() + "---" + sm2.getMsg()
+    + "\n" + "公钥:" + sm2.getDataRow().publicKey + "私钥:" + sm2.getDataRow().privateKey)
+```
+
+* encode 加密
+
+```
+    /**
+   * 加密
+   * @param encodeStr  待加密的字符串
+   * @param pubKey  SM2公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   */
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
+    this.message = encode.getDataRow();
+```
+
+* decode 解密
+
+```
+    /**
+   * 解密
+   * @param decodeStr  待解密的字符串
+   * @param priKey    SM2私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   */
+    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
+    this.message = decode.getDataRow();
+```
+
+* sign 签名
+
+```
+    /**
+   * 签名
+   * @param str  需要签名的字符串
+   * @param priKey  私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns OutDTO<string> 签名对象
+   */
+    let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    /**
+   * 验签
+   * @param signStr  已签名的字符串
+   * @param verifyStr  需要验签的字符串
+   * @param pubKey  SM2公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns 验签结果OutDTO对象,其中Msg为验签结果
+   */
+    let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+* convertSM2PubKey 将服务器端生成的16进制的长度为130位的04开头的C1C3C2格式的SM2公钥转换为前端所需的ASN (1.1.9+)
+
+```
+    //C1C3C2格式的公钥字符串
+    let pk = '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    //转换后的ASN.1格式的字符串
+    let s = await SM2.convertSM2PubKey(pk);
+    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+    let ddd = code.getDataRow();
+```
+
+* convertSM2PriKey 将服务器端生成的16进制的长度为64位的C1C3C2格式的SM2私钥转换为前端所需的ASN (1.1.9+)
+
+```
+    //C1C3C2格式的私钥字符串
+    let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
+    //转换后的ASN.1格式的字符串
+    let dc = await SM2.convertSM2PriKey(pik);
+    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+    this.message = aaaa.getDataRow();
+```
+
+##### 5.SM3Sync的方法【返回结果均为OutDTO对象】
+
+* digest SM3摘要
+
+```
+    /**
+   * SM3摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 摘要后的字符串
+   */
+    let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
+    this.message = sm3.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    /**
+   * 消息认证码计算
+   * @param str  计算字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns
+   */
+    let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
+    this.message = hmac1.getDataRow();
+```
+
+##### 6.SM4Sync的方法【返回结果均为OutDTO对象】
+
+* generateSM4Key 生成SM4的对称密钥
+
+```
+    /**
+   * 生成SM4的对称密钥
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns SM4密钥
+   */
+    let sm4 = await SM4.generateSM4Key();
+    console.error("是否成功:" + sm4.getSuccess() + "消息===:" + sm4.getMsg() + "密钥======:", sm4.getDataRow());
+```
+
+* encodeECB 加密-ECB模式
+
+```
+    /**
+   * 加密-ECB模式
+   * @param str  待加密的字符串
+   * @param sm4Key   SM4密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns
+   */
+    let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
+    this.message = encodeECB.getDataRow();
+```
+
+* decodeECB 解密-ECB模式
+
+```
+    /**
+   * 解密-ECB模式
+   * @param str  加密的字符串
+   * @param sm4Key  SM4密钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   */
+    let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
+    this.message = decodeECB.getDataRow();
+```
+
+* encodeCBC 加密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    /**
+   * 加密-CBC模式
+   * @param str  待加密的字符串
+   * @param aesKey   SM4密钥
+   * @param iv   iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns
+   */
+    let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
+    this.message = encodeCBC.getDataRow();
+```
+
+* decodeCBC 解密-CBC模式 需要传入iv偏移量字符串(IV生成详见RandomUtil)
+
+```
+    /**
+   * 解密-CBC模式
+   * @param str  加密的字符串
+   * @param aesKey SM4密钥
+   * @param iv  iv偏移量字符串
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns
+   */
+    let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
+    this.message = decodeCBC.getDataRow();
+```
+
+##### 7.SHASync的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    /**
+   * SHA256摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 摘要后的字符串
+   */
+    let digest = await SHA.digest('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA1 SHA1摘要
+
+```
+    /**
+   * SHA1摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 摘要后的字符串
+   */
+    let digest = await SHA.digestSHA1('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA224 SHA224摘要
+
+```
+    /**
+   * SHA224摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 摘要后的字符串
+   */
+    let digest = await SHA.digestSHA224('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA384 SHA384摘要
+
+```
+    /**
+   * SHA384摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 摘要后的字符串
+   */
+    let digest = await SHA.digestSHA384('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* digestSHA512 SHA512摘要
+
+```
+    /**
+   * SHA512摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 摘要后的字符串
+   */
+    let digest = await SHA.digestSHA512('这个是SHA的摘要方法~~');
+    this.message = digest.getDataRow();
+```
+
+* hmac 消息认证码计算
+
+```
+    /**
+   * 消息认证码计算
+   * @param str  计算字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns
+   */
+    let hmac2 = await SHA.hmac('这个是SHA的HMAC');
+    this.message = hmac2.getDataRow();
+```
+
+##### 8.MD5的方法【返回结果均为OutDTO对象】
+
+* digest 摘要方法
+
+```
+    /**
+   * MD5摘要
+   * @param str 带摘要的字符串
+   * @param resultCoding  返回结果编码方式(hex/base64)-不传默认为base64
+   * @returns 摘要后的字符串
+   */
+    let md5 = await MD5.digest('使用MD5进行摘要~~~');
+    this.message = md5.getDataRow();
+```
+
+* hash 散列哈希算法
+
+```
+   //默认不传编码格式为hex
+   let hash = MD5.hash('测试MD5散列算法hex~~~');
+   if (hash.getSuccess()) {
+     this.msg = hash.getDataRow();
+   }
+   //传入base64表示生成的为base64的散列值
+   let hash64 = MD5.hash('测试MD5散列算法base64~~~', 'base64');
+   if (hash64.getSuccess()) {
+     this.msg = hash64.getDataRow();
+   }
+```
+
+* hmac hmac
+
+```
+  //生成16位的key
+  let key = RandomUtil.generateIV();
+
+  //默认不传编码格式为hex
+  let hmac = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~');
+  if (hmac.getSuccess()) {
+    this.msg = hmac.getDataRow();
+  }
+  //传入base64表示生成的为base64的hmac值
+  let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法base64~~~~~', 'base64');
+  if (hmac64.getSuccess()) {
+    this.msg = hmac64.getDataRow();
+  }
+```
+
+##### 9.ECDSASync的方法【返回结果均为OutDTO对象】
+
+* generateECDSAKey 生成ECDSA的非对称密钥
+
+```
+    /**
+   * 生成ECDSA的非对称密钥
+   * @param resultCoding 生成ECDSA秘钥的字符串格式-默认不传为base64格式
+   * @returns ECDSA密钥{publicKey:公钥,privateKey:私钥}
+   */
+    let ecdsa = await ECDSA.generateECDSAKey();
+    console.error("generateECDSAKey:" + ecdsa.getSuccess() + "---" + ecdsa.getMsg()
+    + "\n" + "公钥:" + ecdsa.getDataRow().publicKey + "私钥:" + ecdsa.getDataRow().privateKey)
+```
+
+* sign 签名
+
+```
+    /**
+   * 签名
+   * @param str  需要签名的字符串
+   * @param priKey  私钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64) - 不传默认为base64
+   * @returns OutDTO<string> 签名对象
+   */
+    let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
+    this.message = sign.getDataRow();
+```
+
+* verify 验签
+
+```
+    /**
+   * 验签
+   * @param signStr  已签名的字符串
+   * @param verifyStr  需要验签的字符串
+   * @param pubKey  公钥
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param dataCoding  入参字符串编码方式(hex/base64) - 不传默认为base64
+   * @returns 验签结果OutDTO对象,其中Msg为验签结果
+   */
+    let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+    this.message = verify.getMsg();
+```
+
+##### 10.ECDHSync的方法【返回结果均为OutDTO对象】
+
+* ecdh 动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    /**
+   * ecdh动态协商密钥,要求密钥长度为256位的非对称密钥
+   * @param pubKey  符合256位的非对称密钥的公钥字符串或Uint8Array字节流  【一般为外部传入】
+   * @param priKey  符合256位的非对称密钥的私钥字符串或Uint8Array字节流  【一般为本项目】
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns ECC256共享密钥
+   */
+```
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let ecdsa = await ECDSA.generateECDSAKey();
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+    
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    // 创建非对称密钥生成器
+    let rsaGenerator = crypto.createAsyKeyGenerator('ECC256');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    //获取到贡献密钥
+    let symKey = await ECDH.ecdh(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+##### 11.X25519Sync的方法【返回结果均为OutDTO对象】
+
+* x25519 X25519动态协商密钥,要求密钥长度为256位的非对称密钥
+
+```
+    /**
+   * X25519动态协商密钥,要求密钥长度为256位的非对称密钥
+   * @param pubKey  符合非对称密钥的公钥字符串或Uint8Array字节流  【一般为外部传入】
+   * @param priKey  符合非对称密钥的私钥字符串或Uint8Array字节流  【一般为本项目】
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  返回结果编码方式(hex/base64)-默认不传为base64格式
+   * @returns 256位共享密钥字符串
+   */
+```
+
+```
+    //1.测试随机生成的一种256长度的字符串公私钥秘钥
+    let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
+    //将对方的公钥和自己的私钥传入生成256位的共享秘钥
+    let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    this.message = x25519.getDataRow();
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+```
+    //2.测试随机生成的一种256长度的字节流Uint8Array形式的公私钥秘钥
+    let rsaGenerator = crypto.createAsyKeyGenerator('X25519');
+    // 通过非对称密钥生成器，随机生成非对称密钥
+    let promiseKeyPair = await rsaGenerator.generateKeyPair();
+    // 转换成可以读懂的公私钥字符串
+    let pubKey = promiseKeyPair.pubKey.getEncoded().data;
+    let priKey = promiseKeyPair.priKey.getEncoded().data;
+    let x25519 = await X25519.x25519(pubKey, priKey);
+    //可以进行对称加密 注意对称加解密也需要为256位
+    let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = encode.getDataRow();
+    //对称解密
+    let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
+    this.message = decode.getDataRow();
+```
+
+##### 12.SHA1的方法【返回结果均为OutDTO对象】(1.2.1-rc.0+)
 
 * hash 散列哈希算法
 
@@ -1680,7 +2936,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let str = arr.toString();
 ```
 
-* parseArray json字符串转换为实体对象集合(1.1.12+)
+* parseArray json字符串转换为实体对象集合
 
 ```
     class TestDDD {
@@ -1758,7 +3014,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let str = arr.toString();
 ```
 
-* parseArrayList json字符串转换为实体对象集合(1.1.12+)
+* parseArrayList json字符串转换为实体对象集合
 
 ```
     class TestDDD {
@@ -1841,11 +3097,16 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 * isNumber 是否是字符串
 
-### 5.网络相关类组件使用API
+### 5.网络相关类组件使用API(V1.2.1-rc.1有改动)
 
 #### 前言
 
 > efAxios封装需要大家共建和提出建议与需求,已完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见
+
+> 接到大部分开发者反馈需要有一个统一的请求全局加载loading,故在本版本默认集成,后续可能会有样式优化(V1.2.1-rc.1+)
+
+- 效果图  
+  [![loading.th.jpg](https://z4a.net/images/2024/07/20/loading.png)](https://z4a.net/image/jReQM0)
 
 > 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
 
@@ -1928,11 +3189,11 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     //参数说明
-    async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E>
+    async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E> 
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
     //F 为请求入参对象,具体参照示例中的写法
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
-    //headers提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
 ```
 
@@ -1940,8 +3201,9 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
-    async get<E>(url: string): Promise<E>
+    async get<E>(url: string, headers?: Record<string, Object>): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
@@ -1950,8 +3212,9 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     //参数说明   参数为json格式
-    async getByParams<E>(url: string, params: Record<string, Object>): Promise<E>
+    async getByParams<E>(url: string, params: Record<string, Object>, headers?: Record<string, Object>): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //params表示get请求的入参妇科key:value格式
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
     
@@ -1961,8 +3224,9 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     //参数说明
-    async delete<E>(url: string): Promise<E>
+    async delete<E>(url: string, headers?: Record<string, Object>): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //注意demo中的delete请求为rest方式,即入参方式为 delete方法/param1/param2 以此类推
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
 ```
@@ -1971,34 +3235,37 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 
 ```
     //参数说明
-    put<F, E>(url: string, query: Record<string, Object>): Promise<E>
+    async put<F, E>(url: string, query: Record<string, Object>,headers?: Record<string, Object>): Promise<E>
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //F 为请求入参对象,具体参照示例中的写法
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
-    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
 ```
 
-* upload 统一的上传请求 async/await 方式 (1.1.10+)
+* upload 统一的上传请求 async/await 方式
 
 ```
     //参数说明
-    async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, data?: ArrayBuffer, uri?: string, fileName?: string)
+    async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>)
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //progressCallBack 上传进度回调,具体参照示例中的写法
     //isUri  是否为uri文件
+    //progressCallBack 上传进度回调,具体参照示例中的写法
     //data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
     //uri   isUri=true时传入  表示上传的文件为uri格式
-    //fileName  上传时后端接收的key,默认为file
+    //keyName  上传时后端接收的key,默认为file
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
 ```
 
-* download 统一的下载请求 async/await 方式 (1.1.10+)
+* download 统一的下载请求 async/await 方式
 
 ```
     //参数说明
-    async download(url: string, filePath: string, progressCallBack: (process: number) => void)
+    async download(url: string, filePath: string, progressCallBack: (process: number) => void, headers?: Record<string, Object>)
     //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
     //filePath  下载文件名称 如下载png图片后希望名称为girl.png
     //progressCallBack  下载进度回调方法
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
 ```
 
 * 登录示例
@@ -2089,7 +3356,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
       }
 ```
 
-* 上传示例  (1.1.10+)
+* 上传示例
 
 ```
       //模拟文件上传
@@ -2109,7 +3376,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
      }
 ```
 
-* 下载示例  (1.1.10+)
+* 下载示例
 
 ```
       //模拟测试文件下载
@@ -2705,11 +3972,12 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   入参  
   show  是否显示级联框(TRUE显示FALSE关闭)  
   callCity 反回选择的省市区数据
+  titleFontSize 顶部已选择省市区的字体大小-默认为16(V1.2.1-rc.1+)
   //使用demo
   Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
       this.show = !this.show;
   })
-  Cascade({ show: $show, callCity: $callCity })
+  Cascade({ show: $show, callCity: $callCity, titleFontSize: 12 }).zIndex(999)
   //$callCity为调用页面传入给子组件的用于接收返回的值
 ```
 
@@ -3033,7 +4301,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   })
 ```
 
-#### 15.DownloadUtil上传下载工具类 (1.1.10+)
+#### 15.DownloadUtil上传下载工具类
 
 * 示例
 
@@ -3257,7 +4525,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     }
 ```
 
-#### 18.WinDialogUtil 以窗口方式弹出框工具类(1.1.12+)
+#### 18.WinDialogUtil 以窗口方式弹出框工具类
 
 * 入参介绍
 
@@ -3354,7 +4622,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     }
 ```
 
-#### 19.PreviewUtil 预览工具类(1.1.12+)
+#### 19.PreviewUtil 预览工具类
 
 * previewTxt 预览文本
 
@@ -3429,7 +4697,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   this.msg = res.getMsg();
 ```
 
-#### 20.WinLoadingUtil 窗口方式全局弹框(1.2.0+)
+#### 20.WinLoadingUtil 窗口方式全局弹框
 
 * ImgLayout 图片文字布局枚举
 
@@ -3529,7 +4797,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
   
 ```
 
-### 7.媒体相关类组件使用API(1.2.0+)
+### 7.媒体相关类组件使用API
 
 #### 1.FileUtil 文件处理工具类
 
@@ -3727,5 +4995,17 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
 ```
 //后续添加
 ```
+
+---------------------------------------------------------------------------------
+
+## 特别鸣谢
+
+### [幻凡ss](https://blog.csdn.net/q2158798)
+
+* 提供自定义键盘工具类
+* 提供首选项工具类
+* 提供图片预览工具类
+
+## star`eftool`希望您可以动一动小手点点小⭐⭐
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化
