@@ -259,7 +259,7 @@ export struct TypeWritingUtil {
 
         //隐藏按钮
         Column() {
-          Image($r('app.media.loading'))
+          Image($r("app.media.loading"))
             .width(20)
             .aspectRatio(1)
         }

@@ -62,21 +62,22 @@ export class RandomUtil {
 
   /**
    * 根据传入的大小生成随机字符串
-   * @param size
+   * @param size  生成字符串长度
+   * @param resultCoding  返回结果的编码格式
    * @returns
    */
-  static randomStrBySize(size: number, coding: buffer.BufferEncoding): string {
+  static randomStrBySize(size: number, resultCoding: buffer.BufferEncoding): string {
     let randArray: number[] = [];
     for (let i = 0; i < size; i++) {
       randArray[i] = Math.floor(Math.random() * 256);
     }
-    let str = StrAndUintUtil.unitArray2StrCoding(new Uint8Array(randArray), coding);
+    let str = StrAndUintUtil.unitArray2StrCoding(new Uint8Array(randArray), resultCoding);
     return str;
   }
 
   /**
    * 根据传入的大小生成随机Uint8Array字节流
-   * @param size
+   * @param size 生成字符串长度
    * @returns
    */
   static randomUnitBySize(size: number): Uint8Array {
@@ -89,9 +90,10 @@ export class RandomUtil {
 
   /**
    * 生成CBC模式的iv
+   * @param resultCoding  返回结果的编码格式(hex/base64)-不传默认为base64
    * @returns iv字符串
    */
-  static generateIV(coding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
-    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16, coding));
+  static generateIV(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16, resultCoding));
   }
 }

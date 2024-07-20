@@ -201,6 +201,7 @@ export class RSASync {
    * 将pem文件中的数据转换成公钥字符串支持1024/2048字节-hex格式
    * @param pemData pem数据以-----BEGIN开头,以-----END结尾
    * @returns
+   * @deprecated RSASync中的加解密方法已经支持pem格式密钥
    */
   static pemToStrKey(pemData: string): string {
     // 移除PEM格式的头部和尾部，获取Base64编码的数据

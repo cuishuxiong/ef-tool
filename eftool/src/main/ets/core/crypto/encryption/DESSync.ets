@@ -11,7 +11,7 @@ import { buffer } from '@kit.ArkTS';
 export class DESSync {
   /**
    * 生成3DES的对称密钥
-   * @param resultCoding 生成3DES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成3DES秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns 3DES密钥
    */
   static generate3DESKey(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -24,7 +24,7 @@ export class DESSync {
    * @param str  待加密的字符串
    * @param desKey   3DES密钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeECB(str: string, desKey: string, keyCoding: buffer.BufferEncoding,
@@ -38,7 +38,7 @@ export class DESSync {
    * @param aesKey   3DES密钥
    * @param iv   iv偏移量字符串
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeCBC(str: string, desKey: string, iv: string,

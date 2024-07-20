@@ -39,7 +39,7 @@ export class AESSync {
 
   /**
    * 生成AES的对称密钥-默认base64
-   * @param resultCoding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns AES密钥
    */
   static generateAESKey(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -48,7 +48,7 @@ export class AESSync {
 
   /**
    * 生成AES的对称密钥-128位-默认base64
-   * @param resultCoding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns AES密钥-128位
    */
   static generateAESKey128(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -57,7 +57,7 @@ export class AESSync {
 
   /**
    * 生成AES的对称密钥-192位-默认base64
-   * @param resultCoding 生成AES秘钥的字符串格式-默认不传为base64格式
+   * @param resultCoding 生成AES秘钥的字符串格式(hex/base64)-默认不传为base64格式
    * @returns AES密钥-192位
    */
   static generateAESKey192(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
@@ -68,8 +68,8 @@ export class AESSync {
    * 加密-GCM模式
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
-   * @param keyCoding key的编码方式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeGCM(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -103,7 +103,7 @@ export class AESSync {
    * @param aesKey   AES密钥
    * @param iv   iv偏移量字符串
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeCBC(str: string, aesKey: string, iv: string,
@@ -117,7 +117,7 @@ export class AESSync {
    * @param aesKey   AES密钥
    * @param iv   iv偏移量字符串
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeCBC128(str: string, aesKey: string, iv: string,
@@ -131,7 +131,7 @@ export class AESSync {
    * @param aesKey   AES密钥
    * @param iv   iv偏移量字符串
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeCBC192(str: string, aesKey: string, iv: string,
@@ -144,7 +144,7 @@ export class AESSync {
    * @param str  待加密的字符串
    * @param aesKey   AES密钥
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeECB(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -157,7 +157,7 @@ export class AESSync {
    * @param str  待加密的字符串
    * @param aesKey   AES密钥-128位
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeECB128(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,
@@ -170,7 +170,7 @@ export class AESSync {
    * @param str  待加密的字符串
    * @param aesKey   AES密钥-192位
    * @param keyCoding  密钥编码方式(utf8/hex/base64) 普通字符串则选择utf8格式
-   * @param resultCoding  加密后数据的编码方式-不传默认为base64
+   * @param resultCoding  加密后数据的编码方式(hex/base64)-不传默认为base64
    * @returns
    */
   static encodeECB192(str: string, aesKey: string, keyCoding: buffer.BufferEncoding,

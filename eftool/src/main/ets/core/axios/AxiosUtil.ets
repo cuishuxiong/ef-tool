@@ -424,7 +424,7 @@ export const efAxios = new AxiosUtil().efAxios;
 efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   //显示全局加载框
   await WinLoadingUtil.showLoading({
-    content: '努力请求接口中,请稍后...',
+    content: '努力获取数据中,请稍后...',
     imgLayout: ImgLayout.TOP,
     layoutShape: LoadingShape.SQUARE
   });

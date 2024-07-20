@@ -87,8 +87,7 @@ class EfClientApi {
    * @param headers 请求头
    * @returns
    */
-  async put<F, E>(url: string, query: Record<string, Object>,
-    headers?: Record<string, Object>): Promise<E> {
+  async put<F, E>(url: string, query: Record<string, Object>,headers?: Record<string, Object>): Promise<E> {
     //需要添加的header对象
     let addHead: AxiosHeaders = new AxiosHeaders();
     //是否有传入header
@@ -139,8 +138,7 @@ class EfClientApi {
    * @param headers 自定义请求头
    * @returns 上传结果
    */
-  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,
-    data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>) {
+  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>) {
     let formData = new FormData();
     if (keyName) {
       if (isUri) {
@@ -191,8 +189,7 @@ class EfClientApi {
    * @param headers 自定义请求头
    * @returns
    */
-  async download(url: string, filePath: string, progressCallBack: (process: number) => void,
-    headers?: Record<string, Object>) {
+  async download(url: string, filePath: string, progressCallBack: (process: number) => void, headers?: Record<string, Object>) {
     //获取上下文
     let context = getContext(this) as common.UIAbilityContext;
     let filesDir = context.filesDir;

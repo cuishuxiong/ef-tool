@@ -718,9 +718,9 @@ struct Welcome {
   }
 
   testWinLoading() {
-    this.loadingOps.imgLayout = ImgLayout.BOTTOM;
+    this.loadingOps.imgLayout = ImgLayout.TOP;
     setInterval(() => {
-      if (this.count > 10) {
+      if (this.count >= 10) {
         WinLoadingUtil.closeLoading();
         this.count = 0;
       }
@@ -729,6 +729,7 @@ struct Welcome {
     }, 500);
     // this.loadingOps.position = Alignment.Top;
     this.loadingOps.layoutShape = LoadingShape.SQUARE;
+    this.loadingOps.fontSize = 14;
     WinLoadingUtil.showLoading(this.loadingOps);
   }
 
