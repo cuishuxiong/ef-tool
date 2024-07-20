@@ -3106,7 +3106,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 > 接到大部分开发者反馈需要有一个统一的请求全局加载loading,故在本版本默认集成,后续可能会有样式优化(V1.2.1-rc.1+)
 
 - 效果图  
-  [![loading.th.jpg](https://z4a.net/images/2024/07/20/loading.jpg)](https://z4a.net/image/jRUXmi)
+  [![loading.th.jpg](https://z4a.net/images/2024/07/20/loading.png)](https://z4a.net/image/jReQM0)
 
 > 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
 
