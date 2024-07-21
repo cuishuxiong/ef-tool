@@ -3,7 +3,6 @@ import { AxiosError } from '@ohos/axios';
 import { InternalAxiosRequestConfig } from '@ohos/axios';
 import { AxiosResponse } from '@ohos/axios';
 import { AxiosStatic } from '@ohos/axios';
-import { ToastUtil } from '../../ui/prompt/ToastUtil';
 import { OutDTO } from '../base/OutDTO';
 import { SM2 } from '../crypto/encryption/sm2/SM2';
 import { SM3 } from '../crypto/encryption/SM3';
@@ -430,7 +429,14 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   });
   await AxiosUtil.convertRequestInfo(config);
   return config;
-}, (error: AxiosError) => {
+}, async (error: AxiosError) => {
+  //关闭全局加载框
+  await WinLoadingUtil.closeLoading();
+  //如果需要转换的话则将错误数据转换为dto对象
+  if (efAxiosParams.isConvertDTO) {
+    let outDTO = new OutDTO(false, error.message, '', [], error.code ? error.code : 400);
+    return Promise.reject(outDTO);
+  }
   // 对请求错误做些什么
   return Promise.reject(error);
 })
@@ -444,8 +450,14 @@ efAxios.interceptors.response.use(async (response: AxiosResponse) => {
   //关闭全局加载框
   await WinLoadingUtil.closeLoading();
   return response;
-}, (error: AxiosError) => {
-  ToastUtil.showToast("发生错误了,原因为:" + error.message);
+}, async (error: AxiosError) => {
+  //关闭全局加载框
+  await WinLoadingUtil.closeLoading();
+  //如果需要转换的话则将错误数据转换为dto对象
+  if (efAxiosParams.isConvertDTO) {
+    let outDTO = new OutDTO(false, error.message, '', [], error.code ? error.code : 400);
+    return Promise.reject(outDTO);
+  }
   // 对响应错误做点什么
   return Promise.reject(error);
 });

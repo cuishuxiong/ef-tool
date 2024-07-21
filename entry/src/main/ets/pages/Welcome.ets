@@ -24,6 +24,7 @@ import {
   LoadingShape,
   LoadingUtil,
   MD5,
+  OutDTO,
   PickerUtil,
   PreviewUtil,
   RandomUtil,
@@ -382,7 +383,7 @@ struct Welcome {
       }
       this.process = progress;
     }, data);
-    this.msg = res ? res["dataRow"] : '';
+    this.msg = res ? (res as OutDTO<string>).getDataRow() : '';
     return this.msg;
   }
 
@@ -394,7 +395,7 @@ struct Welcome {
       }
       this.process = progress;
     });
-    ToastUtil.showToast(res ? res["msg"] : '下载文件出错了~');
+    ToastUtil.showToast(res ? (res as OutDTO<string>).getMsg() : '下载文件出错了~');
     let context = getContext(this) as common.UIAbilityContext;
     //获取沙箱文件
     let filesDir = context.filesDir + "/" + downName;

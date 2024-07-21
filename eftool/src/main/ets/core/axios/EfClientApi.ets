@@ -3,10 +3,9 @@
  * @DateTime 2024/4/19 08:00:04
  * @TODO EfApi  axios封装的请求工具类
  */
-import { AxiosError, AxiosHeaders, AxiosProgressEvent, AxiosResponse, FormData } from '@ohos/axios';
+import { AxiosHeaders, AxiosProgressEvent, AxiosResponse, FormData } from '@ohos/axios';
 import { efAxios } from './AxiosUtil';
 import fs from '@ohos.file.fs';
-import { ToastUtil } from '../../ui/prompt/ToastUtil';
 import { common } from '@kit.AbilityKit';
 
 
@@ -20,18 +19,23 @@ class EfClientApi {
    */
   async post<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
     //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
+    try {
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      let response: AxiosResponse<E> = await efAxios.post<E, AxiosResponse<E>, F>(url, query as F, {
+        headers: addHead
       });
+      //返回response的数据
+      return response.data;
+    } catch (error) {
+      //将异常抛出
+      return error as E;
     }
-    return await efAxios.post<E, AxiosResponse<E>, F>(url, query as F, {
-      headers: addHead
-    }).then((response: AxiosResponse<E>) => {
-      return response.data
-    });
   }
 
   /**
@@ -41,19 +45,22 @@ class EfClientApi {
    * @returns 响应结果
    */
   async get<E>(url: string, headers?: Record<string, Object>): Promise<E> {
-    //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
+    try { //需要添加的header对象
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      let response: AxiosResponse<E> = await efAxios.get<E, AxiosResponse<E>, null>(url, {
+        headers: addHead
       });
+      //返回response的数据
+      return response.data;
+    } catch (error) {
+      return error as E;
     }
-    return await efAxios.get<E, AxiosResponse<E>, null>(url, {
-      headers: addHead
-    }).then((response: AxiosResponse<E>) => {
-      return response.data
-    });
   }
 
   /**
@@ -64,20 +71,23 @@ class EfClientApi {
    * @returns
    */
   async getByParams<E>(url: string, params: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
-    //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
+    try { //需要添加的header对象
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      let response: AxiosResponse<E> = await efAxios.get<E, AxiosResponse<E>, null>(url, {
+        params: params,
+        headers: addHead
       });
+      //返回response的数据
+      return response.data;
+    } catch (error) {
+      return error as E;
     }
-    return await efAxios.get<E, AxiosResponse<E>, null>(url, {
-      params: params,
-      headers: addHead
-    }).then((response: AxiosResponse<E>) => {
-      return response.data
-    });
   }
 
   /**
@@ -87,20 +97,23 @@ class EfClientApi {
    * @param headers 请求头
    * @returns
    */
-  async put<F, E>(url: string, query: Record<string, Object>,headers?: Record<string, Object>): Promise<E> {
-    //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
+  async put<F, E>(url: string, query: Record<string, Object>, headers?: Record<string, Object>): Promise<E> {
+    try { //需要添加的header对象
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      let response: AxiosResponse<E> = await efAxios.put<E, AxiosResponse<E>, F>(url, query as F, {
+        headers: addHead
       });
+      //返回response的数据
+      return response.data;
+    } catch (error) {
+      return error as E;
     }
-    return await efAxios.put<E, AxiosResponse<E>, F>(url, query as F, {
-      headers: addHead
-    }).then((response: AxiosResponse<E>) => {
-      return response.data
-    });
   }
 
   /**
@@ -110,19 +123,22 @@ class EfClientApi {
    * @returns
    */
   async delete<E>(url: string, headers?: Record<string, Object>): Promise<E> {
-    //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
+    try { //需要添加的header对象
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      let response: AxiosResponse<E> = await efAxios.delete<E, AxiosResponse<E>, null>(url, {
+        headers: addHead
       });
+      //返回response的数据
+      return response.data;
+    } catch (error) {
+      return error as E;
     }
-    return await efAxios.delete<E, AxiosResponse<E>, null>(url, {
-      headers: addHead
-    }).then((response: AxiosResponse<E>) => {
-      return response.data
-    });
   }
 
   /**
@@ -138,47 +154,48 @@ class EfClientApi {
    * @param headers 自定义请求头
    * @returns 上传结果
    */
-  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>) {
-    let formData = new FormData();
-    if (keyName) {
-      if (isUri) {
-        formData.append(keyName, 'internal://cache/' + uri);
+  async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void, data?: ArrayBuffer,
+    uri?: string, keyName?: string, headers?: Record<string, Object>): Promise<Object> {
+    try {
+      let formData = new FormData();
+      if (keyName) {
+        if (isUri) {
+          formData.append(keyName, 'internal://cache/' + uri);
+        } else {
+          formData.append(keyName, data);
+        }
       } else {
-        formData.append(keyName, data);
-      }
-    } else {
-      if (isUri) {
-        formData.append('file', 'internal://cache/' + uri);
-      } else {
-        formData.append('file', data);
-      }
-    }
-    //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    addHead.set('Content-Type', 'multipart/form-data', true);
-    addHead.set('Accept', '*/*', true);
-    addHead.set('Req-Type', 'uploadOrDownload', true);
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
-      });
-    }
-    return await efAxios.post<string, AxiosResponse<string>, FormData>(url, formData, {
-      headers: addHead,
-      context: getContext(this) as common.UIAbilityContext,
-      onUploadProgress: (progressEvent: AxiosProgressEvent): void => {
-        if (progressEvent && progressEvent.loaded && progressEvent.total) {
-          //回调进度
-          progressCallBack(Math.ceil(progressEvent.loaded / progressEvent.total * 100));
+        if (isUri) {
+          formData.append('file', 'internal://cache/' + uri);
+        } else {
+          formData.append('file', data);
         }
       }
-    }).then((response: AxiosResponse<string>) => {
-      return response.data
-    }).catch((err: AxiosError) => {
-      ToastUtil.showToast(err.message);
-    });
-
+      //需要添加的header对象
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      addHead.set('Content-Type', 'multipart/form-data', true);
+      addHead.set('Accept', '*/*', true);
+      addHead.set('Req-Type', 'uploadOrDownload', true);
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      let response: AxiosResponse<string> = await efAxios.post<string, AxiosResponse<string>, FormData>(url, formData, {
+        headers: addHead,
+        context: getContext(this) as common.UIAbilityContext,
+        onUploadProgress: (progressEvent: AxiosProgressEvent): void => {
+          if (progressEvent && progressEvent.loaded && progressEvent.total) {
+            //回调进度
+            progressCallBack(Math.ceil(progressEvent.loaded / progressEvent.total * 100));
+          }
+        }
+      });
+      return response.data;
+    } catch (error) {
+      return error;
+    }
   }
 
   /**
@@ -189,49 +206,51 @@ class EfClientApi {
    * @param headers 自定义请求头
    * @returns
    */
-  async download(url: string, filePath: string, progressCallBack: (process: number) => void, headers?: Record<string, Object>) {
-    //获取上下文
-    let context = getContext(this) as common.UIAbilityContext;
-    let filesDir = context.filesDir;
-    //组装下载路径
-    let finalPath = filesDir + "/" + filePath;
-    try {
-      let isExists = fs.accessSync(finalPath);
-      //如果已存在则删除
-      if (isExists) {
-        fs.unlinkSync(finalPath);
-      }
-    } catch (err) {
-      ToastUtil.showToast('删除路径下已存在文件失败:' + filePath);
-      return;
-    }
-    //需要添加的header对象
-    let addHead: AxiosHeaders = new AxiosHeaders();
-    addHead.set('Req-Type', 'uploadOrDownload', true);
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead.set(row[0], row[1] as string, true);
-      });
-    }
-    //下载
-    return await efAxios({
-      url: url,
-      method: 'get',
-      context: context,
-      filePath: finalPath,
-      headers: addHead,
-      onDownloadProgress: (progressEvent: AxiosProgressEvent): void => {
-        if (progressEvent && progressEvent.loaded && progressEvent.total) {
-          //回调进度
-          progressCallBack(Math.ceil(progressEvent.loaded / progressEvent.total * 100));
+  async download(url: string, filePath: string, progressCallBack: (process: number) => void,
+    headers?: Record<string, Object>): Promise<Object> {
+    try { //获取上下文
+      let context = getContext(this) as common.UIAbilityContext;
+      let filesDir = context.filesDir;
+      //组装下载路径
+      let finalPath = filesDir + "/" + filePath;
+      try {
+        let isExists = fs.accessSync(finalPath);
+        //如果已存在则删除
+        if (isExists) {
+          fs.unlinkSync(finalPath);
         }
+      } catch (err) {
+        // ToastUtil.showToast('删除路径下已存在文件失败:' + filePath);
+        return "下载失败,指定路径下已存在文件~";
       }
-    }).then((response: AxiosResponse<string>) => {
-      return response.data
-    }).catch((err: AxiosError) => {
-      ToastUtil.showToast(err.message);
-    });
+      //需要添加的header对象
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      addHead.set('Req-Type', 'uploadOrDownload', true);
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      //下载
+      let response: AxiosResponse<string> = await efAxios({
+        url: url,
+        method: 'get',
+        context: context,
+        filePath: finalPath,
+        headers: addHead,
+        onDownloadProgress: (progressEvent: AxiosProgressEvent): void => {
+          if (progressEvent && progressEvent.loaded && progressEvent.total) {
+            //回调进度
+            progressCallBack(Math.ceil(progressEvent.loaded / progressEvent.total * 100));
+          }
+        }
+      });
+      //返回结果
+      return response.data;
+    } catch (error) {
+      return error;
+    }
   }
 }
 
