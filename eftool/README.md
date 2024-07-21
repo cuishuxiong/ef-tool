@@ -3266,7 +3266,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   static isConvertDTO: boolean = true;
 ```
 
-#### 2.AxiosUtil工具类
+#### 2.AxiosUtil工具类(V1.2.1-rc.1有改动)
 
 * efAxios 全局对象
 
@@ -3294,11 +3294,19 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   //dataRow和dataTable业务数据自行选择,非必填
 ```
 
-#### 3.EfClientApi工具类
+> 在V1.2.1-rc.1中增加了统一的全局loading,并且针对于请求异常做了统一编码的返回
+
+> 如果efAxiosParams.isConvertDTO=true,则所有的异常均转换成OutDTO对象返回
+
+> 如果efAxiosParams.isConvertDTO=false,则所有异常返回为AxiosError业务自行处理
+
+#### 3.EfClientApi工具类(V1.2.1-rc.1有改动)
 
 > 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
 * post请求 async/await 方式
+
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
@@ -3312,6 +3320,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * get请求 async/await 方式
 
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
     async get<E>(url: string, headers?: Record<string, Object>): Promise<E>
@@ -3322,6 +3332,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 ```
 
 * getByParams请求 async/await 方式
+
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明   参数为json格式
@@ -3335,6 +3347,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * delete请求 async/await 方式
 
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+
 ```
     //参数说明
     async delete<E>(url: string, headers?: Record<string, Object>): Promise<E>
@@ -3345,6 +3359,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 ```
 
 * put请求 async/await 方式
+
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
@@ -3357,6 +3373,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 ```
 
 * upload 统一的上传请求 async/await 方式
+
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
@@ -3371,6 +3389,8 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 ```
 
 * download 统一的下载请求 async/await 方式
+
+> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
