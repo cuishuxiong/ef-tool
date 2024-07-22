@@ -22,9 +22,9 @@ export class JSONObject extends HashMap<string, JSONValue> {
   public static parse(jsonStr: string): JSONObject {
     let json = new JSONObject();
     //去除字符串中的换行符
-    jsonStr = StrUtil.replace(StrUtil.replace(jsonStr, '\n/g', ''), '\r/g', '');
+    const replaceStr = jsonStr.replace(/\r\n/g, '\\r\\n').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
     //转换成json对象
-    let jVal: Record<string, JSONValue> = JSON.parse(jsonStr);
+    let jVal: Record<string, JSONValue> = JSON.parse(replaceStr);
     //循环赋值
     Object.entries(jVal).forEach((item) => {
       if (item[1] instanceof JSONObject) {
@@ -56,7 +56,8 @@ export class JSONObject extends HashMap<string, JSONValue> {
         if (nestedJson[key[0]] instanceof Date) {
           nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
         } else if (Array.isArray(nestedJson[key[0]])) {
-          nestedData[key[0]] = (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
+          nestedData[key[0]] =
+            (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
         } else {
           nestedData[key[0]] = JSONObject.parseNestedObject(nestedJson[key[0]] as Record<string, JSONValue>);
         }
@@ -79,7 +80,10 @@ export class JSONObject extends HashMap<string, JSONValue> {
    * @returns T 对象
    */
   public static parseObject<T>(jsonStr: string): T {
-    let json: Record<string, JSONValue> = JSON.parse(jsonStr);
+    //处理如果带有转义符号的
+    const replaceStr = jsonStr.replace(/\r\n/g, '\\r\\n').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
+    //转换
+    let json: Record<string, JSONValue> = JSON.parse(replaceStr);
     let data: T = JSONObject.parseNestedObject<T>(json);
     return data;
   }
@@ -93,7 +97,7 @@ export class JSONObject extends HashMap<string, JSONValue> {
     if (object instanceof Map) {
       let map = new HashMap<string, JSONValue>();
       (object as Map<string, JSONValue>).forEach((val, key) => {
-        map.set(key,val);
+        map.set(key, val);
       })
       //获取key迭代器
       let iter: IterableIterator<string> = map.keys();

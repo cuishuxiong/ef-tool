@@ -1,6 +1,15 @@
 # Changelog
 
-## [v1.2.1] 2024-07
+## [v1.2.1-rc.2] 2024-07
+
+### 🐣新特性(API12)
+
+### 🐞功能优化
+
+*
+JSONObject,JSONArray,JSONArrayList中parse,parseXXX方法如字符串中有\r\n报错问题[issuesIAESIG](https://gitee.com/yunkss/ef-tool/issues/IAESIG)
+
+## [v1.2.1-rc.1] 2024-07
 
 ### 🐣新特性(API12)
 
@@ -31,7 +40,7 @@
 * efAxios的请求响应中添加全局loading弹框
 * 升级axios版本为2.2.1正式版
 
-## [v1.2.1-rc.0] 2024-06
+## [v1.2.1-rc.1-rc.0] 2024-06
 
 ### 🐣新特性(API12)
 

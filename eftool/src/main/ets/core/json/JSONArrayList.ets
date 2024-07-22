@@ -22,8 +22,9 @@ export class JSONArrayList extends ArrayList<JSONValue> {
    */
   public static parse(jsonStr: string): JSONArrayList {
     let json = new JSONArrayList();
+    const replaceStr = jsonStr.replace(/\r\n/g, '\\r\\n').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
     //转换成json对象
-    let jVal: Record<string, JSONValue> = JSON.parse(jsonStr);
+    let jVal: Record<string, JSONValue> = JSON.parse(replaceStr);
     //循环赋值
     Object.entries(jVal).forEach((item) => {
       if (item[1] instanceof JSONObject) {
@@ -49,10 +50,11 @@ export class JSONArrayList extends ArrayList<JSONValue> {
    * @returns 实体对象集合ArrayList<T>
    */
   public static parseArrayList<T>(jsonStr: string): ArrayList<T> {
+    const replaceStr = jsonStr.replace(/\r\n/g, '\\r\\n').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
     //判断是否是json数组
-    if (JSONUtil.isJSONArray(jsonStr)) {
+    if (JSONUtil.isJSONArray(replaceStr)) {
       //转换成jsonArray
-      let res = JSONArrayList.parse(jsonStr);
+      let res = JSONArrayList.parse(replaceStr);
       //返回结果
       let list = new ArrayList<T>();
       //递归

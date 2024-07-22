@@ -239,18 +239,22 @@ struct Welcome {
     // let st = jsonObj.toString();
     // this.msg = st;
     let userList = new Array<User>();
-    userList.push(new User('2345', '测试用户1'));
-    userList.push(new User('7844', '测试用户2'));
-    let person = new Person('测试', 12, true, new Date(), new User("uuid", "打撒吃的是草动次打次"), userList);
+    userList.push(new User('2345', '测\r\n试用户1'));
+    userList.push(new User('7844', '测试\r用户\n2'));
+    let person = new Person('测\r\n试', 12, true, new Date(), new User("uuid", "打\r撒吃的\n是草动次打次"), userList);
 
     let j = JSONObject.toJSONString(person);
 
-    // let f = JSONObject.parse(j);
+    this.msg = j;
+
+    let obj = JSONObject.parse(j);
+
+    this.msg = obj.hasKey("name") ? obj.get("name") + "" : "1";
 
     let o = JSONObject.parseObject<Person>(j);
 
 
-    this.msg = o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
+    this.msg = o.name + o.birth + "-----" + o.sex + '------' + o.user.name + '======' + o.list?.length;
   }
 
   @State showDownBtn: Visibility = Visibility.None;
