@@ -84,7 +84,8 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
   testAES() {
 
-    let iv = RandomUtil.generateIV();
+    let iv = RandomUtil.generateIV('utf8');
+    this.msg = iv.getDataRow();
     // let key = AESSync.generateAESKey();
     // let encode = AESSync.encodeCBC('测试AES-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
     // let decode = AESSync.decodeCBC(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
@@ -159,20 +160,20 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8');
     // this.msg = decode2.getDataRow();
 
-    // let encode2 =
-    //   AESSync.encodeCBC128("测试AES外部传入key/iv加密~~~", "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8', 'hex');
-    // let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8', 'hex');
-    // this.msg = decode2.getDataRow();
+    let encode2 =
+      AESSync.encodeCBC128("测试AES外部传入key/iv加密~~~", "TESTsdiloia20230", iv.getDataRow(), 'utf8', 'hex');
+    let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", iv.getDataRow(), 'utf8', 'hex');
+    this.msg = decode2.getDataRow();
 
-    let key = AESSync.generateAESKey192();
+    // let key = AESSync.generateAESKey192();
 
     // let encode192 = AESSync.encodeCBC192('测试AES-192-CBC加密~~~', key.getDataRow(), iv.getDataRow(), 'base64');
     // let decode192 = AESSync.decodeCBC192(encode192.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
     // this.msg = decode192.getDataRow();
 
-    let encode192Ecb = AESSync.encodeECB192('测试AES-192-ECB加密~~~', key.getDataRow(), 'base64');
-    let decode192Ecb = AESSync.decodeECB192(encode192Ecb.getDataRow(), key.getDataRow(), 'base64');
-    this.msg = decode192Ecb.getDataRow();
+    // let encode192Ecb = AESSync.encodeECB192('测试AES-192-ECB加密~~~', key.getDataRow(), 'base64');
+    // let decode192Ecb = AESSync.decodeECB192(encode192Ecb.getDataRow(), key.getDataRow(), 'base64');
+    // this.msg = decode192Ecb.getDataRow();
 
 
   }

@@ -7,7 +7,10 @@
 ### 🐞功能优化
 
 *
+
 JSONObject,JSONArray,JSONArrayList中parse,parseXXX方法如字符串中有\r\n报错问题[issuesIAESIG](https://gitee.com/yunkss/ef-tool/issues/IAESIG)
+
+* 优化RandomUtil.generateIV支持生成utf8格式的字符串iv
 
 ## [v1.2.1-rc.1] 2024-07
 

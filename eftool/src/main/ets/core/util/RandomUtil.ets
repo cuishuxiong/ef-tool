@@ -67,12 +67,31 @@ export class RandomUtil {
    * @returns
    */
   static randomStrBySize(size: number, resultCoding: buffer.BufferEncoding): string {
-    let randArray: number[] = [];
+    let randArray = new Uint8Array(size);
     for (let i = 0; i < size; i++) {
       randArray[i] = Math.floor(Math.random() * 256);
     }
-    let str = StrAndUintUtil.unitArray2StrCoding(new Uint8Array(randArray), resultCoding);
+    let str = StrAndUintUtil.unitArray2StrCoding(randArray, resultCoding);
     return str;
+  }
+
+
+  /**
+   * 根据传入的大小生成utf8随机字符串
+   * @param size  生成字符串长度
+   * @returns
+   */
+  static randomUTF8StrBySize(size: number): string {
+    // 定义可打印字符的范围
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:,<.>/?';
+    const charsetLength = charset.length;
+    // 生成随机字符串
+    let result = '';
+    for (let i = 0; i < size; i++) {
+      const randomIndex = Math.floor(Math.random() * charsetLength);
+      result += charset.charAt(randomIndex);
+    }
+    return result;
   }
 
   /**
@@ -90,10 +109,13 @@ export class RandomUtil {
 
   /**
    * 生成CBC模式的iv
-   * @param resultCoding  返回结果的编码格式(hex/base64)-不传默认为base64
+   * @param resultCoding  返回结果的编码格式(utf8/hex/base64)-不传默认为base64
    * @returns iv字符串
    */
   static generateIV(resultCoding: buffer.BufferEncoding = 'base64'): OutDTO<string> {
+    if (resultCoding === 'utf8') {
+      return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomUTF8StrBySize(16));
+    }
     return OutDTO.OKByDataRow<string>('获取iv成功~', RandomUtil.randomStrBySize(16, resultCoding));
   }
 }
