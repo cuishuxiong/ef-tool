@@ -66,7 +66,12 @@ export struct Three {
         }.tabBar('我的')
 
         TabContent() {
-          Text('222222222222222')
+          Text('22222222222222222222222222222222222222')
+            .maxLines(1)
+            .textOverflow({
+              overflow:TextOverflow.Ellipsis
+            })
+            .width('30%')
         }.tabBar('你的')
 
         TabContent() {

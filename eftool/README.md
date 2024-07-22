@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.2.1-rc.1(API12)</center>
+# <center>V1.2.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 | X25519     | 提供x25519动态协商密钥等系列方法(基于HarmonyOS API) |
 | SM2Convert | 提供SM2ASN1与C1C3C2转换类                  |
 
-#### 2.2同步方式(V1.2.1-rc.1+)
+#### 2.2同步方式(V1.2.1+)
 
 | 模块         | 介绍                                       |
 |------------|------------------------------------------|
@@ -164,10 +164,10 @@ ohpm install @yunkss/eftool
 
 ```
     "dependencies": {
-        "@yunkss/eftool":"1.2.1-rc.1",
+        "@yunkss/eftool":"1.2.1",
         "@ohos/axios" :"2.2.1"
     }
-    //当前eftool为1.2.1-rc.1版本,内部使用的axios为2.2.1,使用时需注意项目中的axios与eftool中的版本对应关系
+    //当前eftool为1.2.1版本,内部使用的axios为2.2.1,使用时需注意项目中的axios与eftool中的版本对应关系
 ```
 
 ## 📦使用
@@ -627,7 +627,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     RandomUtil.randomUnitBySize(16);
 ```
 
-* generateIV 生成CBC模式的iv(1.2.1-rc.1+有变动)
+* generateIV 生成CBC模式的iv(1.2.1+有变动)
 
 ```
    /**
@@ -991,7 +991,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     let d = Base64Util.decodeSync(b);
 ```
 
-* encodeHexStr2base64 hex格式字符串转base64-同步(1.2.1-rc.1+)
+* encodeHexStr2base64 hex格式字符串转base64-同步(1.2.1+)
 
 ```
     let d = Base64Util.encodeHexStr2base64(b);
@@ -1558,7 +1558,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     this.message = decode.getDataRow();
 ```
 
-#### 3.2 同步方式(v1.2.1-rc.1+)
+#### 3.2 同步方式(v1.2.1+)
 
 ##### 1.RSASync的方法【返回结果均为OutDTO对象】
 
@@ -3210,13 +3210,13 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * isNumber 是否是字符串
 
-### 5.网络相关类组件使用API(V1.2.1-rc.1有改动)
+### 5.网络相关类组件使用API(V1.2.1有改动)
 
 #### 前言
 
 > efAxios封装需要大家共建和提出建议与需求,已完善传输整体加解密,关键字加解密,统一上传下载等,期待大家提出宝贵意见
 
-> 接到大部分开发者反馈需要有一个统一的请求全局加载loading,故在本版本默认集成,后续可能会有样式优化(V1.2.1-rc.1+)
+> 接到大部分开发者反馈需要有一个统一的请求全局加载loading,故在本版本默认集成,后续可能会有样式优化(V1.2.1+)
 
 - 效果图  
   [![loading.th.jpg](https://z4a.net/images/2024/07/20/loading.png)](https://z4a.net/image/jReQM0)
@@ -3266,7 +3266,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   static isConvertDTO: boolean = true;
 ```
 
-#### 2.AxiosUtil工具类(V1.2.1-rc.1有改动)
+#### 2.AxiosUtil工具类(V1.2.1有改动)
 
 * efAxios 全局对象
 
@@ -3294,19 +3294,19 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   //dataRow和dataTable业务数据自行选择,非必填
 ```
 
-> 在V1.2.1-rc.1中增加了统一的全局loading,并且针对于请求异常做了统一编码的返回
+> 在V1.2.1中增加了统一的全局loading,并且针对于请求异常做了统一编码的返回
 
 > 如果efAxiosParams.isConvertDTO=true,则所有的异常均转换成OutDTO对象返回
 
 > 如果efAxiosParams.isConvertDTO=false,则所有异常返回为AxiosError业务自行处理
 
-#### 3.EfClientApi工具类(V1.2.1-rc.1有改动)
+#### 3.EfClientApi工具类(V1.2.1有改动)
 
 > 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
 * post请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+> V1.2.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
@@ -3320,7 +3320,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * get请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+> V1.2.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
@@ -3333,7 +3333,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * getByParams请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+> V1.2.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明   参数为json格式
@@ -3347,7 +3347,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * delete请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+> V1.2.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
@@ -3360,7 +3360,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * put请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+> V1.2.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
 ```
     //参数说明
