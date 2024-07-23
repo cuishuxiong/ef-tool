@@ -410,6 +410,14 @@ export class efAxiosParams {
    * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
    */
   static isConvertDTO: boolean = true;
+  /**
+   * 是否开启全局请求loading弹框,默认为true
+   */
+  static isLoading: boolean = true;
+  /**
+   * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
+   */
+  static loadingTxt: string = '努力获取数据中,请稍后...';
 }
 
 /**
@@ -421,17 +429,21 @@ export const efAxios = new AxiosUtil().efAxios;
  * 设置统一的请求拦截
  */
 efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-  //显示全局加载框
-  await WinLoadingUtil.showLoading({
-    content: '努力获取数据中,请稍后...',
-    imgLayout: ImgLayout.TOP,
-    layoutShape: LoadingShape.SQUARE
-  });
+  if (efAxiosParams.isLoading) {
+    //显示全局加载框
+    await WinLoadingUtil.showLoading({
+      content: efAxiosParams.loadingTxt,
+      imgLayout: ImgLayout.TOP,
+      layoutShape: LoadingShape.SQUARE
+    });
+  }
   await AxiosUtil.convertRequestInfo(config);
   return config;
 }, async (error: AxiosError) => {
-  //关闭全局加载框
-  await WinLoadingUtil.closeLoading();
+  if (efAxiosParams.isLoading) {
+    //关闭全局加载框
+    await WinLoadingUtil.closeLoading();
+  }
   //如果需要转换的话则将错误数据转换为dto对象
   if (efAxiosParams.isConvertDTO) {
     let outDTO = new OutDTO(false, error.message, '', [], error.code ? error.code : 400);
@@ -447,12 +459,16 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
 efAxios.interceptors.response.use(async (response: AxiosResponse) => {
   // 处理响应数据
   await AxiosUtil.convertResponseInfo(response);
-  //关闭全局加载框
-  await WinLoadingUtil.closeLoading();
+  if (efAxiosParams.isLoading) {
+    //关闭全局加载框
+    await WinLoadingUtil.closeLoading();
+  }
   return response;
 }, async (error: AxiosError) => {
-  //关闭全局加载框
-  await WinLoadingUtil.closeLoading();
+  if (efAxiosParams.isLoading) {
+    //关闭全局加载框
+    await WinLoadingUtil.closeLoading();
+  }
   //如果需要转换的话则将错误数据转换为dto对象
   if (efAxiosParams.isConvertDTO) {
     let outDTO = new OutDTO(false, error.message, '', [], error.code ? error.code : 400);

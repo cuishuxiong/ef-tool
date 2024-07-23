@@ -124,6 +124,7 @@ struct Index {
   }
 
   async sendRequest() {
+    efAxiosParams.loadingTxt = '小的快马加鞭...';
     // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
     efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
     efAxiosParams.isAllEncrypt = true;

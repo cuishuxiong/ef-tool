@@ -7,7 +7,6 @@ import { StringBuilder } from '../base/StringBuilder';
 import { buffer } from '@kit.ArkTS';
 import { SM2Convert } from '../crypto/encryption/sm2/SM2Convert';
 import { Base64Util } from './Base64Util';
-import { StrUtil } from './StrUtil';
 
 export class StrAndUintUtil {
   /**

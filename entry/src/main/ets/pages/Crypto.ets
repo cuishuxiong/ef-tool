@@ -224,10 +224,16 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
     // this.msg = decode.getDataRow();
 
-    let sign = SM2Sync.sign('测试SM2的加密~~~~', key.getDataRow().privateKey, 'base64');
-    this.msg = sign.getDataRow();
-    let verify = SM2Sync.verify(sign.getDataRow(), '测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
-    this.msg = verify.getMsg();
+    let hexKey = SM2Sync.convertSM2PubKey('0415ff68cb5b08396955cc17ea930cf64bf1f5fbee9a76ca5d9b49d1e9190038518d0fb3d265255f8a433c3c066eeeabf8657e7f2fde33ef48cdd0c883ef39dd84');
+
+    let encode = SM2Sync.encode('测试SM2的加密~~~~', hexKey.getDataRow(), 'hex');
+    // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
+    this.msg = encode.getDataRow();
+
+    // let sign = SM2Sync.sign('测试SM2的加密~~~~', key.getDataRow().privateKey, 'base64');
+    // this.msg = sign.getDataRow();
+    // let verify = SM2Sync.verify(sign.getDataRow(), '测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
+    // this.msg = verify.getMsg();
 
   }
 

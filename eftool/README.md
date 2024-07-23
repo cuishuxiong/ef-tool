@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V1.2.1-rc.1(API12)</center>
+# <center>V1.2.1-rc.2(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -627,16 +627,17 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil, ToastUtil, ActionUtil, DialogUti
     RandomUtil.randomUnitBySize(16);
 ```
 
-* generateIV 生成CBC模式的iv(1.2.1-rc.1+有变动)
+* generateIV 生成CBC模式的iv(1.2.1-rc.2+有变动)
 
 ```
    /**
    * 生成CBC模式的iv
-   * @param resultCoding  返回结果的编码格式(hex/base64)-不传默认为base64
+   * @param resultCoding  返回结果的编码格式(utf8/hex/base64)-不传默认为base64
    * @returns iv字符串
    */
     let iv = await RandomUtil.generateIV();  //生成为base64格式
     let iv = await RandomUtil.generateIV('hex');  //生成为16进制hex格式
+    let iv = await RandomUtil.generateIV('utf8');  //生成为16位普通字符串
 ```
 
 * randomBoolean 随机生成一个布尔值
@@ -3264,6 +3265,14 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
    */
   static isConvertDTO: boolean = true;
+  /**
+   * 是否开启全局请求loading弹框,默认为true(1.2.1-rc.2+)
+   */
+  static isLoading: boolean = true;
+  /**
+   * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...](1.2.1-rc.2+)
+   */
+  static loadingTxt: string = '努力获取数据中,请稍后...';
 ```
 
 #### 2.AxiosUtil工具类(V1.2.1-rc.1有改动)
@@ -3404,6 +3413,10 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 * 登录示例
 
 ```
+    //如不需要全局loading则如下设置
+    efAxiosParams.isLoading = false;
+    //如需更改loading提示则如下设置
+    efAxiosParams.loadingTxt = '小的快马加鞭...';
     //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
     efAxiosParams.isConvertDTO = false;
     const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
