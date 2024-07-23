@@ -84,8 +84,8 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
 
   testAES() {
 
-    let iv = RandomUtil.generateIV('utf8');
-    this.msg = iv.getDataRow();
+    // let iv = RandomUtil.generateIV('utf8');
+    // this.msg = iv.getDataRow();
     // let key = AESSync.generateAESKey();
     // let encode = AESSync.encodeCBC('测试AES-CBC加密~~~~', key.getDataRow(), iv.getDataRow(), 'base64');
     // let decode = AESSync.decodeCBC(encode.getDataRow(), key.getDataRow(), iv.getDataRow(), 'base64');
@@ -160,10 +160,10 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7", 'utf8');
     // this.msg = decode2.getDataRow();
 
-    let encode2 =
-      AESSync.encodeCBC128("测试AES外部传入key/iv加密~~~", "TESTsdiloia20230", iv.getDataRow(), 'utf8', 'hex');
-    let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", iv.getDataRow(), 'utf8', 'hex');
-    this.msg = decode2.getDataRow();
+    // let encode2 =
+    //   AESSync.encodeCBC128("测试AES外部传入key/iv加密~~~", "TESTsdiloia20230", iv.getDataRow(), 'utf8', 'hex');
+    // let decode2 = AESSync.decodeCBC128(encode2.getDataRow(), "TESTsdiloia20230", iv.getDataRow(), 'utf8', 'hex');
+    // this.msg = decode2.getDataRow();
 
     // let key = AESSync.generateAESKey192();
 
@@ -175,6 +175,12 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode192Ecb = AESSync.decodeECB192(encode192Ecb.getDataRow(), key.getDataRow(), 'base64');
     // this.msg = decode192Ecb.getDataRow();
 
+    let ivoffset = "7876348472611109";
+    let aesKey = "TESTsdiloia20230";
+    let encodeCBC128 = AESSync.encodeCBC128('测试AES-128-CBC加密~~~~', aesKey, ivoffset, 'utf8');
+    let decodecBc128 = AESSync.decodeCBC128(encodeCBC128.getDataRow(), aesKey, ivoffset, 'utf8');
+
+    this.msg = decodecBc128.getDataRow();
 
   }
 
@@ -224,7 +230,8 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
     // this.msg = decode.getDataRow();
 
-    let hexKey = SM2Sync.convertSM2PubKey('0415ff68cb5b08396955cc17ea930cf64bf1f5fbee9a76ca5d9b49d1e9190038518d0fb3d265255f8a433c3c066eeeabf8657e7f2fde33ef48cdd0c883ef39dd84');
+    let hexKey =
+      SM2Sync.convertSM2PubKey('0415ff68cb5b08396955cc17ea930cf64bf1f5fbee9a76ca5d9b49d1e9190038518d0fb3d265255f8a433c3c066eeeabf8657e7f2fde33ef48cdd0c883ef39dd84');
 
     let encode = SM2Sync.encode('测试SM2的加密~~~~', hexKey.getDataRow(), 'hex');
     // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');

@@ -3211,7 +3211,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 * isNumber 是否是字符串
 
-### 5.网络相关类组件使用API(V1.2.1-rc.1有改动)
+### 5.网络相关类组件使用API(V1.2.1-rc.1+有改动)
 
 #### 前言
 
@@ -3313,7 +3313,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 > 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
-* post请求 async/await 方式
+* post请求 json格式 async/await 方式
 
 > V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
 
@@ -3325,6 +3325,19 @@ eTXVu7hjXEqmrGXmgwIDAQAB
     //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
     //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+```
+
+* post请求 formData格式 async/await 方式(V1.2.1-rc.2+)
+
+> V1.2.1-rc.2中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+
+```
+    //参数说明
+    async postFormData<E>(url: string, formData: FormData, headers?: Record<string, Object>): Promise<E>
+    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
+    //formData 业务传入的formData数据
+    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
 ```
 
 * get请求 async/await 方式

@@ -11,7 +11,7 @@ import { common } from '@kit.AbilityKit';
 
 class EfClientApi {
   /**
-   * post请求
+   * post请求 - json格式
    * @param url 请求url
    * @param query 请求参数
    * @param headers 请求头
@@ -28,6 +28,36 @@ class EfClientApi {
         });
       }
       let response: AxiosResponse<E> = await efAxios.post<E, AxiosResponse<E>, F>(url, query as F, {
+        headers: addHead
+      });
+      //返回response的数据
+      return response.data;
+    } catch (error) {
+      //将异常抛出
+      return error as E;
+    }
+  }
+
+  /**
+   * post请求 - formData
+   * @param url 请求url
+   * @param formData 请求参数formData格式
+   * @param headers 请求头
+   * @returns 响应结果
+   */
+  async postFormData<E>(url: string, formData: FormData, headers?: Record<string, Object>): Promise<E> {
+    //需要添加的header对象
+    try {
+      let addHead: AxiosHeaders = new AxiosHeaders();
+      //是否有传入header
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
+      addHead.set('Content-Type', 'multipart/form-data', true);
+      addHead.set('Accept', '*/*', true);
+      let response: AxiosResponse<E> = await efAxios.post<E, AxiosResponse<E>, FormData>(url, formData, {
         headers: addHead
       });
       //返回response的数据

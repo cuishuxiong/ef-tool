@@ -4,11 +4,14 @@
 
 ### 🐣新特性(API12)
 
+
 ### 🐞功能优化
 
 * JSONObject,JSONArray,JSONArrayList中parse,parseXXX方法如字符串中有\r\n报错问题[issuesIAESIG](https://gitee.com/yunkss/ef-tool/issues/IAESIG)
 * 优化RandomUtil.generateIV支持生成utf8格式的字符串iv
 * 优化efAxios请求全局loading开关,以及可设置loading提示内容
+* efClientApi中新增postFormData方法[issuesIACLR2](https://gitee.com/yunkss/ef-tool/issues/IACLR2)
+
 
 ## [v1.2.1-rc.1] 2024-07
 

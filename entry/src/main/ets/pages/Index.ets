@@ -36,8 +36,7 @@ import {
   efClientApi,
   RandomUtil
 } from '@yunkss/eftool'
-import { image } from '@kit.ImageKit';
-import { common } from '@kit.AbilityKit';
+import { FormData } from '@ohos/axios';
 
 class Message {
   msg: string = '';
@@ -125,9 +124,9 @@ struct Index {
 
   async sendRequest() {
     efAxiosParams.loadingTxt = '小的快马加鞭...';
-    // efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
-    efAxiosParams.isAllEncrypt = true;
+    efAxiosParams.baseURL = 'http://172.20.10.5:18088';
+    // efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
+    efAxiosParams.isAllEncrypt = false;
     efAxiosParams.sm2PubKey =
       '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //关键字加密集合
@@ -155,32 +154,34 @@ struct Index {
     if (login.getSuccess()) {
       //登录成功将token赋值，后续需要
       efAxiosParams.tokenValue = login.getDataRow().token;
-      //模拟测试post请求
-      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
-        'nickName': 'post请求参数',
-        'name': '测试入参'
-      });
+      //模拟测试post-formData请求
+      let formData = new FormData();
+      formData.append("account", "1234QQQ");
+      formData.append("nickName", "旺旺崔冰冰");
+      formData.append("pwd","1111111");
+      const post = await efClientApi.postFormData<OutDTO<Record<string, Object>>>('/api/eftool/postFormData', formData);
       if (post.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
+        this.message = JSONObject.toJSONString(post.getDataRow());
+        ToastUtil.showToast(JSONObject.toJSONString(post.getDataRow()));
       }
       //模拟测试get请求
       const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111', {
         'testHeader': 'csxAdd'
       });
       if (get.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
+        ToastUtil.showToast(JSONObject.toJSONString(get.getDataRow()));
       }
       //模拟测试delete请求
       const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
       if (del.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
+        ToastUtil.showToast(JSONObject.toJSONString(del.getDataRow()));
       }
       //模拟测试put请求
       const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
         'id': '11111'
       });
       if (put.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
+        ToastUtil.showToast(JSONObject.toJSONString(put.getDataRow()));
       }
     } else {
       //登录失败
