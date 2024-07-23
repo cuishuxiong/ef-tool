@@ -1,3 +1,5 @@
+import { EfRcpClientApi } from './src/main/ets/network/rcp/EfRcpClientApi';
+
 export { ArrayUtil } from './src/main/ets/core/util/ArrayUtil';
 
 export { CharUtil } from './src/main/ets/core/util/CharUtil';
@@ -136,11 +138,15 @@ export { LocationUtil } from './src/main/ets/ui/base/LocationUtil';
 
 export { PreviewUtil } from './src/main/ets/ui/base/PreviewUtil';
 
-export { efAxios } from './src/main/ets/core/axios/AxiosUtil';
+export { efAxios } from './src/main/ets/network/axios/AxiosUtil';
 
-export { efAxiosParams } from './src/main/ets/core/axios/AxiosUtil';
+export { efAxiosParams } from './src/main/ets/network/axios/AxiosUtil';
 
-export { efClientApi } from './src/main/ets/core/axios/EfClientApi';
+export { efClientApi } from './src/main/ets/network/axios/EfClientApi';
+
+export { efRcpInstance } from './src/main/ets/network/rcp/EfRcpUtil';
+
+export { efRcpClientApi } from './src/main/ets/network/rcp/EfRcpClientApi';
 
 export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
