@@ -1,5 +1,3 @@
-import { EfRcpClientApi } from './src/main/ets/network/rcp/EfRcpClientApi';
-
 export { ArrayUtil } from './src/main/ets/core/util/ArrayUtil';
 
 export { CharUtil } from './src/main/ets/core/util/CharUtil';
@@ -144,7 +142,7 @@ export { efAxiosParams } from './src/main/ets/network/axios/AxiosUtil';
 
 export { efClientApi } from './src/main/ets/network/axios/EfClientApi';
 
-export { efRcpInstance } from './src/main/ets/network/rcp/EfRcpUtil';
+export { efRcpInstance, efRcpParams } from './src/main/ets/network/rcp/EfRcpUtil';
 
 export { efRcpClientApi } from './src/main/ets/network/rcp/EfRcpClientApi';
 

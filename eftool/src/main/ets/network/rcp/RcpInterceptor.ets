@@ -1,4 +1,7 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
+import { OutDTO } from '../../core/base/OutDTO';
+import { JSONObject } from '../../core/json/JSONObject';
+import { efRcpParams } from './EfRcpUtil';
 
 /**
  * 响应缓存类
@@ -51,7 +54,7 @@ export class RcpInterceptor implements rcp.Interceptor {
    * @param next
    * @returns
    */
-  intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
+  async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
     //获取当前请求url
     const url = context.request.url.href;
     //获取缓存对象
@@ -59,11 +62,38 @@ export class RcpInterceptor implements rcp.Interceptor {
     if (responseFromCache) {
       return Promise.resolve(responseFromCache);
     }
-    const promise = next.handle(context);
-    promise.then((resp) => {
-      resp.statusCode;
-      this.cache.setResponse(url, resp);
-    });
-    return promise;
+    //获取响应结果
+    const response = await next.handle(context);
+    return response;
+  }
+
+
+  /**
+   * 将后端返回的常见的信息封装成OutDTO对象
+   * @param response  响应对象
+   * @returns
+   */
+  static convertResponseDTO(response: rcp.Response) {
+    //考虑几种常见的可能性
+    let success: boolean = true;
+    // if (response.config.headers["Req-Type"]) {
+    //   if (response.data && response.data.dataRow) {
+    //     return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array(), response.status);
+    //   }
+    //   return new OutDTO(true, '下载文件成功~', '', new Array(), response.status);
+    // }
+    if (response.toJSON()) {
+      let obj: Object | null = response.toJSON();
+      if (obj) {
+        let jsonStr = JSONObject.toJSONString(obj);
+        let out = JSONObject.parseObject<OutDTO<string>>(jsonStr);
+        return out;
+      } else {
+        return new OutDTO(success, response.toString() + '', '', [], response.statusCode);
+      }
+    } else {
+      return new OutDTO(success, response.toString() + '', '', [], response.statusCode);
+    }
+
   }
 }

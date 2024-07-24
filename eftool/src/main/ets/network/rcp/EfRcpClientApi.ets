@@ -4,7 +4,9 @@
  * @TODO EfRcpClientApi rcp请求工具类
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcpInstance } from './EfRcpUtil';
+import { JSONObject } from '../../core/json/JSONObject';
+import { efRcpInstance, efRcpParams } from './EfRcpUtil';
+import { RcpInterceptor } from './RcpInterceptor';
 
 export class EfRcpClientApi {
   /**
@@ -15,11 +17,11 @@ export class EfRcpClientApi {
    * @param cookies 自定义cookie
    * @returns 响应结果
    */
-  async post<E>(url: string, query: Record<string, rcp.FormFieldValue>, headers?: Record<string, string>,
+  async post<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,
     cookies?: Record<string, string>): Promise<E> {
     try {
       //转换请求参数
-      let form: rcp.Form = new rcp.Form(query);
+      let jsonStr = JSONObject.toJSONString(query);
       //需要添加的header对象
       let addHead: rcp.RequestHeaders = {};
       //是否有传入header
@@ -36,9 +38,14 @@ export class EfRcpClientApi {
         });
       }
       //创建请求
-      let request = new rcp.Request(efRcpInstance.configuration?.baseAddress + url, 'POST', headers, form, cookie);
+      let request = new rcp.Request(efRcpParams.baseURL + url, 'POST', addHead, jsonStr, cookie);
       //发送请求
       let response = await efRcpInstance.fetch(request);
+      //响应结果
+      if (efRcpParams.isConvertDTO) {
+        //转换为DTO
+        return RcpInterceptor.convertResponseDTO(response) as E;
+      }
       //返回response的数据
       return response.toJSON() as E;
     } catch (error) {

@@ -12,7 +12,7 @@ export class EfRcpUtil {
    * 创建rcp对象
    * @returns
    */
-  static createSession(options: efRcpInitOptions = new efRcpInitOptions()) {
+  static createSession() {
     //创建缓存变量
     const cache = new ResponseCache();
     //创建session
@@ -20,7 +20,7 @@ export class EfRcpUtil {
       //使用拦截器
       interceptors: [new RcpInterceptor(cache)],
       //基础前缀地址
-      baseAddress: options.baseURL,
+      baseAddress: efRcpParams.baseURL,
       //请求配置
       requestConfiguration: {
         //数据传输行为
@@ -29,9 +29,9 @@ export class EfRcpUtil {
           autoRedirect: true,
           timeout: {
             //允许建立连接的最长时间
-            connectMs: options.connectMs,
+            connectMs: efRcpParams.connectMs,
             //允许传输数据的最长时间
-            transferMs: options.transferMs,
+            transferMs: efRcpParams.transferMs,
           },
         },
         tracing: {
@@ -55,52 +55,11 @@ export class EfRcpUtil {
         maxTotalConnections: 80
       }
     });
+    //返回session
     return session;
   }
 }
 
-/**
- * session初始化操作实体
- */
-export class efRcpInitOptions {
-  /**
-   * 服务器 URL
-   */
-  baseURL: string = 'http://192.168.0.102:18088/';
-  /**
-   * 用户自定义token的Key,默认为Authorization
-   */
-  tokenName?: string;
-  /**
-   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
-   */
-  isConvertDTO?: boolean;
-  /**
-   * 是否开启全局请求loading弹框,默认为true
-   */
-  isLoading?: boolean;
-  /**
-   * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
-   */
-  loadingTxt?: string;
-  /**
-   * 允许建立连接的最长时间
-   */
-  connectMs?: number;
-  /**
-   * 允许传输数据的最长时间
-   */
-  transferMs?: number;
-
-  constructor() {
-    this.tokenName = "";
-    this.isConvertDTO = true;
-    this.isLoading = true;
-    this.loadingTxt = '努力获取数据中,请稍后...';
-    this.connectMs = 5000;
-    this.transferMs = 10000;
-  }
-}
 
 /**
  * rcp请求参数实体
@@ -114,9 +73,30 @@ export class efRcpParams {
    * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
    */
   static isConvertDTO: boolean = true;
+  /**
+   * 服务器 URL
+   */
+  static baseURL: string;
+  /**
+   * 是否开启全局请求loading弹框,默认为true
+   */
+  static isLoading: boolean = true;
+  /**
+   * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
+   */
+  static loadingTxt: string = '努力获取数据中,请稍后...';
+  /**
+   * 允许建立连接的最长时间
+   */
+  static connectMs: number = 5000;
+  /**
+   * 允许传输数据的最长时间
+   */
+  static transferMs: number = 10000;
 }
 
 /**
  * 抛出session实例
  */
-export const efRcpInstance = EfRcpUtil.createSession();
+export let efRcpInstance = EfRcpUtil.createSession();
+

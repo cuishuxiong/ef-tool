@@ -1,4 +1,4 @@
-import { efRcpClientApi, JSONObject, ToastUtil } from '@yunkss/eftool';
+import { efRcpClientApi, efRcpInstance, JSONObject, ToastUtil, efRcpParams, OutDTO } from '@yunkss/eftool';
 
 
 class User {
@@ -27,11 +27,11 @@ export struct RcpPage {
   @State message: string = 'Hello World';
 
   async testRcp() {
-    let dto = await efRcpClientApi.post<UserDTO>('/api/eftool/login', {
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
       'pwd': '123456'
     });
-    if (dto) {
+    if (dto.getSuccess()) {
       ToastUtil.showToast(JSONObject.toJSONString(dto));
     }
 
