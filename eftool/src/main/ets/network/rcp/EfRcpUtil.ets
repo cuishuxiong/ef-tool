@@ -1,6 +1,5 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { BusinessError } from '@kit.BasicServicesKit';
-import { RcpInterceptor, ResponseCache } from './RcpInterceptor';
+import { efRcpEventsHandler, RcpInterceptor, ResponseCache } from './RcpInterceptor';
 
 /**
  * @Author csx
@@ -19,8 +18,8 @@ export class EfRcpUtil {
     const session = rcp.createSession({
       //使用拦截器
       interceptors: [new RcpInterceptor(cache)],
-      //基础前缀地址
-      baseAddress: efRcpParams.baseURL,
+      //基础前缀地址(目前发现无法与请求的url拼接)
+      // baseAddress: efRcpParams.baseURL,
       //请求配置
       requestConfiguration: {
         //数据传输行为
@@ -36,6 +35,7 @@ export class EfRcpUtil {
         },
         tracing: {
           verbose: true,
+          httpEventsHandler: efRcpEventsHandler
         }
       },
       //请求头
@@ -44,8 +44,16 @@ export class EfRcpUtil {
       },
       //会话事件监听
       sessionListener: {
-        onCanceled: () => console.info("Session was cancelled"),
-        onClosed: () => console.info("Session was closed"),
+        onCanceled: () => {
+          if (efRcpParams.cancelCallBack) {
+            efRcpParams.cancelCallBack();
+          }
+        },
+        onClosed: () => {
+          if (efRcpParams.closeCallBack) {
+            efRcpParams.closeCallBack();
+          }
+        },
       },
       //连接配置
       connectionConfiguration: {
@@ -66,10 +74,21 @@ export class EfRcpUtil {
 }
 
 
+export class efRcpResponseParams {
+  /**
+   * 上传下载进度
+   */
+  static processNumber: number = 0;
+}
+
 /**
  * rcp请求参数实体
  */
 export class efRcpParams {
+  /**
+   * 登录成功后的token的key
+   */
+  static tokenName: string = 'Authorization';
   /**
    * 登录成功后的token值
    */
@@ -85,11 +104,11 @@ export class efRcpParams {
   /**
    * 是否开启全局请求loading弹框,默认为true
    */
-  static isLoading: boolean = true;
+  // static isLoading: boolean = true;
   /**
    * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
    */
-  static loadingTxt: string = '努力获取数据中,请稍后...';
+  // static loadingTxt: string = '努力获取数据中,请稍后...';
   /**
    * 允许建立连接的最长时间
    */
@@ -98,6 +117,14 @@ export class efRcpParams {
    * 允许传输数据的最长时间
    */
   static transferMs: number = 10000;
+  /**
+   * 会话session请求取消事件回调
+   */
+  static cancelCallBack?: () => void;
+  /**
+   *  会话session关闭事件回调
+   */
+  static closeCallBack?: () => void;
 }
 
 /**

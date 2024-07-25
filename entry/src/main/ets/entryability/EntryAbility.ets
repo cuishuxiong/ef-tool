@@ -1,8 +1,7 @@
 import { AbilityConstant, UIAbility, Want, wantAgent } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { Logger, NotificationUtil } from '@yunkss/eftool'
-import { ImmersionUtil } from '@yunkss/eftool'
+import { efRcpParams, Logger, NotificationUtil, ImmersionUtil } from '@yunkss/eftool'
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -20,6 +19,7 @@ export default class EntryAbility extends UIAbility {
 
     //初始化
     let imm = new ImmersionUtil();
+    efRcpParams.baseURL = "http://192.168.0.101:18088";
     windowStage.loadContent('pages/RcpPage', (err, data) => {
       //调用沉浸式设置方法
       imm.immersiveWindow(windowStage);

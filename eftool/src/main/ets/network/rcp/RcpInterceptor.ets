@@ -1,7 +1,7 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { OutDTO } from '../../core/base/OutDTO';
 import { JSONObject } from '../../core/json/JSONObject';
-import { efRcpParams } from './EfRcpUtil';
+import { efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 
 /**
  * 响应缓存类
@@ -74,26 +74,81 @@ export class RcpInterceptor implements rcp.Interceptor {
    * @returns
    */
   static convertResponseDTO(response: rcp.Response) {
-    //考虑几种常见的可能性
-    let success: boolean = true;
+    //转换成object
+    let result = response.toJSON();
     // if (response.config.headers["Req-Type"]) {
     //   if (response.data && response.data.dataRow) {
     //     return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array(), response.status);
     //   }
     //   return new OutDTO(true, '下载文件成功~', '', new Array(), response.status);
     // }
-    if (response.toJSON()) {
-      let obj: Object | null = response.toJSON();
-      if (obj) {
-        let jsonStr = JSONObject.toJSONString(obj);
-        let out = JSONObject.parseObject<OutDTO<string>>(jsonStr);
-        return out;
-      } else {
-        return new OutDTO(success, response.toString() + '', '', [], response.statusCode);
-      }
-    } else {
-      return new OutDTO(success, response.toString() + '', '', [], response.statusCode);
+    //考虑几种常见的可能性
+    //1.成功失败标识
+    let success: boolean = true;
+    //2.返回的消息提示
+    let message: string = '';
+    //3.返回的单行数据
+    let dataRow: Record<string, Object> = {};
+    //4.返回的多行数据
+    let dataTable: Array<Record<string, Object>> = new Array();
+    //5.返回请求状态码
+    let code = response.statusCode;
+    if (result) {
+      Object.entries(result).forEach((item: object) => {
+        if (["success", "flag"].includes(String(item[0]))) {
+          success = Boolean(item[1]);
+        }
+        if (["msg", "message"].includes(String(item[0]))) {
+          message = String(item[1]);
+        }
+        if (["dataRow", "data"].includes(String(item[0]))) {
+          dataRow = item[1];
+        }
+        if (["dataTable", "list", "arr", "array"].includes(String(item[0]))) {
+          dataTable = item[1];
+        }
+      })
     }
+    if (response.statusCode != 200) {
+      message = response.toString() as string;
+    }
+    return new OutDTO(success, message, dataRow, dataTable, code);
 
   }
 }
+
+/**
+ * efRcp请求事件处理器
+ */
+export const efRcpEventsHandler: rcp.HttpEventsHandler = {
+  /**
+   * 上传进度
+   */
+  onUploadProgress: (totalSize: number, transferredSize: number) => {
+    // Custom logic for handling upload progress
+    console.info("Upload progress:", transferredSize, "of", totalSize);
+    //传递给公共参数
+    efRcpResponseParams.processNumber = Math.ceil(transferredSize / totalSize * 100);
+  },
+  /**
+   * 下载进度
+   */
+  onDownloadProgress: (totalSize: number, transferredSize: number) => {
+    // Custom logic for handling download progress
+    console.info("Download progress:", transferredSize, "of", totalSize);
+  },
+  /**
+   * 数据传输完成
+   */
+  onDataEnd: () => {
+    // Custom logic for handling data transfer completion
+    console.info("Data transfer complete");
+  },
+  /**
+   * 取消请求/响应
+   */
+  onCanceled: () => {
+    // Custom logic for handling cancellation
+    console.info("Request/response canceled");
+  },
+};
