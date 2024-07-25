@@ -38,22 +38,24 @@ export struct RcpPage {
   }
 
   build() {
-    RelativeContainer() {
+    Column() {
       Text(this.message)
         .id('RcpPageHelloWorld')
         .fontSize(50)
         .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
-        })
       Button('发送Rcp的post请求').margin({
         top: 40
       })
         .onClick(async () => {
           await this.testRcp();
         })
+        .margin({
+          top: '20'
+        })
     }
+    .margin({
+      top: 40
+    })
     .height('100%')
     .width('100%')
   }

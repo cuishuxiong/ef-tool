@@ -7,6 +7,7 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 import { JSONObject } from '../../core/json/JSONObject';
 import { efRcpInstance, efRcpParams } from './EfRcpUtil';
 import { RcpInterceptor } from './RcpInterceptor';
+import { JSON } from '@kit.ArkTS';
 
 export class EfRcpClientApi {
   /**
@@ -21,7 +22,7 @@ export class EfRcpClientApi {
     cookies?: Record<string, string>): Promise<E> {
     try {
       //转换请求参数
-      let jsonStr = JSONObject.toJSONString(query);
+      let jsonStr = JSON.stringify(query);
       //需要添加的header对象
       let addHead: rcp.RequestHeaders = {};
       //是否有传入header

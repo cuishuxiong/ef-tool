@@ -12,7 +12,7 @@ export class EfRcpUtil {
    * 创建rcp对象
    * @returns
    */
-  static createSession() {
+  private static createSession() {
     //创建缓存变量
     const cache = new ResponseCache();
     //创建session
@@ -58,6 +58,11 @@ export class EfRcpUtil {
     //返回session
     return session;
   }
+
+  /**
+   * 封装后的全局rcp对象
+   */
+  efRcpInstance = EfRcpUtil.createSession();
 }
 
 
@@ -98,5 +103,5 @@ export class efRcpParams {
 /**
  * 抛出session实例
  */
-export let efRcpInstance = EfRcpUtil.createSession();
+export const efRcpInstance = new EfRcpUtil().efRcpInstance;
 
