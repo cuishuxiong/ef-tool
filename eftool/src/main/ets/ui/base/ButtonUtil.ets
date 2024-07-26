@@ -151,8 +151,17 @@ export struct ButtonUtil {
  * 场景按钮实体
  */
 export class BtnOptions {
+  /**
+   * 按钮文本
+   */
   label: string = '';
+  /**
+   * 场景按钮类型
+   */
   type: functionalButtonComponentManager.OpenType = functionalButtonComponentManager.OpenType.GET_PHONE_NUMBER;
+  /**
+   * 如果是app时所需参数
+   */
   appParams?: functionalButtonComponentManager.AppParam;
 }
 

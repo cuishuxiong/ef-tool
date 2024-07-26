@@ -6,6 +6,7 @@
 
 * 新增efRcpInstance远场通信
 * 新增efRcpClientApi组件,支持post,put,get,delete,cancel等请求
+* 新增场景按钮ButtonUtil工具类
 
 ### 🐞功能优化
 
