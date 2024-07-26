@@ -4,6 +4,8 @@
 
 ### 🐣新特性(API12)
 
+* 新增efRcpInstance远场通信
+* 新增efRcpClientApi组件,支持post,put,get,delete,cancel等请求
 
 ### 🐞功能优化
 
