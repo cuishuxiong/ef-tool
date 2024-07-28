@@ -94,11 +94,22 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 3.网络相关类组件
 
+#### 3.1 efAxios
+
 | 模块            | 介绍                              |
 |---------------|---------------------------------|
 | efAxiosParams | 提供eftool封装axios请求所需的参数          |
 | efAxios       | 二次封装axios的产物,提供统一请求响应拦截等        |
 | efClientApi   | 提供针对于统一post,get,delete,put等请求封装 |
+
+#### 3.2 efRcp
+
+| 模块             | 介绍                              |
+|----------------|---------------------------------|
+| efAxiosParams  | 提供eftool封装axios请求所需的参数          |
+| efAxios        | 二次封装axios的产物,提供统一请求响应拦截等        |
+| efRcpClientApi | 提供针对于统一post,get,delete,put等请求封装 |
+
 
 ### 4.JSON类组件
 
