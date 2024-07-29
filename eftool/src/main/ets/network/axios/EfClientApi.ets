@@ -7,10 +7,10 @@ import { AxiosHeaders, AxiosProgressEvent, AxiosResponse, FormData } from '@ohos
 import { efAxios } from './AxiosUtil';
 import fs from '@ohos.file.fs';
 import { common } from '@kit.AbilityKit';
+import { ArrayList } from '@kit.ArkTS';
 
 
 class EfClientApi {
-
   /**
    * post请求 - json格式
    * @param url 请求url
@@ -171,6 +171,32 @@ class EfClientApi {
       return error as E;
     }
   }
+
+
+  /**
+   * 批量获取请求
+   * @param requestInfo  需要传入的请求集合
+   * @param headers  请求头
+   * @returns 返回的请求结果ArrayList集合组装
+   */
+  // async all<E>(requestInfo: Record<string, Object>, headers?: Record<string, Object>):Promise<ArrayList<E>> {
+  //   try { //需要添加的header对象
+  //     let addHead: AxiosHeaders = new AxiosHeaders();
+  //     //是否有传入header
+  //     if (headers) {
+  //       Object.entries(headers).forEach((row) => {
+  //         addHead.set(row[0], row[1] as string, true);
+  //       });
+  //     }
+  //     let response: AxiosResponse<E> = await efAxios.delete<E, AxiosResponse<E>, null>(url, {
+  //       headers: addHead
+  //     });
+  //     //返回response的数据
+  //     return response.data;
+  //   } catch (error) {
+  //     return error as E;
+  //   }
+  // }
 
   /**
    *
