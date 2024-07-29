@@ -270,7 +270,7 @@ export class EfRcpClientApi {
    * 取消请求
    * @param url  待取消的URL
    */
-  static cancel(url: string) {
+  async cancel(url: string) {
     //获取请求
     let request = CacheUtil.get<rcp.Request>(url);
     if (request) {

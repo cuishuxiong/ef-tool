@@ -103,12 +103,6 @@ export class RcpInterceptor implements rcp.Interceptor {
   static convertResponseDTO(response: rcp.Response) {
     //转换成object
     let result = response.toJSON();
-    // if (response.config.headers["Req-Type"]) {
-    //   if (response.data && response.data.dataRow) {
-    //     return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array(), response.status);
-    //   }
-    //   return new OutDTO(true, '下载文件成功~', '', new Array(), response.status);
-    // }
     //考虑几种常见的可能性
     //1.成功失败标识
     let success: boolean = true;
@@ -121,6 +115,12 @@ export class RcpInterceptor implements rcp.Interceptor {
     //5.返回请求状态码
     let code = response.statusCode;
     if (result) {
+      if (response.headers["Req-Type"]) {
+        if (result["dataRow"] || result["data"]) {
+          return new OutDTO(true, '下载文件成功~', result["dataRow"] || result["data"], new Array(), code);
+        }
+        return new OutDTO(true, '下载文件成功~', '', new Array(), code);
+      }
       Object.entries(result).forEach((item: object) => {
         if (["success", "flag"].includes(String(item[0]))) {
           success = Boolean(item[1]);
