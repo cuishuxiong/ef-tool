@@ -6,7 +6,7 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 import { JSON } from '@kit.ArkTS';
-import { efRcpEventsHandler, RcpInterceptor } from './RcpInterceptor';
+import { RcpInterceptor } from './RcpInterceptor';
 
 export class EfRcpClientApi {
   /**

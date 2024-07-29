@@ -104,11 +104,11 @@ export class efRcpParams {
   /**
    * 是否开启全局请求loading弹框,默认为true
    */
-  // static isLoading: boolean = true;
+  static isLoading: boolean = true;
   /**
    * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
    */
-  // static loadingTxt: string = '努力获取数据中,请稍后...';
+  static loadingTxt: string = '努力获取数据中,请稍后...';
   /**
    * 允许建立连接的最长时间
    */
