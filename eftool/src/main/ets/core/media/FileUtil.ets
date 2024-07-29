@@ -255,6 +255,30 @@ export class FileUtil {
   }
 
   /**
+   * 从给定的uri中获取文件二进制流
+   * @param uri 如picker返回的uri
+   * @returns 文件的ArrayBuffer
+   */
+  static getBufferByURI(uri: string): OutDTO<ArrayBuffer> {
+    //创建文件信息
+    let fileUriObject = new fileUri.FileUri(uri);
+    //获取文件名
+    let name = fileUriObject.name;
+    //打开文件
+    let file = fs.openSync(uri, fs.OpenMode.READ_ONLY);
+    //读取文件大小
+    let info = fs.statSync(file.fd);
+    //缓存照片数据
+    let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
+    //写入缓存
+    fs.readSync(file.fd, bufferImg);
+    //关闭文件流
+    fs.closeSync(file);
+    //返回
+    return OutDTO.OKByDataRow<ArrayBuffer>('获取二进制文件流成功~', bufferImg);
+  }
+
+  /**
    * 获取resources/rawfile目录下对应的rawfile文件内容，使用同步形式返回
    * @param path rawfile文件路径
    * @returns

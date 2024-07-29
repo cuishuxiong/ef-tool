@@ -75,9 +75,13 @@ export class EfRcpUtil {
 
 export class efRcpResponseParams {
   /**
-   * 上传下载进度
+   * 上传进度
    */
-  static processNumber: number = 0;
+  static uploadProgress: number = 0;
+  /**
+   * 下载进度
+   */
+  static downloadProgress: number = 0;
 }
 
 /**

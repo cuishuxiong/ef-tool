@@ -7,7 +7,7 @@
   "license": "",
   "dependencies": {
     "@yunkss/eftool": "file:../eftool",
-    "@ohos/axios": "2.2.1"
+    "@ohos/axios": "2.2.2"
   },
   "devDependencies": {},
   "dynamicDependencies": {}

@@ -58,40 +58,47 @@ export class RcpInterceptor implements rcp.Interceptor {
    * @returns
    */
   async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
-    //获取当前请求url
-    const url = context.request.url.href;
-    //是否开启全局loading
-    if (efRcpParams.isLoading) {
-      await WinLoadingUtil.showLoading({
-        content: efRcpParams.loadingTxt,
-        imgLayout: ImgLayout.TOP,
-        layoutShape: LoadingShape.SQUARE
-      });
-    }
-    //获取请求缓存对象
-    const requestFromCache = CacheUtil.get<rcp.Request>(url);
-    if (!requestFromCache) {
-      //请求存入缓存
-      CacheUtil.save<rcp.Request>(url, context.request);
-    }
-    //获取缓存对象
-    const responseFromCache = this.responseCache.getResponse(url);
-    if (responseFromCache) {
+    try { //获取当前请求url
+      const url = context.request.url.href;
+      //是否开启全局loading
+      if (efRcpParams.isLoading) {
+        await WinLoadingUtil.showLoading({
+          content: efRcpParams.loadingTxt,
+          imgLayout: ImgLayout.TOP,
+          layoutShape: LoadingShape.SQUARE
+        });
+      }
+      //获取请求缓存对象
+      const requestFromCache = CacheUtil.get<rcp.Request>(url);
+      if (!requestFromCache) {
+        //请求存入缓存
+        CacheUtil.save<rcp.Request>(url, context.request);
+      }
+      //获取缓存对象
+      const responseFromCache = this.responseCache.getResponse(url);
+      if (responseFromCache) {
+        if (efRcpParams.isLoading) {
+          //关闭loading
+          await WinLoadingUtil.closeLoading();
+        }
+        return Promise.resolve(responseFromCache);
+      }
+      //获取响应结果
+      const response = await next.handle(context);
+      //存入缓存
+      this.responseCache.setResponse(url, response);
       if (efRcpParams.isLoading) {
         //关闭loading
         await WinLoadingUtil.closeLoading();
       }
-      return Promise.resolve(responseFromCache);
+      return response;
+    } catch (error) {
+      if (efRcpParams.isLoading) {
+        //关闭loading
+        await WinLoadingUtil.closeLoading();
+      }
+      return Promise.reject(error);
     }
-    //获取响应结果
-    const response = await next.handle(context);
-    //存入缓存
-    this.responseCache.setResponse(url, response);
-    if (efRcpParams.isLoading) {
-      //关闭loading
-      await WinLoadingUtil.closeLoading();
-    }
-    return response;
   }
 
 
@@ -142,6 +149,43 @@ export class RcpInterceptor implements rcp.Interceptor {
     return new OutDTO(success, message, dataRow, dataTable, code);
 
   }
+
+  /**
+   * 将异常封装成OutDTO对象
+   * @param response  响应对象
+   * @returns
+   */
+  static convertErrorDTO(response: object) {
+    //考虑几种常见的可能性
+    //1.成功失败标识
+    let success: boolean = false;
+    //2.返回的消息提示
+    let message: string = '';
+    //3.返回的单行数据
+    let dataRow: Record<string, Object> = {};
+    //4.返回的多行数据
+    let dataTable: Array<Record<string, Object>> = new Array();
+    //5.返回请求状态码
+    let code: string = response["code"];
+    if (response) {
+      Object.entries(response).forEach((item: object) => {
+        if (["success", "flag"].includes(String(item[0]))) {
+          success = Boolean(item[1]);
+        }
+        if (["msg", "message"].includes(String(item[0]))) {
+          message = String(item[1]);
+        }
+        if (["dataRow", "data"].includes(String(item[0]))) {
+          message = item[1];
+        }
+        if (["dataTable", "list", "arr", "array"].includes(String(item[0]))) {
+          dataTable = item[1];
+        }
+      })
+    }
+    return new OutDTO(success, message, dataRow, dataTable, code);
+
+  }
 }
 
 /**
@@ -152,10 +196,8 @@ export const efRcpEventsHandler: rcp.HttpEventsHandler = {
    * 上传进度
    */
   onUploadProgress: (totalSize: number, transferredSize: number) => {
-    // Custom logic for handling upload progress
-    console.info("Upload progress:", transferredSize, "of", totalSize);
     //传递给公共参数
-    efRcpResponseParams.processNumber = Math.ceil(transferredSize / totalSize * 100);
+    efRcpResponseParams.uploadProgress = Math.ceil(transferredSize / totalSize * 100);
   },
   /**
    * 下载进度

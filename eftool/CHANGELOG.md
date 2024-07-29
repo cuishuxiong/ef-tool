@@ -14,7 +14,7 @@
 * 优化RandomUtil.generateIV支持生成utf8格式的字符串iv
 * 优化efAxios请求全局loading开关,以及可设置loading提示内容
 * efClientApi中新增postFormData方法[issuesIACLR2](https://gitee.com/yunkss/ef-tool/issues/IACLR2)
-
+* 升级axios为2.2.2正式版
 
 ## [v1.2.1-rc.1] 2024-07
 

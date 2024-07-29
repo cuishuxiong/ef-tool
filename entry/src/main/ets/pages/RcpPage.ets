@@ -1,4 +1,16 @@
-import { efRcpClientApi, JSONObject, ToastUtil, efRcpParams, OutDTO, PickerUtil } from '@yunkss/eftool';
+import {
+  efRcpClientApi,
+  JSONObject,
+  ToastUtil,
+  efRcpParams,
+  OutDTO,
+  PickerUtil,
+  RandomUtil,
+  FileUtil,
+  DownloadUtil
+} from '@yunkss/eftool';
+import { fileUri } from '@kit.CoreFileKit';
+import fs from '@ohos.file.fs';
 
 
 class User {
@@ -25,6 +37,9 @@ class UserDTO extends User {
 @Component
 export struct RcpPage {
   @State message: string = 'Hello World';
+  @State showDownBtn: Visibility = Visibility.None;
+  @State process: number = 0;
+  @State btnCtx: string = '';
 
   async testLogin() {
     let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
@@ -127,18 +142,35 @@ export struct RcpPage {
       let list = result.getDataTable();
       //获取选中照片uri
       let item = list[0];
+      //创建文件信息
+      let fileUriObject = new fileUri.FileUri(item);
+      //获取文件名
+      let name = fileUriObject.name;
+      //获取流
+      let bufferImg = FileUtil.getBufferByURI(item);
+      this.btnCtx = "正在上传中...";
+      this.showDownBtn = Visibility.Visible;
       //上传
       let dto =
-        await efRcpClientApi.uploadFile<OutDTO<string>>('/api/eftool/upload', { fileOrPath: item }, (process) => {
-          ToastUtil.showToast("当前上传进度为:" + process)
+        await efRcpClientApi.uploadFile<OutDTO<string>>('/api/eftool/upload', {
+          "file": {
+            contentType: 'multipart/form-data',
+            remoteFileName: name,
+            contentOrPath: {
+              content: bufferImg.getDataRow()
+            }
+          }
+        }, (progress) => {
+          if (progress >= 100) {
+            this.showDownBtn = Visibility.None;
+            this.process = 0;
+          } else {
+            this.process = progress;
+          }
         });
-      if (dto.getSuccess()) {
-        let res = JSONObject.toJSONString(dto);
-        ToastUtil.showToast(res);
-        this.message = res;
-      } else {
-        ToastUtil.showToast(JSONObject.toJSONString(dto));
-      }
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
     }
   }
 
@@ -202,7 +234,7 @@ export struct RcpPage {
         .onClick(async () => {
           await this.testDelete();
         })
-      Button('发送Rcp的upload(暂时有bug)').margin({
+      Button('发送Rcp的upload').margin({
         top: 40
       })
         .margin({
@@ -211,7 +243,11 @@ export struct RcpPage {
         .onClick(async () => {
           await this.testUploadFile();
         })
-
+      DownloadUtil({
+        progressState: this.showDownBtn,
+        halfProgress: this.process,
+        ctx: this.btnCtx
+      })
     }
     .margin({
       top: 60

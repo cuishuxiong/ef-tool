@@ -283,41 +283,47 @@ export class EfRcpClientApi {
   /**
    * 上传文件 - 选择文件路径方式
    * @param url 请求url
-   * @param filePath  选择的需要上传的文件路径或者文件
+   * @param fileInfo  需要上传的文件对象
    * @param headers 请求头
    * @param cookies 自定义cookie
    * @returns 响应结果
    */
-  async uploadFile<E>(url: string, filePath: rcp.UploadFromFile, progressCallBack: (process: number) => void) {
+  async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,
+    headers?: Record<string, string>,
+    cookies?: Record<string, string>) {
     try {
       //需要添加的header对象
-      // let addHead: rcp.RequestHeaders = {};
+      let addHead: rcp.RequestHeaders = {
+        "content-type": "multipart/form-data"
+      };
       //是否有传入header
-      // if (headers) {
-      //   Object.entries(headers).forEach((row) => {
-      //     addHead[row[0]] = row[1];
-      //   });
-      // }
+      if (headers) {
+        Object.entries(headers).forEach((row) => {
+          addHead[row[0]] = row[1];
+        });
+      }
       //是否需要拼接token
-      // if (efRcpParams.tokenValue) {
-      //   addHead.authorization = efRcpParams.tokenValue;
-      //   if (efRcpParams.tokenName) {
-      //     addHead[efRcpParams.tokenName] = efRcpParams.tokenValue;
-      //   }
-      // }
+      if (efRcpParams.tokenValue) {
+        addHead.authorization = efRcpParams.tokenValue;
+        if (efRcpParams.tokenName) {
+          addHead[efRcpParams.tokenName] = efRcpParams.tokenValue;
+        }
+      }
       //是否有cookie
-      // let cookie: rcp.RequestCookies = {};
-      // if (cookies) {
-      //   Object.entries(cookies).forEach((row) => {
-      //     cookie[row[0]] = row[1];
-      //   });
-      // }
+      let cookie: rcp.RequestCookies = {};
+      if (cookies) {
+        Object.entries(cookies).forEach((row) => {
+          cookie[row[0]] = row[1];
+        });
+      }
+      //拼接上传对象
+      let multipart = new rcp.MultipartForm(fileInfo);
       //创建请求
-      // let request = new rcp.Request(efRcpParams.baseURL + url, 'DELETE', addHead, "", cookie);
+      let request = new rcp.Request(efRcpParams.baseURL + url, 'POST', addHead, multipart, cookie);
       //发送请求
-
-      let response = await efRcpInstance.uploadFromFile(efRcpParams.baseURL + url, filePath);
-      progressCallBack(efRcpResponseParams.processNumber);
+      let response = await efRcpInstance.fetch(request);
+      //设置上传进度
+      progressCallBack(efRcpResponseParams.uploadProgress);
       //响应结果
       if (efRcpParams.isConvertDTO) {
         //转换为DTO
@@ -326,10 +332,16 @@ export class EfRcpClientApi {
       //返回response的数据
       return response.toJSON() as E;
     } catch (error) {
+      //响应结果
+      if (efRcpParams.isConvertDTO) {
+        //转换为DTO
+        return RcpInterceptor.convertErrorDTO(error) as E;
+      }
       //将异常抛出
       return error as E;
     }
   }
+
 
   /**
    * 下载文件
