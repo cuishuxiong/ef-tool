@@ -1,6 +1,9 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { OutDTO } from '../../core/base/OutDTO';
+import { CacheUtil } from '../../core/cache/CacheUtil';
 import { JSONObject } from '../../core/json/JSONObject';
+import { ImgLayout, LoadingShape } from '../../ui/prompt/efLoading';
+import { WinLoadingUtil } from '../../ui/prompt/WinLoadingUtil';
 import { efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 
 /**
@@ -38,14 +41,14 @@ export class RcpInterceptor implements rcp.Interceptor {
   /**
    * 缓存响应属性
    */
-  private readonly cache: ResponseCache;
+  private readonly responseCache: ResponseCache;
 
   /**
    * 构造函数
    * @param cache
    */
-  constructor(cache: ResponseCache) {
-    this.cache = cache;
+  constructor(responseCache: ResponseCache) {
+    this.responseCache = responseCache;
   }
 
   /**
@@ -57,13 +60,37 @@ export class RcpInterceptor implements rcp.Interceptor {
   async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
     //获取当前请求url
     const url = context.request.url.href;
+    //是否开启全局loading
+    if (efRcpParams.isLoading) {
+      await WinLoadingUtil.showLoading({
+        content: efRcpParams.loadingTxt,
+        imgLayout: ImgLayout.TOP,
+        layoutShape: LoadingShape.SQUARE
+      });
+    }
+    //获取请求缓存对象
+    const requestFromCache = CacheUtil.get<rcp.Request>(url);
+    if (!requestFromCache) {
+      //请求存入缓存
+      CacheUtil.save<rcp.Request>(url, context.request);
+    }
     //获取缓存对象
-    const responseFromCache = this.cache.getResponse(url);
+    const responseFromCache = this.responseCache.getResponse(url);
     if (responseFromCache) {
+      if (efRcpParams.isLoading) {
+        //关闭loading
+        await WinLoadingUtil.closeLoading();
+      }
       return Promise.resolve(responseFromCache);
     }
     //获取响应结果
     const response = await next.handle(context);
+    //存入缓存
+    this.responseCache.setResponse(url, response);
+    if (efRcpParams.isLoading) {
+      //关闭loading
+      await WinLoadingUtil.closeLoading();
+    }
     return response;
   }
 

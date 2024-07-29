@@ -7,6 +7,7 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 import { JSON } from '@kit.ArkTS';
 import { RcpInterceptor } from './RcpInterceptor';
+import { CacheUtil } from '../../core/cache/CacheUtil';
 
 export class EfRcpClientApi {
   /**
@@ -266,6 +267,20 @@ export class EfRcpClientApi {
   }
 
   /**
+   * 取消请求
+   * @param url  待取消的URL
+   */
+  static cancel(url: string) {
+    //获取请求
+    let request = CacheUtil.get<rcp.Request>(url);
+    if (request) {
+      //取消请求
+      efRcpInstance.cancel(request);
+    }
+  }
+
+
+  /**
    * 上传文件 - 选择文件路径方式
    * @param url 请求url
    * @param filePath  选择的需要上传的文件路径或者文件
@@ -273,10 +288,7 @@ export class EfRcpClientApi {
    * @param cookies 自定义cookie
    * @returns 响应结果
    */
-  async uploadFile<E>(url: string, filePath: rcp.UploadFromFile, progressCallBack: (process: number) => void
-    // , headers?: Record<string, string>,
-    // cookies?: Record<string, string>
-  ) {
+  async uploadFile<E>(url: string, filePath: rcp.UploadFromFile, progressCallBack: (process: number) => void) {
     try {
       //需要添加的header对象
       // let addHead: rcp.RequestHeaders = {};
@@ -317,6 +329,17 @@ export class EfRcpClientApi {
       //将异常抛出
       return error as E;
     }
+  }
+
+  /**
+   * 下载文件
+   * @param url
+   * @param filePath
+   * @param progressCallBack
+   * @returns
+   */
+  async downloadFile<E>(url: string, filePath: rcp.UploadFromFile, progressCallBack: (process: number) => void) {
+    return null;
   }
 }
 

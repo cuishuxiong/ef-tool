@@ -13,11 +13,11 @@ export class EfRcpUtil {
    */
   private static createSession() {
     //创建缓存变量
-    const cache = new ResponseCache();
+    const responseCache = new ResponseCache();
     //创建session
     const session = rcp.createSession({
       //使用拦截器
-      interceptors: [new RcpInterceptor(cache)],
+      interceptors: [new RcpInterceptor(responseCache)],
       //基础前缀地址(目前发现无法与请求的url拼接)
       // baseAddress: efRcpParams.baseURL,
       //请求配置
@@ -72,7 +72,6 @@ export class EfRcpUtil {
    */
   efRcpInstance = EfRcpUtil.createSession();
 }
-
 
 export class efRcpResponseParams {
   /**
