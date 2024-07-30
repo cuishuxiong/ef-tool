@@ -19,7 +19,7 @@ export default class EntryAbility extends UIAbility {
 
     //初始化
     let imm = new ImmersionUtil();
-    efRcpParams.baseURL = "http://192.168.0.102:18088";
+    efRcpParams.baseURL = "http://192.168.0.100:18088";
     windowStage.loadContent('pages/RcpPage', (err, data) => {
       //调用沉浸式设置方法
       imm.immersiveWindow(windowStage);

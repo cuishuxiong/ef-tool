@@ -75,14 +75,14 @@ export class RcpInterceptor implements rcp.Interceptor {
         CacheUtil.save<rcp.Request>(url, context.request);
       }
       //获取缓存对象
-      const responseFromCache = this.responseCache.getResponse(url);
-      if (responseFromCache) {
-        if (efRcpParams.isLoading) {
-          //关闭loading
-          await WinLoadingUtil.closeLoading();
-        }
-        return Promise.resolve(responseFromCache);
-      }
+      // const responseFromCache = this.responseCache.getResponse(url);
+      // if (responseFromCache) {
+      //   if (efRcpParams.isLoading) {
+      //     //关闭loading
+      //     await WinLoadingUtil.closeLoading();
+      //   }
+      //   return Promise.resolve(responseFromCache);
+      // }
       //获取响应结果
       const response = await next.handle(context);
       //存入缓存

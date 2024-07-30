@@ -13,6 +13,7 @@ import {
 } from '@yunkss/eftool';
 import { fileUri } from '@kit.CoreFileKit';
 import image from '@ohos.multimedia.image';
+import { buffer } from '@kit.ArkTS';
 
 
 class User {
@@ -151,20 +152,22 @@ export struct RcpPage {
   async testDownloadStream() {
     this.btnCtx = "正在下载中...";
     this.showDownBtn = Visibility.Visible;
-    let finalBuffer:ArrayBuffer;
     let dto =
-      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/bf150c94-0bd7-4218-9eb4-11d7eac7b053-Screenshot_2024-02-21T154646.png',
-        async (fileBuffer: ArrayBuffer, size: number) => {
-          ToastUtil.showToast(size + "文件大小");
-
-        }, (progress) => {
+      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/d72c8836-8fd5-4720-b975-f5e64a2f0c75-IMG_20240214_212933.jpg',
+        'abc.jpg', (progress) => {
           if (progress >= 100) {
             this.showDownBtn = Visibility.None;
             this.process = 0;
           } else {
             this.process = progress;
           }
-        })
+        });
+    //获取文件路径
+    let url = FileUtil.getFilesDirPath('', 'abc.jpg');
+    //转换成uri
+    let uri = fileUri.getUriFromPath(url);
+    //预览
+    await PreviewUtil.previewImage(uri);
     this.message = JSONObject.toJSONString(dto);
   }
 
@@ -172,8 +175,8 @@ export struct RcpPage {
     this.btnCtx = "正在下载中...";
     this.showDownBtn = Visibility.Visible;
     let dto =
-      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/bf150c94-0bd7-4218-9eb4-11d7eac7b053-Screenshot_2024-02-21T154646.png',
-        'csx.png', (progress) => {
+      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/d72c8836-8fd5-4720-b975-f5e64a2f0c75-IMG_20240214_212933.jpg',
+        'csx.jpg', (progress) => {
           if (progress >= 100) {
             this.showDownBtn = Visibility.None;
             this.process = 0;
@@ -182,7 +185,7 @@ export struct RcpPage {
           }
         })
     //获取文件路径
-    let url = FileUtil.getFilesDirPath('', 'csx.png');
+    let url = FileUtil.getFilesDirPath('', 'csx.jpg');
     //转换成uri
     let uri = fileUri.getUriFromPath(url);
     //预览
@@ -233,7 +236,8 @@ export struct RcpPage {
   build() {
     Column() {
       Image(this.pixImg)
-        .width(150)
+        .width(200)
+        .objectFit(ImageFit.Contain)
       Text(this.message)
         .id('RcpPageHelloWorld')
         .fontSize(12)

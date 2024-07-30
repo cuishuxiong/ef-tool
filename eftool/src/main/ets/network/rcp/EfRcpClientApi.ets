@@ -5,7 +5,7 @@
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
-import { JSON } from '@kit.ArkTS';
+import { JSON, stream } from '@kit.ArkTS';
 import { RcpInterceptor } from './RcpInterceptor';
 import { CacheUtil } from '../../core/cache/CacheUtil';
 import { common } from '@kit.AbilityKit';
@@ -349,14 +349,14 @@ export class EfRcpClientApi {
   /**
    * 下载文件 - 保存路径方式
    * @param url 请求url
-   * @param savePath   需要下载的文件路径沙箱环境
+   * @param fileName   保存的文件名,默认在沙箱环境下
    * @param progressCallBack  下载进度回调
    * @returns
    */
-  async downloadFile<E>(url: string, savePath: string, progressCallBack: (progress: number) => void) {
+  async downloadFile<E>(url: string, fileName: string, progressCallBack: (progress: number) => void) {
     try {
       //获取保存路径
-      let finalPath = FileUtil.getFilesDirPath('', savePath);
+      let finalPath = FileUtil.getFilesDirPath('', fileName);
       //判断是否存在
       let isExists = fs.accessSync(finalPath);
       //如果已存在则删除
@@ -387,19 +387,18 @@ export class EfRcpClientApi {
   /**
    * 下载文件 - 保存流形式
    * @param url 请求url
-   * @param savePath   需要下载的文件路径沙箱环境
+   * @param fileName   保存的文件名,默认在沙箱环境下
    * @param progressCallBack  下载进度回调
    * @returns
    */
-  async downloadStream<E>(url: string, result: (fileBuffer: ArrayBuffer, size: number) => void,
-    progressCallBack: (progress: number) => void) {
+  async downloadStream<E>(url: string, fileName: string, progressCallBack: (progress: number) => void) {
     try {
+      //获取保存路径
+      let finalPath = FileUtil.getFilesDirPath('', fileName);
+      //创建stream
+      let stream = fs.createStreamSync(finalPath, "w+");
       //需要保存的stream对象
-      const streamData: rcp.SyncWriteStream = {
-        writeSync(buffer: ArrayBuffer): void | number {
-          result(buffer, buffer.byteLength);
-        }
-      };
+      const streamData: rcp.Stream = stream;
       //封装下载对象
       let downloadToStream: rcp.DownloadToStream = {
         kind: 'stream',
