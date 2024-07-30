@@ -8,9 +8,11 @@ import {
   RandomUtil,
   FileUtil,
   DownloadUtil,
-  PreviewUtil
+  PreviewUtil,
+  ImageUtil
 } from '@yunkss/eftool';
 import { fileUri } from '@kit.CoreFileKit';
+import image from '@ohos.multimedia.image';
 
 
 class User {
@@ -40,6 +42,7 @@ export struct RcpPage {
   @State showDownBtn: Visibility = Visibility.None;
   @State process: number = 0;
   @State btnCtx: string = '';
+  @State pixImg: image.PixelMap | null = null;
 
   async testLogin() {
     let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
@@ -145,6 +148,26 @@ export struct RcpPage {
     }
   }
 
+  async testDownloadStream() {
+    this.btnCtx = "正在下载中...";
+    this.showDownBtn = Visibility.Visible;
+    let finalBuffer:ArrayBuffer;
+    let dto =
+      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/bf150c94-0bd7-4218-9eb4-11d7eac7b053-Screenshot_2024-02-21T154646.png',
+        async (fileBuffer: ArrayBuffer, size: number) => {
+          ToastUtil.showToast(size + "文件大小");
+
+        }, (progress) => {
+          if (progress >= 100) {
+            this.showDownBtn = Visibility.None;
+            this.process = 0;
+          } else {
+            this.process = progress;
+          }
+        })
+    this.message = JSONObject.toJSONString(dto);
+  }
+
   async testDownloadFile() {
     this.btnCtx = "正在下载中...";
     this.showDownBtn = Visibility.Visible;
@@ -209,6 +232,8 @@ export struct RcpPage {
 
   build() {
     Column() {
+      Image(this.pixImg)
+        .width(150)
       Text(this.message)
         .id('RcpPageHelloWorld')
         .fontSize(12)
@@ -285,7 +310,7 @@ export struct RcpPage {
         .onClick(async () => {
           await this.testUploadFile();
         })
-      Button('发送Rcp的download').margin({
+      Button('发送Rcp的downloadFile').margin({
         top: 40
       })
         .margin({
@@ -293,6 +318,15 @@ export struct RcpPage {
         })
         .onClick(async () => {
           await this.testDownloadFile();
+        })
+      Button('发送Rcp的downloadStream').margin({
+        top: 40
+      })
+        .margin({
+          top: '20'
+        })
+        .onClick(async () => {
+          await this.testDownloadStream();
         })
       DownloadUtil({
         progressState: this.showDownBtn,
