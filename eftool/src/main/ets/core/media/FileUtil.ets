@@ -3,6 +3,7 @@ import { fileUri } from '@kit.CoreFileKit';
 import fs, { WriteOptions } from '@ohos.file.fs';
 import { StrAndUintUtil } from '../util/StrAndUintUtil';
 import { OutDTO } from '../base/OutDTO';
+import { common } from '@kit.AbilityKit';
 
 /**
  * @Author csx
@@ -22,7 +23,7 @@ export class FileUtil {
    * @returns
    */
   static getFilesDirPath(dirPath: string, fileName?: string): string {
-    let filePath = getContext().filesDir; //根目录
+    let filePath = (getContext() as common.UIAbilityContext).filesDir; //根目录
     if (!StrUtil.isEmpty(dirPath)) {
       if (StrUtil.startsWith(dirPath, filePath)) { //路径中包含根目录，是完整路径。
         filePath = dirPath;

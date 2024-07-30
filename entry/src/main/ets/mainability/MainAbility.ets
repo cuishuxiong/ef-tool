@@ -1,9 +1,8 @@
-import { AbilityConstant, UIAbility, Want, wantAgent } from '@kit.AbilityKit';
+import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { efRcpParams, Logger, NotificationUtil, ImmersionUtil } from '@yunkss/eftool'
 
-export default class EntryAbility extends UIAbility {
+export default class MainAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
   }
@@ -13,31 +12,16 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
-    Logger.init('API11TeTest', this.context);
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
-    //初始化
-    let imm = new ImmersionUtil();
-    efRcpParams.baseURL = "http://192.168.0.102:18088";
-    windowStage.loadContent('pages/RcpPage', (err, data) => {
-      //调用沉浸式设置方法
-      imm.immersiveWindow(windowStage);
+    windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
-      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content.');
     });
-  }
-
-  /**
-   * 监听通知传入的want
-   * @param want
-   * @param launchParam
-   */
-  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
-    NotificationUtil.readOrRemoveNotice(want);
   }
 
   onWindowStageDestroy(): void {

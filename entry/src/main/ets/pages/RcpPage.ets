@@ -7,10 +7,10 @@ import {
   PickerUtil,
   RandomUtil,
   FileUtil,
-  DownloadUtil
+  DownloadUtil,
+  PreviewUtil
 } from '@yunkss/eftool';
 import { fileUri } from '@kit.CoreFileKit';
-import fs from '@ohos.file.fs';
 
 
 class User {
@@ -123,6 +123,17 @@ export struct RcpPage {
     }
   }
 
+  async testCancel() {
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/post', {
+      "nickName": "旺旺崔冰冰",
+      "account": 'yunkss@163.com',
+      "age": 12,
+      "hobby": ["吃", "喝", "敲代码"],
+      "sex": true
+    });
+    await efRcpClientApi.cancel('/api/eftool/post');
+  }
+
   async testDelete() {
     let dto = await efRcpClientApi.delete<OutDTO<string>>('/api/eftool/delete/5345345');
     if (dto.getSuccess()) {
@@ -132,6 +143,28 @@ export struct RcpPage {
     } else {
       ToastUtil.showToast(JSONObject.toJSONString(dto));
     }
+  }
+
+  async testDownloadFile() {
+    this.btnCtx = "正在下载中...";
+    this.showDownBtn = Visibility.Visible;
+    let dto =
+      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/bf150c94-0bd7-4218-9eb4-11d7eac7b053-Screenshot_2024-02-21T154646.png',
+        'csx.png', (progress) => {
+          if (progress >= 100) {
+            this.showDownBtn = Visibility.None;
+            this.process = 0;
+          } else {
+            this.process = progress;
+          }
+        })
+    //获取文件路径
+    let url = FileUtil.getFilesDirPath('', 'csx.png');
+    //转换成uri
+    let uri = fileUri.getUriFromPath(url);
+    //预览
+    await PreviewUtil.previewImage(uri);
+    this.message = JSONObject.toJSONString(dto);
   }
 
   async testUploadFile() {
@@ -234,6 +267,15 @@ export struct RcpPage {
         .onClick(async () => {
           await this.testDelete();
         })
+      Button('取消请求').margin({
+        top: 40
+      })
+        .margin({
+          top: '20'
+        })
+        .onClick(async () => {
+          await this.testCancel();
+        })
       Button('发送Rcp的upload').margin({
         top: 40
       })
@@ -242,6 +284,15 @@ export struct RcpPage {
         })
         .onClick(async () => {
           await this.testUploadFile();
+        })
+      Button('发送Rcp的download').margin({
+        top: 40
+      })
+        .margin({
+          top: '20'
+        })
+        .onClick(async () => {
+          await this.testDownloadFile();
         })
       DownloadUtil({
         progressState: this.showDownBtn,

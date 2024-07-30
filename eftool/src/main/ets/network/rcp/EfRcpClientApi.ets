@@ -8,6 +8,9 @@ import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 import { JSON } from '@kit.ArkTS';
 import { RcpInterceptor } from './RcpInterceptor';
 import { CacheUtil } from '../../core/cache/CacheUtil';
+import { common } from '@kit.AbilityKit';
+import fs from '@ohos.file.fs';
+import { FileUtil } from '../../core/media/FileUtil';
 
 export class EfRcpClientApi {
   /**
@@ -272,7 +275,7 @@ export class EfRcpClientApi {
    */
   async cancel(url: string) {
     //获取请求
-    let request = CacheUtil.get<rcp.Request>(url);
+    let request = CacheUtil.get<rcp.Request>(efRcpParams.baseURL + url);
     if (request) {
       //取消请求
       efRcpInstance.cancel(request);
@@ -350,8 +353,64 @@ export class EfRcpClientApi {
    * @param progressCallBack
    * @returns
    */
-  async downloadFile<E>(url: string, filePath: rcp.UploadFromFile, progressCallBack: (process: number) => void) {
-    return null;
+  async downloadFile<E>(url: string, savePath: string, progressCallBack: (progress: number) => void,
+    // headers?: Record<string, string>,
+    // cookies?: Record<string, string>
+  ) {
+    try {
+      //需要添加的header对象
+      // let addHead: rcp.RequestHeaders = {};
+      //是否有传入header
+      // if (headers) {
+      //   Object.entries(headers).forEach((row) => {
+      //     addHead[row[0]] = row[1];
+      //   });
+      // }
+      //是否需要拼接token
+      // if (efRcpParams.tokenValue) {
+      //   addHead.authorization = efRcpParams.tokenValue;
+      //   if (efRcpParams.tokenName) {
+      //     addHead[efRcpParams.tokenName] = efRcpParams.tokenValue;
+      //   }
+      // }
+      //是否有cookie
+      // let cookie: rcp.RequestCookies = {};
+      // if (cookies) {
+      //   Object.entries(cookies).forEach((row) => {
+      //     cookie[row[0]] = row[1];
+      //   });
+      // }
+      //创建请求
+      // let request = new rcp.Request(efRcpParams.baseURL + url, 'GET', addHead, "", cookie);
+      //发送请求
+      // let response = await efRcpInstance.fetch(request);
+      //获取保存路径
+      let finalPath = FileUtil.getFilesDirPath('', savePath);
+      //判断是否存在
+      let isExists = fs.accessSync(finalPath);
+      //如果已存在则删除
+      if (isExists) {
+        fs.unlinkSync(finalPath);
+      }
+      //下载对象
+      let downloadToFile: rcp.DownloadToFile = {
+        kind: 'file',
+        file: finalPath
+      };
+      let response = await efRcpInstance.downloadToFile(efRcpParams.baseURL + url, downloadToFile)
+      //设置上传进度
+      progressCallBack(efRcpResponseParams.downloadProgress);
+      //响应结果
+      if (efRcpParams.isConvertDTO) {
+        //转换为DTO
+        return RcpInterceptor.convertResponseDTO(response) as E;
+      }
+      //返回response的数据
+      return response.toJSON() as E;
+    } catch (error) {
+      //将异常抛出
+      return error as E;
+    }
   }
 }
 

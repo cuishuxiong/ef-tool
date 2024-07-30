@@ -19,6 +19,14 @@
     {
       "name": "write_permission",
       "value": "写入权限"
+    },
+    {
+      "name": "MainAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "label"
     }
   ]
 }

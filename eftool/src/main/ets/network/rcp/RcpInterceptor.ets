@@ -203,8 +203,8 @@ export const efRcpEventsHandler: rcp.HttpEventsHandler = {
    * 下载进度
    */
   onDownloadProgress: (totalSize: number, transferredSize: number) => {
-    // Custom logic for handling download progress
-    console.info("Download progress:", transferredSize, "of", totalSize);
+    //传递给公共参数
+    efRcpResponseParams.downloadProgress = Math.ceil(transferredSize / totalSize * 100);
   },
   /**
    * 数据传输完成

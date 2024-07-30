@@ -32,6 +32,26 @@
             ]
           }
         ]
+      },
+      {
+        "name": "MainAbility",
+        "srcEntry": "./ets/mainability/MainAbility.ets",
+        "description": "$string:MainAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:MainAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ]
       }
     ],
     "requestPermissions": [
