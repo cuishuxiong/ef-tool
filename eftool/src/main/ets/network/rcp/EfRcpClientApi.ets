@@ -347,7 +347,7 @@ export class EfRcpClientApi {
 
 
   /**
-   * 下载文件 - 保存路径方式
+   * 下载文件 - 保存路径方式 - 外部调用方式与downloadStream一致
    * @param url 请求url
    * @param fileName   保存的文件名,默认在沙箱环境下
    * @param progressCallBack  下载进度回调
@@ -385,7 +385,7 @@ export class EfRcpClientApi {
   }
 
   /**
-   * 下载文件 - 保存流形式
+   * 下载文件 - 保存流形式  外部调用方式与downloadFile一致
    * @param url 请求url
    * @param fileName   保存的文件名,默认在沙箱环境下
    * @param progressCallBack  下载进度回调
