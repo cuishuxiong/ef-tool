@@ -45,6 +45,8 @@ export struct RcpPage {
   @State btnCtx: string = '';
   @State pixImg: image.PixelMap | null = null;
 
+
+
   async testLogin() {
     let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',

@@ -8,10 +8,27 @@ import { efRcpEventsHandler, RcpInterceptor, ResponseCache } from './RcpIntercep
  */
 export class EfRcpUtil {
   /**
-   * 创建rcp对象
+   * 检查 baseURL 是否有值的函数
    * @returns
    */
-  private static createSession() {
+  static waitForBaseURL(): Promise<void> {
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (efRcpParams.baseURL) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 100); // 每 100 毫秒检查一次
+    });
+  }
+
+  /**
+   * 获取默认的axios对象
+   * @returns AxiosStatic
+   */
+  private static async getRcp(): Promise<rcp.Session> {
+    //等待设置值后再初始化
+    await EfRcpUtil.waitForBaseURL();
     //创建缓存变量
     const responseCache = new ResponseCache();
     //创建session
@@ -19,7 +36,7 @@ export class EfRcpUtil {
       //使用拦截器
       interceptors: [new RcpInterceptor(responseCache)],
       //基础前缀地址(目前发现无法与请求的url拼接)
-      // baseAddress: efRcpParams.baseURL,
+      baseAddress: efRcpParams.baseURL,
       //请求配置
       requestConfiguration: {
         //数据传输行为
@@ -70,8 +87,19 @@ export class EfRcpUtil {
   /**
    * 封装后的全局rcp对象
    */
-  efRcpInstance = EfRcpUtil.createSession();
+  efRcpInstance = EfRcpUtil.getRcp();
 }
+
+
+/**
+ * 抛出session实例
+ */
+let efRcpInstance: rcp.Session;
+
+new EfRcpUtil().efRcpInstance.then((session) => {
+  efRcpInstance = session;
+});
+
 
 export class efRcpResponseParams {
   /**
@@ -130,8 +158,7 @@ export class efRcpParams {
   static closeCallBack?: () => void;
 }
 
-/**
- * 抛出session实例
- */
-export const efRcpInstance = new EfRcpUtil().efRcpInstance;
+
+export { efRcpInstance };
+
 

@@ -5,6 +5,7 @@ import { efRcpParams, Logger, NotificationUtil, ImmersionUtil } from '@yunkss/ef
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    efRcpParams.baseURL = "http://192.168.0.100:18088";
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
   }
 
@@ -19,7 +20,6 @@ export default class EntryAbility extends UIAbility {
 
     //初始化
     let imm = new ImmersionUtil();
-    efRcpParams.baseURL = "http://192.168.0.100:18088";
     windowStage.loadContent('pages/RcpPage', (err, data) => {
       //调用沉浸式设置方法
       imm.immersiveWindow(windowStage);

@@ -5,10 +5,9 @@
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
-import { JSON, stream } from '@kit.ArkTS';
+import { JSON } from '@kit.ArkTS';
 import { RcpInterceptor } from './RcpInterceptor';
 import { CacheUtil } from '../../core/cache/CacheUtil';
-import { common } from '@kit.AbilityKit';
 import fs from '@ohos.file.fs';
 import { FileUtil } from '../../core/media/FileUtil';
 
