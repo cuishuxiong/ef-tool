@@ -3,12 +3,13 @@
  * @DateTime 2024/7/16 17:20:07
  * @TODO Three
  */
-import { WinDialogUtil } from '@yunkss/eftool';
+import { PhoneUtil, WinDialogUtil } from '@yunkss/eftool';
 import { promptAction, router } from '@kit.ArkUI';
 
 @Entry
 @Component
 export struct Three {
+  @State msg: string = "1111";
   @State draw: DrawModifier = new DrawModifier();
 
   async openAlert() {
@@ -30,7 +31,7 @@ export struct Three {
     .height('100%')
     .width('100%')
     .margin({
-      bottom:-100
+      bottom: -100
     })
     .padding({
       bottom: -100
@@ -69,13 +70,16 @@ export struct Three {
           Text('22222222222222222222222222222222222222')
             .maxLines(1)
             .textOverflow({
-              overflow:TextOverflow.Ellipsis
+              overflow: TextOverflow.Ellipsis
             })
             .width('30%')
         }.tabBar('你的')
 
         TabContent() {
-          Text('33333333333333')
+          Text(this.msg)
+            .onClick(() => {
+              this.msg = PhoneUtil.isMobile('19876543210').getMsg()
+            })
         }.tabBar('他的')
       }
       .width('100%')

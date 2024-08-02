@@ -1,5 +1,5 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcpEventsHandler, RcpInterceptor, ResponseCache } from './RcpInterceptor';
+import { efRcpEventsHandler, RcpInterceptor } from './RcpInterceptor';
 
 /**
  * @Author csx
@@ -8,35 +8,17 @@ import { efRcpEventsHandler, RcpInterceptor, ResponseCache } from './RcpIntercep
  */
 export class EfRcpUtil {
   /**
-   * 检查 baseURL 是否有值的函数
-   * @returns
-   */
-  static waitForBaseURL(): Promise<void> {
-    return new Promise((resolve) => {
-      const interval = setInterval(() => {
-        if (efRcpParams.baseURL) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 100); // 每 100 毫秒检查一次
-    });
-  }
-
-  /**
    * 获取默认的axios对象
    * @returns AxiosStatic
    */
-  private static async getRcp(): Promise<rcp.Session> {
+  private static getRcp(): rcp.Session {
     //等待设置值后再初始化
-    await EfRcpUtil.waitForBaseURL();
-    //创建缓存变量
-    const responseCache = new ResponseCache();
     //创建session
     const session = rcp.createSession({
       //使用拦截器
-      interceptors: [new RcpInterceptor(responseCache)],
+      interceptors: [new RcpInterceptor()],
       //基础前缀地址(目前发现无法与请求的url拼接)
-      baseAddress: efRcpParams.baseURL,
+      // baseAddress: efRcpParams.baseURL,
       //请求配置
       requestConfiguration: {
         //数据传输行为
@@ -90,17 +72,9 @@ export class EfRcpUtil {
   efRcpInstance = EfRcpUtil.getRcp();
 }
 
-
 /**
- * 抛出session实例
+ * rcp响应参数实体
  */
-let efRcpInstance: rcp.Session;
-
-new EfRcpUtil().efRcpInstance.then((session) => {
-  efRcpInstance = session;
-});
-
-
 export class efRcpResponseParams {
   /**
    * 上传进度
@@ -156,9 +130,60 @@ export class efRcpParams {
    *  会话session关闭事件回调
    */
   static closeCallBack?: () => void;
+  /**
+   * 是否开启证书加密,默认为false
+   */
+  static isSecurity: boolean = false;
+  /**
+   * 是否开启全局日志打印,默认为true
+   */
+  static isLogger: boolean = true;
 }
 
+/**
+ * rcp证书相关参数
+ */
+export class efRcpSecurityParam {
+  /**
+   * 服务器端验证用户
+   */
+  static userName: string;
+  /**
+   * 服务器端验证密码
+   */
+  static pwd: string;
+  /**
+   * 服务器的认证类型 默认为basic
+   */
+  static authenticationType: rcp.AuthenticationType = 'basic';
+  /**
+   * 证书颁发机构（CA） 目前只兼容 system|skip
+   */
+  static remoteValidation: 'system' | 'skip' = 'system';
+  /**
+   * 证书内容
+   */
+  static certContent: string | ArrayBuffer;
+  /**
+   * 证书路径
+   */
+  static certPath: string;
+  /**
+   * 证书格式
+   */
+  static certType: 'PEM' | 'DER' | 'P12';
+  /**
+   *
+   */
+  static certKey: string;
+  /**
+   *
+   */
+  static certKeyPwd: string;
+}
 
-export { efRcpInstance };
-
+/**
+ * 抛出session实例
+ */
+export const efRcpInstance: rcp.Session = new EfRcpUtil().efRcpInstance;
 

@@ -1,12 +1,13 @@
 # Changelog
 
-## [v1.2.1-rc.2] 2024-07
+## [v1.2.1-rc.2] 2024-08
 
 ### 🐣新特性(API12)
 
 * 新增efRcpInstance远场通信
 * 新增efRcpClientApi组件,支持post,put,get,delete,cancel等请求
-* 新增场景按钮ButtonUtil工具类
+* 新增efRcpClientApi统一上传下载方法
+* 新增efRcpClientApi开启日志，全局loading等功能
 
 ### 🐞功能优化
 
@@ -15,6 +16,8 @@
 * 优化efAxios请求全局loading开关,以及可设置loading提示内容
 * efClientApi中新增postFormData方法[issuesIACLR2](https://gitee.com/yunkss/ef-tool/issues/IACLR2)
 * 升级axios为2.2.2正式版
+* 优化支持efAxios打印日志开关[issuesIAGVA1](https://gitee.com/yunkss/ef-tool/issues/IAGVA1)
+* 优化手机号正则问题[issuesIAGBI0](https://gitee.com/yunkss/ef-tool/issues/IAGBI0)
 
 ## [v1.2.1-rc.1] 2024-07
 

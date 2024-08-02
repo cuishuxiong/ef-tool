@@ -1,5 +1,6 @@
 import { fileIo } from '@kit.CoreFileKit';
 import { rcp } from '@kit.RemoteCommunicationKit';
+import { efRcpSecurityParam } from './EfRcpUtil';
 
 /**
  * @Author csx
@@ -12,9 +13,9 @@ export class CertificateUtil {
    * @param filePath  证书路径
    * @returns 证书内容字符串
    */
-  static readClientCerts(filePath: string): string {
+  private static readClientCerts(): string {
     //读取文件内容
-    let file = fileIo.openSync(filePath, fileIo.OpenMode.READ_WRITE);
+    let file = fileIo.openSync(efRcpSecurityParam.certPath, fileIo.OpenMode.READ_WRITE);
     //读取文件大小
     let info = fileIo.statSync(file.fd);
     //创建buffer对象
@@ -33,21 +34,43 @@ export class CertificateUtil {
    * 获取组装的rcp安全校验配置
    * @returns
    */
-  static getRcpSecurityCfg(filePath: string) {
+  static getRcpSecurityCfg() {
+
+    let ctx: string | ArrayBuffer = '';
+
+    //如果是证书路径
+    if (efRcpSecurityParam.certPath) {
+      ctx = CertificateUtil.readClientCerts();
+    }
+    //如果是证书内容
+    if (efRcpSecurityParam.certContent) {
+      ctx = efRcpSecurityParam.certContent;
+    }
+    //创建证书配置对象
     const securityConfig: rcp.SecurityConfiguration = {
-      remoteValidation: "system",
+      //证书颁发机构（CA）
+      remoteValidation: efRcpSecurityParam.remoteValidation,
+      //客户端证书
       certificate: {
-        content: CertificateUtil.readClientCerts(filePath),
-        type: "PEM",
-        key: "-----BEGIN PRIVATE KEY-----\n...", //请根据自身业务选择合适的key
-        keyPassword: "your-password",
+        //证书颁发机构（CA）证书的内容
+        content: ctx,
+        //客户端证书编码格式类型
+        type: efRcpSecurityParam.certType,
+        //客户端证书的key
+        key: efRcpSecurityParam.certKey,
+        //客户端证书密码
+        keyPassword: efRcpSecurityParam.certKeyPwd,
       },
+      //HTTP服务器身份验证
       serverAuthentication: {
         credential: {
-          username: "exampleUser",
-          password: "examplePassword",
+          //用于身份验证的用户名
+          username: efRcpSecurityParam.userName,
+          //用于身份验证的密码
+          password: efRcpSecurityParam.pwd,
         },
-        authenticationType: "basic",
+        //服务器的认证类型
+        authenticationType: efRcpSecurityParam.authenticationType,
       },
     };
     return securityConfig;

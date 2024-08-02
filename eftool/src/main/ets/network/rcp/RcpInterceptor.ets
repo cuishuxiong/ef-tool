@@ -2,35 +2,9 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 import { OutDTO } from '../../core/base/OutDTO';
 import { CacheUtil } from '../../core/cache/CacheUtil';
 import { JSONObject } from '../../core/json/JSONObject';
-import { ImgLayout, LoadingShape } from '../../ui/prompt/efLoading';
-import { WinLoadingUtil } from '../../ui/prompt/WinLoadingUtil';
+import { Logger } from '../../core/util/Logger';
 import { efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 
-/**
- * 响应缓存类
- */
-export class ResponseCache {
-  //响应缓存变量
-  private readonly cache: Record<string, rcp.Response> = {};
-
-  /**
-   * 获取响应
-   * @param url
-   * @returns
-   */
-  getResponse(url: string): rcp.Response {
-    return this.cache[url];
-  }
-
-  /**
-   * 存储响应
-   * @param url
-   * @param response
-   */
-  setResponse(url: string, response: rcp.Response): void {
-    this.cache[url] = response;
-  }
-}
 
 /**
  * @Author csx
@@ -38,19 +12,6 @@ export class ResponseCache {
  * @TODO RcpInterceptor  rcp请求拦截器配置
  */
 export class RcpInterceptor implements rcp.Interceptor {
-  /**
-   * 缓存响应属性
-   */
-  private readonly responseCache: ResponseCache;
-
-  /**
-   * 构造函数
-   * @param cache
-   */
-  constructor(responseCache: ResponseCache) {
-    this.responseCache = responseCache;
-  }
-
   /**
    * 拦截核心
    * @param context
@@ -60,43 +21,39 @@ export class RcpInterceptor implements rcp.Interceptor {
   async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
     try { //获取当前请求url
       const url = context.request.url.href;
-      //是否开启全局loading
-      if (efRcpParams.isLoading) {
-        await WinLoadingUtil.showLoading({
-          content: efRcpParams.loadingTxt,
-          imgLayout: ImgLayout.TOP,
-          layoutShape: LoadingShape.SQUARE
-        });
-      }
       //获取请求缓存对象
       const requestFromCache = CacheUtil.get<rcp.Request>(url);
       if (!requestFromCache) {
         //请求存入缓存
         CacheUtil.save<rcp.Request>(url, context.request);
       }
-      //获取缓存对象
-      // const responseFromCache = this.responseCache.getResponse(url);
-      // if (responseFromCache) {
-      //   if (efRcpParams.isLoading) {
-      //     //关闭loading
-      //     await WinLoadingUtil.closeLoading();
-      //   }
-      //   return Promise.resolve(responseFromCache);
-      // }
+      //是否开启打印日志
+      if (efRcpParams.isLogger) {
+        Logger.init('efRcp', getContext(), 0xFF00);
+        Logger.debug("--------请求信息---------", "");
+        Logger.debug("--------请求URL:", (context.request.url.href));
+        Logger.debug("--------请求方式:", context.request.method);
+        if (context.request.headers) {
+          Logger.debug("--------请求  头:", JSONObject.toJSONString(context.request.headers as object));
+        }
+        if (context.request.cookies) {
+          Logger.debug("--------请求cookie:", JSONObject.toJSONString(context.request.cookies as object));
+        }
+        if (context.request.content) {
+          Logger.debug("--------请求入参:", context.request.content.toString() as string);
+        }
+      }
       //获取响应结果
       const response = await next.handle(context);
-      //存入缓存
-      this.responseCache.setResponse(url, response);
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await WinLoadingUtil.closeLoading();
+      //是否开启打印日志
+      if (efRcpParams.isLogger) {
+        Logger.init('efRcp', getContext(), 0xFF00);
+        Logger.debug("--------响应信息---------", "");
+        Logger.debug("--------响应状态:", response.statusCode + "");
+        Logger.debug("--------响应内容:", response.toString() as string);
       }
       return response;
     } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await WinLoadingUtil.closeLoading();
-      }
       return Promise.reject(error);
     }
   }

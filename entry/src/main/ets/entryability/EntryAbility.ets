@@ -1,11 +1,21 @@
 import { AbilityConstant, UIAbility, Want, wantAgent } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { efRcpParams, Logger, NotificationUtil, ImmersionUtil } from '@yunkss/eftool'
+import { efRcpParams, Logger, NotificationUtil, ImmersionUtil, efAxiosParams, efRcpSecurityParam } from '@yunkss/eftool'
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     efRcpParams.baseURL = "http://192.168.0.100:18088";
+    efRcpParams.loadingTxt = '小的快马加鞭...';
+    efRcpSecurityParam.certContent = '111111111';
+    // efRcpParams.isLogger = false;
+    // efRcpParams.isLoading = false;
+
+    efAxiosParams.loadingTxt = '小的快马加鞭...';
+    efAxiosParams.baseURL = 'http://192.168.0.100:18088';
+    efAxiosParams.isAllEncrypt = false;
+    efAxiosParams.sm2PubKey =
+      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
   }
 

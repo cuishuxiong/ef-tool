@@ -123,12 +123,6 @@ struct Index {
   }
 
   async sendRequest() {
-    efAxiosParams.loadingTxt = '小的快马加鞭...';
-    efAxiosParams.baseURL = 'http://172.20.10.5:18088';
-    // efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
-    efAxiosParams.isAllEncrypt = false;
-    efAxiosParams.sm2PubKey =
-      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //关键字加密集合
     // efAxiosParams.keyWordsList = ['account','pwd'];
     //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false

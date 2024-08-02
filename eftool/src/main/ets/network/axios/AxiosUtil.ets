@@ -12,6 +12,8 @@ import { ArrayList } from '@kit.ArkTS';
 import { JSONUtil } from '../../core/json/JSONUtil';
 import { WinLoadingUtil } from '../../ui/prompt/WinLoadingUtil';
 import { ImgLayout, LoadingShape } from '../../ui/prompt/efLoading';
+import { Logger } from '../../core/util/Logger';
+import { JSONObject } from '../../core/json/JSONObject';
 
 /**
  * @Author csx
@@ -418,6 +420,10 @@ export class efAxiosParams {
    * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
    */
   static loadingTxt: string = '努力获取数据中,请稍后...';
+  /**
+   * 是否开启日志
+   */
+  static isLogger: boolean = true;
 }
 
 /**
@@ -438,6 +444,15 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     });
   }
   await AxiosUtil.convertRequestInfo(config);
+  //是否开启日志
+  if (efAxiosParams.isLogger) {
+    Logger.init('efAxios', getContext(), 0xFF00);
+    Logger.debug("--------请求信息---------", "");
+    Logger.debug("--------请求URL:", (config.baseURL as string + config.url as string));
+    Logger.debug("--------请求方式:", config.method as string);
+    Logger.debug("--------请求  头:", JSONObject.toJSONString(config.headers));
+    Logger.debug("--------请求入参:", JSONObject.toJSONString(config.data));
+  }
   return config;
 }, async (error: AxiosError) => {
   if (efAxiosParams.isLoading) {
@@ -462,6 +477,15 @@ efAxios.interceptors.response.use(async (response: AxiosResponse) => {
   if (efAxiosParams.isLoading) {
     //关闭全局加载框
     await WinLoadingUtil.closeLoading();
+  }
+  //是否开启日志
+  if (efAxiosParams.isLogger) {
+    Logger.init('efAxios', getContext(), 0xFF00);
+    Logger.debug("--------响应信息---------", "");
+    Logger.debug("--------响应状态:", response.status + "");
+    Logger.debug("--------响应文本:", response.statusText);
+    Logger.debug("--------响应  头:", JSONObject.toJSONString(response.headers));
+    Logger.debug("--------响应结果:", JSONObject.toJSONString(response.data));
   }
   return response;
 }, async (error: AxiosError) => {

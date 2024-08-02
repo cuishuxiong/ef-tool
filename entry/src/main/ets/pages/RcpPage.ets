@@ -45,13 +45,11 @@ export struct RcpPage {
   @State btnCtx: string = '';
   @State pixImg: image.PixelMap | null = null;
 
-
-
   async testLogin() {
     let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
       'pwd': '123456'
-    });
+    }, {}, {}, '更改了请求loading内容...');
     if (dto.getSuccess()) {
       let res = JSONObject.toJSONString(dto);
       ToastUtil.showToast(res);
@@ -155,7 +153,7 @@ export struct RcpPage {
     this.btnCtx = "正在下载中...";
     this.showDownBtn = Visibility.Visible;
     let dto =
-      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/d72c8836-8fd5-4720-b975-f5e64a2f0c75-IMG_20240214_212933.jpg',
+      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/a89d3c16-1dba-4a41-909f-1214f52d3466-IMG_20240214_212821.jpg',
         'abc.jpg', (progress) => {
           if (progress >= 100) {
             this.showDownBtn = Visibility.None;
@@ -177,7 +175,7 @@ export struct RcpPage {
     this.btnCtx = "正在下载中...";
     this.showDownBtn = Visibility.Visible;
     let dto =
-      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/d72c8836-8fd5-4720-b975-f5e64a2f0c75-IMG_20240214_212933.jpg',
+      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/7626f4b1-9835-4eb4-8660-ae299ba4733a-IMG_20240214_212933.jpg',
         'csx.jpg', (progress) => {
           if (progress >= 100) {
             this.showDownBtn = Visibility.None;

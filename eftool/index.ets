@@ -142,7 +142,12 @@ export { efAxiosParams } from './src/main/ets/network/axios/AxiosUtil';
 
 export { efClientApi } from './src/main/ets/network/axios/EfClientApi';
 
-export { efRcpInstance, efRcpParams } from './src/main/ets/network/rcp/EfRcpUtil';
+export {
+  efRcpInstance,
+  efRcpParams,
+  efRcpSecurityParam,
+  efRcpResponseParams
+} from './src/main/ets/network/rcp/EfRcpUtil';
 
 export { efRcpClientApi } from './src/main/ets/network/rcp/EfRcpClientApi';
 
