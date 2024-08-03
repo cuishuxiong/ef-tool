@@ -9,6 +9,7 @@
 * 新增efRcpClientApi统一上传下载方法
 * 新增efRcpClientApi开启日志，全局loading,证书校验等功能
 * 新增NetUtil网络工具类
+* 新增场景化按钮ButtonUtil
 
 ### 🐞功能优化
 
@@ -16,10 +17,10 @@
 * 优化RandomUtil.generateIV支持生成utf8格式的字符串iv
 * 优化efAxios请求全局loading开关,以及可设置loading提示内容
 * efClientApi中新增postFormData方法[issuesIACLR2](https://gitee.com/yunkss/ef-tool/issues/IACLR2)
-* 升级axios为2.2.2正式版
 * 优化支持efAxios打印日志开关[issuesIAGVA1](https://gitee.com/yunkss/ef-tool/issues/IAGVA1)
 * 优化手机号正则问题[issuesIAGBI0](https://gitee.com/yunkss/ef-tool/issues/IAGBI0)
 * 优化efAxios下载带有目录时报错[issuesIAHLU5](https://gitee.com/yunkss/ef-tool/issues/IAHLU5)
+* 升级axios为2.2.2正式版
 
 ## [v1.2.1-rc.1] 2024-07
 

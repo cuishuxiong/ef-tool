@@ -18,7 +18,13 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onGetPhoneNumber((err, data) => {
-          handleMessage(err, data, callBack);
+          if (err) {
+            ToastUtil.showToast('快速验证手机号失败,原因为:' + err.message)
+          } else {
+            if (data.code) {
+              callBack(data.code);
+            }
+          }
         })
     })
   }
@@ -28,7 +34,13 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onGetRealtimePhoneNumber((err, data) => {
-          handleMessage(err, data, callBack);
+          if (err) {
+            ToastUtil.showToast('实时验证手机号失败,原因为:' + err.message)
+          } else {
+            if (data.code) {
+              callBack(data.code);
+            }
+          }
         })
     })
   }
@@ -38,7 +50,9 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onLaunchApp((err) => {
-          handleMessage(err, "", callBack);
+          if (err) {
+            ToastUtil.showToast('打开APP失败,原因为:' + err.message)
+          }
         })
     })
   }
@@ -49,7 +63,7 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onOpenSetting((err, data) => {
           if (err) {
-            ToastUtil.showToast('获APP设置结果失败,原因为:' + err.message)
+            ToastUtil.showToast('打开设置失败,原因为:' + err.message)
           } else {
             if (data.permissions) {
               callBack(JSONObject.toJSONString(data.permissions));
@@ -64,7 +78,13 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onChooseAvatar((err, data) => {
-          handleMessage(err, data, callBack);
+          if (err) {
+            ToastUtil.showToast('选择头像失败,原因为:' + err.message)
+          } else {
+            if (data.avatarUri) {
+              callBack(data.avatarUri);
+            }
+          }
         })
     })
   }
@@ -74,7 +94,13 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onChooseAddress((err, data) => {
-          handleMessage(err, data, callBack);
+          if (err) {
+            ToastUtil.showToast('选择地址失败,原因为:' + err.message)
+          } else {
+            if (data) {
+              callBack(JSONObject.toJSONString(data));
+            }
+          }
         })
     })
   }
@@ -84,7 +110,13 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onChooseInvoiceTitle((err, data) => {
-          handleMessage(err, data, callBack);
+          if (err) {
+            ToastUtil.showToast('选择发票抬头失败,原因为:' + err.message)
+          } else {
+            if (data) {
+              callBack(JSONObject.toJSONString(data));
+            }
+          }
         })
     })
   }
@@ -94,25 +126,17 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
       params: params,
       controller: new functionalButtonComponentManager.FunctionalButtonController()
         .onChooseLocation((err, data) => {
-          handleMessage(err, data, callBack);
+          if (err) {
+            ToastUtil.showToast('地图选点失败,原因为:' + err.message)
+          } else {
+            if (data) {
+              callBack(JSONObject.toJSONString(data));
+            }
+          }
         })
     })
   }
 
-}
-
-/**
- * 处理场景按钮统一回调
- * @param err 异常信息
- * @param data  数据
- * @param callBack  回调
- */
-function handleMessage(err: BusinessError, data: Object, callBack: (data: string) => void) {
-  if (err) {
-    ToastUtil.showToast('获取授权结果失败,原因为:' + err.message)
-  } else {
-    callBack(JSONObject.toJSONString(data));
-  }
 }
 
 /**
@@ -129,8 +153,6 @@ export let FunctionalButtonBuilder: WrappedBuilder<[functionalButtonComponentMan
  */
 @Component
 export struct ButtonUtil {
-  // 参考链接  https://gitee.com/harmonyos_samples/senario-fusion-kit_-sample-code_-functional-btn_-arkts
-
   /**
    * 场景按钮入参实体
    */
