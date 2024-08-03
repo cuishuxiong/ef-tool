@@ -186,7 +186,7 @@ ohpm install @yunkss/eftool
 
 ```
     "dependencies": {
-        "@yunkss/eftool":"1.2.1-rc.12",
+        "@yunkss/eftool":"1.2.1-rc.2",
         "@ohos/axios" :"2.2.2"
     }
     //当前eftool为1.2.1-rc.2版本,内部使用的axios为2.2.2,使用时需注意项目中的axios与eftool中的版本对应关系
