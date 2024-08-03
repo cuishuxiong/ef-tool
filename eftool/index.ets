@@ -1,3 +1,5 @@
+import { efRcpEventsHandler } from './src/main/ets/network/rcp/RcpInterceptor';
+
 export { ArrayUtil } from './src/main/ets/core/util/ArrayUtil';
 
 export { CharUtil } from './src/main/ets/core/util/CharUtil';
@@ -151,6 +153,10 @@ export {
 
 export { efRcpClientApi } from './src/main/ets/network/rcp/EfRcpClientApi';
 
+export { efRcpEventsHandler, RcpInterceptor } from './src/main/ets/network/rcp/RcpInterceptor';
+
+export { NetUtil } from './src/main/ets/network/NetUtil';
+
 export { DownloadUtil } from './src/main/ets/ui/base/DownloadUtil';
 
 export { PickerUtil } from './src/main/ets/ui/base/PickerUtil';
@@ -170,6 +176,10 @@ export { WindowUtil } from './src/main/ets/ui/base/WindowUtil';
 export { AuthUtil } from './src/main/ets/core/auth/AuthUtil';
 
 export { CacheUtil } from './src/main/ets/core/cache/CacheUtil';
+
+export { GlobalContext } from './src/main/ets/core/cache/GlobalContext';
+
+export { GlobalThis } from './src/main/ets/core/cache/GlobalThis';
 
 export { ImgPreviewUtil } from './src/main/ets/core/media/ImgPreviewUtil';
 

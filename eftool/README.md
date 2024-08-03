@@ -16,6 +16,8 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 🍺eftool理念
 
+> ### 近期发现有三方库引用eftool的源码但未注明出处,我很欢迎大家进行二次开发以及共建鸿蒙生态，还请大家在引用时注明出处，万分感谢
+
 `eftool`既是一个工具集，也是一个知识库，我从不自诩代码原创，大多数工具类都是**搬运**而来，因此：
 
 - 你可以引入使用，也可以**拷贝**和修改使用，如需分享扩展**希望可以注明原出处即可**，也希望能把bug及时反馈回来。
@@ -94,6 +96,12 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 ### 3.网络相关类组件(V1.2.1-rc.2+有改动)
 
+| 模块      | 介绍                      |
+|---------|-------------------------|
+| efAxios | 二次封装axios               |
+| efRcp   | 封装rcp请求,提供统一请求响应上传下载拦截等 |
+| NetUtil | 提供对网络的方法操作工具类           |
+
 #### 3.1 efAxios
 
 | 模块            | 介绍                              |
@@ -104,12 +112,15 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 
 #### 3.2 efRcp
 
-| 模块             | 介绍                              |
-|----------------|---------------------------------|
-| efRcpParams    | 提供eftool封装rccp请求所需的参数           |
-| efRcpInstance  | 二次封装rcp的产物,提供统一请求响应设置等          |
-| efRcpClientApi | 提供针对于统一post,get,delete,put等请求封装 |
-| RcpInterceptor | 提供针对于统一请求和响应拦截封装                |
+| 模块                 | 介绍                              |
+|--------------------|---------------------------------|
+| EfRcpUtil          | 提供rcp的session相关工具类              |
+| efRcpParams        | 提供eftool封装rccp请求所需的参数           |
+| efRcpSecurityParam | 提供rcp的证书配置参数                    |
+| CertificateUtil    | 证书配置相关工具类                       |
+| efRcpEventsHandler | efRcp请求事件处理器                    |
+| efRcpClientApi     | 提供针对于统一post,get,delete,put等请求封装 |
+| RcpInterceptor     | 提供针对于统一请求和响应拦截封装                |
 
 ### 4.JSON类组件
 
@@ -3286,9 +3297,13 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...](1.2.1-rc.2+)
    */
   static loadingTxt: string = '努力获取数据中,请稍后...';
+  /**
+   * 是否开启日志(1.2.1-rc.2+)
+   */
+  static isLogger: boolean = true;
 ```
 
-##### 2.AxiosUtil工具类(V1.2.1-rc.1有改动)
+##### 2.AxiosUtil工具类(V1.2.1-rc.2有改动)
 
 * efAxios 全局对象
 
@@ -3302,9 +3317,9 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    //1.统一给请求头添加nonce防篡改校验因子,业务自行实现,如有需求也可在后续demo中完善
    //2.统一给请求头添加timestamp防重放的随机数因子,业务自行实现,如有需求也可在后续demo中完善
    //3.设置默认请求类型 application/json
-   //4.添加统一的isAllEncrypt=true时整体加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
-   //5.添加统一的isPartEncrypt=true时根据关键字加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
-   //6.添加统一的请求头签名sign字段,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+   //4.添加统一的isAllEncrypt=true时整体加密
+   //5.添加统一的isPartEncrypt=true时根据关键字加密
+   //6.添加统一的请求头签名sign字段
 ```
 
 * convertResponseInfo 封装的针对于统一响应的处理 【统一返回OutDTO<T>】
@@ -3322,7 +3337,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 > 如果efAxiosParams.isConvertDTO=false,则所有异常返回为AxiosError业务自行处理
 
-##### 3.EfClientApi工具类(V1.2.1-rc.1有改动)
+##### 3.EfClientApi工具类(V1.2.1-rc.2有改动)
 
 > 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
@@ -3569,7 +3584,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 
 ##### 前言
 
-> efRcp封装需要大家共建和提出建议与需求,已完善传post,postForm,put,get,delete,cancel请求,期待大家提出宝贵意见
+> efRcp封装需要大家共建和提出建议与需求,已完善传post,postForm,put,get,delete,cancel请求,统一上传下载,以及配置证书,期待大家提出宝贵意见
 
 > 后端Demo示例为Java开发,大家自行下载使用与阅读,如有问题请提出Issue
 
@@ -3581,7 +3596,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   /**
    * 登录成功后的token的key
    */
-  static tokenName: string = 'Authorization';
+  static tokenName: string = 'authorization';
   /**
    * 登录成功后的token值
    */
@@ -3618,274 +3633,427 @@ eTXVu7hjXEqmrGXmgwIDAQAB
    *  会话session关闭事件回调
    */
   static closeCallBack?: () => void;
+  /**
+   * 是否开启证书加密,默认为false
+   */
+  static isSecurity: boolean = false;
+  /**
+   * 是否开启全局日志打印,默认为true
+   */
+  static isLogger: boolean = true;
 ```
 
 ##### 2.EfRcpUtil工具类
 
-* efRcpInstance 全局对象
+* efRcpInstance 全局rcp的session对象
 
 ```
-  该变量为抛出的全局二次封装的全局rcp对象,默认超时时间为10s
+  该变量为抛出封装的全局rcp对象,默认超时时间为10s
 ```
 
-* createSession 封装创建rcp实例方法
+* getRcp 封装创建rcp实例方法
 
 ```
-   //1.统一给请求头添加nonce防篡改校验因子,业务自行实现,如有需求也可在后续demo中完善
-   //2.统一给请求头添加timestamp防重放的随机数因子,业务自行实现,如有需求也可在后续demo中完善
-   //3.设置默认请求类型 application/json
-   //4.添加统一的isAllEncrypt=true时整体加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
-   //5.添加统一的isPartEncrypt=true时根据关键字加密,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
-   //6.添加统一的请求头签名sign字段,当前版本前端已完成,后端demo暂未完成，预计1.1.9前后可全部完善
+   //1.统一拦截器
+   //2.设置默认请求类型 application/json
+   //3.设置默认传输超时时间为10s
+   //4.设置默认连接超时时间为5s
+   //5.设置此会话中允许的最大同时为80
 ```
 
 ##### 3.EfRcpClientApi工具类
 
-> 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
+> 该工具类提供统一简化各种请求方式
+
+* buildRequest 私有方法 构建Request请求
+
+* buildResponse 私有方法 构建Response响应对象
 
 * post请求 json格式 async/await 方式
 
 ```
     //参数说明
-    async post<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,
-    cookies?: Record<string, string>): Promise<E> 
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
+    async post<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //query 业务传入的请求数据
+    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cookies 自定义cookie
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+    //E 为响应结果对象
 ```
 
-* post请求 formData格式 async/await 方式(V1.2.1-rc.2+)
-
-> V1.2.1-rc.2中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+* postForm请求 async/await 方式
 
 ```
-    //参数说明
-    async postFormData<E>(url: string, formData: FormData, headers?: Record<string, Object>): Promise<E>
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //formData 业务传入的formData数据
-    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //参数说明   参数为json格式
+    async postForm<E>(url: string, query: rcp.FormFields, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //query 业务传入的FormFields请求数据
+    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cookies 自定义cookie
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+    //E 为响应结果对象
+    
 ```
 
 * get请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
-
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
-    async get<E>(url: string, headers?: Record<string, Object>): Promise<E>
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
-    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
-```
-
-* getByParams请求 async/await 方式
-
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
-
-```
-    //参数说明   参数为json格式
-    async getByParams<E>(url: string, params: Record<string, Object>, headers?: Record<string, Object>): Promise<E>
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //params表示get请求的入参妇科key:value格式
-    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
-    
-```
-
-* delete请求 async/await 方式
-
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
-
-```
-    //参数说明
-    async delete<E>(url: string, headers?: Record<string, Object>): Promise<E>
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //注意demo中的delete请求为rest方式,即入参方式为 delete方法/param1/param2 以此类推
-    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    async get<E>(url: string, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cookies 自定义cookie
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+    //E 为响应结果对象
 ```
 
 * put请求 async/await 方式
 
-> V1.2.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+```
+    //参数说明
+    async put<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //query 业务传入的请求数据
+    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cookies 自定义cookie
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+    //E 为响应结果对象
+```
+
+* delete请求 async/await 方式
 
 ```
     //参数说明
-    async put<F, E>(url: string, query: Record<string, Object>,headers?: Record<string, Object>): Promise<E>
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //query 为JSON格式的请求参数key需要为字符串类型必须使用引号包裹 在方法内会将JSON转换为请求对象F,业务无需关心
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //F 为请求入参对象,具体参照示例中的写法
-    //E 为响应结果对象,格式为OutDTO<T> T为业务自定义对象
+    async delete<E>(url: string, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cookies 自定义cookie
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+    //E 为响应结果对象
 ```
 
-* upload 统一的上传请求 async/await 方式
-
-> V1.2.1-rc.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
-
-```
-    //参数说明
-    async upload(url: string, isUri: boolean, progressCallBack: (process: number) => void,data?: ArrayBuffer, uri?: string, keyName?: string, headers?: Record<string, Object>)
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //isUri  是否为uri文件
-    //progressCallBack 上传进度回调,具体参照示例中的写法
-    //data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
-    //uri   isUri=true时传入  表示上传的文件为uri格式
-    //keyName  上传时后端接收的key,默认为file
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-```
-
-* download 统一的下载请求 async/await 方式
-
-> V1.2.1-rc.1-rc.1中将异常抛出给上级如果使用了转换为OutDTO则抛出异常为OutDTO,否则为AxiosError
+* cancel请求 async/await 方式
 
 ```
     //参数说明
-    async download(url: string, filePath: string, progressCallBack: (process: number) => void, headers?: Record<string, Object>)
-    //url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+url 组合而成
-    //filePath  下载文件名称 如下载png图片后希望名称为girl.png
+    async cancel(url: string)
+    //url 为取消请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+```
+
+* uploadFile 统一的上传请求MultipartFormFields形式 async/await 方式
+
+```
+    //参数说明
+    async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //fileInfo  需要上传的文件MultipartFormFields对象
+    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cookies 自定义cookie
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+    //E 为响应结果对象
+```
+
+* downloadFile 统一的下载请求 async/await 方式
+
+```
+    //参数说明
+    async downloadFile<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,loadingTxt?: string, isSecurity?: boolean)
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //fileName  下载文件名称 如下载png图片后希望名称为girl.png
     //progressCallBack  下载进度回调方法
-    //headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+```
+
+* downloadStream 统一的下载请求 async/await 方式
+
+```
+    //参数说明
+    async downloadStream<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,loadingTxt?: string, isSecurity?: boolean)
+    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
+    //fileName  下载文件名称 如下载png图片后希望名称为girl.png
+    //progressCallBack  下载进度回调方法
+    //loadingTxt 是否覆写loading文本
+    //isSecurity 是否开启证书加密
+```
+
+* 初始化参数配置示例
+
+> 请求相关的参数配置建议在Ability的onWindowStageCreate方法中配置
+
+> 可使用BuildProfile获取到当前运行的还是debug/qa/test/release等 然后设置不同的请求信息
+
+```
+  if(运行环境===debug){
+    //关于rcp的配置
+    efRcpParams.baseURL = "http://192.168.0.101:18088";
+    efRcpParams.loadingTxt = '小的快马加鞭...';
+    efRcpParams.isLogger = true;
+    efRcpParams.isLoading = false;
+  }
+  if(运行环境===qa){
+    //关于rcp的配置
+    efRcpParams.baseURL = "http://192.168.0.222:18088";
+    efRcpParams.loadingTxt = '正在努力加载...';
+    //设置证书内容
+    efRcpSecurityParam.certContent = '111111111';
+    efRcpParams.isLogger = false;
+    efRcpParams.isLoading = true;
+  }
 ```
 
 * 登录示例
 
 ```
-    //如不需要全局loading则如下设置
-    efAxiosParams.isLoading = false;
-    //如需更改loading提示则如下设置
-    efAxiosParams.loadingTxt = '小的快马加鞭...';
-    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
-    efAxiosParams.isConvertDTO = false;
-    const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
+  async testLogin() {
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
       'account': 'efadmin',
       'pwd': '123456'
-    }, {
-      'csxTest': '1212121212'
-    });
-    if (loginNoDTO.token) {
-      ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
-    }
-```
-
-```
-    //1.先设置统一的请求后端前缀 具体时机业务自行决定,Ability中也可
-    efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-    //2.调用接口
-    //模拟登录 UserQuery为请求参数,OutDTO<UserDTO>为响应的结果,OutDTO中的对象为业务自己创建
-    const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
-      'account': 'efadmin',
-      'pwd': '123456'
-    }, { 
-      'testAddHeader': '1212121212'   //此处表示当前请求会额外将testAddHeader添加到请求头中
-    });
-    //登录成功
-    if (login.getSuccess()) {
-      //登录成功将token赋值，后续需要,默认token的key为Authorization
-      //如果需要更换业务调用efAxiosParams.tokenName = '业务自定义的token名称'
-      efAxiosParams.tokenName = '如此处更换为efToken';
-      efAxiosParams.tokenValue = login.getDataRow().token;
+    }, {}, {}, '更改了请求loading内容...');
+    if (dto.getSuccess()) {
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+      //请求成功后将token存储在efRcpParams.tokenValue
+      efRcpParams.tokenValue = dto.getDataRow().token;
     } else {
-      //登录失败
-      ToastUtil.showToast(login.getMsg());
+      ToastUtil.showToast(JSONObject.toJSONString(dto));
     }
+  }
 ```
 
-* post示例
+* post示例 json格式
 
 ```
-      //模拟测试post请求  此时的请求头中已经存在token字段
-      //UserQuery为请求参数,OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
-      const post = await efClientApi.post<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/post', {
-        'nickName': 'post请求参数',
-        'name': '测试入参'
-      });
-      if (post.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(post.getDataRow()));
-      }
+  async testPostJSON() {
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/post', {
+      "nickName": "旺旺崔冰冰",
+      "account": 'yunkss@163.com',
+      "age": 12,
+      "hobby": ["吃", "喝", "敲代码"],
+      "sex": true
+    });
+    if (dto.getSuccess()) {
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+    } else {
+      ToastUtil.showToast(JSONObject.toJSONString(dto));
+    }
+  }
+```
+
+* post示例 form格式
+
+```
+  async testPostForm() {
+    let dto = await efRcpClientApi.postForm<OutDTO<string>>('/api/eftool/postFormData', {
+      "nickName": "旺旺崔冰冰",
+      "account": 'yunkss@163.com',
+      "age": 12,
+      "hobby": ["吃", "喝", "敲代码"],
+      "sex": true
+    });
+    if (dto.getSuccess()) {
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+    } else {
+      ToastUtil.showToast(JSONObject.toJSONString(dto));
+    }
+  }
 ```
 
 * get示例
 
 ```
-      //模拟测试get请求
-      //OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
-      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111');
-      if (get.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(get.getDataRow()));
-      }
+  async testGet() {
+    let dto = await efRcpClientApi.get<OutDTO<string>>('/api/eftool/get/122341', {
+      "testHeader": "111"
+    }, {
+      "testCookie": "csx"
+    });
+    if (dto.getSuccess()) {
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+    } else {
+      ToastUtil.showToast(JSONObject.toJSONString(dto));
+    }
+  }
 ```
 
 * put示例
 
 ```
-      //模拟测试put请求
-      //UserQuery为请求参数,OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
-      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
-        'id': '11111'
-      });
-      if (put.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(put.getDataRow()));
-      }
+  async testPUT() {
+    let dto = await efRcpClientApi.put<OutDTO<string>>('/api/eftool/put', {
+      "nickName": "旺旺崔冰冰",
+      "account": 'yunkss@163.com',
+      "age": 12,
+      "hobby": ["吃", "喝", "敲代码"],
+      "sex": true
+    });
+    if (dto.getSuccess()) {
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+    } else {
+      ToastUtil.showToast(JSONObject.toJSONString(dto));
+    }
+  }
 ```
 
 * delete示例
 
 ```
-      //模拟测试delete请求
-      //OutDTO<Record<string, Object>>为响应的结果,OutDTO中的对象为业务自己创建
-      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
-      if (del.getSuccess()) {
-        ToastUtil.showToast(JSONUtil.toJSONString(del.getDataRow()));
-      }
+  async testDelete() {
+    let dto = await efRcpClientApi.delete<OutDTO<string>>('/api/eftool/delete/5345345');
+    if (dto.getSuccess()) {
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+    } else {
+      ToastUtil.showToast(JSONObject.toJSONString(dto));
+    }
+  }
+```
+
+* cancel示例
+
+```
+  async testCancel() {
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/post', {
+      "nickName": "旺旺崔冰冰",
+      "account": 'yunkss@163.com',
+      "age": 12,
+      "hobby": ["吃", "喝", "敲代码"],
+      "sex": true
+    });
+    await efRcpClientApi.cancel('/api/eftool/post');
+  }
 ```
 
 * 上传示例
 
 ```
-      //模拟文件上传
-      async testUpload() {
-          this.showDownBtn = Visibility.Visible;
-          efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-          let ctx = getContext() as common.UIAbilityContext;
-          let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
-          let imageResource = imageArray.buffer as ArrayBuffer;
-          let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
-            if (progress >= 100) {
-              this.showDownBtn = Visibility.None;
+  async testUploadFile() {
+    //拉起选中照片
+    let result = await PickerUtil.selectPhotoVideo();
+    //判断是否成功
+    if (result.getSuccess()) {
+      let list = result.getDataTable();
+      //获取选中照片uri
+      let item = list[0];
+      //创建文件信息
+      let fileUriObject = new fileUri.FileUri(item);
+      //获取文件名
+      let name = fileUriObject.name;
+      //获取流
+      let bufferImg = FileUtil.getBufferByURI(item);
+      this.btnCtx = "正在上传中...";
+      this.showDownBtn = Visibility.Visible;
+      //上传
+      let dto =
+        await efRcpClientApi.uploadFile<OutDTO<string>>('/api/eftool/upload', {
+          "file": {
+            contentType: 'multipart/form-data',
+            remoteFileName: name,
+            contentOrPath: {
+              content: bufferImg.getDataRow()
             }
+          }
+        }, (progress) => {
+          if (progress >= 100) {
+            this.showDownBtn = Visibility.None;
+            this.process = 0;
+          } else {
             this.process = progress;
-          }, imageResource);
-          this.msg = res ? res["dataRow"] : '';
-     }
+          }
+        });
+      let res = JSONObject.toJSONString(dto);
+      ToastUtil.showToast(res);
+      this.message = res;
+    }
+  }
 ```
 
 * 下载示例
 
 ```
-      //模拟测试文件下载
-      async testDownload() {
-        efAxiosParams.baseURL = 'http://192.168.1.126:18088';
-        this.showDownBtn = Visibility.Visible;
-        let res = await efClientApi.download('/api/eftool/download/0d6a25e4-f61b-48eb-8a12-53f82c5b957d-default1715324534920.png', 'girl.png', (progress: number) => {
+  async testDownloadStream() {
+    this.btnCtx = "正在下载中...";
+    this.showDownBtn = Visibility.Visible;
+    let dto =
+      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/a89d3c16-1dba-4a41-909f-1214f52d3466-IMG_20240214_212821.jpg',
+        'abc.jpg', (progress) => {
           if (progress >= 100) {
             this.showDownBtn = Visibility.None;
+            this.process = 0;
+          } else {
+            this.process = progress;
           }
-          this.process = progress;
         });
-        this.msg = res ? res["msg"] : '';
-      }
+    //获取文件路径
+    let url = FileUtil.getFilesDirPath('', 'abc.jpg');
+    //转换成uri
+    let uri = fileUri.getUriFromPath(url);
+    //预览
+    await PreviewUtil.previewImage(uri);
+    this.message = JSONObject.toJSONString(dto);
+  }
 ```
 
-##### 4.RcpInterceptor工具类
-
-* 111
+```
+  async testDownloadFile() {
+    this.btnCtx = "正在下载中...";
+    this.showDownBtn = Visibility.Visible;
+    let dto =
+      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/7626f4b1-9835-4eb4-8660-ae299ba4733a-IMG_20240214_212933.jpg',
+        'csx.jpg', (progress) => {
+          if (progress >= 100) {
+            this.showDownBtn = Visibility.None;
+            this.process = 0;
+          } else {
+            this.process = progress;
+          }
+        })
+    //获取文件路径
+    let url = FileUtil.getFilesDirPath('', 'csx.jpg');
+    //转换成uri
+    let uri = fileUri.getUriFromPath(url);
+    //预览
+    await PreviewUtil.previewImage(uri);
+    this.message = JSONObject.toJSONString(dto);
+  }
 ```
 
-```
+##### 5.CertificateUtil工具类
+
+* readClientCerts 读取指定文件中的证书内容
+
+* getRcpSecurityCfg 获取组装的rcp安全校验配置
+
+#### 5.3 NetUtil网络工具类(V1.2.1-rc.2+)
+
+* getAllNets 获取所有处于连接状态的网络列表
+
+* hasDefaultNet 检查默认数据网络是否激活
+
+* getAppNet 获取App绑定的网络信息
+
+* isWiFi 判断当前网络是否是WiFi
+
+* register 注册网络监听
+
+* unregister 取消注册
 
 ### 6.UI组件相关使用API
 

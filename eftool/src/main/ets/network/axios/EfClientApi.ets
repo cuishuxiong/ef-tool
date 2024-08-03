@@ -8,6 +8,7 @@ import { efAxios } from './AxiosUtil';
 import fs from '@ohos.file.fs';
 import { common } from '@kit.AbilityKit';
 import { ArrayList } from '@kit.ArkTS';
+import { FileUtil } from '../../core/media/FileUtil';
 
 
 class EfClientApi {
@@ -172,7 +173,6 @@ class EfClientApi {
     }
   }
 
-
   /**
    * 批量获取请求
    * @param requestInfo  需要传入的请求集合
@@ -270,11 +270,20 @@ class EfClientApi {
       let filesDir = context.filesDir;
       //组装下载路径
       let finalPath = filesDir + "/" + filePath;
+      //获取文件名
+      let fName = FileUtil.getFileName(finalPath);
+      //获取目录路径
+      let path = finalPath.replace(fName, "");
       try {
         let isExists = fs.accessSync(finalPath);
         //如果已存在则删除
         if (isExists) {
           fs.unlinkSync(finalPath);
+        } else {
+          //创建
+          if (path != filesDir + "/") {
+            FileUtil.mkdirSync(path, true);
+          }
         }
       } catch (err) {
         // ToastUtil.showToast('删除路径下已存在文件失败:' + filePath);

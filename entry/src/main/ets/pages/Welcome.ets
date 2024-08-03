@@ -109,12 +109,12 @@ struct Welcome {
    */
   aboutToAppear(): void {
     //请求地址前缀
-    efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
+    // efAxiosParams.baseURL = 'http://aliyunmr.com:18088';
     //是否开启传输整体加密
-    efAxiosParams.isAllEncrypt = true;
+    // efAxiosParams.isAllEncrypt = true;
     //加密的SM2key
-    efAxiosParams.sm2PubKey =
-      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
+    // efAxiosParams.sm2PubKey =
+    //   '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
   }
 
   testJSONArrayList() {
@@ -393,37 +393,38 @@ struct Welcome {
 
   async testDownload(upName: string, downName: string) {
     this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
-      if (progress >= 100) {
-        this.showDownBtn = Visibility.None;
-      }
-      this.process = progress;
-    });
+    let res =
+      await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
+        if (progress >= 100) {
+          this.showDownBtn = Visibility.None;
+        }
+        this.process = progress;
+      });
     ToastUtil.showToast(res ? (res as OutDTO<string>).getMsg() : '下载文件出错了~');
-    let context = getContext(this) as common.UIAbilityContext;
-    //获取沙箱文件
-    let filesDir = context.filesDir + "/" + downName;
-    //转换成uri
-    let uri = fileUri.getUriFromPath(filesDir);
-    let suffix = uri.substring(uri.lastIndexOf(".") + 1);
-    let r = await PreviewUtil.canPreview(uri);
-    if (!r.getSuccess()) {
-      ToastUtil.showToast(r.getMsg());
-    }
-    if (suffix === 'txt') {
-      await PreviewUtil.previewTxt(uri);
-    } else if (['png', 'gif', 'webp', 'bmp'].includes(suffix) || suffix === 'jpg' || suffix === 'jpeg' ||
-      suffix === 'svg') {
-      await PreviewUtil.previewImage(uri);
-    } else if (suffix === 'mp4' || suffix === 'mkv' || suffix === 'ts') {
-      await PreviewUtil.previewVideo(uri);
-    } else if (['aac', 'ogg'].includes(suffix) || suffix === 'm4a' || suffix === 'mp3' || suffix === 'wav') {
-      await PreviewUtil.previewAudio(uri);
-    } else if (['html', 'htm'].includes(suffix)) {
-      await PreviewUtil.previewHtml(uri);
-    } else {
-      ToastUtil.showToast('该uri格式暂时无法预览~');
-    }
+    // let context = getContext(this) as common.UIAbilityContext;
+    // //获取沙箱文件
+    // let filesDir = context.filesDir + "/" + downName;
+    // //转换成uri
+    // let uri = fileUri.getUriFromPath(filesDir);
+    // let suffix = uri.substring(uri.lastIndexOf(".") + 1);
+    // let r = await PreviewUtil.canPreview(uri);
+    // if (!r.getSuccess()) {
+    //   ToastUtil.showToast(r.getMsg());
+    // }
+    // if (suffix === 'txt') {
+    //   await PreviewUtil.previewTxt(uri);
+    // } else if (['png', 'gif', 'webp', 'bmp'].includes(suffix) || suffix === 'jpg' || suffix === 'jpeg' ||
+    //   suffix === 'svg') {
+    //   await PreviewUtil.previewImage(uri);
+    // } else if (suffix === 'mp4' || suffix === 'mkv' || suffix === 'ts') {
+    //   await PreviewUtil.previewVideo(uri);
+    // } else if (['aac', 'ogg'].includes(suffix) || suffix === 'm4a' || suffix === 'mp3' || suffix === 'wav') {
+    //   await PreviewUtil.previewAudio(uri);
+    // } else if (['html', 'htm'].includes(suffix)) {
+    //   await PreviewUtil.previewHtml(uri);
+    // } else {
+    //   ToastUtil.showToast('该uri格式暂时无法预览~');
+    // }
   }
 
   testArray2Object() {
@@ -889,7 +890,7 @@ struct Welcome {
         })
         Button('下载文件').margin({ top: 20 }).onClick(() => {
           this.btnCtx = '下载文件中...';
-          this.testDownload('1abf78c7-7c6c-490d-bd36-88b5063daab1-default1715851330681', 'girl.jpg');
+          this.testDownload('aaa.jpg', 'girl.jpg');
         })
         DownloadUtil({
           progressState: this.showDownBtn,

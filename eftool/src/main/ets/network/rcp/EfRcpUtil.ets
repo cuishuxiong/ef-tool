@@ -93,7 +93,7 @@ export class efRcpParams {
   /**
    * 登录成功后的token的key
    */
-  static tokenName: string = 'Authorization';
+  static tokenName: string = 'authorization';
   /**
    * 登录成功后的token值
    */

@@ -5,17 +5,6 @@ import { efRcpParams, Logger, NotificationUtil, ImmersionUtil, efAxiosParams, ef
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
-    efRcpParams.baseURL = "http://192.168.0.100:18088";
-    efRcpParams.loadingTxt = '小的快马加鞭...';
-    efRcpSecurityParam.certContent = '111111111';
-    // efRcpParams.isLogger = false;
-    // efRcpParams.isLoading = false;
-
-    efAxiosParams.loadingTxt = '小的快马加鞭...';
-    efAxiosParams.baseURL = 'http://192.168.0.100:18088';
-    efAxiosParams.isAllEncrypt = false;
-    efAxiosParams.sm2PubKey =
-      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
   }
 
@@ -27,7 +16,19 @@ export default class EntryAbility extends UIAbility {
     Logger.init('API11TeTest', this.context);
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+    //关于rcp的配置
+    efRcpParams.baseURL = "http://192.168.0.100:18088";
+    efRcpParams.loadingTxt = '小的快马加鞭...';
+    // efRcpSecurityParam.certContent = '111111111';
+    // efRcpParams.isLogger = false;
+    // efRcpParams.isLoading = false;
 
+    //关于efAxios的配置
+    efAxiosParams.loadingTxt = '小的快马加鞭...';
+    efAxiosParams.baseURL = 'http://192.168.0.100:18088';
+    efAxiosParams.isAllEncrypt = false;
+    efAxiosParams.sm2PubKey =
+      '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //初始化
     let imm = new ImmersionUtil();
     windowStage.loadContent('pages/RcpPage', (err, data) => {

@@ -279,25 +279,4 @@ export class FileUtil {
     return OutDTO.OKByDataRow<ArrayBuffer>('获取二进制文件流成功~', bufferImg);
   }
 
-  /**
-   * 获取resources/rawfile目录下对应的rawfile文件内容，使用同步形式返回
-   * @param path rawfile文件路径
-   * @returns
-   */
-  // static getRawFileContentStrSync(path: string): string {
-  //   let resourceManager = getContext().resourceManager;
-  //   let uint8Array = resourceManager.getRawFileContentSync(path);
-  //   return StrAndUintUtil.unitArray2String(uint8Array);
-  // }
-
-  /**
-   * 获取resources/rawfile目录下对应的rawfile文件内容，使用Promise异步回调
-   * @param path
-   * @returns
-   */
-  // static async getRawFileContentStr(path: string): Promise<string> {
-  //   let resourceManager = getContext().resourceManager;
-  //   let uint8Array = await resourceManager.getRawFileContent(path);
-  //   return StrAndUintUtil.unitArray2String(uint8Array);
-  // }
 }

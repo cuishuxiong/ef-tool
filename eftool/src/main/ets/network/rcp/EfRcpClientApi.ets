@@ -277,8 +277,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,
-    headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
+    headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
     try {
       //更改请求方式
       if (headers && !headers['content-type']) {

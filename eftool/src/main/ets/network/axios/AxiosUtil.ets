@@ -451,7 +451,10 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     Logger.debug("--------请求URL:", (config.baseURL as string + config.url as string));
     Logger.debug("--------请求方式:", config.method as string);
     Logger.debug("--------请求  头:", JSONObject.toJSONString(config.headers));
-    Logger.debug("--------请求入参:", JSONObject.toJSONString(config.data));
+    if (config.headers["Req-Type"] != "uploadOrDownload") {
+      Logger.debug("--------请求入参:", JSONObject.toJSONString(config.data));
+    }
+
   }
   return config;
 }, async (error: AxiosError) => {
@@ -484,8 +487,10 @@ efAxios.interceptors.response.use(async (response: AxiosResponse) => {
     Logger.debug("--------响应信息---------", "");
     Logger.debug("--------响应状态:", response.status + "");
     Logger.debug("--------响应文本:", response.statusText);
-    Logger.debug("--------响应  头:", JSONObject.toJSONString(response.headers));
-    Logger.debug("--------响应结果:", JSONObject.toJSONString(response.data));
+    if (response.config.headers["Req-Type"] != "uploadOrDownload") {
+      Logger.debug("--------响应  头:", JSON.stringify(response.headers));
+      Logger.debug("--------响应结果:", JSON.stringify(response.data));
+    }
   }
   return response;
 }, async (error: AxiosError) => {
