@@ -277,7 +277,8 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,
-    headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
+    headers?: Record<string, string>, cookies?: Record<string, string>, loadingTxt?: string,
+    isSecurity?: boolean): Promise<E> {
     try {
       //更改请求方式
       if (headers && !headers['content-type']) {
@@ -325,13 +326,24 @@ export class EfRcpClientApi {
   async downloadFile<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,
     loadingTxt?: string, isSecurity?: boolean) {
     try {
-      //获取保存路径
+      //获取保存全路径
       let finalPath = FileUtil.getFilesDirPath('', fileName);
+      //获取跟路径
+      let filesDir = FileUtil.getFilesDirPath("");
+      //获取文件名
+      let fName = FileUtil.getFileName(finalPath);
+      //获取目录路径
+      let path = finalPath.replace(fName, "");
       //判断是否存在
       let isExists = fs.accessSync(finalPath);
       //如果已存在则删除
       if (isExists) {
         fs.unlinkSync(finalPath);
+      } else {
+        //创建
+        if (path != filesDir + "/") {
+          FileUtil.mkdirSync(path, true);
+        }
       }
       //下载对象
       let downloadToFile: rcp.DownloadToFile = {

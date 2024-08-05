@@ -265,7 +265,8 @@ class EfClientApi {
    */
   async download(url: string, filePath: string, progressCallBack: (process: number) => void,
     headers?: Record<string, Object>): Promise<Object> {
-    try { //获取上下文
+    try {
+      //获取上下文
       let context = getContext(this) as common.UIAbilityContext;
       let filesDir = context.filesDir;
       //组装下载路径
