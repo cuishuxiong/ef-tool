@@ -1,5 +1,24 @@
 # Changelog
 
+
+## [v1.2.1] 2024-08
+
+### 🐣新特性(API12)
+
+* 新增kvUtil数据持久化工具类
+* 发布1.2.1正式版
+
+### 🐞功能优化
+
+* 优化JSONObject.parse如果是Array不达预期问题[issuesIAI911](https://gitee.com/yunkss/ef-tool/issues/IAI911)
+* 新增getGeoLocationAll获取定位返回信息更全面[issuesIAI83G](https://gitee.com/yunkss/ef-tool/issues/IAI83G)
+
+
+### 🐞功能优化
+
+* 优化rcp请求异常无法抛出问题[issuesIAHYF3](https://gitee.com/yunkss/ef-tool/issues/IAHYF3)
+* 优化rcp下载方法证书校验
+
 ## [v1.2.1-rc.3] 2024-08
 
 ### 🐞功能优化

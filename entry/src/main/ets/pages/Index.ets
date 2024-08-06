@@ -152,7 +152,7 @@ struct Index {
       let formData = new FormData();
       formData.append("account", "1234QQQ");
       formData.append("nickName", "旺旺崔冰冰");
-      formData.append("pwd","1111111");
+      formData.append("pwd", "1111111");
       const post = await efClientApi.postFormData<OutDTO<Record<string, Object>>>('/api/eftool/postFormData', formData);
       if (post.getSuccess()) {
         this.message = JSONObject.toJSONString(post.getDataRow());
@@ -273,8 +273,8 @@ struct Index {
   }
 
   async geoLocation() {
-    let result = await LocationUtil.getGeoLocation();
-    this.message = result.getDataRow();
+    let result = await LocationUtil.getGeoLocationAll();
+    this.message = JSONObject.toJSONString(result);
   }
 
   async add2location() {

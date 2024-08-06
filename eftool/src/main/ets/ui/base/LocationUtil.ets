@@ -28,10 +28,12 @@ export class LocationUtil {
    * @returns 返回当前位置中文描述
    */
   static async getGeoLocation(): Promise<OutDTO<string>> {
-    let isAuth = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION') && await AuthUtil.checkPermissions('ohos.permission.LOCATION');
+    let isAuth = AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION') &&
+    AuthUtil.checkPermissions('ohos.permission.LOCATION');
     if (!isAuth) {
       //获取用户授权
-      let code = await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
+      let code =
+        await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
       if (!code) {
         //授权失败
         return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
@@ -45,6 +47,32 @@ export class LocationUtil {
       return OutDTO.OKByDataRow<string>('获取当前位置成功~', result.placeName);
     }
     return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '未获取到定位信息~');
+  }
+
+  /**
+   * 获取用户当前定位-逆编码后(会申请APPROXIMATELY_LOCATION和LOCATION权限)
+   * @returns 返回当前位置全部结果
+   */
+  static async getGeoLocationAll(): Promise<geoLocationManager.GeoAddress> {
+    let isAuth = AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION') &&
+    AuthUtil.checkPermissions('ohos.permission.LOCATION');
+    if (!isAuth) {
+      //获取用户授权
+      let code =
+        await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
+      if (!code) {
+        //授权失败
+        return {} as geoLocationManager.GeoAddress;
+      }
+    }
+    //授权成功获取当前定位
+    let current = await LocationUtil.getCurrentLocation();
+    //逆编码定位
+    let result = await LocationUtil.geoConvert(current.latitude, current.longitude);
+    if (result) {
+      return result;
+    }
+    return result;
   }
 
   /**

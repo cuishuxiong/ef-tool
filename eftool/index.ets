@@ -186,3 +186,5 @@ export { ImgPreviewUtil } from './src/main/ets/core/media/ImgPreviewUtil';
 export { TypeWritingUtil } from './src/main/ets/device/keyboard/TypeWritingUtil';
 
 export { PrefUtil } from './src/main/ets/device/PrefUtil';
+
+export { KvUtil } from './src/main/ets/device/KvUtil';

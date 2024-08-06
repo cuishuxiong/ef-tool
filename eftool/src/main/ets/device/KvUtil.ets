@@ -1,6 +1,7 @@
 import { distributedKVStore } from '@kit.ArkData';
-import { BusinessError } from '@kit.BasicServicesKit';
-import { ToastUtil } from '../ui/prompt/ToastUtil';
+import { bundleManager, common } from '@kit.AbilityKit';
+import { AuthUtil } from '../core/auth/AuthUtil';
+import { RandomUtil } from '../core/util/RandomUtil';
 
 /**
  * @Author csx
@@ -8,82 +9,127 @@ import { ToastUtil } from '../ui/prompt/ToastUtil';
  * @TODO KvUtil 数据持久化工具类
  */
 export class KvUtil {
-  private kvManager?: distributedKVStore.KVManager;
-  private kvStore: distributedKVStore.SingleKVStore | undefined = undefined;
+  /**
+   * 管理数据库对象
+   */
+  private kvManager: distributedKVStore.KVManager | null = null;
+  /**
+   * 数据库实例
+   */
+  private kvStore: distributedKVStore.SingleKVStore | null = null;
 
-  public init(context: Context) {
+  /**
+   * 构造函数
+   * @param ctx
+   */
+  constructor(ctx: common.Context) {
+    this.init(ctx);
+  }
+
+  /**
+   * 初始化
+   * @returns SingleKVStore
+   */
+  async init(ctx: common.Context) {
+    //获取调用方包名
+    let bundleInfo: bundleManager.BundleInfo =
+      bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION);
+    //构建配置
     const kvManagerConfig: distributedKVStore.KVManagerConfig = {
-      context: context,
-      bundleName: 'com.yunkss.csx.tool'
+      context: ctx,
+      bundleName: bundleInfo.name
     };
-    try {
-      // 创建KVManager实例
-      this.kvManager = distributedKVStore.createKVManager(kvManagerConfig);
-    } catch (e) {
-      let error = e as BusinessError;
-      ToastUtil.showToast(error.message);
-      return;
-    }
-
-    try {
-      const options: distributedKVStore.Options = {
-        createIfMissing: true,
-        encrypt: false,
-        backup: false,
-        autoSync: false,
-        // kvStoreType不填时，默认创建多设备协同数据库
-        kvStoreType: distributedKVStore.KVStoreType.SINGLE_VERSION,
-        // 多设备协同数据库：kvStoreType: distributedKVStore.KVStoreType.DEVICE_COLLABORATION,
-        securityLevel: distributedKVStore.SecurityLevel.S1
-      };
-      this.kvManager.getKVStore<distributedKVStore.SingleKVStore>('storeId', options,
-        (err, store: distributedKVStore.SingleKVStore) => {
-          if (err) {
-            ToastUtil.showToast('获取KVStore失败,原因为:' + err.message)
-            return;
-          }
-          this.kvStore = store as distributedKVStore.SingleKVStore;
-        });
-    } catch (e) {
-      let error = e as BusinessError;
-      ToastUtil.showToast('遇到异常,原因为:' + error.message)
-    }
+    // 创建KVManager实例
+    this.kvManager = distributedKVStore.createKVManager(kvManagerConfig);
+    //创建store配置
+    const options: distributedKVStore.Options = {
+      //当数据库文件不存在时是否创建数据库
+      createIfMissing: true,
+      //设置数据库文件是否加密
+      encrypt: true,
+      //设置数据库文件是否备份
+      backup: false,
+      //设置数据库是否为跨设备自动同步
+      autoSync: false,
+      //设置要创建的数据库类型
+      kvStoreType: distributedKVStore.KVStoreType.SINGLE_VERSION,
+      //设置数据库安全级别
+      securityLevel: distributedKVStore.SecurityLevel.S1
+    };
+    //随机生成storeId
+    let storeId = 'efStore' + RandomUtil.randomNumber(1000, 2000000);
+    //创建kvStore
+    this.kvStore = await this.kvManager.getKVStore<distributedKVStore.SingleKVStore>(storeId, options);
   }
 
-  put(key: string, value: boolean | string | number | Uint8Array) {
-    this.kvStore?.put(key, value, (err) => {
-      if (err !== undefined) {
-        ToastUtil.showToast('存储数据失败,原因为:' + err.message)
-        return;
+  /**
+   * 获取是否授权
+   * @returns
+   */
+  private async getAuth(): Promise<boolean> {
+    //判断是否获取授权
+    let isAuth = AuthUtil.checkPermissions('ohos.permission.DISTRIBUTED_DATASYNC');
+    if (!isAuth) {
+      //获取用户授权
+      let code =
+        await AuthUtil.reqPermissionsList(['ohos.permission.DISTRIBUTED_DATASYNC']);
+      if (!code) {
+        //授权失败
+        return false;
       }
-    });
+    }
+    return true;
   }
 
+  /**
+   * 存储数据
+   * @param key  存入的key
+   * @param value  存入的数据
+   * @returns 存储结果
+   */
+  async put(key: string, value: boolean | string | number | Uint8Array): Promise<string> {
+    let isAuth = await this.getAuth();
+    if (isAuth) {
+      await this.kvStore?.put(key, value);
+      return "存入数据:" + key + "成功~";
+    }
+    return "用户禁止授权,存储失败~";
+  }
+
+  /**
+   * 获取数据
+   * @param key  获取数据的key
+   * @param defVal  默认值
+   * @returns 获取到的数据
+   */
   async get<T>(key: string, defVal: T): Promise<T> {
-    try {
-      const value = await this.kvStore?.get(key);
-      if (value === undefined) {
+    let isAuth = await this.getAuth();
+    if (isAuth) {
+      try {
+        const value = await this.kvStore?.get(key);
+        if (value === undefined) {
+          return defVal;
+        }
+        return value as T;
+      } catch (e) {
         return defVal;
       }
-      return value as T;
-    } catch (e) {
-      let error = e as BusinessError;
-      ToastUtil.showToast('获取数据失败,原因为:' + error.message)
-      return defVal;
     }
+    return defVal;
   }
 
-  delete(key: string) {
-    this.kvStore?.delete(key, (err) => {
-      if (err !== undefined) {
-        ToastUtil.showToast('删除数据失败,原因为:' + err.message)
-        return;
-      }
-    });
+  /**
+   * 删除数据
+   * @param key  删除的key
+   * @returns 结果
+   */
+  async delete(key: string): Promise<string> {
+    let isAuth = await this.getAuth();
+    if (isAuth) {
+      await this.kvStore?.delete(key);
+      return "删除数据:" + key + "成功~";
+    }
+    return "用户禁止授权,删除失败~";
   }
 }
 
-/**
- * 抛出对象
- */
-export const kvUtil = new KvUtil();

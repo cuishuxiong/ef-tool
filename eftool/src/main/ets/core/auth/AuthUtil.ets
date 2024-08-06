@@ -14,13 +14,14 @@ export class AuthUtil {
    * @param permission 待检查权限
    * @returns 授权状态
    */
-  private static async checkAccessToken(permission: Permissions): Promise<abilityAccessCtrl.GrantStatus> {
+  private static checkAccessToken(permission: Permissions): abilityAccessCtrl.GrantStatus {
     let atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
     let grantStatus: abilityAccessCtrl.GrantStatus = abilityAccessCtrl.GrantStatus.PERMISSION_DENIED;
     // 获取应用程序的accessTokenID
     let tokenId: number = 0;
     try {
-      let bundleInfo: bundleManager.BundleInfo = await bundleManager.getBundleInfoForSelf(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION);
+      let bundleInfo: bundleManager.BundleInfo =
+        bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION);
       let appInfo: bundleManager.ApplicationInfo = bundleInfo.appInfo;
       tokenId = appInfo.accessTokenId;
     } catch (error) {
@@ -29,7 +30,7 @@ export class AuthUtil {
     }
     // 校验应用是否被授予权限
     try {
-      grantStatus = await atManager.checkAccessToken(tokenId, permission);
+      grantStatus = atManager.checkAccessTokenSync(tokenId, permission);
     } catch (error) {
       const err: BusinessError = error as BusinessError;
       ToastUtil.showToast('校验授权信息失败:原因为:' + err.message);
@@ -43,9 +44,9 @@ export class AuthUtil {
    * @param permissions  待判断的权限
    * @returns 已授权true,未授权false
    */
-  static async checkPermissions(permissions: Permissions): Promise<boolean> {
+  static checkPermissions(permissions: Permissions): boolean {
     //判断是否授权
-    let grantStatus: abilityAccessCtrl.GrantStatus = await AuthUtil.checkAccessToken(permissions);
+    let grantStatus: abilityAccessCtrl.GrantStatus = AuthUtil.checkAccessToken(permissions);
     if (grantStatus === abilityAccessCtrl.GrantStatus.PERMISSION_GRANTED) {
       //已经授权
       return true;

@@ -24,4 +24,14 @@ export class GlobalContext {
   setObject(key: string, objectClass: Object): void {
     this._objects.set(key, objectClass);
   }
+
+  // 泛型方法
+  getT<T>(key: string): T {
+    return this._objects.get(key) as T;
+  }
+
+  // 泛型方法
+  setT<T>(key: string, objectClass: T): void {
+    this._objects.set(key, objectClass as Object);
+  }
 }
