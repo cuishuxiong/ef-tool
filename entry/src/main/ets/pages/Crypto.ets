@@ -18,6 +18,7 @@ import {
   DESSync
 } from '@yunkss/eftool';
 import { CryptoSyncUtil } from '@yunkss/eftool/src/main/ets/core/util/CryptoSyncUtil';
+import { buffer } from '@kit.ArkTS';
 
 @Entry
 @Component
@@ -26,6 +27,8 @@ struct Crypto {
   scroller: Scroller = new Scroller()
 
   testRSA() {
+
+
     // let key1024 = RSASync.generateRSAKey();
     // let encode1024 = RSASync.encodePKCS1('测试RSA1024加密~~~', key1024.getDataRow().publicKey, 'base64');
     // let decode1024 = RSASync.decodePKCS1(encode1024.getDataRow(), key1024.getDataRow().privateKey, 'base64');
@@ -77,7 +80,7 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     let verify =
       RSASync.verifyPKCS1(sign.getDataRow(), '待签名的RSA的pem格式的字符串~', pemPubKey, 'base64', 'base64', true);
 
-    this.msg = verify.getMsg();
+    // this.msg = verify.getMsg();
 
 
   }

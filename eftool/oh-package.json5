@@ -1,6 +1,8 @@
 {
   "license": "Apache-2.0",
-  "devDependencies": {},
+  "devDependencies": {
+    "@ohos/axios": "2.2.2"
+  },
   "keywords": [
     "axios",
     "JSON",
@@ -21,7 +23,6 @@
   "version": "1.2.1",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    "@ohos/axios": "2.2.2"
   },
   "dynamicDependencies": {}
 }

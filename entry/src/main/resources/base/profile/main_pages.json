@@ -9,6 +9,7 @@
     "pages/Crypto",
     "pages/Three",
     "pages/RcpPage",
-    "pages/KvPage"
+    "pages/KvPage",
+    "pages/Login"
   ]
 }

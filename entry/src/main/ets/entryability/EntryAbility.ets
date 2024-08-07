@@ -46,7 +46,7 @@ export default class EntryAbility extends UIAbility {
       '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
     //初始化
     let imm = new ImmersionUtil();
-    windowStage.loadContent('pages/KvPage', (err, data) => {
+    windowStage.loadContent('pages/Login', (err, data) => {
       GlobalContext.getContext().setT<KvUtil>("kvUtil", kvUtil);
       //调用沉浸式设置方法
       imm.immersiveWindow(windowStage);

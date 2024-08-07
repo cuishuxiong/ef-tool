@@ -21,7 +21,7 @@ export default class MainAbility extends UIAbility {
     efAxiosParams.isAllEncrypt = false;
     efAxiosParams.sm2PubKey =
       '04ba3bc3c5834d9ad1a7d81c4b49cf1209d2f28e4a97c73b75d6561792a2bfafe811e0284692006b0ce1b51f8aadfd65241d80eb979365048253408f5d705ec17b';
-    windowStage.loadContent('pages/Index', (err) => {
+    windowStage.loadContent('pages/Crypto', (err) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;

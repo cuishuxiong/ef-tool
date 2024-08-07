@@ -118,32 +118,34 @@ struct Welcome {
   }
 
   testJSONArrayList() {
-    // let arr = new JSONArrayList();
-    // arr.add(1);
-    // arr.add("cccc");
-    // arr.add("123");
-    // arr.add("aaaaa\\\"34343434");
-    // arr.add("2223\"dasdass");
-    // arr.add(new Date());
-    // arr.add(true);
-    // arr.add(null);
-    // arr.add(new User("10010", "实体数据"));
-    // let str = arr.toString();
+    let arr = new JSONArrayList();
+    arr.add(1);
+    arr.add("cccc");
+    arr.add("123");
+    arr.add("aaaaa\\\"34343434");
+    arr.add("2223\"dasdass");
+    arr.add(new Date());
+    arr.add(true);
+    arr.add(null);
+    arr.add(new User("10010", "实体数据"));
+    let str = arr.toString();
     //
-    // let userList = new ArrayList<User>();
-    // userList.add(new User('2345', '测试用户1'));
-    // userList.add(new User('7844', '测试用户2'));
-    // userList.add(new User('1314', '测试用户3'));
-    // userList.add(new User('5210', '测试用户4'));
-    //
-    // let jarr = JSONArrayList.from(userList);
+    let userList = new ArrayList<User>();
+    userList.add(new User('2345', '测试用户1'));
+    userList.add(new User('7844', '测试用户2'));
+    userList.add(new User('1314', '测试用户3'));
+    userList.add(new User('5210', '测试用户4'));
+
+    let jarr = JSONArrayList.from(userList);
     // this.msg = jarr.length + "";
     //
-    // let s = JSONArrayList.toJSONString(userList);
+    let s = JSONArrayList.toJSONString(userList);
     // this.msg = s;
     //
-    // let jsArr = JSONArrayList.parse(s);
+    let jsArr = JSONArrayList.parse(s);
     // this.msg = jsArr.length + "";
+
+    jsArr.insert('',0)
 
     let str1 =
       '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
@@ -169,18 +171,21 @@ struct Welcome {
     // arr.push(new User("10010", "实体数据"));
     // let str = arr.toString();
 
-    // let userList = new Array<User>();
-    // userList.push(new User('2345', '测试用户1'));
-    // userList.push(new User('7844', '测试用户2'));
-    // userList.push(new User('1314', '测试用户3'));
-    // userList.push(new User('5210', '测试用户4'));
+    let userList = new Array<User>();
+    userList.push(new User('2345', '测试用户1'));
+    userList.push(new User('7844', '测试用户2'));
+    userList.push(new User('1314', '测试用户3'));
+    userList.push(new User('5210', '测试用户4'));
 
-    // let jarr = JSONArray.from(userList);
-    // this.msg = jarr.length + "----" + jarr[1]?.toString();
+    let jarr = JSONArray.from(userList);
+    this.msg = jarr.length + "----" + jarr[1]?.toString();
 
-    // let s = JSONArray.toJSONString(userList);
+    let s = JSONArray.toJSONString(userList);
 
-    // let jsArr = JSONArray.parse(s);
+    let jsArr = JSONArray.parse(s);
+
+    jsArr.concat('')
+
     // this.msg = jsArr.length + "----" + jsArr[2]?.toString();
     // this.msg = s;
 
@@ -217,31 +222,29 @@ struct Welcome {
   }
 
   testJSONObject() {
-    // let jsonObj = new JSONObject();
-    // jsonObj.set("id", "100010");
-    // jsonObj.set("age", 27);
-    // jsonObj.set("sex", true);
-    // jsonObj.set("birth", new Date());
-    // let user = new JSONObject();
-    // user.set("uid", "121212");
-    // user.set("uName", "测试\\\"套对象");
-    // jsonObj.set("user", user);
-    // jsonObj.set("test", null);
-    // jsonObj.set("person", new User('实体id', '实体name'));
-    // jsonObj.set("name", "test字符串");
-    // let arr = new JSONArray();
-    // arr.push(1234);
-    // arr.push(true);
-    // arr.push(null);
-    // arr.push(new Date());
-    // arr.push(user);
-    // jsonObj.set("csx", arr);
-    // let st = jsonObj.toString();
-    // this.msg = st;
+    let jsonObj = new JSONObject();
+    jsonObj.set("id", "100010");
+    jsonObj.set("age", 27);
+    jsonObj.set("sex", true);
+    jsonObj.set("birth", new Date());
+    let user = new JSONObject();
+    user.set("uid", "121212");
+    user.set("uName", "测试\\\"套对象");
+    jsonObj.set("user", user);
+    jsonObj.set("test", null);
+    jsonObj.set("person", new User('实体id', '实体name'));
+    jsonObj.set("name", "test字符串");
+
+    let st = jsonObj.toString();
+    this.msg = st;
     let userList = new Array<User>();
     userList.push(new User('2345', '测\r\n试用户1'));
     userList.push(new User('7844', '测试\r用户\n2'));
     let person = new Person('测\r\n试', 12, true, new Date(), new User("uuid", "打\r撒吃的\n是草动次打次"), userList);
+
+    let jsonA = JSONObject.from<Person>(person);
+
+    let isName = jsonA.hasKey("name");
 
     let j = JSONObject.toJSONString(person);
 
