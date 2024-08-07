@@ -93,9 +93,8 @@ class Person {
   }
 }
 
-@Entry
 @Component
-struct Welcome {
+export struct Welcome {
   @State msg: string = 'csx';
   private alertWinName: string = '';
   @State previewPath: string = '';
@@ -145,7 +144,7 @@ struct Welcome {
     let jsArr = JSONArrayList.parse(s);
     // this.msg = jsArr.length + "";
 
-    jsArr.insert('',0)
+    jsArr.insert('', 0)
 
     let str1 =
       '[{"threeMonthRate":null,"moduleName":"loan","productName":"网E贷","marketPatter":"随借随还，最高20万，利率低至8折起","labelListJson":{"site1":{"labelType":0,"labelValue":"网E贷","labelName":"产品名称:123","labelLocation":true}}},{"threeMonthRate":null,"moduleName":"loan","productName":"烟草贷","marketPatter":"无需抵押，无需担保，当天放款，随借随还","labelListJson":{"site1":{"labelType":12,"labelValue":"烟草贷","labelName":"产品名称","labelLocation":false}}}]';
@@ -777,151 +776,154 @@ struct Welcome {
   };
 
   build() {
-    Scroll() {
-      Column() {
-        Text(this.msg).fontColor('#ff4400')
-        Button('跳转页面').margin({ top: 20, bottom: 20 }).onClick(() => {
-          router.pushUrl({ url: 'pages/Three' })
-        })
-        ButtonUtil({
-          btnOptions: this.btnOptions
-        })
-        Button('MD5工具类').margin({ top: 20 }).onClick(() => {
-          this.testMD5();
-        })
-        Button('SHA1工具类').margin({ top: 20, bottom: 20 }).onClick(() => {
-          this.testSHA1();
-        })
-        SaveButton({
-          icon: SaveIconStyle.FULL_FILLED,
-          buttonType: ButtonType.Capsule,
-          text: SaveDescription.SAVE_IMAGE
-        })
-          .onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) => {
-            if (result == SaveButtonOnClickResult.SUCCESS) {
-              try {
-                let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
-                let result = await ImageUtil.pickerSaveGallery(buffer.from(array).buffer);
-                if (result.getSuccess()) {
-                  ToastUtil.showToast(result.getMsg());
-                }
-              } catch (error) {
-                console.error("error is " + JSON.stringify(error));
-              }
-            }
+    NavDestination() {
+      Scroll() {
+        Column() {
+          Text(this.msg).fontColor('#ff4400')
+          Button('跳转页面').margin({ top: 20, bottom: 20 }).onClick(() => {
+            router.pushUrl({ url: 'pages/Three' })
           })
-        Button('保存图片到目录').margin({ top: 20 }).onClick(() => {
-          this.save2photo();
-        })
-        Button('base64工具类').margin({ top: 20 }).onClick(() => {
-          this.testBase64();
-        })
-        Button('canPreview测试').margin({ top: 20 }).onClick(() => {
-          this.resFileCanPreview();
-        })
-        LoadingUtil({
-          options: { show: this.showLoading, alignment: DialogAlignment.Top, content: this.content }
-        });
-        Button('oldLoading').margin({ top: 20 }).onClick(() => {
-          this.showLoading = true;
-          setInterval(() => {
-            this.count++
-            this.content = this.count.toString()
-            if (this.count > 10) {
-              this.showLoading = false;
-            }
-          }, 500);
-        })
-        Button('loading').margin({ top: 20 }).onClick(() => {
-          this.testWinLoading();
-        })
-        Button('SM4-key-16').margin({ top: 20 }).onClick(() => {
-          this.sm416();
-        })
-        Button('录音').margin({ top: 20 }).onClick(() => {
-          this.recording();
-        })
-        Button('停止录音').margin({ top: 20 }).onClick(() => {
-          this.stopRecording();
-        })
-        Button('replace').margin({ top: 20 }).onClick(() => {
-          this.replace();
-        })
-        Button('SM2d2i').margin({ top: 20 }).onClick(() => {
-          this.SM2d2i();
-        })
-        Button('预览文档').margin({ top: 20 }).onClick(() => {
-          this.previewDocument();
-        })
-        Button('预览图片').margin({ top: 20 }).onClick(() => {
-          this.previewImage();
-        })
-        Button('预览视频').margin({ top: 20 }).onClick(() => {
-          this.previewVideo();
-        })
-        Button('预览音频').margin({ top: 20 }).onClick(() => {
-          this.previewAudio();
-        })
-        Button('打开弹窗').margin({ top: 20 }).onClick(() => {
-          this.openAlert();
-        })
-        Button('AES-ECB-16key').margin({ top: 20 }).onClick(() => {
-          this.aes();
-        })
-        Button('相机拍照').margin({ top: 20 }).onClick(() => {
-          this.camera();
-        })
-        Button('选择文件').margin({ top: 20 }).onClick(() => {
-          this.selectFile();
-        })
-        Button('选择图片').margin({ top: 20 }).onClick(() => {
-          this.selectImage();
-        })
-        Button('选择音频').margin({ top: 20 }).onClick(() => {
-          this.selectAudio();
-        })
-        Button('选择联系人').margin({ top: 20 }).onClick(() => {
-          this.selectContact();
-        })
-        Button('uri上传文件').margin({ top: 20 }).onClick(() => {
-          this.btnCtx = '上传URI文件中...';
-          this.testUriUpload();
-        })
-        Button('上传文件').margin({ top: 20 }).onClick(() => {
-          this.btnCtx = '上传文件中...';
-          this.commonUpload();
-        })
-        Button('下载文件').margin({ top: 20 }).onClick(() => {
-          this.btnCtx = '下载文件中...';
-          this.testDownload('aaa.jpg', 'girl.jpg');
-        })
-        DownloadUtil({
-          progressState: this.showDownBtn,
-          halfProgress: this.process,
-          ctx: this.btnCtx
-        })
-        Button('Array转Object').margin({ top: 20 }).onClick(() => {
-          this.testArray2Object();
-        })
-        Button('验证身份证号').margin({ top: 20 }).onClick(() => {
-          this.testIdCard();
-        })
-        Button('测试JSONArray').margin({ top: 20 }).onClick(() => {
-          this.testJSONArray();
-        })
-        Button('测试JSONArrayList').margin({ top: 20 }).onClick(() => {
-          this.testJSONArrayList();
-        })
-        Button('测试JSONObject').margin({ top: 20 }).onClick(() => {
-          this.testJSONObject();
-        })
-      }
-      .backgroundColor("#fff")
-      .align(Alignment.Center)
-      .width('100%')
-      .borderRadius(10)
-      .padding({ top: 50, bottom: 40 })
-    }.scrollable(ScrollDirection.Vertical)
+          ButtonUtil({
+            btnOptions: this.btnOptions
+          })
+          Button('MD5工具类').margin({ top: 20 }).onClick(() => {
+            this.testMD5();
+          })
+          Button('SHA1工具类').margin({ top: 20, bottom: 20 }).onClick(() => {
+            this.testSHA1();
+          })
+          SaveButton({
+            icon: SaveIconStyle.FULL_FILLED,
+            buttonType: ButtonType.Capsule,
+            text: SaveDescription.SAVE_IMAGE
+          })
+            .onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) => {
+              if (result == SaveButtonOnClickResult.SUCCESS) {
+                try {
+                  let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+                  let result = await ImageUtil.pickerSaveGallery(buffer.from(array).buffer);
+                  if (result.getSuccess()) {
+                    ToastUtil.showToast(result.getMsg());
+                  }
+                } catch (error) {
+                  console.error("error is " + JSON.stringify(error));
+                }
+              }
+            })
+          Button('保存图片到目录').margin({ top: 20 }).onClick(() => {
+            this.save2photo();
+          })
+          Button('base64工具类').margin({ top: 20 }).onClick(() => {
+            this.testBase64();
+          })
+          Button('canPreview测试').margin({ top: 20 }).onClick(() => {
+            this.resFileCanPreview();
+          })
+          LoadingUtil({
+            options: { show: this.showLoading, alignment: DialogAlignment.Top, content: this.content }
+          });
+          Button('oldLoading').margin({ top: 20 }).onClick(() => {
+            this.showLoading = true;
+            setInterval(() => {
+              this.count++
+              this.content = this.count.toString()
+              if (this.count > 10) {
+                this.showLoading = false;
+              }
+            }, 500);
+          })
+          Button('loading').margin({ top: 20 }).onClick(() => {
+            this.testWinLoading();
+          })
+          Button('SM4-key-16').margin({ top: 20 }).onClick(() => {
+            this.sm416();
+          })
+          Button('录音').margin({ top: 20 }).onClick(() => {
+            this.recording();
+          })
+          Button('停止录音').margin({ top: 20 }).onClick(() => {
+            this.stopRecording();
+          })
+          Button('replace').margin({ top: 20 }).onClick(() => {
+            this.replace();
+          })
+          Button('SM2d2i').margin({ top: 20 }).onClick(() => {
+            this.SM2d2i();
+          })
+          Button('预览文档').margin({ top: 20 }).onClick(() => {
+            this.previewDocument();
+          })
+          Button('预览图片').margin({ top: 20 }).onClick(() => {
+            this.previewImage();
+          })
+          Button('预览视频').margin({ top: 20 }).onClick(() => {
+            this.previewVideo();
+          })
+          Button('预览音频').margin({ top: 20 }).onClick(() => {
+            this.previewAudio();
+          })
+          Button('打开弹窗').margin({ top: 20 }).onClick(() => {
+            this.openAlert();
+          })
+          Button('AES-ECB-16key').margin({ top: 20 }).onClick(() => {
+            this.aes();
+          })
+          Button('相机拍照').margin({ top: 20 }).onClick(() => {
+            this.camera();
+          })
+          Button('选择文件').margin({ top: 20 }).onClick(() => {
+            this.selectFile();
+          })
+          Button('选择图片').margin({ top: 20 }).onClick(() => {
+            this.selectImage();
+          })
+          Button('选择音频').margin({ top: 20 }).onClick(() => {
+            this.selectAudio();
+          })
+          Button('选择联系人').margin({ top: 20 }).onClick(() => {
+            this.selectContact();
+          })
+          Button('uri上传文件').margin({ top: 20 }).onClick(() => {
+            this.btnCtx = '上传URI文件中...';
+            this.testUriUpload();
+          })
+          Button('上传文件').margin({ top: 20 }).onClick(() => {
+            this.btnCtx = '上传文件中...';
+            this.commonUpload();
+          })
+          Button('下载文件').margin({ top: 20 }).onClick(() => {
+            this.btnCtx = '下载文件中...';
+            this.testDownload('aaa.jpg', 'girl.jpg');
+          })
+          DownloadUtil({
+            progressState: this.showDownBtn,
+            halfProgress: this.process,
+            ctx: this.btnCtx
+          })
+          Button('Array转Object').margin({ top: 20 }).onClick(() => {
+            this.testArray2Object();
+          })
+          Button('验证身份证号').margin({ top: 20 }).onClick(() => {
+            this.testIdCard();
+          })
+          Button('测试JSONArray').margin({ top: 20 }).onClick(() => {
+            this.testJSONArray();
+          })
+          Button('测试JSONArrayList').margin({ top: 20 }).onClick(() => {
+            this.testJSONArrayList();
+          })
+          Button('测试JSONObject').margin({ top: 20 }).onClick(() => {
+            this.testJSONObject();
+          })
+        }
+        .backgroundColor("#fff")
+        .align(Alignment.Center)
+        .width('100%')
+        .borderRadius(10)
+        .padding({ top: 50, bottom: 40 })
+      }.scrollable(ScrollDirection.Vertical)
+    }
+    .title('Welcome')
 
   }
 }

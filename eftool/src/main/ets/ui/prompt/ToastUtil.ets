@@ -18,9 +18,10 @@ export class ToastUtil {
     }
     promptAction.showToast({
       message: msg,
-      duration: options.duration,
-      bottom: options.bottom,
-      showMode: options.showMode
+      duration: options.duration ? options.duration : Const.ANIMATION_DURATION,
+      bottom: options.bottom ? options.bottom : '20vp',
+      showMode: options.showMode ? options.showMode : 0,
+      alignment: options.alignment ? options.alignment : Alignment.Center
     })
   }
 }
@@ -29,7 +30,8 @@ export class ToastUtil {
  * toast弹窗入参对象
  */
 class toastOptions {
-  duration: number = Const.ANIMATION_DURATION;
-  bottom: string | number = '20vp';
-  showMode: number = 0;
+  duration?: number;
+  bottom?: string | number;
+  showMode?: number;
+  alignment?: number;
 }

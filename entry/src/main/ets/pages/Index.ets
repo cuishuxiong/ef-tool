@@ -84,9 +84,8 @@ class Person {
   }
 }
 
-@Entry
 @Component
-struct Index {
+export struct Index {
   @State message: string = 'Hello World';
   @State showLoading: boolean = false;
   @State showTips: boolean = false;
@@ -682,258 +681,261 @@ struct Index {
   }
 
   build() {
-    Stack({ alignContent: Alignment.TopStart }) {
-      Scroll(this.scroller) {
-        Column() {
-          Text(this.callCity)
-          Text(this.message)
-            .fontSize(50)
-            .fontWeight(FontWeight.Bold)
-          // DownloadUtil({})
-          Button("测试JSONObject").margin({ bottom: '10vp' }).onClick(() => {
-            this.testJSONObject();
-          })
-          Button("测试JSONUtil").margin({ bottom: '10vp' }).onClick(() => {
-            this.test();
-          })
-          Button("发送post请求").margin({ bottom: '10vp' }).onClick(() => {
-            this.sendRequest();
-          })
-          Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
-            ToastUtil.showToast('duration:2000,bottom:10vp');
-            this.testCrypto();
-          })
-          Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
-            this.openWin();
-          })
-          Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
-            this.show = !this.show;
-          })
-          Button("校验是否授予权限").margin({ bottom: '10vp' }).onClick(() => {
-            this.dingWei();
-          })
-          Button("校验是否授予通知权限").margin({ bottom: '10vp' }).onClick(() => {
-            this.notice();
-          })
-          Button("推送文本通知").margin({ bottom: '10vp' }).onClick(() => {
-            this.pushBasic();
-          })
-          Button("推送长文本通知").margin({ bottom: '10vp' }).onClick(() => {
-            this.pushLong();
-          })
-          Button("推送多文本通知").margin({ bottom: '10vp' }).onClick(() => {
-            this.pushMulti();
-          })
-          Button("推送图片通知").margin({ bottom: '10vp' }).onClick(() => {
-            this.pushPicture();
-          })
-          Button("清除通知角标/通知").margin({ bottom: '10vp' }).onClick(() => {
-            NotificationUtil.clearBadge();
-            NotificationUtil.clearNotice();
-          })
-          Button('获取当前定位').margin({ bottom: '10vp' }).onClick(() => {
-            this.geoLocation();
-          })
-          Button('根据经纬度获取Location信息').margin({ bottom: '10vp' }).onClick(() => {
-            this.geoConvert();
-          })
-          Button('根据地理位置获取定位信息').margin({ bottom: '10vp' }).onClick(() => {
-            this.add2location();
-          })
-          Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
-            this.getCountryCode();
-          })
-          Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
-            ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
-          })
-          Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
-            DialogUtil.showDialog({
-              msg: '这是一个弹框提示~~~~',
-              okCallBack: this.ok,
-              okText: '揍你',
-              cancelText: '去吧',
-              cancelCallBack: this.cancel
-            });
-          })
-          Button("dialog一个按钮").margin({ bottom: '10vp' }).onClick(() => {
-            DialogUtil.showDialog({
-              msg: '不写cancelCallBack则显示一个按钮',
-              okCallBack: this.test   //调用方法无需小括号()
-            });
-          })
-          Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
-            DialogUtil.showDialog({
-              msg: '这是一个弹框提示',
-              okText: '同意',
-              okCallBack: this.test, //调用方法无需小括号()
-              cancelCallBack: this.cancel
-            });
-          })
-          Button("action").margin({ bottom: '10vp' }).onClick(() => {
-            ActionUtil.showActionMenu({
-              title: '修改后的标题', btn: [
-                {
-                  text: '测试1', color: '#cdcdcd', btnCallBack: () => {
-                  this.ok()
+    NavDestination() {
+      Stack({ alignContent: Alignment.TopStart }) {
+        Scroll(this.scroller) {
+          Column() {
+            Text(this.callCity)
+            Text(this.message)
+              .fontSize(50)
+              .fontWeight(FontWeight.Bold)
+            // DownloadUtil({})
+            Button("测试JSONObject").margin({ bottom: '10vp' }).onClick(() => {
+              this.testJSONObject();
+            })
+            Button("测试JSONUtil").margin({ bottom: '10vp' }).onClick(() => {
+              this.test();
+            })
+            Button("发送post请求").margin({ bottom: '10vp' }).onClick(() => {
+              this.sendRequest();
+            })
+            Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
+              ToastUtil.showToast('duration:2000,bottom:10vp');
+              this.testCrypto();
+            })
+            Button("打开窗口").margin({ bottom: '10vp' }).onClick(() => {
+              this.openWin();
+            })
+            Button("级联菜选择器").margin({ bottom: '10vp' }).onClick(() => {
+              this.show = !this.show;
+            })
+            Button("校验是否授予权限").margin({ bottom: '10vp' }).onClick(() => {
+              this.dingWei();
+            })
+            Button("校验是否授予通知权限").margin({ bottom: '10vp' }).onClick(() => {
+              this.notice();
+            })
+            Button("推送文本通知").margin({ bottom: '10vp' }).onClick(() => {
+              this.pushBasic();
+            })
+            Button("推送长文本通知").margin({ bottom: '10vp' }).onClick(() => {
+              this.pushLong();
+            })
+            Button("推送多文本通知").margin({ bottom: '10vp' }).onClick(() => {
+              this.pushMulti();
+            })
+            Button("推送图片通知").margin({ bottom: '10vp' }).onClick(() => {
+              this.pushPicture();
+            })
+            Button("清除通知角标/通知").margin({ bottom: '10vp' }).onClick(() => {
+              NotificationUtil.clearBadge();
+              NotificationUtil.clearNotice();
+            })
+            Button('获取当前定位').margin({ bottom: '10vp' }).onClick(() => {
+              this.geoLocation();
+            })
+            Button('根据经纬度获取Location信息').margin({ bottom: '10vp' }).onClick(() => {
+              this.geoConvert();
+            })
+            Button('根据地理位置获取定位信息').margin({ bottom: '10vp' }).onClick(() => {
+              this.add2location();
+            })
+            Button('获取国家码').margin({ bottom: '10vp' }).onClick(() => {
+              this.getCountryCode();
+            })
+            Button("toast修改参数").margin({ bottom: '10vp' }).onClick(() => {
+              ToastUtil.showToast('duration:4000,bottom:50vp', { duration: 4000, bottom: '50vp', showMode: 1 });
+            })
+            Button("dialog").margin({ bottom: '10vp' }).onClick(() => {
+              DialogUtil.showDialog({
+                msg: '这是一个弹框提示~~~~',
+                okCallBack: this.ok,
+                okText: '揍你',
+                cancelText: '去吧',
+                cancelCallBack: this.cancel
+              });
+            })
+            Button("dialog一个按钮").margin({ bottom: '10vp' }).onClick(() => {
+              DialogUtil.showDialog({
+                msg: '不写cancelCallBack则显示一个按钮',
+                okCallBack: this.test   //调用方法无需小括号()
+              });
+            })
+            Button("dialog修改参数").margin({ bottom: '10vp' }).onClick(() => {
+              DialogUtil.showDialog({
+                msg: '这是一个弹框提示',
+                okText: '同意',
+                okCallBack: this.test, //调用方法无需小括号()
+                cancelCallBack: this.cancel
+              });
+            })
+            Button("action").margin({ bottom: '10vp' }).onClick(() => {
+              ActionUtil.showActionMenu({
+                title: '修改后的标题', btn: [
+                  {
+                    text: '测试1', color: '#cdcdcd', btnCallBack: () => {
+                    this.ok()
+                  }
+                  },
+                  {
+                    text: '测试2', color: '#108ee9', btnCallBack: () => {
+                    this.cancel()
+                  }
+                  }
+                ]
+              });
+            })
+            Button("action默认标题").margin({ bottom: '10vp' }).onClick(() => {
+              ActionUtil.showActionMenu({
+                btn: [
+                  { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
+                  { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
+                ]
+              });
+            })
+            Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
+              ActionUtil.showMenu({
+                btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
+                  ToastUtil.showToast(data);
                 }
-                },
-                {
-                  text: '测试2', color: '#108ee9', btnCallBack: () => {
-                  this.cancel()
+              })
+            })
+            Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
+              ActionUtil.showMenu({
+                title: '修改了菜单标题', btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
+                  ToastUtil.showToast(data);
                 }
+              })
+            })
+            Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
+              DialogUtil.showAlertDialog({
+                msg: "这个是一个，默认警告弹框",
+                buttons: [
+                  { callBack: this.ok }
+                ]
+              });
+            })
+            Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
+              DialogUtil.showAlertDialog({
+                msg: "这个是一个警告弹框",
+                title: '标题',
+                alignment: DialogAlignment.Top,
+                buttons: [
+                  { callBack: this.ok, style: DialogButtonStyle.HIGHLIGHT },
+                  { callBack: this.cancel }
+                ]
+              });
+            })
+            Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
+              ActionUtil.showActionSheet({
+                sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                clickCallBack: (data: string) => {
+                  ToastUtil.showToast(data);
                 }
-              ]
+              });
+            })
+            Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
+              ActionUtil.showActionSheet({
+                title: '弹框的标题',
+                msg: '弹框的消息',
+                subtitle: '副标题',
+                alignment: DialogAlignment.Top,
+                sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                clickCallBack: (data: string) => {
+                  ToastUtil.showToast(data);
+                }
+              });
+            })
+
+            LoadingUtil({
+              options: { show: this.showLoading, alignment: DialogAlignment.Top, content: '更改了加载提示...' }
             });
-          })
-          Button("action默认标题").margin({ bottom: '10vp' }).onClick(() => {
-            ActionUtil.showActionMenu({
-              btn: [
-                { text: '测试1', color: '#cdcdcd', btnCallBack: this.ok },
-                { text: '测试2', color: '#108ee9', btnCallBack: this.cancel }
-              ]
+            TipsUtil({
+              options: {
+                show: this.showTips,
+                content: '请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                clickCallBack: (index, isChecked) => {
+                  ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+                  this.showTips = false;
+                }
+              }
             });
-          })
-          Button("actionMenu默认标题").margin({ bottom: '10vp' }).onClick(() => {
-            ActionUtil.showMenu({
-              btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
-                ToastUtil.showToast(data);
+            ConfirmUtil({
+              options: {
+                show: this.showConfirm,
+                title: '这个是提示',
+                content: '确认要禁止定位权限么?',
+                clickCallBack: (index, isChecked) => {
+                  ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
+                  this.showConfirm = false;
+                }
               }
             })
-          })
-          Button("actionMenu修改标题").margin({ bottom: '10vp' }).onClick(() => {
-            ActionUtil.showMenu({
-              title: '修改了菜单标题', btn: ["菜单1", "菜单2"], clickCallBack: (data) => {
-                ToastUtil.showToast(data);
+            AlertUtil({
+              options: {
+                show: this.showAlert,
+                content: '这是一个警告弹出框',
+                clickCallBack: (index) => {
+                  ToastUtil.showToast(index === 0 ? '点击了第一个按钮' : '点击了第二个按钮');
+                  this.showAlert = false;
+                }
               }
             })
-          })
-          Button("alertDialog默认值").margin({ bottom: '10vp' }).onClick(() => {
-            DialogUtil.showAlertDialog({
-              msg: "这个是一个，默认警告弹框",
-              buttons: [
-                { callBack: this.ok }
-              ]
-            });
-          })
-          Button("alertDialog修改值").margin({ bottom: '10vp' }).onClick(() => {
-            DialogUtil.showAlertDialog({
-              msg: "这个是一个警告弹框",
-              title: '标题',
-              alignment: DialogAlignment.Top,
-              buttons: [
-                { callBack: this.ok, style: DialogButtonStyle.HIGHLIGHT },
-                { callBack: this.cancel }
-              ]
-            });
-          })
-          Button("列表选择弹窗默认参数").margin({ bottom: '10vp' }).onClick(() => {
-            ActionUtil.showActionSheet({
-              sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-              clickCallBack: (data: string) => {
-                ToastUtil.showToast(data);
-              }
-            });
-          })
-          Button("列表选择弹窗修改参数").margin({ bottom: '10vp' }).onClick(() => {
-            ActionUtil.showActionSheet({
-              title: '弹框的标题',
-              msg: '弹框的消息',
-              subtitle: '副标题',
-              alignment: DialogAlignment.Top,
-              sheets: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-              clickCallBack: (data: string) => {
-                ToastUtil.showToast(data);
-              }
-            });
-          })
-
-          LoadingUtil({
-            options: { show: this.showLoading, alignment: DialogAlignment.Top, content: '更改了加载提示...' }
-          });
-          TipsUtil({
-            options: {
-              show: this.showTips,
-              content: '请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读请仔细阅读xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-              clickCallBack: (index, isChecked) => {
-                ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
-                this.showTips = false;
-              }
-            }
-          });
-          ConfirmUtil({
-            options: {
-              show: this.showConfirm,
-              title: '这个是提示',
-              content: '确认要禁止定位权限么?',
-              clickCallBack: (index, isChecked) => {
-                ToastUtil.showToast(index === 0 ? '点击了第一个按钮' + isChecked : '点击了第二个按钮' + isChecked);
-                this.showConfirm = false;
-              }
-            }
-          })
-          AlertUtil({
-            options: {
-              show: this.showAlert,
-              content: '这是一个警告弹出框',
-              clickCallBack: (index) => {
-                ToastUtil.showToast(index === 0 ? '点击了第一个按钮' : '点击了第二个按钮');
-                this.showAlert = false;
-              }
-            }
-          })
-          SelectUtil({
-            options: {
-              show: this.showSelect,
-              ctxList: ['苹果', '香蕉', '梨', '哈密瓜', '凤梨', '西瓜', '火龙果', '伊丽莎白'],
-              clickCallBack: (selectData) => {
-                //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
-                if (selectData) {
-                  ToastUtil.showToast('选择了' + selectData);
+            SelectUtil({
+              options: {
+                show: this.showSelect,
+                ctxList: ['苹果', '香蕉', '梨', '哈密瓜', '凤梨', '西瓜', '火龙果', '伊丽莎白'],
+                clickCallBack: (selectData) => {
+                  //点击按钮时也会触发该回调,返回值为'',故需要判断当返回值不为空时进行业务操作
+                  if (selectData) {
+                    ToastUtil.showToast('选择了' + selectData);
+                  }
+                  this.showSelect = false;
                 }
-                this.showSelect = false;
               }
-            }
-          })
-          Button("显示loading").margin({ bottom: '10vp' }).onClick(() => {
-            this.showLoading = true;
-            setTimeout(() => {
-              this.showLoading = false;
-            }, 3000);
-          })
-          Button("显示Tips").margin({ bottom: '10vp' }).onClick(() => {
-            this.showTips = true;
-          })
-          Button("显示Conform").margin({ bottom: '10vp' }).onClick(() => {
-            this.showConfirm = true;
-          })
-          Button("显示Alert").margin({ bottom: '10vp' }).onClick(() => {
-            this.showAlert = true;
-          })
-          Button("显示Select").margin({ bottom: '10vp' }).onClick(() => {
-            this.showSelect = true;
-          })
-          Button("显示Exception").margin({ bottom: '10vp' }).onClick(() => {
-            this.showException = true;
-          })
-        }
-        .width('100%')
-        .padding({ top: 60 })
-      }
-      .scrollable(ScrollDirection.Vertical)
-
-      Cascade({ show: $show, callCity: $callCity, titleFontSize: 12 }).zIndex(999)
-      ExceptionUtil({
-        options: {
-          show: this.showException,
-          clickCallBack: (index) => {
-            //index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
-            ToastUtil.showToast("点击了" + index);
-            this.showException = false;
+            })
+            Button("显示loading").margin({ bottom: '10vp' }).onClick(() => {
+              this.showLoading = true;
+              setTimeout(() => {
+                this.showLoading = false;
+              }, 3000);
+            })
+            Button("显示Tips").margin({ bottom: '10vp' }).onClick(() => {
+              this.showTips = true;
+            })
+            Button("显示Conform").margin({ bottom: '10vp' }).onClick(() => {
+              this.showConfirm = true;
+            })
+            Button("显示Alert").margin({ bottom: '10vp' }).onClick(() => {
+              this.showAlert = true;
+            })
+            Button("显示Select").margin({ bottom: '10vp' }).onClick(() => {
+              this.showSelect = true;
+            })
+            Button("显示Exception").margin({ bottom: '10vp' }).onClick(() => {
+              this.showException = true;
+            })
           }
+          .width('100%')
+          .padding({ top: 60 })
         }
-      })
+        .scrollable(ScrollDirection.Vertical)
+
+        Cascade({ show: $show, callCity: $callCity, titleFontSize: 12 }).zIndex(999)
+        ExceptionUtil({
+          options: {
+            show: this.showException,
+            clickCallBack: (index) => {
+              //index为0表示点击了左侧文字,为1表示点击了右侧图标,根据情况进行业务处理
+              ToastUtil.showToast("点击了" + index);
+              this.showException = false;
+            }
+          }
+        })
+      }
+      .width('100%')
     }
-    .width('100%')
+    .title('Index')
 
     // .margin({ bottom: this.bottomRectHeight })
   }

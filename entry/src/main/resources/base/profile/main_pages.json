@@ -1,15 +1,11 @@
 {
   "src": [
-    "pages/Index",
-    "pages/Welcome",
     "pages/NetPage",
     "pages/ImgUp",
     "pages/InputIndex",
     "pages/PrefIndex",
-    "pages/Crypto",
     "pages/Three",
-    "pages/RcpPage",
-    "pages/KvPage",
-    "pages/Login"
+    "pages/Login",
+    "pages/Home"
   ]
 }

@@ -20,9 +20,8 @@ import {
 import { CryptoSyncUtil } from '@yunkss/eftool/src/main/ets/core/util/CryptoSyncUtil';
 import { buffer } from '@kit.ArkTS';
 
-@Entry
 @Component
-struct Crypto {
+export struct Crypto {
   @State msg: string = '';
   scroller: Scroller = new Scroller()
 
@@ -224,8 +223,18 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
   }
 
   testSM2() {
-    let key = SM2Sync.generateSM2Key();
-    // let encode = SM2Sync.encode('测试SM2的加密~~~~', key.getDataRow().publicKey, 'base64');
+
+
+    let key = SM2Sync.generateSM2Key('hex');
+
+    let convert = new SM2Convert();
+
+    let encode = SM2Sync.encode('测试SM2的加密~~~~', key.getDataRow().publicKey, 'hex', 'hex');
+
+    let d2c = "04" + convert.d2c(encode.getDataRow());
+
+    this.msg = d2c;
+
     // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64');
     // this.msg = decode.getDataRow();
 
@@ -233,12 +242,12 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
     // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
     // this.msg = decode.getDataRow();
 
-    let hexKey =
-      SM2Sync.convertSM2PubKey('0415ff68cb5b08396955cc17ea930cf64bf1f5fbee9a76ca5d9b49d1e9190038518d0fb3d265255f8a433c3c066eeeabf8657e7f2fde33ef48cdd0c883ef39dd84');
+    // let hexKey =
+    //   SM2Sync.convertSM2PubKey('0415ff68cb5b08396955cc17ea930cf64bf1f5fbee9a76ca5d9b49d1e9190038518d0fb3d265255f8a433c3c066eeeabf8657e7f2fde33ef48cdd0c883ef39dd84');
 
-    let encode = SM2Sync.encode('测试SM2的加密~~~~', hexKey.getDataRow(), 'hex');
+    // let encode = SM2Sync.encode('测试SM2的加密~~~~', hexKey.getDataRow(), 'hex');
     // let decode = SM2Sync.decode(encode.getDataRow(), key.getDataRow().privateKey, 'base64', 'hex');
-    this.msg = encode.getDataRow();
+    // this.msg = encode.getDataRow();
 
     // let sign = SM2Sync.sign('测试SM2的加密~~~~', key.getDataRow().privateKey, 'base64');
     // this.msg = sign.getDataRow();
@@ -322,51 +331,53 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
   }
 
   build() {
+    NavDestination() {
+      Scroll(this.scroller) {
+        Column() {
 
-    Scroll(this.scroller) {
-      Column() {
+          Text(this.msg)
+            .fontSize(UiConst.FONT_18);
 
-        Text(this.msg)
-          .fontSize(UiConst.FONT_18);
+          Button('测试AES各种编码加解密').margin({ top: 20 }).onClick(() => {
+            this.testAES();
+          })
 
-        Button('测试AES各种编码加解密').margin({ top: 20 }).onClick(() => {
-          this.testAES();
-        })
+          Button('测试RSA各种编码加解密').margin({ top: 20 }).onClick(() => {
+            this.testRSA();
+          })
 
-        Button('测试RSA各种编码加解密').margin({ top: 20 }).onClick(() => {
-          this.testRSA();
-        })
+          Button('测试SHA各种编码签名').margin({ top: 20 }).onClick(() => {
+            this.testSHA();
+          })
 
-        Button('测试SHA各种编码签名').margin({ top: 20 }).onClick(() => {
-          this.testSHA();
-        })
+          Button('测试3DES各种编码加解密').margin({ top: 20 }).onClick(() => {
+            this.test3DES();
+          })
 
-        Button('测试3DES各种编码加解密').margin({ top: 20 }).onClick(() => {
-          this.test3DES();
-        })
+          Button('测试SM2各种编码签名').margin({ top: 20 }).onClick(() => {
+            this.testSM2();
+          })
 
-        Button('测试SM2各种编码签名').margin({ top: 20 }).onClick(() => {
-          this.testSM2();
-        })
+          Button('测试SM3各种编码签名').margin({ top: 20 }).onClick(() => {
+            this.testSM3();
+          })
 
-        Button('测试SM3各种编码签名').margin({ top: 20 }).onClick(() => {
-          this.testSM3();
-        })
+          Button('测试SM4各种编码签名').margin({ top: 20 }).onClick(() => {
+            this.testSM4();
+          })
 
-        Button('测试SM4各种编码签名').margin({ top: 20 }).onClick(() => {
-          this.testSM4();
-        })
+          Button('测试ECDH各种编码签名').margin({ top: 20 }).onClick(() => {
+            this.testECDH();
+          })
 
-        Button('测试ECDH各种编码签名').margin({ top: 20 }).onClick(() => {
-          this.testECDH();
-        })
-
+        }
+        .width('100%')
+        .padding({ top: 60 })
       }
+      .height('100%')
       .width('100%')
-      .padding({ top: 60 })
+      .scrollable(ScrollDirection.Vertical)
     }
-    .height('100%')
-    .width('100%')
-    .scrollable(ScrollDirection.Vertical)
+    .title('Crypto')
   }
 }

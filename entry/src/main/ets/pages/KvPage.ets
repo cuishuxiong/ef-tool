@@ -6,38 +6,40 @@
 import { GlobalContext, KvUtil } from '@yunkss/eftool'
 
 @Component
-@Entry
 export struct KvPage {
   @State msg: string = "";
 
   build() {
-    Column() {
+    NavDestination() {
+      Column() {
 
-      Text(this.msg);
+        Text(this.msg);
 
-      Button("kv存储")
-        .margin({ top: 20 })
-        .onClick(async () => {
-          let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-          this.msg = await kvUtil.put("csx", true);
-        })
+        Button("kv存储")
+          .margin({ top: 20 })
+          .onClick(async () => {
+            let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
+            this.msg = await kvUtil.put("csx", true);
+          })
 
-      Button("kv获取")
-        .margin({ top: 20 })
-        .onClick(async () => {
-          let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-          this.msg = await kvUtil.get<boolean>("csx", false) + "";
-        })
+        Button("kv获取")
+          .margin({ top: 20 })
+          .onClick(async () => {
+            let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
+            this.msg = await kvUtil.get<boolean>("csx", false) + "";
+          })
 
-      Button("kv删除")
-        .margin({ top: 20 })
-        .onClick(async () => {
-          let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-          this.msg = await kvUtil.delete("csx");
-        })
+        Button("kv删除")
+          .margin({ top: 20 })
+          .onClick(async () => {
+            let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
+            this.msg = await kvUtil.delete("csx");
+          })
+      }
+      .width('100%')
+      .height('100%')
+      .margin({ top: 40 })
     }
-    .width('100%')
-    .height('100%')
-    .margin({ top: 40 })
+    .title('KvPage')
   }
 }

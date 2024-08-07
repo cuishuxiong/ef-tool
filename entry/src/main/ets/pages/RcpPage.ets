@@ -36,9 +36,10 @@ class UserDTO extends User {
 }
 
 
-@Entry
+// @Entry
 @Component
 export struct RcpPage {
+  @Consume('NavPathStack') pageStack: NavPathStack;
   @State message: string = 'Hello World';
   @State showDownBtn: Visibility = Visibility.None;
   @State process: number = 0;
@@ -234,114 +235,117 @@ export struct RcpPage {
   }
 
   build() {
-    Column() {
-      Image(this.pixImg)
-        .width(200)
-        .objectFit(ImageFit.Contain)
-      Text(this.message)
-        .id('RcpPageHelloWorld')
-        .fontSize(12)
-        .fontWeight(FontWeight.Bold)
-      Button('发送Rcp的login请求').margin({
-        top: 40
+    NavDestination() {
+      Column() {
+        Image(this.pixImg)
+          .width(200)
+          .objectFit(ImageFit.Contain)
+        Text(this.message)
+          .id('RcpPageHelloWorld')
+          .fontSize(12)
+          .fontWeight(FontWeight.Bold)
+        Button('发送Rcp的login请求').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testLogin();
+          })
+        Button('发送Rcp的post请求json').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testPostJSON();
+          })
+        Button('发送Rcp的post请求from').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testPostForm();
+          })
+        Button('发送Rcp的get请求').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testGet();
+          })
+        Button('发送Rcp的put请求').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testPUT();
+          })
+        Button('发送Rcp的delete').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testDelete();
+          })
+        Button('取消请求').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testCancel();
+          })
+        Button('发送Rcp的upload').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testUploadFile();
+          })
+        Button('发送Rcp的downloadFile').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testDownloadFile();
+          })
+        Button('发送Rcp的downloadStream').margin({
+          top: 40
+        })
+          .margin({
+            top: '20'
+          })
+          .onClick(async () => {
+            await this.testDownloadStream();
+          })
+        DownloadUtil({
+          progressState: this.showDownBtn,
+          halfProgress: this.process,
+          ctx: this.btnCtx
+        })
+      }
+      .margin({
+        top: 60
       })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testLogin();
-        })
-      Button('发送Rcp的post请求json').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testPostJSON();
-        })
-      Button('发送Rcp的post请求from').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testPostForm();
-        })
-      Button('发送Rcp的get请求').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testGet();
-        })
-      Button('发送Rcp的put请求').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testPUT();
-        })
-      Button('发送Rcp的delete').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testDelete();
-        })
-      Button('取消请求').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testCancel();
-        })
-      Button('发送Rcp的upload').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testUploadFile();
-        })
-      Button('发送Rcp的downloadFile').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testDownloadFile();
-        })
-      Button('发送Rcp的downloadStream').margin({
-        top: 40
-      })
-        .margin({
-          top: '20'
-        })
-        .onClick(async () => {
-          await this.testDownloadStream();
-        })
-      DownloadUtil({
-        progressState: this.showDownBtn,
-        halfProgress: this.process,
-        ctx: this.btnCtx
-      })
+      .height('100%')
+      .width('100%')
     }
-    .margin({
-      top: 60
-    })
-    .height('100%')
-    .width('100%')
+    .title('RcpPage')
   }
 }
