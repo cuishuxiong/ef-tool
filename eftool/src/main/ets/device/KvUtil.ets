@@ -56,10 +56,8 @@ export class KvUtil {
       //设置数据库安全级别
       securityLevel: distributedKVStore.SecurityLevel.S1
     };
-    //随机生成storeId
-    let storeId = 'efStore' + RandomUtil.randomNumber(1000, 2000000);
     //创建kvStore
-    this.kvStore = await this.kvManager.getKVStore<distributedKVStore.SingleKVStore>(storeId, options);
+    this.kvStore = await this.kvManager.getKVStore<distributedKVStore.SingleKVStore>('efStore', options);
   }
 
   /**

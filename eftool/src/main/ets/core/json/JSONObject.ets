@@ -138,6 +138,8 @@ export class JSONObject extends HashMap<string, JSONValue> {
     Object.entries(jVal).forEach((item) => {
       if (item[1] instanceof JSONObject) {
         json.set(item[0], JSONObject.from(item[1]));
+      } else if (item[1] instanceof Array) {
+        json.set(item[0], JSONArray.from(item[1]));
       } else if (item[1] instanceof JSONArray) {
         json.set(item[0], JSONArray.from(item[1]));
       } else if (item[1] instanceof JSONArrayList) {
