@@ -14,12 +14,6 @@
 * 新增getGeoLocationAll获取定位返回信息更全面[issuesIAI83G](https://gitee.com/yunkss/ef-tool/issues/IAI83G)
 * 新增SM2的ASN1与C1C2C3加密内容互转[issuesIADJLX](https://gitee.com/yunkss/ef-tool/issues/IADJLX)
 
-
-### 🐞功能优化
-
-* 优化rcp请求异常无法抛出问题[issuesIAHYF3](https://gitee.com/yunkss/ef-tool/issues/IAHYF3)
-* 优化rcp下载方法证书校验
-
 ## [v1.2.1-rc.3] 2024-08
 
 ### 🐞功能优化
