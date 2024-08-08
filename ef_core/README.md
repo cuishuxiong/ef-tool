@@ -855,7 +855,7 @@ import { CacheUtil, OutDTO, Logger, IdCardUtil,xxxx} from '@yunkss/ef_core'
     console.log(StrUtil.truncate(longStr, { length: 10, separator: ' ' })); // 输出：'This is a very...'
 ```
 
-## [`eftool`](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
+## [eftool](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
 
 ## star `ef_core` 希望您可以动一动小手点点小⭐⭐
 

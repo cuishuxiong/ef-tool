@@ -325,7 +325,7 @@ import { JSONArray, JSONObject,xxxx} from '@yunkss/ef_json'
 
 * isNumber 是否是字符串
 
-## [`eftool`](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
+## [eftool](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
 
 ## star `ef_core` 希望您可以动一动小手点点小⭐⭐
 
