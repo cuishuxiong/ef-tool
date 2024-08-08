@@ -34,6 +34,10 @@
 ohpm install @yunkss/ef_json
 ```
 
+* 特殊说明
+
+> ef_json依赖于ef_core,故将依赖引入为dependencies方式,即开发者在使用ef_json时无需自行引入ef_core,ef_json会自动下载对应依赖版本
+
 ## 📦使用
 
 ### 1.在项目中引入插件
