@@ -11,102 +11,79 @@ struct Home {
    * 创建一个页面栈对象并传入Navigation
    */
   @Provide('NavPathStack') pageStack: NavPathStack = new NavPathStack()
+  //当前显示页面
+  @State pageName: string = 'RcpPage';
   /**
    * 底部导航
    */
   private toolBar: ToolbarItem[] = [
     {
       value: 'efRcp',
-      icon: $r("app.media.ok")
+      icon: $r("app.media.ok"),
+      action: () => {
+        this.pageName = 'RcpPage';
+        this.pageStack.pushPath({ name: this.pageName })
+      }
     },
     {
       value: 'efUI',
-      icon: $r("app.media.tips")
+      icon: $r("app.media.tips"),
+      action: () => {
+        this.pageName = 'IndexPage';
+        this.pageStack.pushPath({ name: this.pageName })
+      }
     },
     {
       value: 'efAxios',
-      icon: $r("app.media.notice")
+      icon: $r("app.media.notice"),
+      action: () => {
+        this.pageName = 'WelcomePage';
+        this.pageStack.pushPath({ name: this.pageName })
+      }
     },
     {
       value: 'efCrypto',
-      icon: $r("app.media.startIcon")
+      icon: $r("app.media.startIcon"),
+      action: () => {
+        this.pageName = 'CryptoPage';
+        this.pageStack.pushPath({ name: this.pageName })
+      }
     },
     {
       value: 'other',
-      icon: $r("app.media.error")
-    }
-  ];
-  /**
-   * list数据
-   */
-  @State arr: Array<Record<string, string>> = [
-    {
-      "title": 'efRcp请求Demo',
-      "page": 'RcpPage'
-    },
-    {
-      "title": 'efAxios请求Demo',
-      "page": 'Index'
-    },
-    {
-      "title": '数据库Demo',
-      "page": 'KvPage'
-    },
-    {
-      "title": 'UIDemo',
-      "page": 'Welcome'
-    },
-    {
-      "title": '加解密Demo',
-      "page": 'Crypto'
+      icon: $r("app.media.error"),
+      action: () => {
+        this.pageName = 'KvPage';
+        this.pageStack.pushPath({ name: this.pageName })
+      }
     }
   ];
 
   /**
    * 构建页面
-   * @param name
    */
   @Builder
-  PageMap(name: string) {
-    if (name === "RcpPage") {
+  PageMap() {
+    if (this.pageName === "RcpPage") {
       RcpPage()
     }
-    if (name === "KvPage") {
+    if (this.pageName === "KvPage") {
       KvPage()
     }
-    if (name === "Crypto") {
+    if (this.pageName === "CryptoPage") {
       Crypto()
     }
-    if (name === "Welcome") {
+    if (this.pageName === "WelcomePage") {
       Welcome()
     }
-    if (name === "Index") {
+    if (this.pageName === "IndexPage") {
       Index()
     }
   }
 
   build() {
     Navigation(this.pageStack) {
-      List({ space: 12 }) {
-        ForEach(this.arr, (item: Record<string, string>) => {
-          ListItem() {
-            Text(item["title"])
-              .width("100%")
-              .height(72)
-              .backgroundColor('#FFFFFF')
-              .borderRadius(24)
-              .fontSize(16)
-              .fontWeight(500)
-              .borderColor("#108ee9")
-              .textAlign(TextAlign.Center)
-              .onClick(() => {
-                this.pageStack.pushPath({ name: item["page"] })
-              })
-          }
-        }, (item: Record<string, string>): string => item["page"])
-      }
-      .width("100%")
-      .margin({ top: 12 })
+      Index()
     }
     .mode(NavigationMode.Stack)
     .navDestination(this.PageMap)

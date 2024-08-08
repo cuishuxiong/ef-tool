@@ -86,6 +86,7 @@ class Person {
 
 @Component
 export struct Index {
+  @Consume('NavPathStack') pageStack: NavPathStack;
   @State message: string = 'Hello World';
   @State showLoading: boolean = false;
   @State showTips: boolean = false;
@@ -934,8 +935,10 @@ export struct Index {
         })
       }
       .width('100%')
+      .height('100%')
     }
-    .title('Index')
+    .title('IndexPage')
+    .hideTitleBar(true)
 
     // .margin({ bottom: this.bottomRectHeight })
   }

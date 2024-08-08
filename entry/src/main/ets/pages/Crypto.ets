@@ -22,6 +22,7 @@ import { buffer } from '@kit.ArkTS';
 
 @Component
 export struct Crypto {
+  @Consume('NavPathStack') pageStack: NavPathStack;
   @State msg: string = '';
   scroller: Scroller = new Scroller()
 
@@ -378,6 +379,7 @@ POIkvzh8o+k+FaOmvU0CQBNhCHc2ufGNc88MZmTwxHpGom177f9p/YPiYcg5w3Ej
       .width('100%')
       .scrollable(ScrollDirection.Vertical)
     }
-    .title('Crypto')
+    .title('CryptoPage')
+    .hideTitleBar(true)
   }
 }

@@ -7,6 +7,7 @@ import { GlobalContext, KvUtil } from '@yunkss/eftool'
 
 @Component
 export struct KvPage {
+  @Consume('NavPathStack') pageStack: NavPathStack;
   @State msg: string = "";
 
   build() {
@@ -41,5 +42,6 @@ export struct KvPage {
       .margin({ top: 40 })
     }
     .title('KvPage')
+    .hideTitleBar(true)
   }
 }

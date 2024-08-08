@@ -347,5 +347,6 @@ export struct RcpPage {
       .width('100%')
     }
     .title('RcpPage')
+    .hideTitleBar(true)
   }
 }

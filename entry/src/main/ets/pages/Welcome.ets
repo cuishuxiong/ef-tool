@@ -95,6 +95,7 @@ class Person {
 
 @Component
 export struct Welcome {
+  @Consume('NavPathStack') pageStack: NavPathStack;
   @State msg: string = 'csx';
   private alertWinName: string = '';
   @State previewPath: string = '';
@@ -922,8 +923,11 @@ export struct Welcome {
         .borderRadius(10)
         .padding({ top: 50, bottom: 40 })
       }.scrollable(ScrollDirection.Vertical)
+      .height('100%')
+      .width('100%')
     }
-    .title('Welcome')
+    .title('WelcomePage')
+    .hideTitleBar(true)
 
   }
 }
