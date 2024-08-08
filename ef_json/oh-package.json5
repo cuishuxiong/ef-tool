@@ -1,0 +1,22 @@
+{
+  "name": "@yunkss/ef_json",
+  "version": "1.0.0",
+  "keywords": [
+    "eftool",
+    "json",
+    "转换",
+    "JSONUtil",
+    "JSONObject",
+    "JSONArray",
+    "泛型"
+  ],
+  "author": "csx",
+  "description": "eftool的JSON封装包,封装了常用工具类如JSONUtil、JSONObject等,提供一系列快捷操作方法.",
+  "main": "Index.ets",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
+  "license": "Apache-2.0",
+  "homepage": "https://gitee.com/yunkss",
+  "devDependencies": {
+    "@yunkss/ef_core": "1.0.0"
+  }
+}

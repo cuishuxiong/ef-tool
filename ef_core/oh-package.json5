@@ -1,0 +1,23 @@
+{
+  "name": "@yunkss/ef_core",
+  "version": "1.0.0",
+  "keywords": [
+    "eftool",
+    "正则",
+    "身份证",
+    "格式校验",
+    "日期",
+    "手机号",
+    "工具类",
+    "base64",
+    "随机数",
+    "字符串"
+  ],
+  "author": "csx",
+  "description": "eftool的核心封装包,封装了常用工具类如字符串、正则、身份证、格式校验、日期、手机号、base64等,提供一系列快捷操作方法.",
+  "main": "Index.ets",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
+  "license": "Apache-2.0",
+  "homepage": "https://gitee.com/yunkss",
+  "dependencies": {}
+}

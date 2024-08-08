@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "ef_rcp",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

@@ -48,6 +48,38 @@
     {
       "name": "eftool",
       "srcPath": "./eftool"
+    },
+    {
+      "name": "ef_axios",
+      "srcPath": "./ef_axios",
+    },
+    {
+      "name": "ef_rcp",
+      "srcPath": "./ef_rcp",
+    },
+    {
+      "name": "ef_core",
+      "srcPath": "./ef_core",
+    },
+    {
+      "name": "ef_json",
+      "srcPath": "./ef_json",
+    },
+    {
+      "name": "ef_crypto",
+      "srcPath": "./ef_crypto",
+    },
+    {
+      "name": "ef_media",
+      "srcPath": "./ef_media",
+    },
+    {
+      "name": "ef_device",
+      "srcPath": "./ef_device",
+    },
+    {
+      "name": "ef_ui",
+      "srcPath": "./ef_ui",
     }
   ]
 }

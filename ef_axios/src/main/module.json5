@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "ef_axios",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

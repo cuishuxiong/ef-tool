@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "ef_ui",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

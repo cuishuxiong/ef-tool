@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "ef_crypto",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

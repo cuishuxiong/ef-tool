@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "ef_core",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}
