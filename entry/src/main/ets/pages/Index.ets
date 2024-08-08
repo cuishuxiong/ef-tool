@@ -688,7 +688,6 @@ export struct Index {
           Column() {
             Text(this.callCity)
             Text(this.message)
-              .fontSize(50)
               .fontWeight(FontWeight.Bold)
             // DownloadUtil({})
             Button("测试JSONObject").margin({ bottom: '10vp' }).onClick(() => {

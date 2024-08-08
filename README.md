@@ -192,6 +192,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 |-----------------|----------|
 | PreUtil         | 首选项工具类   |
 | TypeWritingUtil | 自定义键盘工具类 |
+| KvUtil          | 数据库工具类   |
 
 ## 📦安装
 
@@ -4910,7 +4911,7 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   }
 ```
 
-#### 14.LocationUtil位置工具类
+#### 14.LocationUtil位置工具类(V1.2.1+有改动)
 
 * getGeoLocation 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限) 【返回OutDTO对象】
 
@@ -4918,6 +4919,16 @@ eTXVu7hjXEqmrGXmgwIDAQAB
   //注意APPROXIMATELY_LOCATION和LOCATION权限需要配置到项目的module.json5文件的requestPermissions中
   //需要获取用户当前定位的中文位置信息时调用,返回格式如北京市海淀区xxx街道xxxx号
   let result = await LocationUtil.getGeoLocation();
+  this.message = result.getDataRow();
+```
+
+
+* getGeoLocationAll 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限) 【返回全部信息】
+
+```
+  //注意APPROXIMATELY_LOCATION和LOCATION权限需要配置到项目的module.json5文件的requestPermissions中
+  //需要获取用户当前定位的中文位置信息时调用,返回格式如北京市海淀区xxx街道xxxx号
+  let result = await LocationUtil.getGeoLocationAll();
   this.message = result.getDataRow();
 ```
 
@@ -5680,6 +5691,64 @@ eTXVu7hjXEqmrGXmgwIDAQAB
 ```
 
 ---------------------------------------------------------------------------------
+
+### 8.设备类相关组件使用API(V1.2.1+)
+
+#### 1.KvUtil
+
+* init 初始化
+
+> 建议在Ability中进行初始化操作
+
+```
+ 在Ability的  方法中进行初始化
+ 
+   onWindowStageCreate(windowStage: window.WindowStage): void {
+        //构造函数内异步调用里init方法
+        let kvUtil = new KvUtil(this.context);
+         //希望全局可以调用，通过GlobalContext来解决,目的是保证init异步初始化完成后，存入GlobalContext
+         windowStage.loadContent('pages/Login', (err, data) => {
+           GlobalContext.getContext().setT<KvUtil>("kvUtil", kvUtil);
+         }
+   }
+```
+
+* put  存入数据——会进行权限校验
+
+```
+        Button("kv存储")
+          .margin({ top: 20 })
+          .onClick(async () => {
+            //从全局中获取
+            let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
+            //调用方法
+            this.msg = await kvUtil.put("csx", true);
+        })
+```
+
+* get  获取数据——会进行权限校验
+
+```
+        Button("kv获取")
+          .margin({ top: 20 })
+          .onClick(async () => {
+            let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
+            this.msg = await kvUtil.get<boolean>("csx", false) + "";
+        })
+```
+
+* delete  删除数据——会进行权限校验
+
+
+```
+        Button("kv删除")
+          .margin({ top: 20 })
+          .onClick(async () => {
+            let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
+            this.msg = await kvUtil.delete("csx");
+        })
+```
+
 
 ## 特别鸣谢
 

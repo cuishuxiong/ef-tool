@@ -12,6 +12,7 @@
 
 * 优化JSONObject.parse如果是Array不达预期问题[issuesIAI911](https://gitee.com/yunkss/ef-tool/issues/IAI911)
 * 新增getGeoLocationAll获取定位返回信息更全面[issuesIAI83G](https://gitee.com/yunkss/ef-tool/issues/IAI83G)
+* 新增SM2的ASN1与C1C2C3加密内容互转[issuesIADJLX](https://gitee.com/yunkss/ef-tool/issues/IADJLX)
 
 
 ### 🐞功能优化
