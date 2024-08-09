@@ -5,5 +5,10 @@
   "main": "Index.ets",
   "author": "",
   "license": "Apache-2.0",
-  "dependencies": {}
+  "dependencies": {
+    "@yunkss/ef_json":"1.0.0"
+  },
+  "devDependencies": {
+    "@yunkss/ef_json": "../ef_json"
+  }
 }

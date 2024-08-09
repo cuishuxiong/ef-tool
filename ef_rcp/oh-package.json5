@@ -1,9 +1,29 @@
 {
-  "name": "ef_rcp",
+  "name": "@yunkss/ef_rcp",
   "version": "1.0.0",
-  "description": "Please describe the basic information.",
+  "keywords": [
+    "eftool",
+    "rcp",
+    "post",
+    "fetch",
+    "cancel",
+    "上传",
+    "下载",
+    "网络请求",
+    "formData",
+    "efRcp"
+  ],
+  "author": "csx",
+  "description": "eftool的rcp网络请求封装包,封装了rcp的统一请求拦截,上传,下载,post,get等提供一系列快捷操作方法.",
   "main": "Index.ets",
-  "author": "",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
   "license": "Apache-2.0",
-  "dependencies": {}
+  "homepage": "https://gitee.com/yunkss",
+  "dependencies": {
+    "@yunkss/ef_json": "1.0.0"
+  },
+  "devDependencies": {
+    "@yunkss/ef_json": "../ef_json",
+    "@yunkss/ef_core": "../ef_core"
+  }
 }
