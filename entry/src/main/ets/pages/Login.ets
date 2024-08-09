@@ -35,10 +35,15 @@ function iptStyle() {
   })
   .backgroundColor("#00000000")
   .border({
-    width: 1,
-    color: "#979BB5"
+    width: {
+      top:0,
+      left:0,
+      right:0,
+      bottom:1
+    },
+    color: "#979BB5",
   })
-  .borderRadius(15)
+  .borderRadius(0)
 }
 
 @Component

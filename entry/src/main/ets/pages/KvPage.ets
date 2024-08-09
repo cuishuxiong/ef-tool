@@ -23,18 +23,18 @@ export struct KvPage {
             this.msg = await kvUtil.put("csx", true);
           })
 
-        Button("kv获取")
+        Button("token获取")
           .margin({ top: 20 })
           .onClick(async () => {
             let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-            this.msg = await kvUtil.get<boolean>("csx", false) + "";
+            this.msg = await kvUtil.get<string>("Authorization","") + "";
           })
 
-        Button("kv删除")
+        Button("token删除")
           .margin({ top: 20 })
           .onClick(async () => {
             let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-            this.msg = await kvUtil.delete("csx");
+            this.msg = await kvUtil.delete("Authorization");
           })
       }
       .width('100%')
