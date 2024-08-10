@@ -1,8 +1,5 @@
-import { efRcpEventsHandler } from './src/main/ets/network/rcp/RcpInterceptor';
 
-export { ArrayUtil } from './src/main/ets/core/util/ArrayUtil';
-
-export { CharUtil } from './src/main/ets/core/util/CharUtil';
+export { ArrayUtil,CharUtil } from '@yunkss/ef_core';
 
 export { DateUtil } from './src/main/ets/core/util/DateUtil';
 

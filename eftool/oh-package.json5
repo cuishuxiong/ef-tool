@@ -1,7 +1,14 @@
 {
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ohos/axios": "2.2.2"
+    "@yunkss/ef_axios": "./ef_axios",
+    "@yunkss/ef_core": "./ef_core",
+    "@yunkss/ef_crypto_dto": "./ef_crypto_dto",
+    "@yunkss/ef_device": "./ef_device",
+    "@yunkss/ef_json": "./ef_json",
+    "@yunkss/ef_media": "./ef_media",
+    "@yunkss/ef_rcp": "./ef_rcp",
+    "@yunkss/ef_ui": "./ef_ui"
   },
   "keywords": [
     "axios",
@@ -20,9 +27,13 @@
   "description": "一款高效的兼容API12的HarmonyOS工具包.封装了常用工具类如字符串、正则、加解密、图片处理、axios、rcp、json等和常用UI组件如Dialog,Loading,Cascade,通知,位置,窗口等,提供一系列快捷操作方法.",
   "main": "index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
+    //    "@yunkss/ef_axios": "1.0.0",
+    //    "@yunkss/ef_rcp": "1.0.0",
+    //    "@yunkss/ef_ui": "1.0.0",
+    //    "@yunkss/ef_crypto_dto": "1.0.0"
   },
   "dynamicDependencies": {}
 }
