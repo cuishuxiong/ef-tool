@@ -198,10 +198,9 @@ export struct RcpPage {
     //拉起选中照片
     let result = await PickerUtil.selectPhotoVideo();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
+    if (result && result.length > 0) {
       //获取选中照片uri
-      let item = list[0];
+      let item = result[0];
       //创建文件信息
       let fileUriObject = new fileUri.FileUri(item);
       //获取文件名

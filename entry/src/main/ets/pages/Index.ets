@@ -273,13 +273,13 @@ export struct Index {
   }
 
   async geoLocation() {
-    let result = await LocationUtil.getGeoLocationAll();
-    this.message = JSONObject.toJSONString(result);
+    let result = await LocationUtil.getGeoLocation();
+    this.message = result;
   }
 
   async add2location() {
     let res = await LocationUtil.address2Location('北京市顺义区后沙峪裕祥花园');
-    this.message = res.getDataRow().latitude + '-------' + res.getDataRow().longitude;
+    this.message = res.latitude + '-------' + res.longitude;
   }
 
   async geoConvert() {
@@ -291,7 +291,7 @@ export struct Index {
 
   async getCountryCode() {
     let res = await LocationUtil.getCountryCode();
-    this.message = res.getDataRow();
+    this.message = res;
   }
 
   async testCrypto() {

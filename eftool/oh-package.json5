@@ -1,14 +1,14 @@
 {
   "license": "Apache-2.0",
   "devDependencies": {
-    "@yunkss/ef_axios": "./ef_axios",
-    "@yunkss/ef_core": "./ef_core",
-    "@yunkss/ef_crypto_dto": "./ef_crypto_dto",
-    "@yunkss/ef_device": "./ef_device",
-    "@yunkss/ef_json": "./ef_json",
-    "@yunkss/ef_media": "./ef_media",
-    "@yunkss/ef_rcp": "./ef_rcp",
-    "@yunkss/ef_ui": "./ef_ui"
+    "@yunkss/ef_axios": "../ef_axios",
+    "@yunkss/ef_core": "../ef_core",
+    "@yunkss/ef_crypto_dto": "../ef_crypto_dto",
+    "@yunkss/ef_device": "../ef_device",
+    "@yunkss/ef_json": "../ef_json",
+    "@yunkss/ef_media": "../ef_media",
+    "@yunkss/ef_rcp": "../ef_rcp",
+    "@yunkss/ef_ui": "../ef_ui"
   },
   "keywords": [
     "axios",

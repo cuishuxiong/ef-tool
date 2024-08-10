@@ -1,17 +1,7 @@
-import { AbilityConstant, UIAbility, Want, wantAgent } from '@kit.AbilityKit';
+import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import {
-  efRcpParams,
-  Logger,
-  NotificationUtil,
-  ImmersionUtil,
-  efAxiosParams,
-  efRcpSecurityParam,
-  KvUtil,
-  GlobalThis,
-  GlobalContext
-} from '@yunkss/eftool'
+import { efRcpParams, Logger, NotificationUtil, ImmersionUtil, KvUtil, GlobalContext } from '@yunkss/eftool'
 
 
 export default class EntryAbility extends UIAbility {

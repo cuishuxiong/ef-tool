@@ -20,7 +20,7 @@
   "license": "Apache-2.0",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    "@yunkss/ef_crypto": "1.0.0",
+//    "@yunkss/ef_crypto": "1.0.0",
     "@ohos/axios": "2.2.2"
   },
   "devDependencies": {

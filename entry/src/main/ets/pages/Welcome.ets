@@ -5,7 +5,7 @@
  */
 import {
   AES,
-  AudioCapturerUtil,
+  AudioUtil,
   Base64Util,
   BtnOptions,
   ButtonUtil,
@@ -269,14 +269,6 @@ export struct Welcome {
     // let hmac2 = await SHA.hmac('这个是SHA的HMAC');
     // this.msg = hmac2.getDataRow();
 
-    let re1 = await PreviewUtil.canPreview('http://124.71.72.144:8801/mbank/dist/121.gif');
-
-    this.msg = re1.getMsg();
-
-    // let isOk = await filePreview.canPreview(this.getUIContext(),'http://124.71.72.144:8801/mbank/dist/121.gif');
-    // if (isOk) {
-    //   ToastUtil.showToast('可以预览~');
-    // }
     let res = IdCardUtil.isValidCard18('12022519540815028x');
     this.msg = res.getMsg();
   }
@@ -284,10 +276,9 @@ export struct Welcome {
   async selectAudio() {
     let result = await PickerUtil.selectAudio();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
+    if (result && result.length > 0) {
       //获取选中照片uri
-      let item = list[0];
+      let item = result[0];
       //创建文件信息
       //创建文件信息
       let fileUriObject = new fileUri.FileUri(item);
@@ -312,9 +303,8 @@ export struct Welcome {
 
   async selectContact() {
     let result = await PickerUtil.selectContact();
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      let str = JSONArray.toJSONString(list);
+    if (result) {
+      let str = JSONArray.toJSONString(result);
       this.msg = str;
     }
   }
@@ -323,10 +313,9 @@ export struct Welcome {
     //拉起选中照片
     let result = await PickerUtil.selectPhotoVideo();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
+    if (result && result.length > 0) {
       //获取选中照片uri
-      let item = list[0];
+      let item = result[0];
       //创建文件信息
       let fileUriObject = new fileUri.FileUri(item);
       //获取文件名
@@ -351,8 +340,8 @@ export struct Welcome {
 
   async camera() {
     let res = await CameraUtil.picker();
-    if (res.getSuccess()) {
-      let str = res.getDataRow().resultUri;
+    if (res) {
+      let str = res.resultUri;
       let fileUriObject = new fileUri.FileUri(str);
       let name = fileUriObject.name;
       let file = fs.openSync(str, fs.OpenMode.READ_ONLY);
@@ -376,7 +365,7 @@ export struct Welcome {
 
   async commonUpload() {
     let ctx = getContext() as common.UIAbilityContext;
-    let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
+    let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.icon').id);
     let imageResource = imageArray.buffer as ArrayBuffer;
     await this.testUpload(imageResource);
   }
@@ -448,10 +437,9 @@ export struct Welcome {
     let result = await PickerUtil.selectFile();
     let name: string = '';
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
+    if (result && result.length > 0) {
       //获取选中照片uri
-      let item = list[0];
+      let item = result[0];
       //创建文件信息
       let fileUriObject = new fileUri.FileUri(item);
       //获取文件名
@@ -499,9 +487,8 @@ export struct Welcome {
     //拉起选择文件
     let result = await PickerUtil.selectFile();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      let item = list[0];
+    if (result && result.length > 0) {
+      let item = result[0];
       await PreviewUtil.previewTxt(item);
     }
   }
@@ -510,32 +497,14 @@ export struct Welcome {
     //拉起选择文件
     let result = await PickerUtil.selectPhotoVideo();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      let item = list[0];
+    if (result && result.length > 0) {
+      let item = result[0];
       let res = await PreviewUtil.canPreview(item);
-      if (res.getSuccess()) {
-        // //打开文件
-        // let file = fs.openSync(item, fs.OpenMode.READ_ONLY);
-        // //读取文件大小
-        // let info = fs.statSync(file.fd);
-        // //缓存照片数据
-        // let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
-        // //写入缓存
-        // fs.readSync(file.fd, bufferImg);
-        // //关闭文件流
-        // fs.closeSync(file);
-        // //创建imageResource
-        // let imageResource = image.createImageSource(bufferImg);
-        // //创建pixelMap
-        // let picture = await imageResource.createPixelMap();
-        //
-
+      if (res) {
         await PreviewUtil.previewImage(item);
       } else {
-        ToastUtil.showToast(res.getMsg());
+        ToastUtil.showToast(res + "");
       }
-
     }
   }
 
@@ -543,9 +512,8 @@ export struct Welcome {
     //拉起选择文件
     let result = await PickerUtil.selectPhotoVideo();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      let item = list[0];
+    if (result && result.length > 0) {
+      let item = result[0];
       await PreviewUtil.previewVideo(item);
     }
   }
@@ -554,9 +522,8 @@ export struct Welcome {
     //拉起选择文件
     let result = await PickerUtil.selectAudio();
     //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      let item = list[0];
+    if (result && result.length > 0) {
+      let item = result[0];
       await PreviewUtil.previewAudio(item);
     }
   }
@@ -625,10 +592,8 @@ export struct Welcome {
   }
 
   async stopRecording() {
-    let res = await AudioCapturerUtil.stopRecording();
-    if (res.getSuccess()) {
-      this.msg = res.getMsg();
-    }
+    let res = await AudioUtil.stopRecording();
+    this.msg = res;
   }
 
   async testNDK() {
@@ -698,14 +663,14 @@ export struct Welcome {
   }
 
   async save2photo() {
-    let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+    let array = getContext().resourceManager.getMediaContentSync($r("app.media.icon").id);
     let res = await ImageUtil.pickerSave(buffer.from(array).buffer);
     this.msg = res.getMsg();
   }
 
   async resFileCanPreview() {
     //转换成数组
-    let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+    let array = getContext().resourceManager.getMediaContentSync($r("app.media.icon").id);
     //获取沙箱路径
     let context = getContext(this) as common.UIAbilityContext;
     let filesDir = context.filesDir;
@@ -719,10 +684,10 @@ export struct Welcome {
     //转换地址
     let uri = fileUri.getUriFromPath(finalPath);
     let can = await PreviewUtil.canPreview(uri);
-    if (can.getSuccess()) {
+    if (can) {
       await PreviewUtil.previewImage(uri);
     } else {
-      ToastUtil.showToast(can.getMsg());
+      ToastUtil.showToast(can + "");
     }
   }
 
@@ -754,20 +719,20 @@ export struct Welcome {
     let filePath = path + '/csx.wav';
     let file: fs.File = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
     let bufferSize: number = 0;
-    let initResult = await AudioCapturerUtil.init((buffer: ArrayBuffer) => {
+    let initResult = await AudioUtil.init((buffer: ArrayBuffer) => {
       fs.writeSync(file.fd, buffer, {
         offset: bufferSize,
         length: buffer.byteLength
       });
       bufferSize += buffer.byteLength;
     });
-    if (!initResult.getSuccess()) {
-      ToastUtil.showToast(initResult.getMsg());
+    if (!initResult) {
+      ToastUtil.showToast(initResult);
       return;
     }
-    let record = await AudioCapturerUtil.startRecording();
-    if (record.getSuccess()) {
-      this.msg = record.getMsg();
+    let record = await AudioUtil.startRecording();
+    if (record) {
+      this.msg = record;
     }
   }
 
@@ -801,7 +766,7 @@ export struct Welcome {
             .onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) => {
               if (result == SaveButtonOnClickResult.SUCCESS) {
                 try {
-                  let array = getContext().resourceManager.getMediaContentSync($r("app.media.notice").id);
+                  let array = getContext().resourceManager.getMediaContentSync($r("app.media.icon").id);
                   let result = await ImageUtil.pickerSaveGallery(buffer.from(array).buffer);
                   if (result.getSuccess()) {
                     ToastUtil.showToast(result.getMsg());

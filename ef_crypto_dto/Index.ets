@@ -53,4 +53,3 @@ export { DynamicSyncUtil } from './src/main/ets/crypto/util/DynamicSyncUtil';
 export { DynamicUtil } from './src/main/ets/crypto/util/DynamicUtil';
 
 export { StrAndUintUtil } from './src/main/ets/crypto/util/StrAndUintUtil';
-

@@ -1,6 +1,5 @@
 import webSocket from '@ohos.net.webSocket';
-
-import { ToastUtil } from '../../ui/prompt/ToastUtil'
+import { Logger } from '@yunkss/ef_core';
 
 /**
  * @Author csx
@@ -17,7 +16,7 @@ export class WsUtil {
    */
   static connect(ip: string, headers?: Record<string, string>): void {
     if (!ip) {
-      ToastUtil.showToast("请输入websocket地址~");
+      Logger.error("请输入IP");
       return;
     }
     let head: Record<string, Record<string, string>> = {}
@@ -26,9 +25,9 @@ export class WsUtil {
     }
     WsUtil.ws.connect("ws://" + ip, head, (err, value) => {
       if (!err) {
-        ToastUtil.showToast("连接ws成功~");
+        Logger.error("连接ws成功~");
       } else {
-        ToastUtil.showToast("连接ws失败,原因为:" + JSON.stringify(err));
+        Logger.error("连接ws失败,原因为:", JSON.stringify(err));
       }
     });
   }

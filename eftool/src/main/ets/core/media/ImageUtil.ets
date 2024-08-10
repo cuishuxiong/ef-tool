@@ -6,11 +6,9 @@ import fs from '@ohos.file.fs';
  * @TODO ImageUtil  图片处理类
  */
 import { image } from '@kit.ImageKit';
-import { Base64Util } from '../util/Base64Util';
-import { StrUtil } from '../util/StrUtil';
+import { Base64Util, StrUtil, OutDTO } from '@yunkss/ef_core';
 import { FileUtil } from './FileUtil';
 import { resourceManager } from '@kit.LocalizationKit';
-import { OutDTO } from '../base/OutDTO';
 import { fileIo, picker } from '@kit.CoreFileKit';
 import { buffer } from '@kit.ArkTS';
 import { photoAccessHelper } from '@kit.MediaLibraryKit';

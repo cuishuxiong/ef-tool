@@ -4,21 +4,17 @@
  * @TODO Crypto
  */
 import {
-  RandomUtil,
   AESSync,
   UiConst,
   RSASync,
-  RSA,
   SHASync,
   SM3Sync,
   SM2Sync,
   SM2Convert,
   SM4Sync,
   ECDHSync,
-  DESSync
+  CryptoSyncUtil
 } from '@yunkss/eftool';
-import { CryptoSyncUtil } from '@yunkss/eftool/src/main/ets/core/util/CryptoSyncUtil';
-import { buffer } from '@kit.ArkTS';
 
 @Component
 export struct Crypto {

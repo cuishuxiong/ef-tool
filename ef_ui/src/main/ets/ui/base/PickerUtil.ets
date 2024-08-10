@@ -7,6 +7,8 @@ import { picker } from '@kit.CoreFileKit';
 import { ToastUtil } from '../prompt/ToastUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
 import contact from '@ohos.contact';
+import { common } from '@kit.AbilityKit';
+import { photoAccessHelper } from '@kit.MediaLibraryKit';
 
 
 export class PickerUtil {
@@ -56,7 +58,8 @@ export class PickerUtil {
       selectOpts.maxSelectNumber = options.maxNumber;
       selectOpts.selectMode = options.selectMode;
       //创建picker
-      let documentPicker = new picker.DocumentViewPicker();
+      let context = getContext() as common.Context;
+      let documentPicker = new picker.DocumentViewPicker(context);
       documentPicker.select(selectOpts).then((list: Array<string>) => {
         if (list !== null && list !== undefined) {
           if (options?.selectCallBack) {
@@ -120,13 +123,13 @@ export class PickerUtil {
       options.maxNumber = 5;
     }
     try {
-      let selectOpts = new picker.PhotoSelectOptions();
+      let selectOpts = new photoAccessHelper.PhotoSelectOptions();
       selectOpts.maxSelectNumber = options.maxNumber;
-      selectOpts.MIMEType = picker.PhotoViewMIMETypes.IMAGE_VIDEO_TYPE;
+      selectOpts.MIMEType = photoAccessHelper.PhotoViewMIMETypes.IMAGE_VIDEO_TYPE;
       //创建picker
-      let photoPicker = new picker.PhotoViewPicker();
+      let photoPicker = new photoAccessHelper.PhotoViewPicker();
       //拉起选择
-      let list: picker.PhotoSelectResult = await photoPicker.select(selectOpts);
+      let list: photoAccessHelper.PhotoSelectResult = await photoPicker.select(selectOpts);
       //回调
       if (list !== null && list !== undefined) {
         if (options?.selectCallBack) {
@@ -151,13 +154,13 @@ export class PickerUtil {
     if (!options.maxNumber) {
       options.maxNumber = 5;
     }
-    let selectOpts = new picker.PhotoSelectOptions();
+    let selectOpts = new photoAccessHelper.PhotoSelectOptions();
     selectOpts.maxSelectNumber = options.maxNumber;
-    selectOpts.MIMEType = picker.PhotoViewMIMETypes.IMAGE_VIDEO_TYPE;
+    selectOpts.MIMEType = photoAccessHelper.PhotoViewMIMETypes.IMAGE_VIDEO_TYPE;
     //创建picker
-    let photoPicker = new picker.PhotoViewPicker();
+    let photoPicker = new photoAccessHelper.PhotoViewPicker();
     //拉起选择
-    let list: picker.PhotoSelectResult = await photoPicker.select(selectOpts);
+    let list: photoAccessHelper.PhotoSelectResult = await photoPicker.select(selectOpts);
     //回调
     if (list !== null && list !== undefined) {
       return list.photoUris;
@@ -240,7 +243,7 @@ class efPickerOptions {
   /**
    * 选择模式是文件还是目录
    */
-  selectMode?: number;
+  selectMode?: picker.DocumentSelectMode;
   /**
    * 是否多选联系人
    */

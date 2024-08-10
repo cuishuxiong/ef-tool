@@ -5,8 +5,7 @@
  */
 import { connection } from '@kit.NetworkKit';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { GlobalContext } from '../core/cache/GlobalContext';
-import { Logger } from '../core/util/Logger';
+import { GlobalContext, Logger } from '@yunkss/ef_core';
 
 export class NetUtil {
   /**

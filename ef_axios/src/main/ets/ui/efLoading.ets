@@ -26,7 +26,7 @@ struct efAlert {
       Column() {
         if (this.options.imgLayout != undefined && this.options.imgLayout === ImgLayout.TOP) {
           Column() {
-            Image($r("app.media.loading"))
+            Image($r("app.media.axiosLoading"))
               .width('30')
               .animation({
                 duration: 50,
@@ -54,7 +54,7 @@ struct efAlert {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
               .margin({ bottom: UiConst.NUMBER_20 })
-            Image($r("app.media.loading"))
+            Image($r("app.media.axiosLoading"))
               .width('30')
               .animation({
                 duration: 50,
@@ -78,7 +78,7 @@ struct efAlert {
           Row() {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
-            Image($r("app.media.loading"))
+            Image($r("app.media.axiosLoading"))
               .width('30')
               .animation({
                 duration: 50,
@@ -102,7 +102,7 @@ struct efAlert {
         }
         if (this.options.imgLayout != undefined && this.options.imgLayout === ImgLayout.LEFT) {
           Row() {
-            Image($r("app.media.loading"))
+            Image($r("app.media.axiosLoading"))
               .width('30')
               .animation({
                 duration: 50,

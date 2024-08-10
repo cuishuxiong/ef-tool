@@ -1,8 +1,6 @@
-import { StrUtil } from '../util/StrUtil';
+import { StrUtil } from '@yunkss/ef_core';
 import { fileUri } from '@kit.CoreFileKit';
-import fs, { WriteOptions } from '@ohos.file.fs';
-import { StrAndUintUtil } from '../util/StrAndUintUtil';
-import { OutDTO } from '../base/OutDTO';
+import fs from '@ohos.file.fs';
 import { common } from '@kit.AbilityKit';
 
 /**
@@ -193,30 +191,6 @@ export class FileUtil {
   }
 
   /**
-   * 将数据写入文件并关闭文件。
-   * @param path string 文件的应用沙箱路径或URI。
-   * @param buffer ArrayBuffer|string 待写入文件的数据，可来自缓冲区或字符串。
-   * @param append 是否追加，true-追加，false-不追加（直接覆盖）
-   * @returns
-   */
-  static async writeEasy(path: string, buffer: ArrayBuffer | string, append: boolean = true): Promise<OutDTO<string>> {
-    try {
-      let file = fs.openSync(path, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
-      let offset = append ? fs.statSync(file.fd).size : 0
-      let options: WriteOptions = { offset: offset, encoding: 'utf-8' };
-      let res = await fs.write(file.fd, buffer, options).finally(() => {
-        fs.close(file.fd); //关闭文件
-      });
-      if (res >= 0) {
-        return OutDTO.OK("写入文件成功~");
-      }
-      return OutDTO.Error("写入文件失败~");
-    } catch (err) {
-      return OutDTO.Error("写入文件失败~");
-    }
-  }
-
-  /**
    * 格式化文件大小
    * @param fileSize
    * @returns
@@ -260,7 +234,7 @@ export class FileUtil {
    * @param uri 如picker返回的uri
    * @returns 文件的ArrayBuffer
    */
-  static getBufferByURI(uri: string): OutDTO<ArrayBuffer> {
+  static getBufferByURI(uri: string): ArrayBuffer {
     //创建文件信息
     let fileUriObject = new fileUri.FileUri(uri);
     //获取文件名
@@ -276,7 +250,6 @@ export class FileUtil {
     //关闭文件流
     fs.closeSync(file);
     //返回
-    return OutDTO.OKByDataRow<ArrayBuffer>('获取二进制文件流成功~', bufferImg);
+    return bufferImg;
   }
-
 }

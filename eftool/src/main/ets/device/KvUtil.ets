@@ -1,7 +1,6 @@
 import { distributedKVStore } from '@kit.ArkData';
 import { bundleManager, common } from '@kit.AbilityKit';
-import { AuthUtil } from '../core/auth/AuthUtil';
-import { RandomUtil } from '../core/util/RandomUtil';
+import { AuthUtil } from '@yunkss/ef_ui';
 
 /**
  * @Author csx

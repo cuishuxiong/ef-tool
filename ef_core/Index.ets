@@ -41,5 +41,3 @@ export { RandomUtil } from './src/main/ets/core/util/RandomUtil';
 export { RegUtil } from './src/main/ets/core/util/RegUtil';
 
 export { StrUtil } from './src/main/ets/core/util/StrUtil';
-
-

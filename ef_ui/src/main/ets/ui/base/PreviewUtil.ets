@@ -92,12 +92,8 @@ export class PreviewUtil {
    * @param uri 判断的uri
    * @returns
    */
-  static async canPreview(uri: string): Promise<string> {
-    let isOk = await filePreview.canPreview(getContext() as common.UIAbilityContext, uri);
-    if (isOk) {
-      return '该uri支持预览~';
-    }
-    return '该uri不支持预览~';
+  static async canPreview(uri: string): Promise<boolean> {
+    return await filePreview.canPreview(getContext() as common.UIAbilityContext, uri);
   }
 
   /**
