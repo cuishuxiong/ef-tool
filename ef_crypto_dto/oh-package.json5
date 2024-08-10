@@ -1,5 +1,5 @@
 {
-  "name": "@yunkss/ef_crypto",
+  "name": "@yunkss/ef_crypto_dto",
   "version": "1.0.0",
   "keywords": [
     "eftool",
@@ -14,15 +14,16 @@
     "SM4"
   ],
   "author": "csx",
-  "description": "eftool的加解密crypto封装包返回类型为字符串,封装了常见的AES、RSA、MD5、SHA、SM2、SM3、SM4、动态协商等，提供一系列快捷操作方法.",
+  "description": "eftool的加解密crypto封装包返回类型为OutDTO,封装了常见的AES、RSA、MD5、SHA、SM2、SM3、SM4、动态协商等，提供一系列快捷操作方法.",
   "main": "Index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
   "license": "Apache-2.0",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    "@yunkss/ef_core": "1.0.0",
+    "@yunkss/ef_json": "1.0.0",
   },
   "devDependencies": {
+    "@yunkss/ef_json": "../ef_json",
     "@yunkss/ef_core": "../ef_core"
   }
 }

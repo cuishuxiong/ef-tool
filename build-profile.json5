@@ -80,6 +80,10 @@
     {
       "name": "ef_ui",
       "srcPath": "./ef_ui",
+    },
+    {
+      "name": "ef_crypto_dto",
+      "srcPath": "./ef_crypto_dto",
     }
   ]
 }

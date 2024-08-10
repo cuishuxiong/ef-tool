@@ -1,9 +1,31 @@
 {
-  "name": "ef_axios",
+  "name": "@yunkss/ef_axios",
   "version": "1.0.0",
-  "description": "Please describe the basic information.",
+  "keywords": [
+    "eftool",
+    "efAxios",
+    "post",
+    "efClientApi",
+    "efAxiosParams",
+    "上传",
+    "下载",
+    "网络请求",
+    "formData",
+    "axios"
+  ],
+  "author": "csx",
+  "description": "eftool的efAxios网络请求封装包,二次封装了axios的统一请求拦截,上传,下载,post,get以及传输加密等提供一系列快捷操作方法.",
   "main": "Index.ets",
-  "author": "",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
   "license": "Apache-2.0",
-  "dependencies": {}
+  "homepage": "https://gitee.com/yunkss",
+  "dependencies": {
+    "@yunkss/ef_crypto": "1.0.0",
+    "@ohos/axios": "2.2.2"
+  },
+  "devDependencies": {
+    "@yunkss/ef_json": "../ef_json",
+    "@yunkss/ef_core": "../ef_core",
+    "@yunkss/ef_crypto": "../ef_crypto"
+  }
 }

@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "ef_crypto_dto",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}
