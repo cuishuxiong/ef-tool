@@ -1,17 +1,17 @@
 /**
  * @Author csx
  * @DateTime 2024/6/19 00:16
- * @TODO WinLoadingUtil  子窗口方式实现全局加载框
+ * @TODO RcpLoadingUtil  子窗口方式实现全局加载框
  */
 import { display, window } from '@kit.ArkUI';
 import { common } from '@kit.AbilityKit';
 import { Logger, RandomUtil } from '@yunkss/ef_core';
-import { efLoadingOptions, ImgLayout, LoadingShape } from './efLoading';
+import { rcpLoadingOptions, RcpImgLayout, RcpLoadingShape } from './rcpLoading';
 
-import('./efLoading'); // 引入命名路由页面
+import('./rcpLoading'); // 引入命名路由页面
 
 
-export class WinLoadingUtil {
+export class RcpLoadingUtil {
   /**
    * 缓存窗体集合,关闭时需要
    */
@@ -22,11 +22,11 @@ export class WinLoadingUtil {
    * @param options
    * @returns
    */
-  static async showLoading(options?: efLoadingOptions): Promise<void> {
+  static async showLoading(options?: rcpLoadingOptions): Promise<void> {
     let ctx = getContext() as common.UIAbilityContext;
     try {
       //当前窗口的编码
-      let winName = 'efLoading' + RandomUtil.randomNumber(2000, 2000000);
+      let winName = 'rcpLoading' + RandomUtil.randomNumber(2000, 2000000);
       //创建存储
       let efStorage = new LocalStorage();
       //创建窗口
@@ -36,22 +36,22 @@ export class WinLoadingUtil {
         ctx: ctx
       });
       //将窗口缓存
-      WinLoadingUtil.cacheWindow = windowClass;
+      RcpLoadingUtil.cacheWindow = windowClass;
       //更新属性
       if (options) {
         if (!options.content) {
           options.content = '小的正在努力加载中...';
         }
         if (options.imgLayout == undefined) {
-          options.imgLayout = ImgLayout.RIGHT;
+          options.imgLayout = RcpImgLayout.RIGHT;
         }
         if (options.layoutShape == undefined) {
-          options.layoutShape = LoadingShape.RECTANGLE;
+          options.layoutShape = RcpLoadingShape.RECTANGLE;
         }
         //存储数据
-        efStorage.setOrCreate('efLoadingOptions', options);
+        efStorage.setOrCreate('rcpLoadingOptions', options);
       }
-      await windowClass.loadContentByName('efLoading', efStorage);
+      await windowClass.loadContentByName('rcpLoading', efStorage);
       //获取屏幕四大角
       let d = display.getDefaultDisplaySync();
       //设置窗口大小
@@ -70,8 +70,8 @@ export class WinLoadingUtil {
    * @returns
    */
   static async closeLoading(): Promise<void> {
-    if (WinLoadingUtil.cacheWindow) {
-      await WinLoadingUtil.cacheWindow.destroyWindow();
+    if (RcpLoadingUtil.cacheWindow) {
+      await RcpLoadingUtil.cacheWindow.destroyWindow();
     }
   }
 }

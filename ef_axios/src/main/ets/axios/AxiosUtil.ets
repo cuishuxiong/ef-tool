@@ -4,8 +4,8 @@ import { OutDTO, RandomUtil, Logger } from '@yunkss/ef_core';
 import { SM2Sync, SM3Sync, SM4Sync } from '@yunkss/ef_crypto';
 import { ArrayList } from '@kit.ArkTS';
 import { JSONUtil, JSONObject } from '@yunkss/ef_json';
-import { WinLoadingUtil } from '../ui/WinLoadingUtil';
-import { ImgLayout, LoadingShape } from '../ui/efLoading';
+import { WinLoadingUtil } from '../ui/AxiosLoadingUtil';
+import { ImgLayout, LoadingShape } from '../ui/axiosLoading';
 
 /**
  * @Author csx

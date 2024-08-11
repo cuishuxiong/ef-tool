@@ -12,14 +12,14 @@ function loadingTxt(fontSize: string | number) {
   .fontColor("#fff")
 }
 
-@Entry({ routeName: 'efLoading', storage: LocalStorage.getShared() })
+@Entry({ routeName: 'efAxiosLoading', storage: LocalStorage.getShared() })
 @Component
-struct efAlert {
+struct efAxiosLoading {
   @State rotateAngle: number = 0;
   /**
    * 属性配置
    */
-  @LocalStorageProp('efLoadingOptions') options: efLoadingOptions = new efLoadingOptions();
+  @LocalStorageProp('efAxiosLoadingOptions') options: efAxiosLoadingOptions = new efAxiosLoadingOptions();
 
   build() {
     Stack() {
@@ -153,7 +153,7 @@ struct efAlert {
  * 窗口loading方式入参实体
  */
 @Observed
-export class efLoadingOptions {
+export class efAxiosLoadingOptions {
   /**
    * 加载内容
    */

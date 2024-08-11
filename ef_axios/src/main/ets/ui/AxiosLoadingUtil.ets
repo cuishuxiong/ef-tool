@@ -6,9 +6,9 @@
 import { display, window } from '@kit.ArkUI';
 import { common } from '@kit.AbilityKit';
 import { Logger, RandomUtil } from '@yunkss/ef_core';
-import { efLoadingOptions, ImgLayout, LoadingShape } from './efLoading';
+import { efAxiosLoadingOptions, ImgLayout, LoadingShape } from './axiosLoading';
 
-import('./efLoading'); // 引入命名路由页面
+import('./axiosLoading'); // 引入命名路由页面
 
 
 export class WinLoadingUtil {
@@ -22,11 +22,11 @@ export class WinLoadingUtil {
    * @param options
    * @returns
    */
-  static async showLoading(options?: efLoadingOptions): Promise<void> {
+  static async showLoading(options?: efAxiosLoadingOptions): Promise<void> {
     let ctx = getContext() as common.UIAbilityContext;
     try {
       //当前窗口的编码
-      let winName = 'efLoading' + RandomUtil.randomNumber(2000, 2000000);
+      let winName = 'efAxiosLoading' + RandomUtil.randomNumber(2000, 2000000);
       //创建存储
       let efStorage = new LocalStorage();
       //创建窗口
@@ -49,9 +49,9 @@ export class WinLoadingUtil {
           options.layoutShape = LoadingShape.RECTANGLE;
         }
         //存储数据
-        efStorage.setOrCreate('efLoadingOptions', options);
+        efStorage.setOrCreate('efAxiosLoadingOptions', options);
       }
-      await windowClass.loadContentByName('efLoading', efStorage);
+      await windowClass.loadContentByName('efAxiosLoading', efStorage);
       //获取屏幕四大角
       let d = display.getDefaultDisplaySync();
       //设置窗口大小
