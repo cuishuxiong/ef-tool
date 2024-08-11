@@ -312,8 +312,7 @@ export class NotificationUtil {
       options.expandedTitle = '默认展开标题';
     }
     if (!options.picture) {
-      let ctx = getContext() as common.UIAbilityContext;
-      let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.notice').id);
+      let imageArray = getContext().resourceManager.getMediaByNameSync("notice");
       let imageResource = image.createImageSource(imageArray.buffer as ArrayBuffer);
       let picture = await imageResource.createPixelMap();
       options.picture = picture;

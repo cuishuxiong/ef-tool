@@ -143,7 +143,7 @@ export struct Cascade {
       Column() {
         Row() {
           Text('请选择地区').fontWeight('bold').fontSize(UiConst.FONT_16)
-          Image($r("app.media.close"))
+          Image(getContext().resourceManager.getMediaBase64ByNameSync("close"))
             .width(UiConst.VP_15)
             .height(UiConst.VP_15)
             .onClick(() => {
@@ -224,7 +224,7 @@ export struct Cascade {
                     .cityTxtColor()
                     .fontColor(item.code == this.selectData.provinceCode ? "#1989fa" : "#323233")
                   if (item.code == this.selectData.provinceCode) {
-                    Image($r("app.media.ok")).width(UiConst.VP_15).height(UiConst.VP_15)
+                    Image(getContext().resourceManager.getMediaBase64ByNameSync("ok")).width(UiConst.VP_15).height(UiConst.VP_15)
                   }
                 }
                 if (this.selectIndex === 1) {
@@ -232,7 +232,7 @@ export struct Cascade {
                     .cityTxtColor()
                     .fontColor(item.code == this.selectData.cityCode ? "#1989fa" : "#323233")
                   if (item.code == this.selectData.cityCode) {
-                    Image($r("app.media.ok")).width(UiConst.VP_15).height(UiConst.VP_15)
+                    Image(getContext().resourceManager.getMediaBase64ByNameSync("ok")).width(UiConst.VP_15).height(UiConst.VP_15)
                   }
                 }
                 if (this.selectIndex === 2) {
@@ -240,7 +240,7 @@ export struct Cascade {
                     .cityTxtColor()
                     .fontColor(item.code == this.selectData.areaCode ? "#1989fa" : "#323233")
                   if (item.code == this.selectData.areaCode) {
-                    Image($r("app.media.ok")).width(UiConst.VP_15).height(UiConst.VP_15)
+                    Image(getContext().resourceManager.getMediaBase64ByNameSync("ok")).width(UiConst.VP_15).height(UiConst.VP_15)
                   }
                 }
               }

@@ -42,16 +42,24 @@ export struct TipsUtil {
     }),
     autoCancel: false,
     alignment: this.options.alignment != undefined ? this.options.alignment : DialogAlignment.Center,
-    offset: this.options.offset != undefined ? this.options.offset : this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd || this.options.alignment == DialogAlignment.BottomStart ? {
-      dx: 0,
-      dy: -20
-    } : this.options.alignment == DialogAlignment.Top || this.options.alignment == DialogAlignment.TopStart || this.options.alignment == DialogAlignment.TopEnd ? {
-      dx: 0,
-      dy: 50
-    } : { dx: 0, dy: 0 },
+    offset: this.options.offset != undefined ? this.options.offset :
+      this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd ||
+        this.options.alignment == DialogAlignment.BottomStart ? {
+        dx: 0,
+        dy: -20
+      } : this.options.alignment == DialogAlignment.Top || this.options.alignment == DialogAlignment.TopStart ||
+        this.options.alignment == DialogAlignment.TopEnd ? {
+        dx: 0,
+        dy: 50
+      } : { dx: 0, dy: 0 },
     customStyle: true,
     gridCount: 10,
-    maskRect: { x: 0, y: 0, width: '100%', height: '100%' },
+    maskRect: {
+      x: 0,
+      y: 0,
+      width: '100%',
+      height: '100%'
+    },
     // maskColor: UiConst.DIALOG_CANCEL_COLOR,
     openAnimation: { duration: 500, tempo: 0.7, curve: Curve.EaseInOut },
     closeAnimation: { duration: 500, tempo: 0.7, curve: Curve.FastOutLinearIn },

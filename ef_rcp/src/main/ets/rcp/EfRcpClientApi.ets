@@ -8,8 +8,8 @@ import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 import { JSON } from '@kit.ArkTS';
 import { RcpInterceptor } from './RcpInterceptor';
 import fs from '@ohos.file.fs';
-import { WinLoadingUtil } from '../ui/WinLoadingUtil';
-import { ImgLayout, LoadingShape } from '../ui/efLoading';
+import { RcpLoadingUtil } from '../ui/RcpLoadingUtil';
+import { RcpImgLayout, RcpLoadingShape } from '../ui/rcpLoading';
 import { CertificateUtil } from './CertificateUtil';
 import { CacheUtil } from '@yunkss/ef_core';
 import { common } from '@kit.AbilityKit';
@@ -52,10 +52,10 @@ export class EfRcpClientApi {
     }
     //是否开启全局loading
     if (efRcpParams.isLoading) {
-      await WinLoadingUtil.showLoading({
+      await RcpLoadingUtil.showLoading({
         content: loadingTxt ? loadingTxt : efRcpParams.loadingTxt,
-        imgLayout: ImgLayout.TOP,
-        layoutShape: LoadingShape.SQUARE
+        imgLayout: RcpImgLayout.TOP,
+        layoutShape: RcpLoadingShape.SQUARE
       });
     }
     if (!addHead["content-type"]) {
@@ -86,7 +86,7 @@ export class EfRcpClientApi {
       let response = await efRcpInstance.fetch(request);
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //响应结果
       if (efRcpParams.isConvertDTO) {
@@ -124,7 +124,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;
@@ -163,7 +163,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;
@@ -189,7 +189,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;
@@ -220,7 +220,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;
@@ -246,7 +246,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;
@@ -302,7 +302,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //响应结果
       if (efRcpParams.isConvertDTO) {
@@ -353,10 +353,10 @@ export class EfRcpClientApi {
       };
       //是否开启全局loading
       if (efRcpParams.isLoading) {
-        await WinLoadingUtil.showLoading({
+        await RcpLoadingUtil.showLoading({
           content: loadingTxt ? loadingTxt : efRcpParams.loadingTxt,
-          imgLayout: ImgLayout.TOP,
-          layoutShape: LoadingShape.SQUARE
+          imgLayout: RcpImgLayout.TOP,
+          layoutShape: RcpLoadingShape.SQUARE
         });
       }
       //是否开启证书加密
@@ -372,7 +372,7 @@ export class EfRcpClientApi {
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //响应结果
       if (efRcpParams.isConvertDTO) {
@@ -384,7 +384,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;
@@ -418,10 +418,10 @@ export class EfRcpClientApi {
       }
       //是否开启全局loading
       if (efRcpParams.isLoading) {
-        await WinLoadingUtil.showLoading({
+        await RcpLoadingUtil.showLoading({
           content: loadingTxt ? loadingTxt : efRcpParams.loadingTxt,
-          imgLayout: ImgLayout.TOP,
-          layoutShape: LoadingShape.SQUARE
+          imgLayout: RcpImgLayout.TOP,
+          layoutShape: RcpLoadingShape.SQUARE
         });
       }
       //是否开启证书加密
@@ -438,7 +438,7 @@ export class EfRcpClientApi {
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //响应结果
       if (efRcpParams.isConvertDTO) {
@@ -450,7 +450,7 @@ export class EfRcpClientApi {
     } catch (error) {
       if (efRcpParams.isLoading) {
         //关闭loading
-        await WinLoadingUtil.closeLoading();
+        await RcpLoadingUtil.closeLoading();
       }
       //将异常抛出
       return error as E;

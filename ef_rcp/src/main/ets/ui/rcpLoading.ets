@@ -12,19 +12,19 @@ function loadingTxt(fontSize: string | number) {
   .fontColor("#fff")
 }
 
-@Entry({ routeName: 'efLoading', storage: LocalStorage.getShared() })
+@Entry({ routeName: 'rcpLoading', storage: LocalStorage.getShared() })
 @Component
-struct efAlert {
+struct rcpLoading {
   @State rotateAngle: number = 0;
   /**
    * 属性配置
    */
-  @LocalStorageProp('efLoadingOptions') options: efLoadingOptions = new efLoadingOptions();
+  @LocalStorageProp('rcpLoadingOptions') options: rcpLoadingOptions = new rcpLoadingOptions();
 
   build() {
     Stack() {
       Column() {
-        if (this.options.imgLayout != undefined && this.options.imgLayout === ImgLayout.TOP) {
+        if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.TOP) {
           Column() {
             Image($r("app.media.rcpLoading"))
               .width('30')
@@ -46,10 +46,11 @@ struct efAlert {
               .margin({ top: UiConst.NUMBER_20 })
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
           }
-          .width(this.options.layoutShape != undefined && this.options.layoutShape === LoadingShape.RECTANGLE ? '100%' :
+          .width(this.options.layoutShape != undefined && this.options.layoutShape === RcpLoadingShape.RECTANGLE ?
+            '100%' :
             '50%')
         }
-        if (this.options.imgLayout != undefined && this.options.imgLayout === ImgLayout.BOTTOM) {
+        if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.BOTTOM) {
           Column() {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
@@ -71,10 +72,11 @@ struct efAlert {
                 this.rotateAngle = 15
               })
           }
-          .width(this.options.layoutShape != undefined && this.options.layoutShape === LoadingShape.RECTANGLE ? '100%' :
+          .width(this.options.layoutShape != undefined && this.options.layoutShape === RcpLoadingShape.RECTANGLE ?
+            '100%' :
             '50%')
         }
-        if (this.options.imgLayout != undefined && this.options.imgLayout === ImgLayout.RIGHT) {
+        if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.RIGHT) {
           Row() {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
@@ -95,12 +97,13 @@ struct efAlert {
                 this.rotateAngle = 15
               })
           }
-          .width(this.options.layoutShape != undefined && this.options.layoutShape === LoadingShape.RECTANGLE ? '100%' :
+          .width(this.options.layoutShape != undefined && this.options.layoutShape === RcpLoadingShape.RECTANGLE ?
+            '100%' :
             '50%')
           .alignItems(VerticalAlign.Center)
           .justifyContent(FlexAlign.SpaceBetween)
         }
-        if (this.options.imgLayout != undefined && this.options.imgLayout === ImgLayout.LEFT) {
+        if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.LEFT) {
           Row() {
             Image($r("app.media.rcpLoading"))
               .width('30')
@@ -122,7 +125,8 @@ struct efAlert {
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
               .margin({ left: UiConst.NUMBER_20 })
           }
-          .width(this.options.layoutShape != undefined && this.options.layoutShape === LoadingShape.RECTANGLE ? '100%' :
+          .width(this.options.layoutShape != undefined && this.options.layoutShape === RcpLoadingShape.RECTANGLE ?
+            '100%' :
             '50%')
           .alignItems(VerticalAlign.Center)
           .justifyContent(FlexAlign.Start)
@@ -153,7 +157,7 @@ struct efAlert {
  * 窗口loading方式入参实体
  */
 @Observed
-export class efLoadingOptions {
+export class rcpLoadingOptions {
   /**
    * 加载内容
    */
@@ -169,11 +173,11 @@ export class efLoadingOptions {
   /**
    * 图片布局方式
    */
-  @Track imgLayout?: ImgLayout;
+  @Track imgLayout?: RcpImgLayout;
   /**
    * 弹框形状
    */
-  @Track layoutShape?: LoadingShape;
+  @Track layoutShape?: RcpLoadingShape;
 
   constructor() {
     this.content = '小的正在努力加载中...';
@@ -184,7 +188,7 @@ export class efLoadingOptions {
 /**
  * 弹框形状布局
  */
-export enum LoadingShape {
+export enum RcpLoadingShape {
   /**
    * 正方形
    */
@@ -198,7 +202,7 @@ export enum LoadingShape {
 /**
  * 图片文字布局枚举
  */
-export enum ImgLayout {
+export enum RcpImgLayout {
   /**
    * 图片在文字上方
    */

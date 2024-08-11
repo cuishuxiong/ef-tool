@@ -179,7 +179,11 @@ export class ActionUtil {
     let sheetList = Array<SheetInfo>();
     //遍历组装数据
     options.sheets.forEach(item => {
-      sheetList.push({ title: item, icon: $r("app.media.dian"), action: () => options.clickCallBack(item) })
+      sheetList.push({
+        title: item,
+        icon: $r("app.media.dian"),
+        action: () => options.clickCallBack(item)
+      })
     })
     ActionSheet.show({
       title: options.title,
