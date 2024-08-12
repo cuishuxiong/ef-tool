@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.2.2] 2024-08
+
+### 🐞功能优化
+
+* 优化efAxios打印日志JSON报错问题[issuesIAJ22Z](https://gitee.com/yunkss/ef-tool/issues/IAJ22Z)
 
 ## [v1.2.1] 2024-08
 
