@@ -1,11 +1,12 @@
 import axios from '@ohos/axios'
 import { AxiosError, InternalAxiosRequestConfig, AxiosResponse, AxiosStatic } from '@ohos/axios';
-import { OutDTO, RandomUtil, Logger } from '@yunkss/ef_core';
+import { RandomUtil, Logger } from '@yunkss/ef_core';
 import { SM2Sync, SM3Sync, SM4Sync } from '@yunkss/ef_crypto';
 import { ArrayList } from '@kit.ArkTS';
 import { JSONUtil, JSONObject } from '@yunkss/ef_json';
 import { WinLoadingUtil } from '../ui/AxiosLoadingUtil';
 import { ImgLayout, LoadingShape } from '../ui/axiosLoading';
+import { EfAxiosConst } from '../EfAxiosConst';
 
 /**
  * @Author csx
@@ -114,61 +115,6 @@ export class AxiosUtil {
   }
 
   /**
-   * 将后端返回的常见的信息封装成OutDTO对象
-   * @param response  响应对象
-   * @returns
-   */
-  static convertResponseDTO(response: AxiosResponse) {
-    //考虑几种常见的可能性
-    let success: boolean = true;
-    if (response.config.headers["Req-Type"]) {
-      if (response.data && response.data.dataRow) {
-        return new OutDTO(true, '下载文件成功~', response.data.dataRow, new Array(), response.status);
-      }
-      return new OutDTO(true, '下载文件成功~', '', new Array(), response.status);
-    }
-    if (response.data && response.data.success != undefined) {
-      success = response.data.success;
-    }
-    if (response.data && response.data.flag != undefined) {
-      success = response.data.flag;
-    }
-    //2.返回的消息提示
-    let message: string = '';
-    if (response.data && response.data.msg) {
-      message = response.data.msg;
-    }
-    if (response.data && response.data.message) {
-      message = response.data.message;
-    }
-    if (response.status != 200) {
-      message = response.statusText;
-    }
-    //3.返回的单行数据
-    let dataRow: Record<string, Object> = {};
-    if (response.data && response.data.dataRow) {
-      dataRow = response.data.dataRow;
-    }
-    if (response.data && response.data.data) {
-      dataRow = response.data.data;
-    }
-    //4.返回的多行数据
-    let dataTable: Array<Record<string, Object>> = new Array();
-    if (response.data && response.data.dataTable) {
-      dataTable = response.data.dataTable;
-    }
-    if (response.data && response.data.list) {
-      dataTable = response.data.list;
-    }
-    if (response.data && response.data.arr) {
-      dataTable = response.data.arr;
-    }
-    //5.返回请求状态码
-    let code = response.status;
-    return new OutDTO(success, message, dataRow, dataTable, code);
-  }
-
-  /**
    * 统一处理响应
    * @param response  axios返回的响应对象
    */
@@ -186,11 +132,6 @@ export class AxiosUtil {
     //关键字解密
     if (efAxiosParams.isPartEncrypt) {
       response.data = AxiosUtil.decryptPartResponseData(response.data);
-    }
-    //如果开启转换数据
-    if (efAxiosParams.isConvertDTO) {
-      //将响应数据转换
-      response.data = AxiosUtil.convertResponseDTO(response);
     }
   }
 
@@ -400,17 +341,13 @@ export class efAxiosParams {
    */
   static ignoreEncryptList: Array<string> = new Array<string>();
   /**
-   * 是否将响应数据转换为OutDTO对象,默认为true,如业务后台返回无法转换则关闭
-   */
-  static isConvertDTO: boolean = true;
-  /**
    * 是否开启全局请求loading弹框,默认为true
    */
   static isLoading: boolean = true;
   /**
    * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
    */
-  static loadingTxt: string = '努力获取数据中,请稍后...';
+  static loadingTxt: string = EfAxiosConst.loadingTxt;
   /**
    * 是否开启日志
    */
@@ -442,7 +379,7 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     Logger.debug("--------请求URL:", (config.baseURL as string + config.url as string));
     Logger.debug("--------请求方式:", config.method as string);
     Logger.debug("--------请求  头:", JSONObject.toJSONString(config.headers));
-    if (config.headers["Req-Type"] != "uploadOrDownload") {
+    if (config.headers["Req-Type"] != "uploadOrDownload" && config.data) {
       Logger.debug("--------请求入参:", JSONObject.toJSONString(config.data));
     }
 
@@ -452,11 +389,6 @@ efAxios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   if (efAxiosParams.isLoading) {
     //关闭全局加载框
     await WinLoadingUtil.closeLoading();
-  }
-  //如果需要转换的话则将错误数据转换为dto对象
-  if (efAxiosParams.isConvertDTO) {
-    let outDTO = new OutDTO(false, error.message, '', [], error.code ? error.code : 400);
-    return Promise.reject(outDTO);
   }
   // 对请求错误做些什么
   return Promise.reject(error);
@@ -478,7 +410,7 @@ efAxios.interceptors.response.use(async (response: AxiosResponse) => {
     Logger.debug("--------响应信息---------", "");
     Logger.debug("--------响应状态:", response.status + "");
     Logger.debug("--------响应文本:", response.statusText);
-    if (response.config.headers["Req-Type"] != "uploadOrDownload") {
+    if (response.config.headers["Req-Type"] != "uploadOrDownload" && response.data) {
       Logger.debug("--------响应  头:", JSON.stringify(response.headers));
       Logger.debug("--------响应结果:", JSON.stringify(response.data));
     }
@@ -488,11 +420,6 @@ efAxios.interceptors.response.use(async (response: AxiosResponse) => {
   if (efAxiosParams.isLoading) {
     //关闭全局加载框
     await WinLoadingUtil.closeLoading();
-  }
-  //如果需要转换的话则将错误数据转换为dto对象
-  if (efAxiosParams.isConvertDTO) {
-    let outDTO = new OutDTO(false, error.message, '', [], error.code ? error.code : 400);
-    return Promise.reject(outDTO);
   }
   // 对响应错误做点什么
   return Promise.reject(error);
