@@ -99,6 +99,9 @@ export class RcpInterceptor implements rcp.Interceptor {
           dataTable = item[1];
         }
       })
+    } else {
+      success = false;
+      message = "返回结果为空！";
     }
     if (response.statusCode != 200) {
       message = response.toString() as string;

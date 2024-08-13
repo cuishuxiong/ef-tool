@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.2.3] 2024-08
+
+### 🐞功能优化
+
+* 优化全局WinLoadingUtil在并发请求中关闭异常问题
+* 优化未选择图片时,返回标识为false
+* 优化rcp中Response为null时OutDTO标识为true问题[issuesIAIWIQ](https://gitee.com/yunkss/ef-tool/issues/IAIWIQ)
+
+
 ## [v1.2.2] 2024-08
 
 ### 🐞功能优化

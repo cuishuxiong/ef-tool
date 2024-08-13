@@ -160,10 +160,11 @@ export class PickerUtil {
     //拉起选择
     let list: picker.PhotoSelectResult = await photoPicker.select(selectOpts);
     //回调
-    if (list !== null && list !== undefined) {
+    if (list !== null && list !== undefined && list.photoUris.length > 0) {
       return OutDTO.OKByDataTable<string>('选择照片或视频成功~', list.photoUris, '');
+    } else {
+      return OutDTO.Error("暂未选择图片~");
     }
-    return OutDTO.Error('选择照片或视频失败~');
   }
 
   /**
