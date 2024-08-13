@@ -1,12 +1,29 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcpEventsHandler, RcpInterceptor } from './RcpInterceptor';
+import { efRcpEventsHandler, RcpLogInterceptor } from './RcpLogInterceptor';
+import { Callback } from '@kit.BasicServicesKit';
 
 /**
  * @Author csx
  * @DateTime 2024/7/23 23:56
  * @TODO RcpUtil 远场通信服务工具类
  */
-export class EfRcpUtil {
+export class EfRcp {
+  /**
+   * 私有单例对象
+   */
+  private static efRcpInstance: EfRcp;
+
+  /**
+   * 创建单例
+   * @returns
+   */
+  public static getInstance(): EfRcp {
+    if (!EfRcp.efRcpInstance) {
+      EfRcp.efRcpInstance = new EfRcp();
+    }
+    return EfRcp.efRcpInstance;
+  }
+
   /**
    * 获取默认的axios对象
    * @returns AxiosStatic
@@ -16,7 +33,7 @@ export class EfRcpUtil {
     //创建session
     const session = rcp.createSession({
       //使用拦截器
-      interceptors: [new RcpInterceptor()],
+      interceptors: [new RcpLogInterceptor()],
       //基础前缀地址(目前发现无法与请求的url拼接)
       // baseAddress: efRcpParams.baseURL,
       //请求配置
@@ -67,9 +84,87 @@ export class EfRcpUtil {
   }
 
   /**
+   * 添加efRcp默认的日志拦截器
+   * @returns
+   */
+  addLogInterceptor(): EfRcp {
+    if (this.efRcp.configuration) {
+      if (this.efRcp.configuration.interceptors) {
+        this.efRcp.configuration.interceptors.push(new RcpLogInterceptor());
+      } else {
+        this.efRcp.configuration.interceptors = [new RcpLogInterceptor()];
+      }
+    }
+    return this;
+  }
+
+
+  /**
+   * 添加自定义加解密拦截器
+   * @param cryptoInterceptor
+   * @returns
+   */
+  addCryptoInterceptor(cryptoInterceptor: rcp.Interceptor): EfRcp {
+    if (this.efRcp.configuration) {
+      if (this.efRcp.configuration.interceptors) {
+        this.efRcp.configuration.interceptors.push(cryptoInterceptor);
+      } else {
+        this.efRcp.configuration.interceptors = [cryptoInterceptor];
+      }
+    }
+    return this;
+  }
+
+  /**
+   * 添加统一的编码拦截器操作
+   * @param codeEvent  对返回编码的判断操作
+   * @returns
+   */
+  addCodeInterceptors(codeEvent: Callback<string>): EfRcp {
+    if (this.efRcp.configuration) {
+      // if (this.efRcp.configuration.interceptors) {
+      //   this.efRcp.configuration.interceptors.push(cryptoInterceptor);
+      // } else {
+      //   this.efRcp.configuration.interceptors = [cryptoInterceptor];
+      // }
+    }
+    return this
+  }
+
+
+  /**
+   * 构建请求配置
+   * @returns
+   */
+  addRequestConfiguration(): EfRcp {
+    //设置请求配置
+    let reqCfg: rcp.Configuration = {
+      //数据传输行为
+      transfer: {
+        //指定HTTP客户端是否应自动遵循重定向
+        autoRedirect: true,
+        timeout: {
+          //允许建立连接的最长时间
+          connectMs: efRcpParams.connectMs,
+          //允许传输数据的最长时间
+          transferMs: efRcpParams.transferMs,
+        },
+      },
+      tracing: {
+        verbose: true,
+        httpEventsHandler: efRcpEventsHandler
+      }
+    };
+    if (this.efRcp.configuration) {
+      this.efRcp.configuration.requestConfiguration = reqCfg;
+    }
+    return this;
+  }
+
+  /**
    * 封装后的全局rcp对象
    */
-  efRcpInstance = EfRcpUtil.getRcp();
+  public efRcp: rcp.Session = rcp.createSession({});
 }
 
 /**
@@ -181,9 +276,3 @@ export class efRcpSecurityParam {
    */
   static certKeyPwd: string;
 }
-
-/**
- * 抛出session实例
- */
-export const efRcpInstance: rcp.Session = new EfRcpUtil().efRcpInstance;
-

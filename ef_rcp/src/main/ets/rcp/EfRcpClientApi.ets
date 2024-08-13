@@ -4,9 +4,8 @@
  * @TODO EfRcpClientApi rcp请求工具类
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcpInstance, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
+import { EfRcp, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 import { JSON } from '@kit.ArkTS';
-import { RcpInterceptor } from './RcpInterceptor';
 import fs from '@ohos.file.fs';
 import { RcpLoadingUtil } from '../ui/RcpLoadingUtil';
 import { RcpImgLayout, RcpLoadingShape } from '../ui/rcpLoading';
@@ -75,23 +74,18 @@ export class EfRcpClientApi {
    */
   private static async buildResponse<E>(request: rcp.Request, isSecurity?: boolean) {
     //是否开启证书加密
-    if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
-      if (efRcpInstance.configuration) {
-        if (efRcpInstance.configuration.requestConfiguration) {
-          efRcpInstance.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
-        }
-      }
-    }
+    // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
+    //   if (EfRcp.getInstance().efRcp.configuration) {
+    //     if (EfRcp.getInstance().efRcp.configuration.requestConfiguration) {
+    //       EfRcp.getInstance().efRcp.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
+    //     }
+    //   }
+    // }
     try { //发送请求
-      let response = await efRcpInstance.fetch(request);
+      let response = await EfRcp.getInstance().efRcp.fetch(request);
       if (efRcpParams.isLoading) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
-      }
-      //响应结果
-      if (efRcpParams.isConvertDTO) {
-        //转换为DTO
-        return RcpInterceptor.convertResponseDTO(response) as E;
       }
       //返回response的数据
       return response.toJSON() as E;
@@ -262,7 +256,7 @@ export class EfRcpClientApi {
     let request = CacheUtil.get<rcp.Request>(efRcpParams.baseURL + url);
     if (request) {
       //取消请求
-      efRcpInstance.cancel(request);
+      EfRcp.getInstance().efRcp.cancel(request);
     }
   }
 
@@ -303,11 +297,6 @@ export class EfRcpClientApi {
       if (efRcpParams.isLoading) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
-      }
-      //响应结果
-      if (efRcpParams.isConvertDTO) {
-        //转换为DTO
-        return RcpInterceptor.convertErrorDTO(error) as E;
       }
       //将异常抛出
       return error as E;
@@ -360,24 +349,23 @@ export class EfRcpClientApi {
         });
       }
       //是否开启证书加密
-      if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
-        if (efRcpInstance.configuration) {
-          if (efRcpInstance.configuration.requestConfiguration) {
-            efRcpInstance.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
-          }
-        }
-      }
-      let response = await efRcpInstance.downloadToFile(efRcpParams.baseURL + url, downloadToFile)
+      // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
+      //   if (EfRcp.getInstance().efRcp.configuration) {
+      //     if (EfRcp.getInstance().efRcp.configuration.requestConfiguration) {
+      //       EfRcp.getInstance()
+      //         .efRcp
+      //         .configuration
+      //         .requestConfiguration
+      //         .security = CertificateUtil.getRcpSecurityCfg();
+      //     }
+      //   }
+      // }
+      let response = await EfRcp.getInstance().efRcp.downloadToFile(efRcpParams.baseURL + url, downloadToFile)
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
-      }
-      //响应结果
-      if (efRcpParams.isConvertDTO) {
-        //转换为DTO
-        return RcpInterceptor.convertResponseDTO(response) as E;
       }
       //返回response的数据
       return response.toJSON() as E;
@@ -425,25 +413,24 @@ export class EfRcpClientApi {
         });
       }
       //是否开启证书加密
-      if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
-        if (efRcpInstance.configuration) {
-          if (efRcpInstance.configuration.requestConfiguration) {
-            efRcpInstance.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
-          }
-        }
-      }
+      // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
+      //   if (EfRcp.getInstance().efRcp.configuration) {
+      //     if (EfRcp.getInstance().efRcp.configuration.requestConfiguration) {
+      //       EfRcp.getInstance()
+      //         .efRcp
+      //         .configuration
+      //         .requestConfiguration
+      //         .security = CertificateUtil.getRcpSecurityCfg();
+      //     }
+      //   }
+      // }
       //发送下载请求
-      let response = await efRcpInstance.downloadToStream(efRcpParams.baseURL + url, downloadToStream);
+      let response = await EfRcp.getInstance().efRcp.downloadToStream(efRcpParams.baseURL + url, downloadToStream);
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
-      }
-      //响应结果
-      if (efRcpParams.isConvertDTO) {
-        //转换为DTO
-        return RcpInterceptor.convertResponseDTO(response) as E;
       }
       //返回response的数据
       return response.toJSON() as E;
