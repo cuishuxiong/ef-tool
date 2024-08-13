@@ -16,6 +16,10 @@ export class WinLoadingUtil {
    * 缓存窗体集合,关闭时需要
    */
   private static cacheWindow: window.Window;
+  /**
+   * 解决重复多次弹出关闭可能导致的异常
+   */
+  private static showTimes: number = 0;
 
   /**
    * 根据参数创建窗口
@@ -24,6 +28,12 @@ export class WinLoadingUtil {
    */
   static async showLoading(options?: efAxiosLoadingOptions): Promise<void> {
     let ctx = getContext() as common.UIAbilityContext;
+    //创建后计数器加一  思路由coder_liu提供
+    WinLoadingUtil.showTimes += 1
+    if (WinLoadingUtil.showTimes > 1) {
+      //已经有一个在显示了，不要过多的创建
+      return
+    }
     try {
       //当前窗口的编码
       let winName = 'efAxiosLoading' + RandomUtil.randomNumber(2000, 2000000);
@@ -61,6 +71,7 @@ export class WinLoadingUtil {
       //显示窗口
       await windowClass.showWindow();
     } catch (exception) {
+      WinLoadingUtil.showTimes -= 1;
       Logger.warn('创建窗口失败,原因为:', JSON.stringify(exception));
     }
   }
@@ -71,7 +82,10 @@ export class WinLoadingUtil {
    */
   static async closeLoading(): Promise<void> {
     if (WinLoadingUtil.cacheWindow) {
-      await WinLoadingUtil.cacheWindow.destroyWindow();
+      WinLoadingUtil.showTimes -= 1;
+      if (WinLoadingUtil.showTimes == 0) {
+        await WinLoadingUtil.cacheWindow.destroyWindow();
+      }
     }
   }
 }
