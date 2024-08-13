@@ -2,6 +2,7 @@ import { efAxiosParams, efClientApi, EfAxiosError, efAxios } from '@yunkss/ef_ax
 import { OutDTO } from '@yunkss/ef_core';
 import { AxiosResponse, FormData } from '@ohos/axios';
 import { buffer, JSON } from '@kit.ArkTS';
+import { JSONObject } from '@yunkss/ef_json';
 
 class User {
   account?: string;
@@ -126,7 +127,7 @@ struct Index {
       return efAxios.get<OutDTO<Record<string, Object>>, AxiosResponse, null>('/api/eftool/get/2222222222');
     }
     let result = await efClientApi.all([get1(), get2()]);
-    this.message = JSON.stringify(result);
+    this.message = JSONObject.toJSONString(result);
   }
 
   async upload() {

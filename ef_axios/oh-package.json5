@@ -1,6 +1,6 @@
 {
   "name": "@yunkss/ef_axios",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "eftool",
     "efAxios",
@@ -25,8 +25,8 @@
     "@ohos/axios": "2.2.2"
   },
   "devDependencies": {
-    "@yunkss/ef_json": "../ef_json",
     "@yunkss/ef_core": "../ef_core",
+    "@yunkss/ef_json": "../ef_json",
     "@yunkss/ef_crypto": "../ef_crypto"
   }
 }

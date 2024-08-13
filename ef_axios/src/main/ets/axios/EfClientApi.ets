@@ -10,7 +10,6 @@ import { common } from '@kit.AbilityKit';
 import { fileUri } from '@kit.CoreFileKit';
 import { EfAxiosError } from './EfAxiosError';
 import { ArrayList } from '@kit.ArkTS';
-import { JSONObject } from '@yunkss/ef_json';
 import { EfAxiosConst } from '../EfAxiosConst';
 
 
@@ -240,7 +239,7 @@ class EfClientApi {
       //返回response的数据
       responseList.forEach((response: AxiosResponse) => {
         if (response.data) {
-          result.add(JSONObject.toJSONString(response.data));
+          result.add(JSON.stringify(response.data));
         }
       });
       return result;
