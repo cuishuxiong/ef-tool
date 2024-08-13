@@ -30,18 +30,18 @@ export class EfRcpClientApi {
     cookies?: Record<string, string>, loadingTxt?: string): Promise<rcp.Request> {
     //需要添加的header对象
     let addHead: rcp.RequestHeaders = {};
-    //是否有传入header
-    if (headers) {
-      Object.entries(headers).forEach((row) => {
-        addHead[row[0]] = row[1];
-      });
-    }
     //是否需要拼接token
     if (efRcpParams.tokenValue) {
       addHead.authorization = efRcpParams.tokenValue;
       if (efRcpParams.tokenName) {
         addHead[efRcpParams.tokenName] = efRcpParams.tokenValue;
       }
+    }
+    //是否有传入header
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        addHead[row[0]] = row[1];
+      });
     }
     //是否有cookie
     let cookie: rcp.RequestCookies = {};

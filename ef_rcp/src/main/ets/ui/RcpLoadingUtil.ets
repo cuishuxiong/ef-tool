@@ -16,6 +16,10 @@ export class RcpLoadingUtil {
    * 缓存窗体集合,关闭时需要
    */
   private static cacheWindow: window.Window;
+  /**
+   * 解决重复多次弹出关闭可能导致的异常
+   */
+  private static showTimes: number = 0;
 
   /**
    * 根据参数创建窗口
@@ -24,6 +28,12 @@ export class RcpLoadingUtil {
    */
   static async showLoading(options?: rcpLoadingOptions): Promise<void> {
     let ctx = getContext() as common.UIAbilityContext;
+    //创建后计数器加一  思路由coder_liu提供
+    RcpLoadingUtil.showTimes += 1
+    if (RcpLoadingUtil.showTimes > 1) {
+      //已经有一个在显示了，不要过多的创建
+      return
+    }
     try {
       //当前窗口的编码
       let winName = 'rcpLoading' + RandomUtil.randomNumber(2000, 2000000);
@@ -61,6 +71,7 @@ export class RcpLoadingUtil {
       //显示窗口
       await windowClass.showWindow();
     } catch (exception) {
+      RcpLoadingUtil.showTimes -= 1;
       Logger.warn('创建窗口失败,原因为:', JSON.stringify(exception));
     }
   }
@@ -71,7 +82,10 @@ export class RcpLoadingUtil {
    */
   static async closeLoading(): Promise<void> {
     if (RcpLoadingUtil.cacheWindow) {
-      await RcpLoadingUtil.cacheWindow.destroyWindow();
+      RcpLoadingUtil.showTimes -= 1;
+      if (RcpLoadingUtil.showTimes == 0) {
+        await RcpLoadingUtil.cacheWindow.destroyWindow();
+      }
     }
   }
 }
