@@ -9,7 +9,6 @@ import { JSON } from '@kit.ArkTS';
 import fs from '@ohos.file.fs';
 import { RcpLoadingUtil } from '../ui/RcpLoadingUtil';
 import { RcpImgLayout, RcpLoadingShape } from '../ui/rcpLoading';
-import { CertificateUtil } from './CertificateUtil';
 import { CacheUtil } from '@yunkss/ef_core';
 import { common } from '@kit.AbilityKit';
 import { fileUri } from '@kit.CoreFileKit';
@@ -31,10 +30,19 @@ export class EfRcpClientApi {
     let addHead: rcp.RequestHeaders = {};
     //是否需要拼接token
     if (efRcpParams.tokenValue) {
-      addHead.authorization = efRcpParams.tokenValue;
-      if (efRcpParams.tokenName) {
+      if (efRcpParams.tokenName && efRcpParams.tokenName != 'authorization') {
         addHead[efRcpParams.tokenName] = efRcpParams.tokenValue;
+      } else {
+        addHead.authorization = efRcpParams.tokenValue;
       }
+    }
+    //获取全局header配置
+    let cfg = EfRcp.getInstance().builder().configuration;
+    //如果配置中有headers
+    if (cfg && cfg.headers) {
+      Object.entries(cfg.headers).forEach((row) => {
+        addHead[row[0]] = row[1];
+      });
     }
     //是否有传入header
     if (headers) {
@@ -82,7 +90,7 @@ export class EfRcpClientApi {
     //   }
     // }
     try { //发送请求
-      let response = await EfRcp.getInstance().efRcp.fetch(request);
+      let response = await EfRcp.getInstance().builder().fetch(request);
       if (efRcpParams.isLoading) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
@@ -256,7 +264,7 @@ export class EfRcpClientApi {
     let request = CacheUtil.get<rcp.Request>(efRcpParams.baseURL + url);
     if (request) {
       //取消请求
-      EfRcp.getInstance().efRcp.cancel(request);
+      EfRcp.getInstance().builder().cancel(request);
     }
   }
 
@@ -351,16 +359,16 @@ export class EfRcpClientApi {
       //是否开启证书加密
       // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
       //   if (EfRcp.getInstance().efRcp.configuration) {
-      //     if (EfRcp.getInstance().efRcp.configuration.requestConfiguration) {
+      //     if (EfRcp.getInstance().builder().configuration.requestConfiguration) {
       //       EfRcp.getInstance()
-      //         .efRcp
+      //         .builder()
       //         .configuration
       //         .requestConfiguration
       //         .security = CertificateUtil.getRcpSecurityCfg();
       //     }
       //   }
       // }
-      let response = await EfRcp.getInstance().efRcp.downloadToFile(efRcpParams.baseURL + url, downloadToFile)
+      let response = await EfRcp.getInstance().builder().downloadToFile(efRcpParams.baseURL + url, downloadToFile)
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {
@@ -415,9 +423,9 @@ export class EfRcpClientApi {
       //是否开启证书加密
       // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
       //   if (EfRcp.getInstance().efRcp.configuration) {
-      //     if (EfRcp.getInstance().efRcp.configuration.requestConfiguration) {
+      //     if (EfRcp.getInstance().builder().configuration.requestConfiguration) {
       //       EfRcp.getInstance()
-      //         .efRcp
+      //         .builder()
       //         .configuration
       //         .requestConfiguration
       //         .security = CertificateUtil.getRcpSecurityCfg();
@@ -425,7 +433,7 @@ export class EfRcpClientApi {
       //   }
       // }
       //发送下载请求
-      let response = await EfRcp.getInstance().efRcp.downloadToStream(efRcpParams.baseURL + url, downloadToStream);
+      let response = await EfRcp.getInstance().builder().downloadToStream(efRcpParams.baseURL + url, downloadToStream);
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {

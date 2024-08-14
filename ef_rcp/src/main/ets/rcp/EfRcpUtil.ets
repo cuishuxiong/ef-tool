@@ -1,6 +1,8 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcpEventsHandler, RcpLogInterceptor } from './RcpLogInterceptor';
+import { RcpLogInterceptor } from './RcpLogInterceptor';
 import { Callback } from '@kit.BasicServicesKit';
+import { EfRcpError } from './EfRcpError';
+import { efRcpConfig } from './efRcpConfig'
 
 /**
  * @Author csx
@@ -8,6 +10,52 @@ import { Callback } from '@kit.BasicServicesKit';
  * @TODO RcpUtil 远场通信服务工具类
  */
 export class EfRcp {
+  /**
+   * 全局session配置
+   */
+  private cfg: rcp.SessionConfiguration = {
+    //请求配置
+    requestConfiguration: {
+      //数据传输行为
+      transfer: {
+        //指定HTTP客户端是否应自动遵循重定向
+        autoRedirect: true,
+        timeout: {
+          //允许建立连接的最长时间
+          connectMs: 5000,
+          //允许传输数据的最长时间
+          transferMs: 10000,
+        },
+      },
+      tracing: {
+        verbose: true,
+        //默认传输事件
+        // httpEventsHandler: efRcpEventsHandler
+      }
+    },
+    //请求头
+    headers: {
+      "content-type": "application/json"
+    },
+    //连接配置
+    connectionConfiguration: {
+      //单个主机允许的最大并发 TCP 连接数（主机与主机名+端口号对相同）
+      maxConnectionsPerHost: 10,
+      //此会话中允许的最大同时 TCP 连接总数
+      maxTotalConnections: 80
+    }
+  };
+  /**
+   * 封装后的全局rcp对象
+   */
+  private efRcp: rcp.Session | undefined;
+
+  /**
+   * 私有化构造
+   */
+  private constructor() {
+  }
+
   /**
    * 私有单例对象
    */
@@ -25,79 +73,45 @@ export class EfRcp {
   }
 
   /**
-   * 获取默认的axios对象
-   * @returns AxiosStatic
+   * 创建session对象
+   * @returns
    */
-  private static getRcp(): rcp.Session {
-    //等待设置值后再初始化
-    //创建session
-    const session = rcp.createSession({
-      //使用拦截器
-      interceptors: [new RcpLogInterceptor()],
-      //基础前缀地址(目前发现无法与请求的url拼接)
-      // baseAddress: efRcpParams.baseURL,
-      //请求配置
-      requestConfiguration: {
-        //数据传输行为
-        transfer: {
-          //指定HTTP客户端是否应自动遵循重定向
-          autoRedirect: true,
-          timeout: {
-            //允许建立连接的最长时间
-            connectMs: efRcpParams.connectMs,
-            //允许传输数据的最长时间
-            transferMs: efRcpParams.transferMs,
-          },
-        },
-        tracing: {
-          verbose: true,
-          httpEventsHandler: efRcpEventsHandler
-        }
-      },
-      //请求头
-      headers: {
-        "Content-Type": "application/json"
-      },
-      //会话事件监听
-      sessionListener: {
-        onCanceled: () => {
-          if (efRcpParams.cancelCallBack) {
-            efRcpParams.cancelCallBack();
-          }
-        },
-        onClosed: () => {
-          if (efRcpParams.closeCallBack) {
-            efRcpParams.closeCallBack();
-          }
-        },
-      },
-      //连接配置
-      connectionConfiguration: {
-        //单个主机允许的最大并发 TCP 连接数（主机与主机名+端口号对相同）
-        maxConnectionsPerHost: 10,
-        //此会话中允许的最大同时 TCP 连接总数
-        maxTotalConnections: 80
-      }
-    });
-    //返回session
-    return session;
+  create(): EfRcp {
+    this.efRcp = rcp.createSession(this.cfg);
+    return this;
+  }
+
+  /**
+   * 构建efRcpSession对象
+   * @returns
+   */
+  builder(): rcp.Session {
+    if (this.efRcp === undefined) {
+      throw new EfRcpError(12306, '构建efRcpSession异常', '请在构建之前调用create方法创建~');
+    }
+    return this.efRcp as rcp.Session;
   }
 
   /**
    * 添加efRcp默认的日志拦截器
    * @returns
    */
-  addLogInterceptor(): EfRcp {
-    if (this.efRcp.configuration) {
-      if (this.efRcp.configuration.interceptors) {
-        this.efRcp.configuration.interceptors.push(new RcpLogInterceptor());
-      } else {
-        this.efRcp.configuration.interceptors = [new RcpLogInterceptor()];
-      }
+  private addLogInterceptor(): EfRcp {
+    if (this.cfg.interceptors) {
+      this.cfg.interceptors.push(new RcpLogInterceptor());
+    } else {
+      this.cfg.interceptors = [new RcpLogInterceptor()];
     }
     return this;
   }
 
+  /**
+   * 启用日志拦截器
+   * @returns
+   */
+  enableLogInterceptor(): EfRcp {
+    return this.addLogInterceptor();
+  }
 
   /**
    * 添加自定义加解密拦截器
@@ -105,7 +119,7 @@ export class EfRcp {
    * @returns
    */
   addCryptoInterceptor(cryptoInterceptor: rcp.Interceptor): EfRcp {
-    if (this.efRcp.configuration) {
+    if (this.efRcp?.configuration) {
       if (this.efRcp.configuration.interceptors) {
         this.efRcp.configuration.interceptors.push(cryptoInterceptor);
       } else {
@@ -116,12 +130,31 @@ export class EfRcp {
   }
 
   /**
+   * 添加公共的header
+   * @param headers
+   * @returns
+   */
+  addCommonHeaders(headers: Record<string, string>): EfRcp {
+    if (headers) {
+      Object.entries(headers).forEach((row) => {
+        if (this.cfg.headers) {
+          this.cfg.headers[row[0]] = row[1];
+        } else {
+          this.cfg.headers = {};
+          this.cfg.headers[row[0]] = row[1];
+        }
+      });
+    }
+    return this;
+  }
+
+  /**
    * 添加统一的编码拦截器操作
    * @param codeEvent  对返回编码的判断操作
    * @returns
    */
   addCodeInterceptors(codeEvent: Callback<string>): EfRcp {
-    if (this.efRcp.configuration) {
+    if (this.efRcp?.configuration) {
       // if (this.efRcp.configuration.interceptors) {
       //   this.efRcp.configuration.interceptors.push(cryptoInterceptor);
       // } else {
@@ -133,38 +166,22 @@ export class EfRcp {
 
 
   /**
-   * 构建请求配置
-   * @returns
+   * 设置超时时间
+   * @param timeout
    */
-  addRequestConfiguration(): EfRcp {
-    //设置请求配置
-    let reqCfg: rcp.Configuration = {
-      //数据传输行为
-      transfer: {
-        //指定HTTP客户端是否应自动遵循重定向
-        autoRedirect: true,
-        timeout: {
-          //允许建立连接的最长时间
-          connectMs: efRcpParams.connectMs,
-          //允许传输数据的最长时间
-          transferMs: efRcpParams.transferMs,
-        },
-      },
-      tracing: {
-        verbose: true,
-        httpEventsHandler: efRcpEventsHandler
+  setTimeOut(timeout: efRcpConfig.TimeOut): EfRcp {
+    if (timeout && this.cfg.requestConfiguration?.transfer) {
+      //允许建立连接的最长时间
+      if (timeout.connectMs && this.cfg.requestConfiguration.transfer.timeout) {
+        this.cfg.requestConfiguration.transfer.timeout.connectMs = timeout.connectMs;
       }
-    };
-    if (this.efRcp.configuration) {
-      this.efRcp.configuration.requestConfiguration = reqCfg;
+      //允许传输数据的最长时间
+      if (timeout.transferMs && this.cfg.requestConfiguration.transfer.timeout) {
+        this.cfg.requestConfiguration.transfer.timeout.transferMs = timeout.transferMs;
+      }
     }
     return this;
   }
-
-  /**
-   * 封装后的全局rcp对象
-   */
-  public efRcp: rcp.Session = rcp.createSession({});
 }
 
 /**
@@ -180,6 +197,7 @@ export class efRcpResponseParams {
    */
   static downloadProgress: number = 0;
 }
+
 
 /**
  * rcp请求参数实体
