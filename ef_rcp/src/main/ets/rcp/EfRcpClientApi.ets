@@ -4,7 +4,8 @@
  * @TODO EfRcpClientApi rcp请求工具类
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcp, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
+import { efRcp, efRcpParams, efRcpResponseParams } from './EfRcp';
+import { efRcpConfig } from './efRcpConfig';
 import { JSON } from '@kit.ArkTS';
 import fs from '@ohos.file.fs';
 import { RcpLoadingUtil } from '../ui/RcpLoadingUtil';
@@ -12,20 +13,16 @@ import { RcpImgLayout, RcpLoadingShape } from '../ui/rcpLoading';
 import { CacheUtil } from '@yunkss/ef_core';
 import { common } from '@kit.AbilityKit';
 import { fileUri } from '@kit.CoreFileKit';
+import { BusinessError } from '@kit.BasicServicesKit';
+import { EfRcpError } from './EfRcpError';
 
 export class EfRcpClientApi {
   /**
-   * 构建请求对象
-   * @param url 请求url
-   * @param method 请求方式
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param isSecurity 是否开启证书加密
-   * @param loadingTxt 是否覆写loading文本
-   * @returns
+   * 构建请求的header
+   * @param headers 传入的自定义header
+   * @returns 拼接完公共系列全部完整header
    */
-  private static async buildRequest(url: string, method: string, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string): Promise<rcp.Request> {
+  private static buildHeaders(headers?: Record<string, string>): rcp.RequestHeaders {
     //需要添加的header对象
     let addHead: rcp.RequestHeaders = {};
     //是否需要拼接token
@@ -50,13 +47,63 @@ export class EfRcpClientApi {
         addHead[row[0]] = row[1];
       });
     }
-    //是否有cookie
-    let cookie: rcp.RequestCookies = {};
-    if (cookies) {
-      Object.entries(cookies).forEach((row) => {
-        cookie[row[0]] = row[1];
+    if (!addHead["content-type"]) {
+      addHead['content-type'] = "application/json";
+    }
+    return addHead;
+  }
+
+  /**
+   * 构建请求的cookies
+   * @param headers 传入的自定义cookies
+   * @returns 拼接完公共系列全部完整cookies
+   */
+  private static buildCookies(cookies?: Record<string, string>): rcp.RequestCookies {
+    //需要添加的header对象
+    let addCookie: rcp.RequestCookies = {};
+    //获取全局header配置
+    let cfg = efRcp.builder().configuration;
+    //如果配置中有headers
+    if (cfg && cfg.cookies) {
+      Object.entries(cfg.cookies).forEach((row) => {
+        addCookie[row[0]] = row[1];
       });
     }
+    //是否有传入header
+    if (cookies) {
+      Object.entries(cookies).forEach((row) => {
+        addCookie[row[0]] = row[1];
+      });
+    }
+    return addCookie;
+  }
+
+  /**
+   * 构建当前请求的证书配置
+   * @param security 当前请求证书配置
+   * @returns
+   */
+  private static buildSecurity(security: efRcpConfig.securityCfg): rcp.SecurityConfiguration {
+    let securityCfg: rcp.SecurityConfiguration = {
+      remoteValidation: security.remoteValidation,
+      serverAuthentication: security.serverAuthentication,
+      certificate: security.certificate
+    }
+    return securityCfg;
+  }
+
+  /**
+   * 构建请求对象
+   * @param url 请求url
+   * @param method 请求方式
+   * @param headers 请求头
+   * @param cookies 自定义cookie
+   * @param isSecurity 是否开启证书加密
+   * @param loadingTxt 是否覆写loading文本
+   * @returns
+   */
+  private static async buildRequest(url: string, method: string, headers?: Record<string, string>,
+    cookies?: Record<string, string>, loadingTxt?: string): Promise<rcp.Request> {
     //是否开启全局loading
     if (efRcpParams.isLoading) {
       await RcpLoadingUtil.showLoading({
@@ -65,11 +112,9 @@ export class EfRcpClientApi {
         layoutShape: RcpLoadingShape.SQUARE
       });
     }
-    if (!addHead["content-type"]) {
-      addHead['content-type'] = "application/json";
-    }
     //创建请求
-    let request = new rcp.Request(efRcpParams.baseURL + url, method, addHead, "", cookie);
+    let request = new rcp.Request(efRcpParams.baseURL + url, method, EfRcpClientApi.buildHeaders(headers), "",
+      EfRcpClientApi.buildCookies(cookies));
     //返回
     return request;
   }
@@ -80,16 +125,24 @@ export class EfRcpClientApi {
    * @param isSecurity 是否开启证书校验
    * @returns
    */
-  private static async buildResponse<E>(request: rcp.Request, isSecurity?: boolean) {
-    //是否开启证书加密
-    // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
-    //   if (EfRcp.getInstance().efRcp.configuration) {
-    //     if (efRcp.efRcp.configuration.requestConfiguration) {
-    //       efRcp.efRcp.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
-    //     }
-    //   }
-    // }
-    try { //发送请求
+  private static async buildResponse<E>(request: rcp.Request, isSecurity?: boolean,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try {
+      //是否针对当前请求开启证书加密
+      if (isSecurity !== false && isSecurity) {
+        if (request.configuration) {
+          if (securityCfg) {
+            request.configuration.security = EfRcpClientApi.buildSecurity(securityCfg)
+          }
+        } else {
+          if (securityCfg) {
+            request.configuration = {
+              security: EfRcpClientApi.buildSecurity(securityCfg)
+            }
+          }
+        }
+      }
+      //发送请求
       let response = await efRcp.builder().fetch(request);
       if (efRcpParams.isLoading) {
         //关闭loading
@@ -97,8 +150,19 @@ export class EfRcpClientApi {
       }
       //返回response的数据
       return response.toJSON() as E;
-    } catch (e) {
-      throw new Error("错误编码:" + e["code"] + ",错误消息:" + e["data"]);
+    } catch (error) {
+      if (efRcpParams.isLoading) {
+        //关闭loading
+        await RcpLoadingUtil.closeLoading();
+      }
+      //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
+      let b = error as BusinessError<Object>;
+      if (b.data) {
+        b.message = b.data as string;
+      }
+      let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
+      //抛出
+      return Promise.reject(efRcpError);
     }
   }
 
@@ -113,24 +177,15 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async post<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
-    try {
-      //转换请求参数
-      let jsonStr = JSON.stringify(query);
-      //构建request
-      let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
-      //传入请求参数
-      request.content = jsonStr;
-      //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
-    } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await RcpLoadingUtil.closeLoading();
-      }
-      //将异常抛出
-      return error as E;
-    }
+    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
+    //转换请求参数
+    let jsonStr = JSON.stringify(query);
+    //构建request
+    let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
+    //传入请求参数
+    request.content = jsonStr;
+    //构建响应
+    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
   /**
@@ -144,32 +199,23 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async postForm<E>(url: string, query: rcp.FormFields, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
-    try {
-      //转换请求参数
-      let form = new rcp.Form(query);
-      //更改请求方式
-      if (headers && !headers['content-type']) {
-        headers['content-type'] = "application/x-www-form-urlencoded";
-      } else {
-        headers = {
-          'content-type': 'application/x-www-form-urlencoded'
-        }
+    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
+    //转换请求参数
+    let form = new rcp.Form(query);
+    //更改请求方式
+    if (headers && !headers['content-type']) {
+      headers['content-type'] = "application/x-www-form-urlencoded";
+    } else {
+      headers = {
+        'content-type': 'application/x-www-form-urlencoded'
       }
-      //构建request
-      let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
-      //设置请求内容
-      request.content = form;
-      //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
-    } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await RcpLoadingUtil.closeLoading();
-      }
-      //将异常抛出
-      return error as E;
     }
+    //构建request
+    let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
+    //设置请求内容
+    request.content = form;
+    //构建响应
+    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
   /**
@@ -182,20 +228,11 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async get<E>(url: string, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
-    try {
-      //创建请求
-      let request = await EfRcpClientApi.buildRequest(url, 'GET', headers, cookies, loadingTxt);
-      //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
-    } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await RcpLoadingUtil.closeLoading();
-      }
-      //将异常抛出
-      return error as E;
-    }
+    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
+    //创建请求
+    let request = await EfRcpClientApi.buildRequest(url, 'GET', headers, cookies, loadingTxt);
+    //构建响应
+    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
   /**
@@ -209,24 +246,15 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async put<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
-    try {
-      //转换请求参数
-      let jsonStr = JSON.stringify(query);
-      //构建request
-      let request = await EfRcpClientApi.buildRequest(url, 'PUT', headers, cookies, loadingTxt);
-      //传入请求参数
-      request.content = jsonStr;
-      //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
-    } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await RcpLoadingUtil.closeLoading();
-      }
-      //将异常抛出
-      return error as E;
-    }
+    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
+    //转换请求参数
+    let jsonStr = JSON.stringify(query);
+    //构建request
+    let request = await EfRcpClientApi.buildRequest(url, 'PUT', headers, cookies, loadingTxt);
+    //传入请求参数
+    request.content = jsonStr;
+    //构建响应
+    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
   /**
@@ -239,20 +267,11 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async delete<E>(url: string, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E> {
-    try {
-      //创建请求
-      let request = await EfRcpClientApi.buildRequest(url, 'DELETE', headers, cookies, loadingTxt);
-      //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
-    } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await RcpLoadingUtil.closeLoading();
-      }
-      //将异常抛出
-      return error as E;
-    }
+    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
+    //创建请求
+    let request = await EfRcpClientApi.buildRequest(url, 'DELETE', headers, cookies, loadingTxt);
+    //构建响应
+    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
   /**
@@ -281,34 +300,25 @@ export class EfRcpClientApi {
    */
   async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,
     headers?: Record<string, string>, cookies?: Record<string, string>, loadingTxt?: string,
-    isSecurity?: boolean): Promise<E> {
-    try {
-      //更改请求方式
-      if (headers && !headers['content-type']) {
-        headers['content-type'] = "multipart/form-data";
-      } else {
-        headers = {
-          'content-type': 'multipart/form-data'
-        }
+    isSecurity?: boolean): Promise<E | EfRcpError> {
+    //更改请求方式
+    if (headers && !headers['content-type']) {
+      headers['content-type'] = "multipart/form-data";
+    } else {
+      headers = {
+        'content-type': 'multipart/form-data'
       }
-      //拼接上传对象
-      let multipart = new rcp.MultipartForm(fileInfo);
-      //创建请求
-      let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
-      //设置参数
-      request.content = multipart;
-      //设置上传进度
-      progressCallBack(efRcpResponseParams.uploadProgress);
-      //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
-    } catch (error) {
-      if (efRcpParams.isLoading) {
-        //关闭loading
-        await RcpLoadingUtil.closeLoading();
-      }
-      //将异常抛出
-      return error as E;
     }
+    //拼接上传对象
+    let multipart = new rcp.MultipartForm(fileInfo);
+    //创建请求
+    let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
+    //设置参数
+    request.content = multipart;
+    //设置上传进度
+    progressCallBack(efRcpResponseParams.uploadProgress);
+    //构建响应
+    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
 
@@ -322,7 +332,7 @@ export class EfRcpClientApi {
    * @returns
    */
   async downloadFile<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,
-    loadingTxt?: string, isSecurity?: boolean) {
+    loadingTxt?: string): Promise<E | EfRcpError> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
@@ -356,18 +366,6 @@ export class EfRcpClientApi {
           layoutShape: RcpLoadingShape.SQUARE
         });
       }
-      //是否开启证书加密
-      // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
-      //   if (EfRcp.getInstance().efRcp.configuration) {
-      //     if (EfRcp.getInstance().builder().configuration.requestConfiguration) {
-      //       EfRcp.getInstance()
-      //         .builder()
-      //         .configuration
-      //         .requestConfiguration
-      //         .security = CertificateUtil.getRcpSecurityCfg();
-      //     }
-      //   }
-      // }
       let response = await efRcp.builder().downloadToFile(efRcpParams.baseURL + url, downloadToFile)
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
@@ -382,8 +380,11 @@ export class EfRcpClientApi {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
-      //将异常抛出
-      return error as E;
+      //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
+      let b = error as BusinessError;
+      let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
+      //抛出
+      return Promise.reject(efRcpError);
     }
   }
 
@@ -397,7 +398,7 @@ export class EfRcpClientApi {
    * @returns
    */
   async downloadStream<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,
-    loadingTxt?: string, isSecurity?: boolean) {
+    loadingTxt?: string): Promise<E | EfRcpError> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
@@ -420,18 +421,6 @@ export class EfRcpClientApi {
           layoutShape: RcpLoadingShape.SQUARE
         });
       }
-      //是否开启证书加密
-      // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
-      //   if (EfRcp.getInstance().efRcp.configuration) {
-      //     if (EfRcp.getInstance().builder().configuration.requestConfiguration) {
-      //       EfRcp.getInstance()
-      //         .builder()
-      //         .configuration
-      //         .requestConfiguration
-      //         .security = CertificateUtil.getRcpSecurityCfg();
-      //     }
-      //   }
-      // }
       //发送下载请求
       let response = await efRcp.builder().downloadToStream(efRcpParams.baseURL + url, downloadToStream);
       //设置上传进度
@@ -447,8 +436,11 @@ export class EfRcpClientApi {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
-      //将异常抛出
-      return error as E;
+      //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
+      let b = error as BusinessError;
+      let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
+      //抛出
+      return Promise.reject(efRcpError);
     }
   }
 }

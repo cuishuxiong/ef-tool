@@ -7,7 +7,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { JSONObject } from '@yunkss/ef_json';
 
 /**
- * efAxios自定义异常
+ * efRcp自定义异常
  */
 export class EfRcpError implements BusinessError {
   /**
