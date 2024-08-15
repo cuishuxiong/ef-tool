@@ -4,7 +4,7 @@
  * @TODO EfRcpClientApi rcp请求工具类
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { EfRcp, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
+import { efRcp, efRcpParams, efRcpResponseParams } from './EfRcpUtil';
 import { JSON } from '@kit.ArkTS';
 import fs from '@ohos.file.fs';
 import { RcpLoadingUtil } from '../ui/RcpLoadingUtil';
@@ -37,7 +37,7 @@ export class EfRcpClientApi {
       }
     }
     //获取全局header配置
-    let cfg = EfRcp.getInstance().builder().configuration;
+    let cfg = efRcp.builder().configuration;
     //如果配置中有headers
     if (cfg && cfg.headers) {
       Object.entries(cfg.headers).forEach((row) => {
@@ -84,13 +84,13 @@ export class EfRcpClientApi {
     //是否开启证书加密
     // if (efRcpParams.isSecurity || (isSecurity !== false && isSecurity)) {
     //   if (EfRcp.getInstance().efRcp.configuration) {
-    //     if (EfRcp.getInstance().efRcp.configuration.requestConfiguration) {
-    //       EfRcp.getInstance().efRcp.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
+    //     if (efRcp.efRcp.configuration.requestConfiguration) {
+    //       efRcp.efRcp.configuration.requestConfiguration.security = CertificateUtil.getRcpSecurityCfg();
     //     }
     //   }
     // }
     try { //发送请求
-      let response = await EfRcp.getInstance().builder().fetch(request);
+      let response = await efRcp.builder().fetch(request);
       if (efRcpParams.isLoading) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
@@ -264,7 +264,7 @@ export class EfRcpClientApi {
     let request = CacheUtil.get<rcp.Request>(efRcpParams.baseURL + url);
     if (request) {
       //取消请求
-      EfRcp.getInstance().builder().cancel(request);
+      efRcp.builder().cancel(request);
     }
   }
 
@@ -368,7 +368,7 @@ export class EfRcpClientApi {
       //     }
       //   }
       // }
-      let response = await EfRcp.getInstance().builder().downloadToFile(efRcpParams.baseURL + url, downloadToFile)
+      let response = await efRcp.builder().downloadToFile(efRcpParams.baseURL + url, downloadToFile)
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {
@@ -433,7 +433,7 @@ export class EfRcpClientApi {
       //   }
       // }
       //发送下载请求
-      let response = await EfRcp.getInstance().builder().downloadToStream(efRcpParams.baseURL + url, downloadToStream);
+      let response = await efRcp.builder().downloadToStream(efRcpParams.baseURL + url, downloadToStream);
       //设置上传进度
       progressCallBack(efRcpResponseParams.downloadProgress);
       if (efRcpParams.isLoading) {

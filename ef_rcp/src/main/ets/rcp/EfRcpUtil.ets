@@ -9,7 +9,7 @@ import { efRcpConfig } from './efRcpConfig'
  * @DateTime 2024/7/23 23:56
  * @TODO RcpUtil 远场通信服务工具类
  */
-export class EfRcp {
+class EfRcp {
   /**
    * 全局session配置
    */
@@ -77,6 +77,10 @@ export class EfRcp {
    * @returns
    */
   create(): EfRcp {
+    if (this.efRcp) {
+      this.efRcp.close();
+      this.efRcp = undefined;
+    }
     this.efRcp = rcp.createSession(this.cfg);
     return this;
   }
@@ -185,6 +189,11 @@ export class EfRcp {
 }
 
 /**
+ * 抛出单例对象
+ */
+export const efRcp = EfRcp.getInstance();
+
+/**
  * rcp响应参数实体
  */
 export class efRcpResponseParams {
@@ -227,14 +236,6 @@ export class efRcpParams {
    * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
    */
   static loadingTxt: string = '努力获取数据中,请稍后...';
-  /**
-   * 允许建立连接的最长时间
-   */
-  static connectMs: number = 5000;
-  /**
-   * 允许传输数据的最长时间
-   */
-  static transferMs: number = 10000;
   /**
    * 会话session请求取消事件回调
    */
