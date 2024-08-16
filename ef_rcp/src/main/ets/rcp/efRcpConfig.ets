@@ -136,5 +136,42 @@ export namespace efRcpConfig {
     }
   }
 
+  /**
+   * 全局加载对象设置
+   */
+  export class loading {
+    /**
+     * 是否启用 - 默认true
+     */
+    static enable: boolean = true;
+    /**
+     * loading提示内容 - 默认为【努力获取数据中,请稍后...】
+     */
+    static content: string = '努力获取数据中,请稍后...';
+    /**
+     * 动画builder属性
+     */
+    static imgBuilder?: WrappedBuilder<[]>;
+  }
+
+  /**
+   * token相关配置
+   */
+  export class token {
+    /**
+     * 登录成功后的token的key
+     */
+    static tokenName: string = 'authorization';
+    /**
+     * 登录成功后的token值
+     */
+    static tokenValue: string = '';
+  }
+
+  /**
+   * 基础请求前缀地址
+   */
+  export const baseURL: string = "";
+
 
 }

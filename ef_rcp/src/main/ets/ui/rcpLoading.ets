@@ -4,6 +4,7 @@
  * @TODO Loading
  */
 import { UiConst } from '@yunkss/ef_core';
+import { efRcpConfig } from '../rcp/efRcpConfig';
 
 
 @Extend(Text)
@@ -16,6 +17,27 @@ function loadingTxt(fontSize: string | number) {
 @Component
 struct rcpLoading {
   @State rotateAngle: number = 0;
+
+  @Builder
+  imgBuilder() {
+    Image($r("app.media.rcpLoading"))
+      .width('30')
+      .animation({
+        duration: 50,
+        curve: Curve.Linear,
+        iterations: 1,
+        tempo: 100,
+        playMode: PlayMode.Normal,
+        onFinish: () => {
+          this.rotateAngle = this.rotateAngle + 15
+        }
+      })
+      .rotate({ angle: this.rotateAngle })
+      .onAppear(() => {
+        this.rotateAngle = 15
+      })
+  }
+
   /**
    * 属性配置
    */
@@ -26,22 +48,11 @@ struct rcpLoading {
       Column() {
         if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.TOP) {
           Column() {
-            Image($r("app.media.rcpLoading"))
-              .width('30')
-              .animation({
-                duration: 50,
-                curve: Curve.Linear,
-                iterations: 1,
-                tempo: 100,
-                playMode: PlayMode.Normal,
-                onFinish: () => {
-                  this.rotateAngle = this.rotateAngle + 15
-                }
-              })
-              .rotate({ angle: this.rotateAngle })
-              .onAppear(() => {
-                this.rotateAngle = 15
-              })
+            if (efRcpConfig.loading.imgBuilder) {
+              efRcpConfig.loading.imgBuilder.builder();
+            } else {
+              this.imgBuilder();
+            }
             Text(this.options.content)
               .margin({ top: UiConst.NUMBER_20 })
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
@@ -55,22 +66,11 @@ struct rcpLoading {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
               .margin({ bottom: UiConst.NUMBER_20 })
-            Image($r("app.media.rcpLoading"))
-              .width('30')
-              .animation({
-                duration: 50,
-                curve: Curve.Linear,
-                iterations: 1,
-                tempo: 100,
-                playMode: PlayMode.Normal,
-                onFinish: () => {
-                  this.rotateAngle = this.rotateAngle + 15
-                }
-              })
-              .rotate({ angle: this.rotateAngle })
-              .onAppear(() => {
-                this.rotateAngle = 15
-              })
+            if (efRcpConfig.loading.imgBuilder) {
+              efRcpConfig.loading.imgBuilder.builder();
+            } else {
+              this.imgBuilder();
+            }
           }
           .width(this.options.layoutShape != undefined && this.options.layoutShape === RcpLoadingShape.RECTANGLE ?
             '100%' :
@@ -80,22 +80,11 @@ struct rcpLoading {
           Row() {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
-            Image($r("app.media.rcpLoading"))
-              .width('30')
-              .animation({
-                duration: 50,
-                curve: Curve.Linear,
-                iterations: 1,
-                tempo: 100,
-                playMode: PlayMode.Normal,
-                onFinish: () => {
-                  this.rotateAngle = this.rotateAngle + 15
-                }
-              })
-              .rotate({ angle: this.rotateAngle })
-              .onAppear(() => {
-                this.rotateAngle = 15
-              })
+            if (efRcpConfig.loading.imgBuilder) {
+              efRcpConfig.loading.imgBuilder.builder();
+            } else {
+              this.imgBuilder();
+            }
           }
           .width(this.options.layoutShape != undefined && this.options.layoutShape === RcpLoadingShape.RECTANGLE ?
             '100%' :
@@ -105,22 +94,11 @@ struct rcpLoading {
         }
         if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.LEFT) {
           Row() {
-            Image($r("app.media.rcpLoading"))
-              .width('30')
-              .animation({
-                duration: 50,
-                curve: Curve.Linear,
-                iterations: 1,
-                tempo: 100,
-                playMode: PlayMode.Normal,
-                onFinish: () => {
-                  this.rotateAngle = this.rotateAngle + 15
-                }
-              })
-              .rotate({ angle: this.rotateAngle })
-              .onAppear(() => {
-                this.rotateAngle = 15
-              })
+            if (efRcpConfig.loading.imgBuilder) {
+              efRcpConfig.loading.imgBuilder.builder();
+            } else {
+              this.imgBuilder();
+            }
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
               .margin({ left: UiConst.NUMBER_20 })

@@ -1,5 +1,5 @@
 export {
-  efRcpParams, efRcpResponseParams, efRcp
+  efRcpParams, efRcp
 } from './src/main/ets/rcp/EfRcp';
 
 export { efRcpClientApi } from './src/main/ets/rcp/EfRcpClientApi';

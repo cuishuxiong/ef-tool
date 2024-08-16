@@ -320,6 +320,35 @@ class EfRcp {
     }
     return this;
   }
+
+  /**
+   * 禁用全局加载框
+   * @returns
+   */
+  disableLoading(): EfRcp {
+    efRcpConfig.loading.enable = false;
+    return this;
+  }
+
+  /**
+   * 更改全局默认loading的提示内容
+   * @param content
+   * @returns
+   */
+  setLoadingContent(content: string): EfRcp {
+    efRcpConfig.loading.content = content;
+    return this;
+  }
+
+  /**
+   * 更改全局默认loading的图片- builder 类型 内容业务自行传入 包括lottie
+   * @param content
+   * @returns
+   */
+  setLoadingImg(builder: WrappedBuilder<[]>): EfRcp {
+    efRcpConfig.loading.imgBuilder = builder;
+    return this;
+  }
 }
 
 /**
@@ -328,50 +357,11 @@ class EfRcp {
 export const efRcp = EfRcp.getInstance();
 
 /**
- * rcp响应参数实体
- */
-export class efRcpResponseParams {
-  /**
-   * 上传进度
-   */
-  static uploadProgress: number = 0;
-  /**
-   * 下载进度
-   */
-  static downloadProgress: number = 0;
-}
-
-
-/**
  * rcp请求参数实体
  */
 export class efRcpParams {
   /**
-   * 登录成功后的token的key
-   */
-  static tokenName: string = 'authorization';
-  /**
-   * 登录成功后的token值
-   */
-  static tokenValue: string = '';
-  /**
-   * 服务器 URL
-   */
-  static baseURL: string;
-  /**
-   * 是否开启全局请求loading弹框,默认为true
-   */
-  static isLoading: boolean = true;
-  /**
-   * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
-   */
-  static loadingTxt: string = '努力获取数据中,请稍后...';
-  /**
    * 是否开启证书加密,默认为false
    */
   static isSecurity: boolean = false;
-  /**
-   * 是否开启全局日志打印,默认为true
-   */
-  static isLogger: boolean = true;
 }

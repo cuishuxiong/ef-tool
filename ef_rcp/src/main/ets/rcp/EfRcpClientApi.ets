@@ -4,7 +4,7 @@
  * @TODO EfRcpClientApi rcp请求工具类
  */
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcp, efRcpParams, efRcpResponseParams } from './EfRcp';
+import { efRcp, efRcpParams } from './EfRcp';
 import { efRcpConfig } from './efRcpConfig';
 import { JSON } from '@kit.ArkTS';
 import fs from '@ohos.file.fs';
@@ -26,11 +26,11 @@ export class EfRcpClientApi {
     //需要添加的header对象
     let addHead: rcp.RequestHeaders = {};
     //是否需要拼接token
-    if (efRcpParams.tokenValue) {
-      if (efRcpParams.tokenName && efRcpParams.tokenName != 'authorization') {
-        addHead[efRcpParams.tokenName] = efRcpParams.tokenValue;
+    if (efRcpConfig.token.tokenValue) {
+      if (efRcpConfig.token.tokenName && efRcpConfig.token.tokenName != 'authorization') {
+        addHead[efRcpConfig.token.tokenName] = efRcpConfig.token.tokenValue;
       } else {
-        addHead.authorization = efRcpParams.tokenValue;
+        addHead.authorization = efRcpConfig.token.tokenValue;
       }
     }
     //获取全局header配置
@@ -105,15 +105,15 @@ export class EfRcpClientApi {
   private static async buildRequest(url: string, method: string, headers?: Record<string, string>,
     cookies?: Record<string, string>, loadingTxt?: string): Promise<rcp.Request> {
     //是否开启全局loading
-    if (efRcpParams.isLoading) {
+    if (efRcpConfig.loading.enable) {
       await RcpLoadingUtil.showLoading({
-        content: loadingTxt ? loadingTxt : efRcpParams.loadingTxt,
+        content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
         imgLayout: RcpImgLayout.TOP,
         layoutShape: RcpLoadingShape.SQUARE
       });
     }
     //创建请求
-    let request = new rcp.Request(efRcpParams.baseURL + url, method, EfRcpClientApi.buildHeaders(headers), "",
+    let request = new rcp.Request(efRcpConfig.baseURL + url, method, EfRcpClientApi.buildHeaders(headers), "",
       EfRcpClientApi.buildCookies(cookies));
     //返回
     return request;
@@ -144,14 +144,14 @@ export class EfRcpClientApi {
       }
       //发送请求
       let response = await efRcp.builder().fetch(request);
-      if (efRcpParams.isLoading) {
+      if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
       //返回response的数据
       return response.toJSON() as E;
     } catch (error) {
-      if (efRcpParams.isLoading) {
+      if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -280,7 +280,7 @@ export class EfRcpClientApi {
    */
   async cancel(url: string) {
     //获取请求
-    let request = CacheUtil.get<rcp.Request>(efRcpParams.baseURL + url);
+    let request = CacheUtil.get<rcp.Request>(efRcpConfig.baseURL + url);
     if (request) {
       //取消请求
       efRcp.builder().cancel(request);
@@ -315,8 +315,6 @@ export class EfRcpClientApi {
     let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
     //设置参数
     request.content = multipart;
-    //设置上传进度
-    progressCallBack(efRcpResponseParams.uploadProgress);
     //构建响应
     return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
@@ -359,24 +357,22 @@ export class EfRcpClientApi {
         file: filePath
       };
       //是否开启全局loading
-      if (efRcpParams.isLoading) {
+      if (efRcpConfig.loading.enable) {
         await RcpLoadingUtil.showLoading({
-          content: loadingTxt ? loadingTxt : efRcpParams.loadingTxt,
+          content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
           layoutShape: RcpLoadingShape.SQUARE
         });
       }
-      let response = await efRcp.builder().downloadToFile(efRcpParams.baseURL + url, downloadToFile)
-      //设置上传进度
-      progressCallBack(efRcpResponseParams.downloadProgress);
-      if (efRcpParams.isLoading) {
+      let response = await efRcp.builder().downloadToFile(efRcpConfig.baseURL + url, downloadToFile)
+      if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
       //返回response的数据
       return response.toJSON() as E;
     } catch (error) {
-      if (efRcpParams.isLoading) {
+      if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -414,25 +410,23 @@ export class EfRcpClientApi {
         stream: streamData
       }
       //是否开启全局loading
-      if (efRcpParams.isLoading) {
+      if (efRcpConfig.loading.enable) {
         await RcpLoadingUtil.showLoading({
-          content: loadingTxt ? loadingTxt : efRcpParams.loadingTxt,
+          content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
           layoutShape: RcpLoadingShape.SQUARE
         });
       }
       //发送下载请求
-      let response = await efRcp.builder().downloadToStream(efRcpParams.baseURL + url, downloadToStream);
-      //设置上传进度
-      progressCallBack(efRcpResponseParams.downloadProgress);
-      if (efRcpParams.isLoading) {
+      let response = await efRcp.builder().downloadToStream(efRcpConfig.baseURL + url, downloadToStream);
+      if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
       //返回response的数据
       return response.toJSON() as E;
     } catch (error) {
-      if (efRcpParams.isLoading) {
+      if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }

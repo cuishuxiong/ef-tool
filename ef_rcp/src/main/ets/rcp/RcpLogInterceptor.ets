@@ -1,8 +1,6 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcpParams, efRcpResponseParams } from './EfRcp';
-import { CacheUtil, Logger, OutDTO } from '@yunkss/ef_core'
+import { CacheUtil, Logger } from '@yunkss/ef_core'
 import { JSONObject } from '@yunkss/ef_json';
-import { BusinessError } from '@kit.BasicServicesKit';
 import { EfRcpError } from './EfRcpError';
 
 
