@@ -349,6 +349,25 @@ class EfRcp {
     efRcpConfig.loading.imgBuilder = builder;
     return this;
   }
+
+  /**
+   * 启用loading加载使用lottie动画
+   * @returns
+   */
+  enableLottie(): EfRcp {
+    efRcpConfig.loading.enableLottie = true;
+    return this;
+  }
+
+  /**
+   * 设置lottie动画
+   * @param lottieFunction  lottie动画函数
+   * @returns
+   */
+  setLottieAnimation(lottieFunction: (arg: CanvasRenderingContext2D) => void): EfRcp {
+    lottieFunction(efRcpConfig.loading.lottieRenderingCtx);
+    return this;
+  }
 }
 
 /**

@@ -19,6 +19,19 @@ struct rcpLoading {
   @State rotateAngle: number = 0;
 
   @Builder
+  lottieImg() {
+    Canvas(efRcpConfig.loading.lottieRenderingCtx)
+      .width('50%')
+      .height(60)
+      .backgroundColor(Color.Gray)
+      .onReady(() => {
+        //抗锯齿的设置
+        efRcpConfig.loading.lottieRenderingCtx.imageSmoothingEnabled = true;
+        efRcpConfig.loading.lottieRenderingCtx.imageSmoothingQuality = 'medium'
+      })
+  }
+
+  @Builder
   imgBuilder() {
     Image($r("app.media.rcpLoading"))
       .width('30')
@@ -48,7 +61,9 @@ struct rcpLoading {
       Column() {
         if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.TOP) {
           Column() {
-            if (efRcpConfig.loading.imgBuilder) {
+            if (efRcpConfig.loading.enableLottie) {
+              this.lottieImg()
+            } else if (efRcpConfig.loading.imgBuilder) {
               efRcpConfig.loading.imgBuilder.builder();
             } else {
               this.imgBuilder();
@@ -66,7 +81,9 @@ struct rcpLoading {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
               .margin({ bottom: UiConst.NUMBER_20 })
-            if (efRcpConfig.loading.imgBuilder) {
+            if (efRcpConfig.loading.enableLottie) {
+              this.lottieImg()
+            } else if (efRcpConfig.loading.imgBuilder) {
               efRcpConfig.loading.imgBuilder.builder();
             } else {
               this.imgBuilder();
@@ -80,7 +97,9 @@ struct rcpLoading {
           Row() {
             Text(this.options.content)
               .loadingTxt(this.options.fontSize ? this.options.fontSize : UiConst.FONT_16)
-            if (efRcpConfig.loading.imgBuilder) {
+            if (efRcpConfig.loading.enableLottie) {
+              this.lottieImg()
+            } else if (efRcpConfig.loading.imgBuilder) {
               efRcpConfig.loading.imgBuilder.builder();
             } else {
               this.imgBuilder();
@@ -94,7 +113,9 @@ struct rcpLoading {
         }
         if (this.options.imgLayout != undefined && this.options.imgLayout === RcpImgLayout.LEFT) {
           Row() {
-            if (efRcpConfig.loading.imgBuilder) {
+            if (efRcpConfig.loading.enableLottie) {
+              this.lottieImg()
+            } else if (efRcpConfig.loading.imgBuilder) {
               efRcpConfig.loading.imgBuilder.builder();
             } else {
               this.imgBuilder();

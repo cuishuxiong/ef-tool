@@ -149,9 +149,18 @@ export namespace efRcpConfig {
      */
     static content: string = '努力获取数据中,请稍后...';
     /**
-     * 动画builder属性
+     * 动画builder属性-图片类
      */
     static imgBuilder?: WrappedBuilder<[]>;
+    /**
+     * 是否为lottie动画
+     */
+    static enableLottie: boolean = false
+    /**
+     * lottie动画所需画板
+     */
+    static lottieRenderingCtx: CanvasRenderingContext2D =
+      new CanvasRenderingContext2D(new RenderingContextSettings(true));
   }
 
   /**
@@ -171,7 +180,7 @@ export namespace efRcpConfig {
   /**
    * 基础请求前缀地址
    */
-  export const baseURL: string = "";
+  export let baseURL: string = "";
 
 
 }
