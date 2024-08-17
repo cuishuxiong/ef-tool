@@ -30,10 +30,10 @@
   "version": "2.0.0",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    //    "@yunkss/ef_axios": "1.0.0",
+        "@yunkss/ef_axios": "1.0.0",
     //    "@yunkss/ef_rcp": "1.0.0",
     //    "@yunkss/ef_ui": "1.0.0",
-    //    "@yunkss/ef_crypto_dto": "1.0.0"
+        "@yunkss/ef_crypto_dto": "1.0.0"
   },
   "dynamicDependencies": {}
 }

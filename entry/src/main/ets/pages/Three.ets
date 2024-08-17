@@ -3,7 +3,7 @@
  * @DateTime 2024/7/16 17:20:07
  * @TODO Three
  */
-import { PhoneUtil, WinDialogUtil, ImageUtil } from '@yunkss/eftool';
+import { PhoneUtil, WinDialogUtil, ImageUtil, MD5 } from '@yunkss/eftool';
 import { promptAction, router } from '@kit.ArkUI';
 import { image } from '@kit.ImageKit';
 
@@ -71,7 +71,7 @@ export struct Three {
         TabContent() {
           Column() {
             Image(this.pxImg).width(200)
-            Text('22222222222222222222222222222222222222')
+            Text(MD5.hash('abc123456','hex').getDataRow())
               .maxLines(1)
               .textOverflow({
                 overflow: TextOverflow.Ellipsis

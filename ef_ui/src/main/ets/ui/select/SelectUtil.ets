@@ -1,11 +1,28 @@
 /**
+ Copyright 2024 csx - @yunkss/ef_ui
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+
+import { SelectDialog } from '@kit.ArkUI';
+import { UiConst } from '@yunkss/ef_core';
+
+/**
  * @Author csx
  * @DateTime 2024/3/27 19:56
  * @TODO SelectUtil
  */
-import { SelectDialog } from '@kit.ArkUI';
-import { UiConst } from '@yunkss/ef_core';
-
 @Component
 export struct SelectUtil {
   @Prop @Watch("change") options: SelectOptions = new SelectOptions();
@@ -31,16 +48,24 @@ export struct SelectUtil {
     }),
     autoCancel: false,
     alignment: this.options.alignment != undefined ? this.options.alignment : DialogAlignment.Center,
-    offset: this.options.offset != undefined ? this.options.offset : this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd || this.options.alignment == DialogAlignment.BottomStart ? {
-      dx: 0,
-      dy: -20
-    } : this.options.alignment == DialogAlignment.Top || this.options.alignment == DialogAlignment.TopStart || this.options.alignment == DialogAlignment.TopEnd ? {
-      dx: 0,
-      dy: 50
-    } : { dx: 0, dy: 0 },
+    offset: this.options.offset != undefined ? this.options.offset :
+      this.options.alignment == DialogAlignment.Bottom || this.options.alignment == DialogAlignment.BottomEnd ||
+        this.options.alignment == DialogAlignment.BottomStart ? {
+        dx: 0,
+        dy: -20
+      } : this.options.alignment == DialogAlignment.Top || this.options.alignment == DialogAlignment.TopStart ||
+        this.options.alignment == DialogAlignment.TopEnd ? {
+        dx: 0,
+        dy: 50
+      } : { dx: 0, dy: 0 },
     customStyle: true,
     gridCount: 10,
-    maskRect: { x: 0, y: 0, width: '100%', height: '100%' },
+    maskRect: {
+      x: 0,
+      y: 0,
+      width: '100%',
+      height: '100%'
+    },
     // maskColor: UiConst.DIALOG_CANCEL_COLOR,
     openAnimation: { duration: 500, tempo: 0.7, curve: Curve.EaseInOut },
     closeAnimation: { duration: 500, tempo: 0.7, curve: Curve.FastOutLinearIn },

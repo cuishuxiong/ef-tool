@@ -1,8 +1,20 @@
 /**
- * @Author csx
- * @DateTime 2024/3/26 10:02:02
- * @TODO Cascade  级联选择器
+ Copyright 2024 csx - @yunkss/ef_ui
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
  */
+
+
 import { UiConst } from '@yunkss/ef_core'
 import { util } from '@kit.ArkTS'
 import { BusinessError } from '@kit.BasicServicesKit';
@@ -41,7 +53,11 @@ function cityTxtColor() {
   // .backgroundColor("#f7f8fa")
 }
 
-
+/**
+ * @Author csx
+ * @DateTime 2024/3/26 10:02:02
+ * @TODO Cascade  级联选择器
+ */
 @Component
 export struct Cascade {
   //反会给上一级的数据
