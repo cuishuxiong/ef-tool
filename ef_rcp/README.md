@@ -268,7 +268,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 * setConfig 全部自定义session配置 - 特殊场景如efRcp所有默认配置均不满足开发需求，则全部自定义并设置
 
-> 注意调用完setConfig后必须调用create方法重新创建session对象,否则配置不生效
+  > 注意调用完setConfig后必须调用create方法重新创建session对象,否则配置不生效
 
 * addCodeEvent 添加统一的编码拦截操作
 
