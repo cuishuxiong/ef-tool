@@ -198,7 +198,7 @@ class EfRcp {
   }
 
   /**
-   * 添加统一的编码拦截器操作
+   * 添加统一的编码拦截操作
    * @param codeEvent  编码操作事件  efRcpConfig.codeEvent
    * @returns
    */
@@ -212,7 +212,7 @@ class EfRcp {
   }
 
   /**
-   * 添加自定义加解密拦截器
+   * 添加自定义加解密拦截
    * @param cryptoEvent 加解密操作事件 efRcpConfig.cryptoEvent
    * @returns
    */
@@ -357,8 +357,8 @@ class EfRcp {
   }
 
   /**
-   * 更改全局默认loading的图片- builder 类型 内容业务自行传入 包括lottie
-   * @param content
+   * 更改全局默认loading的图片- 全局builder,内容业务自行传入,只支持gif动图,不支持内部使用状态变量
+   * @param builder 全局构造builder
    * @returns
    */
   setLoadingImg(builder: WrappedBuilder<[]>): EfRcp {
@@ -384,19 +384,19 @@ class EfRcp {
     lottieFunction(efRcpConfig.loading.lottieRenderingCtx);
     return this;
   }
+
+  /**
+   * 设置全局请求路径前缀
+   * @param baseURL 请求路径前缀
+   * @returns
+   */
+  setBaseURL(baseURL: string): EfRcp {
+    efRcpConfig.baseURL = baseURL;
+    return this;
+  }
 }
 
 /**
  * 抛出单例对象
  */
 export const efRcp = EfRcp.getInstance();
-
-/**
- * rcp请求参数实体
- */
-export class efRcpParams {
-  /**
-   * 是否开启证书加密,默认为false
-   */
-  static isSecurity: boolean = false;
-}

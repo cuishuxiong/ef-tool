@@ -20,7 +20,7 @@ import { fileIo } from '@kit.CoreFileKit';
 /**
  * @Author csx
  * @DateTime 2024/8/14 23:40
- * @TODO efRcpConfig  efRcp配置对象命名空间
+ * @TODO efRcpConfig  efRcp配置对象命名空间   本类灵感来源于官方rcp.xxxxxxx
  */
 export namespace efRcpConfig {
 
@@ -86,7 +86,7 @@ export namespace efRcpConfig {
   }
 
   /**
-   * 上传相关
+   * 上传相关事件
    */
   export class uploadEvent {
     /**
@@ -97,7 +97,7 @@ export namespace efRcpConfig {
   }
 
   /**
-   * 下载相关
+   * 下载相关事件
    */
   export class downloadEvent {
     /**
@@ -194,9 +194,60 @@ export namespace efRcpConfig {
   }
 
   /**
+   * 请求公共传参
+   */
+  export class commonParams {
+    /**
+     * 请求路径 必填
+     */
+    url: string = '';
+    /**
+     * 当次请求需要设置的请求头
+     */
+    headers?: Record<string, string>;
+    /**
+     * 当次请求需要设置的cookies
+     */
+    cookies?: Record<string, string>;
+    /**
+     * 当次请求需要设置的loading文本
+     */
+    loadingTxt?: string;
+  }
+
+  /**
+   * post/put请求所需参数对象
+   */
+  export class requestBaseParams extends commonParams {
+    /**
+     * 请求参数 post/put
+     */
+    query: Record<string, Object> | rcp.FormFields = {};
+  }
+
+  /**
+   * 上传入参对象
+   */
+  export class uploadParams extends commonParams {
+    /**
+     * 上传文件字段
+     */
+    fileInfo: rcp.MultipartFormFields = {};
+  }
+
+  /**
+   * 下载入参对象
+   */
+  export class downloadParams extends commonParams {
+    /**
+     * 下载文件名
+     */
+    fileName: string = '';
+  }
+
+  /**
    * 基础请求前缀地址
    */
   export let baseURL: string = "";
-
 
 }

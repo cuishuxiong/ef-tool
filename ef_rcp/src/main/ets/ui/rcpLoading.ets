@@ -39,7 +39,7 @@ struct rcpLoading {
     Canvas(efRcpConfig.loading.lottieRenderingCtx)
       .width('50%')
       .height(60)
-      .backgroundColor(Color.Gray)
+      .backgroundColor(Color.Transparent)
       .onReady(() => {
         //抗锯齿的设置
         efRcpConfig.loading.lottieRenderingCtx.imageSmoothingEnabled = true;

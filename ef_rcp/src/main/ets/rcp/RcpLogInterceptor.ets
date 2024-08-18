@@ -62,14 +62,6 @@ export class RcpLogInterceptor implements rcp.Interceptor {
       Logger.debug("--------响应内容:", response.toString() as string);
       return response;
     } catch (error) {
-      if (error instanceof EfRcpError) {
-        //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
-        let efRcpError = new EfRcpError(error.code, error.name, error.message, error.stack);
-        return Promise.reject(efRcpError);
-      }
-      //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
-      // let b = error as BusinessError;
-      // let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
       //抛出
       return Promise.reject(error);
     }

@@ -15,7 +15,7 @@
  */
 
 import { rcp } from '@kit.RemoteCommunicationKit';
-import { efRcp, efRcpParams } from './EfRcp';
+import { efRcp } from './EfRcp';
 import { efRcpConfig } from './efRcpConfig';
 import { JSON } from '@kit.ArkTS';
 import fs from '@ohos.file.fs';
@@ -141,11 +141,11 @@ export class EfRcpClientApi {
    * @param isSecurity 是否开启证书校验
    * @returns
    */
-  private static async buildResponse<E>(request: rcp.Request, isSecurity?: boolean,
+  private static async buildResponse<E>(request: rcp.Request,
     securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
     try {
       //是否针对当前请求开启证书加密
-      if (isSecurity !== false && isSecurity) {
+      if (securityCfg) {
         if (request.configuration) {
           if (securityCfg) {
             request.configuration.security = EfRcpClientApi.buildSecurity(securityCfg)
@@ -172,6 +172,11 @@ export class EfRcpClientApi {
         await RcpLoadingUtil.closeLoading();
       }
       //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
+      if (error instanceof EfRcpError) {
+        let efRcpError = new EfRcpError(error.code, error.name, error.message, error.stack);
+        //抛出
+        return Promise.reject(efRcpError);
+      }
       let b = error as BusinessError<Object>;
       if (b.data) {
         b.message = b.data as string;
@@ -184,110 +189,141 @@ export class EfRcpClientApi {
 
   /**
    * post请求 - json格式
-   * @param url 请求url
-   * @param query 请求参数
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param postParam post请求入参,详见efRcpConfig.requestBaseParams
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async post<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
-    //转换请求参数
-    let jsonStr = JSON.stringify(query);
-    //构建request
-    let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
-    //传入请求参数
-    request.content = jsonStr;
-    //构建响应
-    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
+  async post<E>(postParam: efRcpConfig.requestBaseParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //转换请求参数
+      let jsonStr = JSON.stringify(postParam.query);
+      //构建request
+      let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
+        postParam.loadingTxt);
+      //传入请求参数
+      request.content = jsonStr;
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
+    }
   }
 
   /**
    * post请求 - 普通表单
-   * @param url 请求url
-   * @param query 请求参数
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param postParam post请求入参,详见efRcpConfig.requestBaseParams
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async postForm<E>(url: string, query: rcp.FormFields, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
-    //转换请求参数
-    let form = new rcp.Form(query);
-    //更改请求方式
-    if (headers && !headers['content-type']) {
-      headers['content-type'] = "application/x-www-form-urlencoded";
-    } else {
-      headers = {
-        'content-type': 'application/x-www-form-urlencoded'
+  async postForm<E>(postParam: efRcpConfig.requestBaseParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //转换请求参数
+      let form = new rcp.Form(postParam.query as rcp.FormFields);
+      //更改请求方式
+      if (postParam.headers && !postParam.headers['content-type']) {
+        postParam.headers['content-type'] = "application/x-www-form-urlencoded";
+      } else {
+        postParam.headers = {
+          'content-type': 'application/x-www-form-urlencoded'
+        }
       }
+      //构建request
+      let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
+        postParam.loadingTxt);
+      //设置请求内容
+      request.content = form;
+      //判断是否需要传入证书
+      let isSecurity = false;
+      if (securityCfg) {
+        isSecurity = true;
+      }
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
     }
-    //构建request
-    let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
-    //设置请求内容
-    request.content = form;
-    //构建响应
-    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
 
   /**
    * get请求
-   * @param url 请求url
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param getParam get请求入参,详见efRcpConfig.commonParams
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async get<E>(url: string, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
-    //创建请求
-    let request = await EfRcpClientApi.buildRequest(url, 'GET', headers, cookies, loadingTxt);
-    //构建响应
-    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
+  async get<E>(getParam: efRcpConfig.commonParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //创建请求
+      let request =
+        await EfRcpClientApi.buildRequest(getParam.url, 'GET', getParam.headers, getParam.cookies, getParam.loadingTxt);
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
+    }
   }
 
   /**
    * put请求
-   * @param url 请求url
-   * @param query 请求参数
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param putParam put请求入参,详见efRcpConfig.requestBaseParams
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async put<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
-    //转换请求参数
-    let jsonStr = JSON.stringify(query);
-    //构建request
-    let request = await EfRcpClientApi.buildRequest(url, 'PUT', headers, cookies, loadingTxt);
-    //传入请求参数
-    request.content = jsonStr;
-    //构建响应
-    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
+  async put<E>(putParam: efRcpConfig.requestBaseParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //转换请求参数
+      let jsonStr = JSON.stringify(putParam.query);
+      //构建request
+      let request =
+        await EfRcpClientApi.buildRequest(putParam.url, 'PUT', putParam.headers, putParam.cookies, putParam.loadingTxt);
+      //传入请求参数
+      request.content = jsonStr;
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
+    }
   }
 
   /**
    * delete请求
-   * @param url 请求url
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param deleteParam delete请求入参,详见efRcpConfig.commonParams
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async delete<E>(url: string, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E | EfRcpError> {
-    //创建请求
-    let request = await EfRcpClientApi.buildRequest(url, 'DELETE', headers, cookies, loadingTxt);
-    //构建响应
-    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
+  async delete<E>(deleteParam: efRcpConfig.commonParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //创建请求
+      let request =
+        await EfRcpClientApi.buildRequest(deleteParam.url, 'DELETE', deleteParam.headers, deleteParam.cookies,
+          deleteParam.loadingTxt);
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  /**
+   * patch请求
+   * @param patchParam  patch请求所需参数,详见efRcpConfig.commonParams
+   * @param securityCfg  本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
+   * @returns 响应结果
+   */
+  async patch<E>(patchParam: efRcpConfig.requestBaseParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //转换请求参数
+      let jsonStr = JSON.stringify(patchParam.query);
+      //构建request
+      let request =
+        await EfRcpClientApi.buildRequest(patchParam.url, 'PATCH', patchParam.headers, patchParam.cookies,
+          patchParam.loadingTxt);
+      //传入请求参数
+      request.content = jsonStr;
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
+    }
   }
 
   /**
@@ -303,55 +339,47 @@ export class EfRcpClientApi {
     }
   }
 
-
   /**
    * 上传文件 - MultipartFormFields形式
-   * @param url 请求url
-   * @param fileInfo  需要上传的文件对象
-   * @param headers 请求头
-   * @param cookies 自定义cookie
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param uploadParam uploadFile请求入参,详见efRcpConfig.uploadParams
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,
-    headers?: Record<string, string>, cookies?: Record<string, string>, loadingTxt?: string,
-    isSecurity?: boolean): Promise<E | EfRcpError> {
-    //更改请求方式
-    if (headers && !headers['content-type']) {
-      headers['content-type'] = "multipart/form-data";
-    } else {
-      headers = {
-        'content-type': 'multipart/form-data'
+  async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,
+    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    try { //更改请求方式
+      if (uploadParam.headers && !uploadParam.headers['content-type']) {
+        uploadParam.headers['content-type'] = "multipart/form-data";
+      } else {
+        uploadParam.headers = {
+          'content-type': 'multipart/form-data'
+        }
       }
+      //拼接上传对象
+      let multipart = new rcp.MultipartForm(uploadParam.fileInfo);
+      //创建请求
+      let request = await EfRcpClientApi.buildRequest(uploadParam.url, 'POST', uploadParam.headers, uploadParam.cookies,
+        uploadParam.loadingTxt);
+      //设置参数
+      request.content = multipart;
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+    } catch (e) {
+      return e;
     }
-    //拼接上传对象
-    let multipart = new rcp.MultipartForm(fileInfo);
-    //创建请求
-    let request = await EfRcpClientApi.buildRequest(url, 'POST', headers, cookies, loadingTxt);
-    //设置参数
-    request.content = multipart;
-    //构建响应
-    return await EfRcpClientApi.buildResponse<E>(request, isSecurity);
   }
-
 
   /**
    * 下载文件 - 保存路径方式 - 外部调用方式与downloadStream一致
-   * @param url 请求url
-   * @param fileName   保存的文件名,默认在沙箱环境下
-   * @param progressCallBack  下载进度回调
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param downloadParam 下载请求入参,详见efRcpConfig.downloadParams
    * @returns
    */
-  async downloadFile<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,
-    loadingTxt?: string): Promise<E | EfRcpError> {
+  async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
       //获取文件全路径
-      let filePath = filesDir + "/" + fileName;
+      let filePath = filesDir + "/" + downloadParam.fileName;
       //获取文件名
       let fName = new fileUri.FileUri(filePath).name;
       //获取文件路径
@@ -375,12 +403,12 @@ export class EfRcpClientApi {
       //是否开启全局loading
       if (efRcpConfig.loading.enable) {
         await RcpLoadingUtil.showLoading({
-          content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
+          content: downloadParam.loadingTxt ? downloadParam.loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
           layoutShape: RcpLoadingShape.SQUARE
         });
       }
-      let response = await efRcp.builder().downloadToFile(efRcpConfig.baseURL + url, downloadToFile)
+      let response = await efRcp.builder().downloadToFile(efRcpConfig.baseURL + downloadParam.url, downloadToFile)
       if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
@@ -402,20 +430,15 @@ export class EfRcpClientApi {
 
   /**
    * 下载文件 - 保存流形式  外部调用方式与downloadFile一致
-   * @param url 请求url
-   * @param fileName   保存的文件名,默认在沙箱环境下
-   * @param progressCallBack  下载进度回调
-   * @param loadingTxt 是否覆写loading文本
-   * @param isSecurity 是否开启证书加密
+   * @param downloadParam 下载请求入参,详见efRcpConfig.downloadParams
    * @returns
    */
-  async downloadStream<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,
-    loadingTxt?: string): Promise<E | EfRcpError> {
+  async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
       //获取保存路径
-      let finalPath = filesDir + "/" + fileName;
+      let finalPath = filesDir + "/" + downloadParam.fileName;
       //创建stream
       let stream = fs.createStreamSync(finalPath, "w+");
       //需要保存的stream对象
@@ -428,13 +451,13 @@ export class EfRcpClientApi {
       //是否开启全局loading
       if (efRcpConfig.loading.enable) {
         await RcpLoadingUtil.showLoading({
-          content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
+          content: downloadParam.loadingTxt ? downloadParam.loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
           layoutShape: RcpLoadingShape.SQUARE
         });
       }
       //发送下载请求
-      let response = await efRcp.builder().downloadToStream(efRcpConfig.baseURL + url, downloadToStream);
+      let response = await efRcp.builder().downloadToStream(efRcpConfig.baseURL + downloadParam.url, downloadToStream);
       if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();

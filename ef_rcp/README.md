@@ -16,15 +16,12 @@
 
 ## 🛠️包含组件
 
-| 模块                 | 介绍                              |
-|--------------------|---------------------------------|
-| EfRcpUtil          | 提供rcp的session相关工具类              |
-| efRcpParams        | 提供eftool封装rcp请求所需的参数            |
-| efRcpSecurityParam | 提供rcp的证书配置参数                    |
-| CertificateUtil    | 证书配置相关工具类                       |
-| efRcpEventsHandler | efRcp请求事件处理器                    |
-| efRcpClientApi     | 提供针对于统一post,get,delete,put等请求封装 |
-| RcpInterceptor     | 提供针对于统一请求和响应拦截封装                |
+| 模块             | 介绍                                 |
+|----------------|------------------------------------|
+| efRcp          | 提供针对efRcp的一系列请求相关功能的配置工具类          |
+| efRcpConfig    | efRcp所有的相关配置命名空间                   |
+| EfRcpError     | efRcp的统一异常处理对象,内置toString方法        |
+| efRcpClientApi | 提供针对于统一post,get,delete,put等请求的灵活封装 |
 
 ## 📦安装
 
@@ -39,13 +36,14 @@ ohpm install @yunkss/ef_rcp
 * 特殊说明
 
 > ef_rcp依赖于ef_json,故将依赖引入为dependencies方式,即开发者在使用ef_rcp时无需自行引入ef_json,ef_rcp会自动下载对应依赖版本
+> 但如果开发者自身业务需要使用JSON相关内容，则仍需要自行引入ef_json
 
 ## 📦使用
 
 ### 1.在项目中引入插件
 
 ```
-import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
+import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 ```
 
 类按需引入,项目需要使用那个就引入
@@ -60,148 +58,312 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-##### 1.efRcpParams类参数详解
+##### 1.efRcpConfig配置类参数详解
+
+* baseURL 基础请求前缀地址
+
+* timeout 超时对象
 
 ```
-  /**
-   * 登录成功后的token的key
-   */
-  static tokenName: string = 'authorization';
-  /**
-   * 登录成功后的token值
-   */
-  static tokenValue: string = '';
-  /**
-   * 服务器 URL
-   */
-  static baseURL: string;
-  /**
-   * 是否开启全局请求loading弹框,默认为true
-   */
-  static isLoading: boolean = true;
-  /**
-   * 全局loading的加载内容,默认值为[努力获取数据中,请稍后...]
-   */
-  static loadingTxt: string = '努力获取数据中,请稍后...';
-  /**
-   * 允许建立连接的最长时间
-   */
-  static connectMs: number = 5000;
-  /**
-   * 允许传输数据的最长时间
-   */
-  static transferMs: number = 10000;
-  /**
-   * 会话session请求取消事件回调
-   */
-  static cancelCallBack?: () => void;
-  /**
-   *  会话session关闭事件回调
-   */
-  static closeCallBack?: () => void;
-  /**
-   * 是否开启证书加密,默认为false
-   */
-  static isSecurity: boolean = false;
-  /**
-   * 是否开启全局日志打印,默认为true
-   */
-  static isLogger: boolean = true;
+    /**
+     * 允许建立连接的最长时间
+     */
+    connectMs?: number;
+    /**
+     * 允许传输数据的最长时间
+     */
+    transferMs?: number;
 ```
 
-##### 2.EfRcpUtil工具类
-
-* efRcpInstance 全局rcp的session对象
+* codeEvent 请求响应码对象
 
 ```
-  该变量为抛出封装的全局rcp对象,默认超时时间为10s
+    /**
+     * 请求响应码监听-业务自行处理数据
+     */
+    listener: (code: number) => void = () => {};
 ```
 
-* getRcp 封装创建rcp实例方法
+* cryptoEvent 请求拦截加解密操作
 
 ```
-   //1.统一拦截器
-   //2.设置默认请求类型 application/json
-   //3.设置默认传输超时时间为10s
-   //4.设置默认连接超时时间为5s
-   //5.设置此会话中允许的最大同时为80
+    /**
+     * 请求加密操作-业务自行处理数据 - 默认无任何操作直接返回
+     */
+    requestEncoder: (request: rcp.RequestContext) => rcp.RequestContext =
+      (request: rcp.RequestContext): rcp.RequestContext => {
+        return request;
+      };
+    /**
+     * 请求解密操作-业务自行处理数据 - 默认无任何操作直接返回
+     */
+    responseDecoder: (response: rcp.Response) => rcp.Response =
+      (response: rcp.Response): rcp.Response => {
+        return response;
+      };
 ```
 
-##### 3.EfRcpClientApi工具类
+* sessionListener 会话监听器
+
+```
+    /**
+     * 会话关闭事件回调。会话关闭时调用
+     */
+    onClosed: () => void = () => {};
+    /**
+     * 会话取消事件的回调。会话取消时调用
+     */
+    onCanceled: () => void = () => {};
+```
+
+* uploadEvent 上传相关事件
+
+```
+    /**
+     * 监听上传进度
+     */
+    onUploadProgress: (progress: number) => void = (progress: number) => {};
+```
+
+* downloadEvent 下载相关事件
+
+```
+    /**
+     * 监听下载进度
+     */
+    onDownloadProgress: (progress: number) => void = (progress: number) => {};
+```
+
+* securityCfg 证书相关配置
+
+```
+    /**
+     * 证书颁发机构
+     */
+    remoteValidation?: 'system' | 'skip' | rcp.CertificateAuthority | rcp.ValidationCallback = 'system';
+    /**
+     * 客户端证书,身份认证
+     */
+    certificate?: rcp.ClientCertificate;
+    /**
+     * 安全连接期间的服务器身份验证配置
+     */
+    serverAuthentication?: rcp.ServerAuthentication
+```
+
+* securityUtil 证书工具类
+
+```
+    /**
+     * 读取证书内容
+     * @param certPath 证书地址需要为沙箱环境地址
+     * @returns 证书字符串
+     */
+    static readClientCerts(certPath: string): string;
+```
+
+* loading 全局加载对象设置
+
+```
+    /**
+     * 是否启用 - 默认true
+     */
+    static enable: boolean = true;
+    /**
+     * loading提示内容 - 默认为【努力获取数据中,请稍后...】
+     */
+    static content: string = '努力获取数据中,请稍后...';
+    /**
+     * 动画builder属性-图片类-只支持gif动图 暂不支持在内部使用状态变量
+     */
+    static imgBuilder?: WrappedBuilder<[]>;
+    /**
+     * loading是否为lottie动画
+     */
+    static enableLottie: boolean = false
+    /**
+     * lottie动画所需画板 - enableLottie 为true时生效
+     */
+    static lottieRenderingCtx: CanvasRenderingContext2D =  new CanvasRenderingContext2D(new RenderingContextSettings(true));
+```
+
+* token token相关配置
+
+```
+    /**
+     * 登录成功后的token的key
+     */
+    static tokenName: string = 'authorization';
+    /**
+     * 登录成功后的token值
+     */
+    static tokenValue: string = '';
+```
+
+* commonParams 请求公共传参
+
+```
+    /**
+     * 请求路径 必填
+     */
+    url: string = '';
+    /**
+     * 当次请求需要设置的请求头
+     */
+    headers?: Record<string, string>;
+    /**
+     * 当次请求需要设置的cookies
+     */
+    cookies?: Record<string, string>;
+    /**
+     * 当次请求需要设置的loading文本
+     */
+    loadingTxt?: string;
+```
+
+* requestBaseParams post/put请求所需参数对象 - 继承所有commonParams参数
+
+```
+    /**
+     * 请求参数 post/put
+     */
+    query: Record<string, Object> | rcp.FormFields = {};
+```
+
+* uploadParams 上传入参对象 - 继承所有commonParams参数
+
+```
+    /**
+     * 上传文件字段
+     */
+    fileInfo: rcp.MultipartFormFields = {};
+```
+
+* downloadParams 下载入参对象 - 继承所有commonParams参数
+
+```
+    /**
+     * 下载文件名
+     */
+    fileName: string = '';
+```
+
+##### 2.efRcp工具类
+
+* getInstance 懒汉模式获取EfRcp类单例
+
+* create 创建session对象 如业务某些地方需要根据参数重新创建session则可多次调用,默认只需要调用一次
+
+* builder 获取构建后的session对象
+
+* setBaseURL 设置全局请求地址前缀
+
+* enableLogInterceptor 是否启用日志拦截器
+
+* addCustomInterceptors 添加用户自定义拦截器 - 可添加多个
+
+* addCommonHeaders 添加公共的header
+
+* addCommonCookies 添加公共的cookie
+
+* setConfig 全部自定义session配置 - 特殊场景如efRcp所有默认配置均不满足开发需求，则全部自定义并设置
+
+> 注意调用完setConfig后必须调用create方法重新创建session对象,否则配置不生效
+
+* addCodeEvent 添加统一的编码拦截操作
+
+* addCryptoEvent 添加自定义加解密拦截
+
+* setTimeOut 设置超时时间
+
+* setSessionListener 设置会话监听
+
+* setUploadEvent 设置上传进度操作
+
+* setDownLoadEvent 设置下载进度操作
+
+* addSecurity 设置证书
+
+* disableLoading 禁用全局加载框
+
+* setLoadingContent 更改全局默认loading的提示内容
+
+* setLoadingImg 更改全局默认loading的图片- 全局builder,内容业务自行传入,只支持gif动图,不支持内部使用状态变量
+
+* enableLottie 启用loading加载使用lottie动画
+
+* setLottieAnimation 设置lottie动画
+
+* efRcp 抛出的全局efRcp对象,可链式调用
+
+##### 3.efRcpClientApi工具类
 
 > 该工具类提供统一简化各种请求方式
-
-* buildRequest 私有方法 构建Request请求
-
-* buildResponse 私有方法 构建Response响应对象
 
 * post请求 json格式 async/await 方式
 
 ```
     //参数说明
-    async post<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //query 业务传入的请求数据
-    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //cookies 自定义cookie
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async post<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * postForm请求 async/await 方式
 
 ```
-    //参数说明   参数为json格式
-    async postForm<E>(url: string, query: rcp.FormFields, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //query 业务传入的FormFields请求数据
-    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //cookies 自定义cookie
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    //参数说明   参数为form格式
+    async postForm<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //E 为响应结果对象
-    
+    //EfRcpError 为统一异常对象
 ```
 
 * get请求 async/await 方式
 
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
-    async get<E>(url: string, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //cookies 自定义cookie
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async get<E>(getParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //getParam get请求所需参数,详见efRcpConfig.commonParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * put请求 async/await 方式
 
 ```
     //参数说明
-    async put<E>(url: string, query: Record<string, Object>, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //query 业务传入的请求数据
-    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //cookies 自定义cookie
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async put<E>(putParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //putParam put请求所需参数,详见efRcpConfig.requestBaseParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * delete请求 async/await 方式
 
 ```
     //参数说明
-    async delete<E>(url: string, headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //cookies 自定义cookie
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async delete<E>(deleteParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //deleteParam delete请求所需参数,详见efRcpConfig.requestBaseParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //E 为响应结果对象
+    //EfRcpError 为统一异常对象
+```
+
+* patch请求 async/await 方式
+
+```
+    //参数说明
+    async patch<E>(patchParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //patchParam patch请求所需参数,详见efRcpConfig.requestBaseParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
+    //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * cancel请求 async/await 方式
@@ -216,81 +378,168 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async uploadFile<E>(url: string, fileInfo: rcp.MultipartFormFields, progressCallBack: (progress: number) => void,headers?: Record<string, string>,cookies?: Record<string, string>, loadingTxt?: string, isSecurity?: boolean): Promise<E>
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //fileInfo  需要上传的文件MultipartFormFields对象
-    //headers 提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    //cookies 自定义cookie
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    //uploadParam 上传文件所需参数,详见efRcpConfig.uploadParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * downloadFile 统一的下载请求 async/await 方式
 
 ```
     //参数说明
-    async downloadFile<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,loadingTxt?: string, isSecurity?: boolean)
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //fileName  下载文件名称 如下载png图片后希望名称为girl.png
-    //progressCallBack  下载进度回调方法
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError>
+    //downloadParam 下载文件所需参数,详见efRcpConfig.downloadParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
+    //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * downloadStream 统一的下载请求 async/await 方式
 
 ```
     //参数说明
-    async downloadStream<E>(url: string, fileName: string, progressCallBack: (progress: number) => void,loadingTxt?: string, isSecurity?: boolean)
-    //url 为请求方法的url 全路径应该为 efRcpParams.baseURL+url 组合而成
-    //fileName  下载文件名称 如下载png图片后希望名称为girl.png
-    //progressCallBack  下载进度回调方法
-    //loadingTxt 是否覆写loading文本
-    //isSecurity 是否开启证书加密
+    async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError>
+    //downloadParam 下载文件所需参数,详见efRcpConfig.downloadParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
+    //E 为响应结果对象
+    //EfRcpError 为统一异常对象
 ```
 
 * 初始化参数配置示例
 
-> 请求相关的参数配置建议在Ability的onWindowStageCreate方法中配置
+> 请求相关的参数配置建议在Ability的onWindowStageCreate方法中配置绝大部分,少部分可在调用时灵活配置
 
 > 可使用BuildProfile获取到当前运行的还是debug/qa/test/release等 然后设置不同的请求信息
 
 ```
   if(运行环境===debug){
     //关于rcp的配置
-    efRcpParams.baseURL = "http://192.168.0.101:18088";
-    efRcpParams.loadingTxt = '小的快马加鞭...';
-    efRcpParams.isLogger = true;
-    efRcpParams.isLoading = false;
+    efRcp
+       //设置请求路径
+      .setBaseURL("http://aliyunmr.com:18088")
+      //启用打印日志
+      .enableLogInterceptor()
+      //更改loading文本
+      .setLoadingContent('充值有大礼包...')
+      //设置公共头
+      .addCommonHeaders({
+        "platform": "HarmonyOS",
+        "version": "V1.0.0"
+      })
+      //设置loading为gif图片
+      // .setLoadingImg(wrapBuilder(loadingImg))
+      //启动lottie  与setLoadingImg互斥不可同事使用
+      .enableLottie()
+      //添加统一编码处理逻辑,如跳转登录等
+      .addCodeEvent({
+        listener: (code: number) => {
+          Logger.debug("----code监听事件-----", code + "")
+        }
+      })
+      //添加加解密逻辑
+      .addCryptoEvent({
+        requestEncoder: (request: rcp.RequestContext): rcp.RequestContext => {
+          if (request.request.content) {
+            Logger.debug('-----------------加密操作--------------', request.request.content as string)
+          }
+          return request;
+        },
+        responseDecoder: (response: rcp.Response): rcp.Response => {
+          if (response) {
+            Logger.debug('-----------------解密操作--------------', JSON.stringify(response.toJSON()))
+          }
+          return response;
+        }
+      })
+      //添加上传进度监听
+      .setUploadEvent({
+        onUploadProgress: (progress) => {
+          Logger.debug("---------测试上传进度----------", progress + "%")
+        }
+      })
+      //添加下载进度监听
+      .setDownLoadEvent({
+        onDownloadProgress: (progress) => {
+          Logger.debug("---------测试下载进度----------", progress + "%")
+        }
+      })
+      //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
+      .create()
+      //获取统一的session对象，必须在create后调用
+      .builder();
   }
   if(运行环境===qa){
     //关于rcp的配置
-    efRcpParams.baseURL = "http://192.168.0.222:18088";
-    efRcpParams.loadingTxt = '正在努力加载...';
-    //设置证书内容
-    efRcpSecurityParam.certContent = '111111111';
-    efRcpParams.isLogger = false;
-    efRcpParams.isLoading = true;
+    efRcp
+       //设置请求路径
+      .setBaseURL("http://aliyunmr.com:18088")
+      //更改loading文本
+      .setLoadingContent('正式环境的loading...')
+      //设置公共头
+      .addCommonHeaders({
+        "platform": "HarmonyOS",
+        "version": "V1.0.1"
+      })
+      //设置loading为gif图片
+      .setLoadingImg(wrapBuilder(loadingImg))
+      //添加统一编码处理逻辑,如跳转登录等
+      .addCodeEvent({
+        listener: (code: number) => {
+          Logger.debug("----code监听事件-----", code + "")
+        }
+      })
+      //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
+      .create()
+      //获取统一的session对象，必须在create后调用
+      .builder();
   }
 ```
 
 * 登录示例
 
 ```
-  async testLogin() {
-    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
-      'account': 'efadmin',
-      'pwd': '123456'
-    }, {}, {}, '更改了请求loading内容...');
-    if (dto.getSuccess()) {
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
+  async login() {
+    //此处模拟系统第一次调用接口,设置lottie加载动画
+    //设置动画必须要加100ms的timer,原因为官方需要再canvas的onready方法后再设置动画
+    //而点击时才创建窗口,故需要等窗口的dom原始绘制完，再进行动画创建
+    setTimeout(() => {
+      efRcp
+        .setLottieAnimation((ctx: CanvasRenderingContext2D) => {
+          lottie.destroy('2016');
+          lottie.loadAnimation({
+            container: ctx, // 渲染上下文
+            renderer: 'canvas', // 渲染方式
+            loop: true, // 是否循环播放,默认true
+            autoplay: true, // 是否自动播放，默认true
+            name: '2016', // 动画名称
+            contentMode: 'Contain', // 填充的模式
+            frameRate: 20, //设置animator的刷帧率为20
+            //此处的动画只能是动画内容json格式，故需要将xxx.json放入rawfile中读取内容设置
+            animationData: JSON.parse(this.lottieStr)
+          })
+        });
+      // lottie.play();
+    }, 100)
+    //登录
+    let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
+      url: '/api/eftool/login',
+      query: {
+        'account': 'efadmin',
+        'pwd': '123456'
+      },
+      loadingTxt: '正在登录中...'
+    });
+    if (!(dto instanceof EfRcpError) && dto["success"]) {
+      // ToastUtil.showToast('登录成功~');
       //请求成功后将token存储在efRcpParams.tokenValue
-      efRcpParams.tokenValue = dto.getDataRow().token;
+      efRcpConfig.token.tokenValue = dto["dataRow"].token;
+      efRcpConfig.token.tokenName = "Authorization";
+      this.message = JSON.stringify(dto);
     } else {
-      ToastUtil.showToast(JSONObject.toJSONString(dto));
+      //可直接调用统一异常的toString方法转换为json字符串
+      this.message = (dto as EfRcpError).toString();
     }
   }
 ```
@@ -298,42 +547,37 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 * post示例 json格式
 
 ```
-  async testPostJSON() {
-    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/post', {
-      "nickName": "旺旺崔冰冰",
-      "account": 'yunkss@163.com',
-      "age": 12,
-      "hobby": ["吃", "喝", "敲代码"],
-      "sex": true
+  async postJSON() {
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>({
+      url: '/api/eftool/post',
+      query: {
+        "nickName": "旺旺崔冰冰",
+        "account": 'yunkss@163.com',
+        "age": 12,
+        "hobby": ["吃", "喝", "敲代码"],
+        "sex": true
+      }
     });
-    if (dto.getSuccess()) {
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
-    } else {
-      ToastUtil.showToast(JSONObject.toJSONString(dto));
-    }
+    this.message = JSON.stringify(dto);
   }
 ```
 
 * post示例 form格式
 
 ```
-  async testPostForm() {
-    let dto = await efRcpClientApi.postForm<OutDTO<string>>('/api/eftool/postFormData', {
-      "nickName": "旺旺崔冰冰",
-      "account": 'yunkss@163.com',
-      "age": 12,
-      "hobby": ["吃", "喝", "敲代码"],
-      "sex": true
+  async postForm() {
+    //登录
+    let dto = await efRcpClientApi.postForm <OutDTO<UserDTO>>({
+      url: '/api/eftool/postFormData',
+      query: {
+        "nickName": "旺旺崔冰冰",
+        "account": 'yunkss@163.com',
+        "age": 12,
+        "hobby": ["吃", "喝", "敲代码"],
+        "sex": true
+      }
     });
-    if (dto.getSuccess()) {
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
-    } else {
-      ToastUtil.showToast(JSONObject.toJSONString(dto));
-    }
+    this.message = JSON.stringify(dto);
   }
 ```
 
@@ -341,18 +585,16 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 
 ```
   async testGet() {
-    let dto = await efRcpClientApi.get<OutDTO<string>>('/api/eftool/get/122341', {
-      "testHeader": "111"
-    }, {
-      "testCookie": "csx"
+    let dto = await efRcpClientApi.get<OutDTO<string>>({
+      url: '/api/eftool/get/122341',
+      headers: {
+        "testHeader": "111"
+      },
+      cookies: {
+        "testCookie": "csx"
+      }
     });
-    if (dto.getSuccess()) {
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
-    } else {
-      ToastUtil.showToast(JSONObject.toJSONString(dto));
-    }
+    this.message = JSON.stringify(dto);
   }
 ```
 
@@ -360,20 +602,17 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 
 ```
   async testPUT() {
-    let dto = await efRcpClientApi.put<OutDTO<string>>('/api/eftool/put', {
-      "nickName": "旺旺崔冰冰",
-      "account": 'yunkss@163.com',
-      "age": 12,
-      "hobby": ["吃", "喝", "敲代码"],
-      "sex": true
+    let dto = await efRcpClientApi.put<OutDTO<string>>({
+      url: '/api/eftool/put',
+      query: {
+        "nickName": "旺旺崔冰冰",
+        "account": 'yunkss@163.com',
+        "age": 12,
+        "hobby": ["吃", "喝", "敲代码"],
+        "sex": true
+      }
     });
-    if (dto.getSuccess()) {
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
-    } else {
-      ToastUtil.showToast(JSONObject.toJSONString(dto));
-    }
+    this.message = JSON.stringify(dto);
   }
 ```
 
@@ -381,14 +620,10 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 
 ```
   async testDelete() {
-    let dto = await efRcpClientApi.delete<OutDTO<string>>('/api/eftool/delete/5345345');
-    if (dto.getSuccess()) {
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
-    } else {
-      ToastUtil.showToast(JSONObject.toJSONString(dto));
-    }
+    let dto = await efRcpClientApi.delete<OutDTO<string>>({
+      url: '/api/eftool/delete/5345345'
+    });
+    this.message = JSON.stringify(dto);
   }
 ```
 
@@ -396,117 +631,131 @@ import { efRcpClientApi, efRcpParams,xxxx} from '@yunkss/ef_rcp'
 
 ```
   async testCancel() {
-    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/post', {
-      "nickName": "旺旺崔冰冰",
-      "account": 'yunkss@163.com',
-      "age": 12,
-      "hobby": ["吃", "喝", "敲代码"],
-      "sex": true
+    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>({
+      url: '/api/eftool/post',
+      query: {
+        "nickName": "旺旺崔冰冰",
+        "account": 'yunkss@163.com',
+        "age": 12,
+        "hobby": ["吃", "喝", "敲代码"],
+        "sex": true
+      }
     });
     await efRcpClientApi.cancel('/api/eftool/post');
+  }
+```
+
+* patch 示例
+
+```
+  async testPATCH() {
+    let dto = await efRcpClientApi.patch<OutDTO<string>>({
+      url: '/api/eftool/patch/12306',
+      query: {
+        "nickName": "旺旺崔冰冰",
+        "account": 'yunkss@163.com',
+        "age": 12,
+        "hobby": ["吃", "喝", "敲代码"],
+        "sex": true
+      }
+    });
+    this.message = JSON.stringify(dto);
   }
 ```
 
 * 上传示例
 
 ```
-  async testUploadFile() {
-    //拉起选中照片
-    let result = await PickerUtil.selectPhotoVideo();
-    //判断是否成功
-    if (result.getSuccess()) {
-      let list = result.getDataTable();
-      //获取选中照片uri
-      let item = list[0];
-      //创建文件信息
-      let fileUriObject = new fileUri.FileUri(item);
-      //获取文件名
-      let name = fileUriObject.name;
-      //获取流
-      let bufferImg = FileUtil.getBufferByURI(item);
-      this.btnCtx = "正在上传中...";
-      this.showDownBtn = Visibility.Visible;
-      //上传
-      let dto =
-        await efRcpClientApi.uploadFile<OutDTO<string>>('/api/eftool/upload', {
+    上传进度在如下处
+    .setUploadEvent({
+        onUploadProgress: (progress) => {
+          Logger.debug("---------测试上传进度----------", progress + "%")
+        }
+    })
+```
+
+```
+   let arr = getContext().resourceManager.getMediaContentSync($r("app.media.abc").id);
+    //上传
+    let dto =
+      await efRcpClientApi.uploadFile<OutDTO<string>>({
+        url: '/api/eftool/upload',
+        fileInfo: {
           "file": {
             contentType: 'multipart/form-data',
-            remoteFileName: name,
+            remoteFileName: 'newRcp.png',
             contentOrPath: {
-              content: bufferImg.getDataRow()
+              content: buffer.from(arr).buffer
             }
           }
-        }, (progress) => {
-          if (progress >= 100) {
-            this.showDownBtn = Visibility.None;
-            this.process = 0;
-          } else {
-            this.process = progress;
-          }
-        });
-      let res = JSONObject.toJSONString(dto);
-      ToastUtil.showToast(res);
-      this.message = res;
-    }
-  }
+        }
+      });
+    this.message = JSON.stringify(dto);
 ```
 
 * 下载示例
 
 ```
+    下载进度在如下处
+    .setDownLoadEvent({
+        onDownloadProgress: (progress) => {
+          Logger.debug("---------测试下载进度----------", progress + "%")
+        }
+    })
+```
+
+```
   async testDownloadStream() {
-    this.btnCtx = "正在下载中...";
-    this.showDownBtn = Visibility.Visible;
     let dto =
-      await efRcpClientApi.downloadStream<OutDTO<string>>('/api/eftool/download/a89d3c16-1dba-4a41-909f-1214f52d3466-IMG_20240214_212821.jpg',
-        'abc.jpg', (progress) => {
-          if (progress >= 100) {
-            this.showDownBtn = Visibility.None;
-            this.process = 0;
-          } else {
-            this.process = progress;
-          }
-        });
-    //获取文件路径
-    let url = FileUtil.getFilesDirPath('', 'abc.jpg');
-    //转换成uri
-    let uri = fileUri.getUriFromPath(url);
-    //预览
-    await PreviewUtil.previewImage(uri);
-    this.message = JSONObject.toJSONString(dto);
+      await efRcpClientApi.downloadStream<OutDTO<string>>({
+        url: '/api/eftool/download/13c79c32-c291-429b-a1a9-e6ae2cb0b635-IMG_010.png',
+        fileName: 'abc.jpg'
+      });
+    this.message = JSON.stringify(dto);
   }
 ```
 
 ```
   async testDownloadFile() {
-    this.btnCtx = "正在下载中...";
-    this.showDownBtn = Visibility.Visible;
     let dto =
-      await efRcpClientApi.downloadFile<OutDTO<string>>('/api/eftool/download/7626f4b1-9835-4eb4-8660-ae299ba4733a-IMG_20240214_212933.jpg',
-        'csx.jpg', (progress) => {
-          if (progress >= 100) {
-            this.showDownBtn = Visibility.None;
-            this.process = 0;
-          } else {
-            this.process = progress;
-          }
-        })
-    //获取文件路径
-    let url = FileUtil.getFilesDirPath('', 'csx.jpg');
-    //转换成uri
-    let uri = fileUri.getUriFromPath(url);
-    //预览
-    await PreviewUtil.previewImage(uri);
-    this.message = JSONObject.toJSONString(dto);
+      await efRcpClientApi.downloadFile<OutDTO<string>>({
+        url: '/api/eftool/download/ddbab76c-6d73-4ba8-8efc-9e5264ade01a-newRcp.png',
+        fileName: 'csx1.png'
+      })
+    this.message = JSON.stringify(dto);
   }
 ```
 
-##### 5.CertificateUtil工具类
+##### 4.EfRcpError工具类
 
-* readClientCerts 读取指定文件中的证书内容
+* 字段
 
-* getRcpSecurityCfg 获取组装的rcp安全校验配置
+```
+  /**
+   * 编码
+   */
+  code: number;
+  /**
+   * 名称
+   */
+  name: string;
+  /**
+   * 消息
+   */
+  message: string;
+  /**
+   * 堆栈信息
+   */
+  stack?: string | undefined;
+```
 
+* toString 转换成json字符串
+
+* getCode 获取错误码
+
+* getName 获取错误名称
+
+* getMessage 获取错误提示
 
 ## [eftool](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
 

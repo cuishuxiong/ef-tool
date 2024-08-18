@@ -1,6 +1,4 @@
-export {
-  efRcpParams, efRcp
-} from './src/main/ets/rcp/EfRcp';
+export { efRcp } from './src/main/ets/rcp/EfRcp';
 
 export { efRcpClientApi } from './src/main/ets/rcp/EfRcpClientApi';
 

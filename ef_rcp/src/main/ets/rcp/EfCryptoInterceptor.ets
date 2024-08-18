@@ -49,11 +49,6 @@ export class EfCryptoInterceptor implements rcp.Interceptor {
       //返回解密后的Response
       return decoderResponse;
     } catch (error) {
-      if (error instanceof EfRcpError) {
-        //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
-        let efRcpError = new EfRcpError(error.code, error.name, error.message, error.stack);
-        return Promise.reject(efRcpError);
-      }
       //抛出
       return Promise.reject(error);
     }

@@ -29,10 +29,6 @@ export class EfRcpError implements BusinessError {
    */
   code: number;
   /**
-   * 数据
-   */
-  data?: void | undefined;
-  /**
    * 名称
    */
   name: string;
