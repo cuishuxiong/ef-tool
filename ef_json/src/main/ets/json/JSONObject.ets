@@ -62,22 +62,25 @@ export class JSONObject extends HashMap<string, JSONValue> {
   /**
    * 递归解析字符串
    * @param nestedJson 待解析的json
+   * @param convertDateStr  是否将日期字符串转换为日期对象
    * @returns 解析后的结果
    */
-  private static parseNestedObject<U>(nestedJson: Record<string, JSONValue>): U {
+  private static parseNestedObject<U>(nestedJson: Record<string, JSONValue>, convertDateStr: boolean = true): U {
     let nestedData: Record<string, JSONValue> = {};
     for (let key of Object.entries(nestedJson)) {
       if (typeof nestedJson[key[0]] === 'object' && nestedJson[key[0]] !== null) {
-        if (nestedJson[key[0]] instanceof Date) {
+        if (nestedJson[key[0]] instanceof Date && convertDateStr == true) {
           nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
         } else if (Array.isArray(nestedJson[key[0]])) {
           nestedData[key[0]] =
-            (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item));
+            (nestedJson[key[0]] as Array<Record<string, JSONValue>>).map(item => JSONObject.parseNestedObject(item,
+              convertDateStr));
         } else {
-          nestedData[key[0]] = JSONObject.parseNestedObject(nestedJson[key[0]] as Record<string, JSONValue>);
+          nestedData[key[0]] =
+            JSONObject.parseNestedObject(nestedJson[key[0]] as Record<string, JSONValue>, convertDateStr);
         }
       } else if (typeof nestedJson[key[0]] === 'string') {
-        if (DateUtil.isDate(nestedJson[key[0]] as string)) {
+        if (DateUtil.isDate(nestedJson[key[0]] as string) && convertDateStr == true) {
           nestedData[key[0]] = new Date(nestedJson[key[0]] as string);
         } else {
           nestedData[key[0]] = nestedJson[key[0]];
@@ -92,14 +95,15 @@ export class JSONObject extends HashMap<string, JSONValue> {
   /**
    * json字符串转换为实体对象
    * @param jsonStr json字符串
+   * @param convertDateStr 是否将日期字符串转换成日期对象 - 默认为true
    * @returns T 对象
    */
-  public static parseObject<T>(jsonStr: string): T {
+  public static parseObject<T>(jsonStr: string, convertDateStr: boolean = true): T {
     //处理如果带有转义符号的
     const replaceStr = jsonStr.replace(/\r\n/g, '\\r\\n').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
     //转换
     let json: Record<string, JSONValue> = JSON.parse(replaceStr);
-    let data: T = JSONObject.parseNestedObject<T>(json);
+    let data: T = JSONObject.parseNestedObject<T>(json, convertDateStr);
     return data;
   }
 
