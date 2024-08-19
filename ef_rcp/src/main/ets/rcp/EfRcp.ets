@@ -42,7 +42,7 @@ class EfRcp {
           //允许建立连接的最长时间
           connectMs: 5000,
           //允许传输数据的最长时间
-          transferMs: 10000,
+          transferMs: 20000,
         },
       },
       tracing: {
