@@ -74,7 +74,7 @@ export class PickerUtil {
       selectOpts.maxSelectNumber = options.maxNumber;
       selectOpts.selectMode = options.selectMode;
       //创建picker
-      let context = getContext() as common.Context;
+      let context = getContext() as common.UIAbilityContext;
       let documentPicker = new picker.DocumentViewPicker(context);
       documentPicker.select(selectOpts).then((list: Array<string>) => {
         if (list !== null && list !== undefined) {
@@ -115,8 +115,8 @@ export class PickerUtil {
     selectOpts.fileSuffixFilters = options.suffixList;
     selectOpts.maxSelectNumber = options.maxNumber;
     selectOpts.selectMode = options.selectMode;
-    //创建picker
-    let documentPicker = new picker.DocumentViewPicker();
+    let context = getContext() as common.UIAbilityContext;
+    let documentPicker = new picker.DocumentViewPicker(context);
     //拉起
     let list = await documentPicker.select(selectOpts);
     if (list !== null && list !== undefined) {
@@ -192,9 +192,10 @@ export class PickerUtil {
   static async selectAudioCallBack(options?: efPickerOptions): Promise<void> {
     try {
       //创建picker
-      let documentPicker = new picker.AudioViewPicker();
+      let context = getContext() as common.UIAbilityContext;
+      let audioPicker = new picker.AudioViewPicker(context);
       //调起选择
-      documentPicker.select(new picker.AudioSelectOptions()).then((list: Array<string>) => {
+      audioPicker.select(new picker.AudioSelectOptions()).then((list: Array<string>) => {
         if (list !== null && list !== undefined) {
           if (options?.selectCallBack) {
             options.selectCallBack(list);
@@ -214,7 +215,8 @@ export class PickerUtil {
    */
   static async selectAudio(): Promise<Array<string>> {
     //创建picker
-    let audioPicker = new picker.AudioViewPicker();
+    let context = getContext() as common.UIAbilityContext;
+    let audioPicker = new picker.AudioViewPicker(context);
     //拉起
     let list = await audioPicker.select(new picker.AudioSelectOptions());
     if (list !== null && list !== undefined) {
