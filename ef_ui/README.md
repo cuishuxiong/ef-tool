@@ -123,7 +123,7 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
 > 需要服务端获取凭证Access Token才可获取手机号
 
 ```
-
+  暂无demo
 ```
 
 * 实时验证手机号 functionalButtonComponentManager.OpenType.GET_REALTIME_PHONENUMBER
@@ -131,55 +131,61 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
 > 需要服务端获取凭证Access Token才可获取手机号
 
 ```
-
+  暂无demo
 ```
 
 * 打开应用 functionalButtonComponentManager.OpenType.LAUNCH_APP
 
 ```
-
+  暂无demo
 ```
 
 * 打开设置 functionalButtonComponentManager.OpenType.OPEN_SETTING
 
 ```
-
+  @State btnOptions: BtnOptions = {
+    label: '打开设置',
+    type: functionalButtonComponentManager.OpenType.OPEN_SETTING
+  };
+  ButtonUtil({
+    btnOptions: this.btnOptions
+  })
 ```
 
 * 选择头像 functionalButtonComponentManager.OpenType.CHOOSE_AVATAR
 
 ```
-
+  暂无demo
 ```
 
 * 选择地址 functionalButtonComponentManager.OpenType.CHOOSE_ADDRESS
 
 ```
-
+  暂无demo
 ```
 
 * 选择发票抬头 functionalButtonComponentManager.OpenType.CHOOSE_INVOICE_TITLE
 
 ```
-
+  暂无demo
 ```
 
 * 实名认证 functionalButtonComponentManager.OpenType.REAL_NAME_AUTHENTICATION
 
 ```
-
+  暂无demo
 ```
 
 * 人脸核验 functionalButtonComponentManager.OpenType.FACE_AUTHENTICATION
 
 ```
-
+  暂无demo
 ```
 
 * 地图选点 functionalButtonComponentManager.OpenType.CHOOSE_LOCATION
 
 ```
-
+  暂无demo
 ```
 
 #### 3.CameraUtil 调起拍照工具类
