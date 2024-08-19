@@ -57,7 +57,7 @@ export {
   ECDH,
   X25519,
   CryptoUtil
-} from '@yunkss/ef_crypto_dto';
+} from '@yunkss/ef_crypto';
 
 export {
   efAxios, efAxiosParams, efClientApi
@@ -65,13 +65,7 @@ export {
 
 
 export {
-  efRcpInstance,
-  efRcpParams,
-  efRcpSecurityParam,
-  efRcpResponseParams,
-  efRcpClientApi,
-  efRcpEventsHandler,
-  RcpInterceptor
+  efRcp, EfRcpError, efRcpConfig, efRcpClientApi
 } from '@yunkss/ef_rcp';
 
 export {

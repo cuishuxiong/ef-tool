@@ -4,7 +4,9 @@
     "type": "har",
     "deviceTypes": [
       "default",
-      "tablet"
+      "tablet",
+      "phone",
+      "2in1"
     ]
   }
 }

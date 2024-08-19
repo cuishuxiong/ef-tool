@@ -135,6 +135,39 @@ function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalBut
         })
     })
   }
+  if (params.openType === functionalButtonComponentManager.OpenType.FACE_AUTHENTICATION) {
+    //人脸核验
+    FunctionalButton({
+      params: params,
+      controller: new functionalButtonComponentManager.FunctionalButtonController()
+        .onFaceAuthentication((err, data) => {
+          if (err) {
+            ToastUtil.showToast('人脸核验错误,原因为:' + err.message)
+          } else {
+            if (data) {
+              callBack(JSONObject.toJSONString(data));
+            }
+          }
+        })
+    })
+  }
+
+  if (params.openType === functionalButtonComponentManager.OpenType.REAL_NAME_AUTHENTICATION) {
+    //实名认证
+    FunctionalButton({
+      params: params,
+      controller: new functionalButtonComponentManager.FunctionalButtonController()
+        .onRealNameAuthentication((err, data) => {
+          if (err) {
+            ToastUtil.showToast('实名认证失败,原因为:' + err.message)
+          } else {
+            if (data) {
+              callBack(JSONObject.toJSONString(data));
+            }
+          }
+        })
+    })
+  }
   if (params.openType === functionalButtonComponentManager.OpenType.CHOOSE_LOCATION) {
     //地图选点
     FunctionalButton({
@@ -177,6 +210,10 @@ export struct ButtonUtil {
     FunctionalButtonBuilder.builder({
       openType: this.btnOptions.type,
       label: this.btnOptions.label,
+      styleOption: {
+        //按钮镂空
+        plain: true
+      },
       appParam: this.btnOptions.appParams
     }, (data) => {
       ToastUtil.showToast(data);

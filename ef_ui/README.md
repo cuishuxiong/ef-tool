@@ -54,6 +54,7 @@ ohpm install @yunkss/ef_ui
 * 特殊说明
 
 > ef_ui依赖于ef_json,故将依赖引入为dependencies方式,即开发者在使用ef_ui时无需自行引入ef_json,ef_ui会自动下载对应依赖版本
+> 但如果开发者自身业务需要使用JSON相关内容，则仍需要自行引入ef_json
 
 ## 📦使用
 
@@ -69,9 +70,119 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
 
 #### 1.AuthUtil的方法
 
+* checkPermissions 校验是否已授权 【异步方法】
+
+```
+    //单次校验一个权限,入参为需要校验的权限
+    let result = await AuthUtil.checkPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+    if (!result) {
+     //此处可调用拉起授权方法
+     ToastUtil.showToast('用户未授权~');
+    } else {
+      ToastUtil.showToast('用户已授权~');
+    }
+```
+
+* reqPermissionsFromUser 拉起单个用户授权 【异步方法】 有callBack
+
+```
+     //拉起用户单个权限授权操作,第一个参数为需要授予的权限,第二个参数为用户授权回调
+     AuthUtil.reqPermissionsFromUser('ohos.permission.APPROXIMATELY_LOCATION', (index: number) => {
+        //用户同意授权index为1,用户拒绝授权index为-1,根据结果进行业务操作
+        ToastUtil.showToast(index == 1 ? '授权成功' : '用户取消授权~');
+     })
+```
+
+* reqPermissions 拉起单个用户授权 【异步方法】 无callBack
+
+```
+     //拉起用户单个权限授权操作,用户同意授权code为1,用户拒绝授权code为-1,根据结果进行业务操作
+     let code = await AuthUtil.reqPermissions('ohos.permission.APPROXIMATELY_LOCATION');
+     if (code<0) {
+       //授权失败
+       return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+     }
+```
+
+* reqPermissionsList 拉起组合用户授权 【异步方法】 无callBack
+
+```
+     //拉起组合用户授权操作,入参为需要授权的权限集合
+     let code = await AuthUtil.reqPermissionsList(['ohos.permission.APPROXIMATELY_LOCATION', 'ohos.permission.LOCATION']);
+     //code为true表示权限集合均被授权,为false表示有权限未被授权
+     if (!code) {
+       //授权失败
+       return OutDTO.ErrorByDataRow<string>('获取当前位置失败~', '用户拒绝授权精准定位,获取定位失败~');
+     }
+```
+
 #### 2.ButtonUtil的方法
 
-#### 3.CameraUtil 调起拍照工具类(1.1.11+)
+* 快速验证手机号 functionalButtonComponentManager.OpenType.GET_PHONE_NUMBER
+
+> 需要服务端获取凭证Access Token才可获取手机号
+
+```
+
+```
+
+* 实时验证手机号 functionalButtonComponentManager.OpenType.GET_REALTIME_PHONENUMBER
+
+> 需要服务端获取凭证Access Token才可获取手机号
+
+```
+
+```
+
+* 打开应用 functionalButtonComponentManager.OpenType.LAUNCH_APP
+
+```
+
+```
+
+* 打开设置 functionalButtonComponentManager.OpenType.OPEN_SETTING
+
+```
+
+```
+
+* 选择头像 functionalButtonComponentManager.OpenType.CHOOSE_AVATAR
+
+```
+
+```
+
+* 选择地址 functionalButtonComponentManager.OpenType.CHOOSE_ADDRESS
+
+```
+
+```
+
+* 选择发票抬头 functionalButtonComponentManager.OpenType.CHOOSE_INVOICE_TITLE
+
+```
+
+```
+
+* 实名认证 functionalButtonComponentManager.OpenType.REAL_NAME_AUTHENTICATION
+
+```
+
+```
+
+* 人脸核验 functionalButtonComponentManager.OpenType.FACE_AUTHENTICATION
+
+```
+
+```
+
+* 地图选点 functionalButtonComponentManager.OpenType.CHOOSE_LOCATION
+
+```
+
+```
+
+#### 3.CameraUtil 调起拍照工具类
 
 * picker 调起照相和录屏
 
@@ -197,18 +308,9 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
   .margin({ bottom: this.bottomRectHeight })
 ```
 
-#### 6.LocationUtil位置工具类(V1.2.1+有改动)
+#### 6.LocationUtil位置工具类
 
-* getGeoLocation 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限) 【返回OutDTO对象】
-
-```
-  //注意APPROXIMATELY_LOCATION和LOCATION权限需要配置到项目的module.json5文件的requestPermissions中
-  //需要获取用户当前定位的中文位置信息时调用,返回格式如北京市海淀区xxx街道xxxx号
-  let result = await LocationUtil.getGeoLocation();
-  this.message = result.getDataRow();
-```
-
-* getGeoLocationAll 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限) 【返回全部信息】
+* getGeoLocation 获取用户当前定位-逆编码后的位置(会申请APPROXIMATELY_LOCATION和LOCATION权限)
 
 ```
   //注意APPROXIMATELY_LOCATION和LOCATION权限需要配置到项目的module.json5文件的requestPermissions中
@@ -217,7 +319,7 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
   this.message = result.getDataRow();
 ```
 
-* address2Location 地理逆编码,将地理描述转换为具体坐标-无需申请定位权限 【返回OutDTO对象】
+* address2Location 地理逆编码,将地理描述转换为具体坐标-无需申请定位权限
 
 ```
    //已有详细地址需要编码为坐标信息时调用
@@ -235,7 +337,7 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
    }
 ```
 
-* getCountryCode 获取当前的国家码-无需申请定位权限 【返回OutDTO对象】
+* getCountryCode 获取当前的国家码-无需申请定位权限
 
 ```
    //在需要获取当前国家编码时调用
@@ -428,7 +530,7 @@ import { CasCade, ToastUtil,TipsUtil,xxx} from '@yunkss/ef_ui'
   }
 ```
 
-#### 8.PickerUtil 调起选择工具类(1.1.11+)
+#### 8.PickerUtil 调起选择工具类
 
 * efPickerOptions picker选择入参实体
 

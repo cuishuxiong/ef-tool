@@ -1,6 +1,6 @@
 {
   "name": "@yunkss/ef_axios",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "keywords": [
     "eftool",
     "efAxios",
@@ -20,13 +20,9 @@
   "license": "Apache-2.0",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    "@yunkss/ef_json": "1.0.0",
-    "@yunkss/ef_crypto": "1.0.0",
+    "@yunkss/ef_json": "1.0.1",
+    "@yunkss/ef_core": "1.0.1",
+    "@yunkss/ef_crypto": "1.0.1",
     "@ohos/axios": "2.2.2"
-  },
-  "devDependencies": {
-    "@yunkss/ef_core": "../ef_core",
-    "@yunkss/ef_json": "../ef_json",
-    "@yunkss/ef_crypto": "../ef_crypto"
   }
 }
