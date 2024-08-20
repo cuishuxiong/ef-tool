@@ -64,7 +64,7 @@ ohpm install @yunkss/eftool
 
 > eftool拆分后默认保持全量包
 
-> ef_tool依赖的子模块均无需自行下载,ef_tool会自动下载对应依赖版本
+> eftool依赖的子模块均无需自行下载,eftool会自动下载对应依赖版本
 
 ## 🛠️版本说明【重要】
 
