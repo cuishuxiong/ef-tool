@@ -4,6 +4,7 @@
  * @TODO Login 登录页面
  */
 import {
+  CharUtil,
   efRcp,
   efRcpClientApi,
   efRcpConfig,
@@ -12,7 +13,6 @@ import {
   JSONObject,
   KvUtil,
   Logger,
-  OutDTO,
   ToastUtil
 } from '@yunkss/eftool'
 import { router } from '@kit.ArkUI';
@@ -67,6 +67,9 @@ export struct Login {
   @State lottieStr: string = '';
 
   buildRcpCfg() {
+
+    CharUtil
+
     let resStr = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     this.lottieStr = resStr.decodeWithStream(new Uint8Array(getContext(this)
       .resourceManager
@@ -74,7 +77,7 @@ export struct Login {
       .buffer));
 
     efRcp
-      .setBaseURL("http://aliyunmr.com:18188")
+      .setBaseURL("http://aliyunmr.com:18088")
       .enableLogInterceptor()
       .setLoadingContent('充值有大礼包...')
       .addCommonHeaders({
