@@ -853,7 +853,7 @@ export struct Index {
             })
           }
           .width('100%')
-          .padding({ top: 60 })
+          .padding({ top: 20 })
         }
         .scrollable(ScrollDirection.Vertical)
 

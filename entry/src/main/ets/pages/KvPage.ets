@@ -3,7 +3,7 @@
  * @DateTime 2024/8/6 23:37
  * @TODO KvPage
  */
-import { GlobalContext, KvUtil } from '@yunkss/eftool'
+import { GlobalContext, KvUtil, efRcpConfig } from '@yunkss/eftool'
 
 @Component
 export struct KvPage {
@@ -20,21 +20,21 @@ export struct KvPage {
           .margin({ top: 20 })
           .onClick(async () => {
             let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-            this.msg = await kvUtil.put("csx", true);
+            this.msg = await kvUtil.put(efRcpConfig.token.tokenName, '');
           })
 
         Button("kv获取")
           .margin({ top: 20 })
           .onClick(async () => {
             let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-            this.msg = await kvUtil.get<boolean>("csx", false) + "";
+            this.msg = await kvUtil.get<string>(efRcpConfig.token.tokenName, '');
           })
 
         Button("kv删除")
           .margin({ top: 20 })
           .onClick(async () => {
             let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-            this.msg = await kvUtil.delete("csx");
+            this.msg = await kvUtil.delete(efRcpConfig.token.tokenName);
           })
       }
       .width('100%')

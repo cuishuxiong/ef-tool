@@ -19,7 +19,7 @@ struct Home {
   private toolBar: ToolbarItem[] = [
     {
       value: 'efRcp',
-      icon: $r("app.media.startIcon"),
+      icon: $r("app.media.close"),
       action: () => {
         this.pageName = 'RcpPage';
         this.pageStack.pushPath({ name: this.pageName })
@@ -27,7 +27,7 @@ struct Home {
     },
     {
       value: 'efUI',
-      icon: $r("app.media.startIcon"),
+      icon: $r("app.media.ok"),
       action: () => {
         this.pageName = 'IndexPage';
         this.pageStack.pushPath({ name: this.pageName })
@@ -35,7 +35,7 @@ struct Home {
     },
     {
       value: 'efAxios',
-      icon: $r("app.media.startIcon"),
+      icon: $r("app.media.notice"),
       action: () => {
         this.pageName = 'WelcomePage';
         this.pageStack.pushPath({ name: this.pageName })
@@ -43,7 +43,7 @@ struct Home {
     },
     {
       value: 'efCrypto',
-      icon: $r("app.media.startIcon"),
+      icon: $r("app.media.dian"),
       action: () => {
         this.pageName = 'CryptoPage';
         this.pageStack.pushPath({ name: this.pageName })
@@ -51,7 +51,7 @@ struct Home {
     },
     {
       value: 'other',
-      icon: $r("app.media.startIcon"),
+      icon: $r("app.media.tips"),
       action: () => {
         this.pageName = 'KvPage';
         this.pageStack.pushPath({ name: this.pageName })

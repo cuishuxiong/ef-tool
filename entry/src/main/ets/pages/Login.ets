@@ -24,6 +24,7 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 class User {
   account?: string;
   pwd?: string;
+  token?: string;
 
   constructor(account: string, pwd: string) {
     this.account = account;
@@ -32,12 +33,9 @@ class User {
 }
 
 
-class UserDTO extends User {
-  token: string = '';
-
-  constructor(id: string, name: string) {
-    super(id, name);
-  }
+class UserDTO<T> {
+  success: boolean = false;
+  dataRow?: T;
 }
 
 @Extend(TextInput)
@@ -76,12 +74,9 @@ export struct Login {
       .buffer));
 
     efRcp
-      .setBaseURL("http://aliyunmr.com:18088")
+      .setBaseURL("http://aliyunmr.com:18188")
       .enableLogInterceptor()
       .setLoadingContent('充值有大礼包...')
-      .setTimeOut({
-        transferMs: 200000
-      })
       .addCommonHeaders({
         "platform": "HarmonyOS",
         "version": "V1.0.0"
@@ -212,7 +207,7 @@ export struct Login {
                 });
             }, 100)
             //登录
-            let dto = await efRcpClientApi.post<string>({
+            let dto = await efRcpClientApi.post<UserDTO<User>>({
               url: '/api/eftool/login',
               query: {
                 'account': this.account,
@@ -220,16 +215,9 @@ export struct Login {
               },
               loadingTxt: '正在登录中,稍等...'
             });
-            if (!(dto instanceof EfRcpError) && dto) {
-              // ToastUtil.showToast('登录成功~');
-              //请求成功后将token存储在efRcpParams.tokenValue
-              let map = JSONObject.parse(JSON.stringify(dto));
-              if (map.hasKey('dataRow')) {
-                let dataRow = map.get("dataRow");
-                if (dataRow) {
-                }
-              }
-              efRcpConfig.token.tokenValue = map.hasKey('dataRow')?map.get("dataRow") as string:'';
+            if (!(dto instanceof EfRcpError) && dto.success) {
+              //请求成功后将token存储在efRcpConfig.tokenValue
+              efRcpConfig.token.tokenValue = dto.dataRow?.token as string;
               efRcpConfig.token.tokenName = "Authorization";
               //存入数据库
               let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
@@ -239,7 +227,7 @@ export struct Login {
                 url: 'pages/Home'
               })
             } else {
-              ToastUtil.showToast(dto.toString(), {
+              ToastUtil.showToast(JSONObject.toJSONString(dto), {
                 alignment: Alignment.Center
               });
             }
