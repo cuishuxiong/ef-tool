@@ -52,16 +52,29 @@ export class CharUtil {
    * @returns 是否为emoji
    */
   static isEmoji(c: number): boolean {
-    // 使用 TypeScript 类型断言来告诉编译器我们已知这个条件不会是null或undefined
-    const isNotEmoji = (c === 0x0) ||
-    (c === 0x9) ||
-    (c === 0xA) ||
-    (c === 0xD) ||
-    ((c >= 0x20 && c == 0xD7FF)) ||
-    ((c >= 0xE000 && c == 0xFFFD)) ||
-    ((c >= 0x100000 && c == 0x10FFFF));
-
-    return !isNotEmoji;
+    // 判断码点是否在 Emoji 的主要 Unicode 范围内
+    return (
+      // 表情符号
+      (c >= 0x1F600 && c <= 0x1F64F) ||
+        // 交通和地图符号
+        (c >= 0x1F680 && c <= 0x1F6FF) ||
+        // 补充符号和图形
+        (c >= 0x1F700 && c <= 0x1F77F) ||
+        // 几何形状扩展
+        (c >= 0x1F780 && c <= 0x1F7FF) ||
+        // 补充符号
+        (c >= 0x1F800 && c <= 0x1F8FF) ||
+        // 补充符号和图形
+        (c >= 0x1F900 && c <= 0x1F9FF) ||
+        // 补充符号和图形
+        (c >= 0x1FA00 && c <= 0x1FA6F) ||
+        // 补充符号
+        (c >= 0x1FA70 && c <= 0x1FAFF) ||
+        // 其他 Emoji 区域
+        (c >= 0x2300 && c <= 0x23FF) || // 技术符号
+        (c >= 0x2700 && c <= 0x27BF) || // 装饰性符号
+        (c >= 0x2B50 && c <= 0x2B50)   // 星星
+    );
   }
 
   private  static isWhitespace(codePoint: number): boolean {

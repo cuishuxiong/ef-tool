@@ -71,7 +71,7 @@ export struct Three {
         TabContent() {
           Column() {
             Image(this.pxImg).width(200)
-            Text(MD5.hash('abc123456','hex').getDataRow())
+            Text(MD5.hash('abc123456','hex'))
               .maxLines(1)
               .textOverflow({
                 overflow: TextOverflow.Ellipsis

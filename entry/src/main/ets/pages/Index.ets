@@ -122,67 +122,6 @@ export struct Index {
 
   }
 
-  async sendRequest() {
-    //关键字加密集合
-    // efAxiosParams.keyWordsList = ['account','pwd'];
-    //如果不需要响应数据转换为OutDTO则将efAxiosParams.isConvertDTO设置为false
-    // efAxiosParams.isConvertDTO = false;
-    // const loginNoDTO = await efClientApi.post<UserQuery,UserDTO>('/api/eftool/login', {
-    //   'account': 'efadmin',
-    //   'pwd': '123456'
-    // }, {
-    //   'csxTest': '1212121212'
-    // });
-    // if (loginNoDTO.token) {
-    //   ToastUtil.showToast('登录成功,token为:'+loginNoDTO.token);
-    // }
-
-    //模拟登录
-    const login = await efClientApi.post<UserQuery, OutDTO<UserDTO>>('/api/eftool/login', {
-      'account': 'efadmin',
-      'pwd': '123456'
-    }, {
-      'csxTest': '1212121212'
-    });
-    //登录成功
-    if (login.getSuccess()) {
-      //登录成功将token赋值，后续需要
-      efAxiosParams.tokenValue = login.getDataRow().token;
-      //模拟测试post-formData请求
-      let formData = new FormData();
-      formData.append("account", "1234QQQ");
-      formData.append("nickName", "旺旺崔冰冰");
-      formData.append("pwd", "1111111");
-      const post = await efClientApi.postFormData<OutDTO<Record<string, Object>>>('/api/eftool/postFormData', formData);
-      if (post.getSuccess()) {
-        this.message = JSONObject.toJSONString(post.getDataRow());
-        ToastUtil.showToast(JSONObject.toJSONString(post.getDataRow()));
-      }
-      //模拟测试get请求
-      const get = await efClientApi.get<OutDTO<Record<string, Object>>>('/api/eftool/get/11111111', {
-        'testHeader': 'csxAdd'
-      });
-      if (get.getSuccess()) {
-        ToastUtil.showToast(JSONObject.toJSONString(get.getDataRow()));
-      }
-      //模拟测试delete请求
-      const del = await efClientApi.delete<OutDTO<Record<string, Object>>>('/api/eftool/delete/1212133');
-      if (del.getSuccess()) {
-        ToastUtil.showToast(JSONObject.toJSONString(del.getDataRow()));
-      }
-      //模拟测试put请求
-      const put = await efClientApi.put<UserQuery, OutDTO<Record<string, Object>>>('/api/eftool/put', {
-        'id': '11111'
-      });
-      if (put.getSuccess()) {
-        ToastUtil.showToast(JSONObject.toJSONString(put.getDataRow()));
-      }
-    } else {
-      //登录失败
-      ToastUtil.showToast(login.getMsg());
-    }
-  }
-
   async pushBasic() {
     await NotificationUtil.publishBasic({
       text: '推送通知内容！！！！！！！！！！！！！！！！！！！！',
@@ -301,15 +240,15 @@ export struct Index {
 
     //ECDSA
     // let ecdsa = await ECDSA.generateECDSAKey();
-    // this.message = ecdsa.getDataRow().publicKey;
-    // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
-    // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.getDataRow().privateKey);
-    // this.message = sign.getDataRow();
-    // let verify = await ECDSA.verify(sign.getDataRow(), '这个是ECDSA的验签字符串~~', ecdsa.getDataRow().publicKey);
+    // this.message = ecdsa.publicKey;
+    // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.privateKey);
+    // let sign = await ECDSA.sign('这个是ECDSA的验签字符串~~', ecdsa.privateKey);
+    // this.message = sign;
+    // let verify = await ECDSA.verify(sign, '这个是ECDSA的验签字符串~~', ecdsa.publicKey);
     // this.message = verify.getMsg();
 
     //ecdh-传入256位字符串公私钥
-    // let symKey = await ECDH.ecdh(ecdsa.getDataRow().publicKey, ecdsa.getDataRow().privateKey);
+    // let symKey = await ECDH.ecdh(ecdsa.publicKey, ecdsa.privateKey);
     //ecdh-传入字节流公私钥
     // 创建非对称密钥生成器
     // let rsaGenerator = crypto.createAsyKeyGenerator('ECC256');
@@ -321,11 +260,11 @@ export struct Index {
     //获取到贡献密钥
     // let symKey = await ECDH.ecdh(pubKey, priKey);
     //可以进行对称加密
-    // let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    // this.message = encode.getDataRow();
+    // let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', symKey, 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = encode;
     //对称解密
-    // let decode = await CryptoUtil.decodeECB(encode.getDataRow(), symKey.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    // this.message = decode.getDataRow();
+    // let decode = await CryptoUtil.decodeECB(encode, symKey, 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = decode;
 
     // let rsaGenerator = crypto.createAsyKeyGenerator('X25519');
     // 通过非对称密钥生成器，随机生成非对称密钥
@@ -335,77 +274,77 @@ export struct Index {
     // let priKey = promiseKeyPair.priKey.getEncoded().data;
     //生成x25519公私钥
     // let x25519Key = await CryptoUtil.generateCryptoKey('X25519');
-    // let x25519 = await X25519.x25519(x25519Key.getDataRow().publicKey, x25519Key.getDataRow().privateKey);
+    // let x25519 = await X25519.x25519(x25519Key.publicKey, x25519Key.privateKey);
     // let x25519 = await X25519.x25519(pubKey, priKey);
-    // this.message = x25519.getDataRow();
+    // this.message = x25519;
     //可以进行对称加密
-    // let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    // this.message = encode.getDataRow();
+    // let encode = await CryptoUtil.encodeECB('测试共享密钥加密数据~~~', x25519, 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = encode;
     //对称解密
-    // let decode = await CryptoUtil.decodeECB(encode.getDataRow(), x25519.getDataRow(), 'AES256', 'AES256|ECB|PKCS7');
-    // this.message = decode.getDataRow();
+    // let decode = await CryptoUtil.decodeECB(encode, x25519, 'AES256', 'AES256|ECB|PKCS7');
+    // this.message = decode;
 
     // let sm3 = await SM3.digest('使用SM3进行摘要数据~~~');
-    // this.message = sm3.getDataRow();
+    // this.message = sm3;
 
     // let md5 = await MD5.digest('使用MD5进行摘要~~~');
-    // this.message = md5.getDataRow();
+    // this.message = md5;
 
     //AES
     // let aes = await AES.generateAESKey();
-    // this.message = aes.getDataRow();
-    // let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes.getDataRow());
-    // this.message = encodeGCM.getDataRow();
-    // let decodeGCM = await AES.decodeGCM(encodeGCM.getDataRow(), aes.getDataRow());
-    // this.message = decodeGCM.getDataRow();
-    // let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes.getDataRow(), iv.getDataRow());
-    // this.message = encode.getDataRow();
-    // let decode = await AES.decodeCBC(encode.getDataRow(), aes.getDataRow(), iv.getDataRow());
-    // this.message = decode.getDataRow();
+    // this.message = aes;
+    // let encodeGCM = await AES.encodeGCM('测试加密字符串Test!', aes);
+    // this.message = encodeGCM;
+    // let decodeGCM = await AES.decodeGCM(encodeGCM, aes);
+    // this.message = decodeGCM;
+    // let encode = await AES.encodeCBC('测试CBC加密字符串Test!', aes, iv);
+    // this.message = encode;
+    // let decode = await AES.decodeCBC(encode, aes, iv);
+    // this.message = decode;
 
     //SM4
     // let sm4 = await SM4.generateSM4Key();
-    // this.message = sm4.getDataRow();
-    // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4.getDataRow());
-    // this.message = encodeECB.getDataRow();
-    // let decodeECB = await SM4.decodeECB(encodeECB.getDataRow(), sm4.getDataRow());
-    // this.message = decodeECB.getDataRow();
-    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4.getDataRow(), iv.getDataRow());
-    // this.message = encodeCBC.getDataRow();
-    // let decodeCBC = await SM4.decodeCBC(encodeCBC.getDataRow(), sm4.getDataRow(), iv.getDataRow());
-    // this.message = decodeCBC.getDataRow();
+    // this.message = sm4;
+    // let encodeECB = await SM4.encodeECB('测试SM4加密字符串Test!', sm4);
+    // this.message = encodeECB;
+    // let decodeECB = await SM4.decodeECB(encodeECB, sm4);
+    // this.message = decodeECB;
+    // let encodeCBC = await SM4.encodeCBC('测试SM4的CBC加密字符串Test!', sm4, iv);
+    // this.message = encodeCBC;
+    // let decodeCBC = await SM4.decodeCBC(encodeCBC, sm4, iv);
+    // this.message = decodeCBC;
 
     //3DES
     // let des = await DES.generate3DESKey();
-    // this.message = des.getDataRow();
-    // let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des.getDataRow());
-    // this.message = encodeECB.getDataRow();
-    // let decodeECB = await DES.decodeECB(encodeECB.getDataRow(), des.getDataRow());
-    // this.message = decodeECB.getDataRow();
-    // let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des.getDataRow(), iv.getDataRow());
-    // this.message = encodeCBC.getDataRow();
-    // let decodeCBC = await DES.decodeCBC(encodeCBC.getDataRow(), des.getDataRow(), iv.getDataRow());
-    // this.message = decodeCBC.getDataRow();
+    // this.message = des;
+    // let encodeECB = await DES.encodeECB('测试3DES-ECB加密字符串Test!', des);
+    // this.message = encodeECB;
+    // let decodeECB = await DES.decodeECB(encodeECB, des);
+    // this.message = decodeECB;
+    // let encodeCBC = await DES.encodeCBC('测试3DES-CBC加密字符串Test!', des, iv);
+    // this.message = encodeCBC;
+    // let decodeCBC = await DES.decodeCBC(encodeCBC, des, iv);
+    // this.message = decodeCBC;
 
     //RSA
     // let rsa = await RSA.generate2048RSAKey();
-    // this.message = rsa.getDataRow().publicKey;
-    // let encode = await RSA.encode2048PKCS1Segment('测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX~~', rsa.getDataRow()
+    // this.message = rsa.publicKey;
+    // let encode = await RSA.encode2048PKCS1Segment('测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX测试RSA-2048-PKCS1分段加密字符串CSX~~', rsa
     //   .publicKey);
-    // this.message = encode.getDataRow();
-    // let decode = await RSA.decode2048PKCS1Segment(encode.getDataRow(), rsa.getDataRow().privateKey);
-    // this.message = decode.getDataRow();
-    // let encode = await RSA.encode2048PKCS1('测试RSA-2048-PKCS1加密字符串CSX~~', rsa.getDataRow().publicKey);
-    // this.message = encode.getDataRow();
-    // let decode = await RSA.decode2048PKCS1(encode.getDataRow(), rsa.getDataRow().privateKey);
-    // this.message = decode.getDataRow();
-    // let sign = await RSA.sign2048PKCS1('这个是2048位RSA的验签字符串~~', rsa.getDataRow().privateKey);
-    // this.message = sign.getDataRow();
-    // let verify = await RSA.verify2048PKCS1(sign.getDataRow(), '这个是2048位RSA的验签字符串~~', rsa.getDataRow()
+    // this.message = encode;
+    // let decode = await RSA.decode2048PKCS1Segment(encode, rsa.privateKey);
+    // this.message = decode;
+    // let encode = await RSA.encode2048PKCS1('测试RSA-2048-PKCS1加密字符串CSX~~', rsa.publicKey);
+    // this.message = encode;
+    // let decode = await RSA.decode2048PKCS1(encode, rsa.privateKey);
+    // this.message = decode;
+    // let sign = await RSA.sign2048PKCS1('这个是2048位RSA的验签字符串~~', rsa.privateKey);
+    // this.message = sign;
+    // let verify = await RSA.verify2048PKCS1(sign, '这个是2048位RSA的验签字符串~~', rsa
     //   .publicKey);
     // this.message = verify.getMsg();
     // let rsa = await RSA.generateRSAKey();
-    // this.message = rsa.getDataRow().publicKey;
+    // this.message = rsa.publicKey;
     //2048位pem公钥
     // let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
     //             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1nwHtqSbMNwjHKutrLUI
@@ -417,7 +356,7 @@ export struct Index {
     //             4QIDAQAB
     //             -----END PUBLIC KEY-----`);
     // let encode = await RSA.encode2048PKCS1('测试2048位RSA-PKCS1加密字符串CSX~~', pubKey);
-    // this.message = encode.getDataRow();
+    // this.message = encode;
     //2048位pem私钥
     // let priKey = RSA.pemToStrKey(`-----BEGIN RSA PRIVATE KEY-----
     //             MIIEpAIBAAKCAQEA1nwHtqSbMNwjHKutrLUI+dMBCtoRb/SSY00ujBMsNPFdERxa
@@ -446,11 +385,11 @@ export struct Index {
     //             rVvbu1gSJnmvj0dIObp55wwFBs30xEiMfli+83srOur6nxYUDgn9rqGcufn6hOeH
     //             ++y1uOHhOenfUTy51Gy1Dlv+maJ3LZ0ZnqPnbBdhZ1RtXFnczVKeFg==
     //             -----END RSA PRIVATE KEY-----`)
-    // let decode = await RSA.decode2048PKCS1(encode.getDataRow(), priKey);
-    // this.message = decode.getDataRow();
-    // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.getDataRow().privateKey);
-    // this.message = sign.getDataRow();
-    // let verify = await RSA.verifyPKCS1(sign.getDataRow(), '这个是RSA的验签字符串~~', rsa.getDataRow().publicKey);
+    // let decode = await RSA.decode2048PKCS1(encode, priKey);
+    // this.message = decode;
+    // let sign = await RSA.signPKCS1('这个是RSA的验签字符串~~', rsa.privateKey);
+    // this.message = sign;
+    // let verify = await RSA.verifyPKCS1(sign, '这个是RSA的验签字符串~~', rsa.publicKey);
     // this.message = verify.getMsg();
 
     // let pubKey = RSA.pemToStrKey(`-----BEGIN PUBLIC KEY-----
@@ -470,37 +409,37 @@ export struct Index {
     // let eee = await CryptoUtil.convertPubKeyFromStr(pubKey,'ECC256');
 
     // let ecdas = await ECDSA.generateECDSAKey();
-    // let res = await ECDH.ecdh(pubKey, ecdas.getDataRow().privateKey);
-    // let aesKey = res.getDataRow();
+    // let res = await ECDH.ecdh(pubKey, ecdas.privateKey);
+    // let aesKey = res;
 
     // let encode = await AES.encodeECB('此处为共享密钥加密的数据~~~~~~', aesKey);
-    // this.message = encode.getDataRow();
+    // this.message = encode;
 
-    // let decode = await AES.decodeECB(encode.getDataRow(), aesKey);
-    // this.message = decode.getDataRow();
+    // let decode = await AES.decodeECB(encode, aesKey);
+    // this.message = decode;
 
 
     //SM2
     let sm2 = await SM2.generateSM2Key();
-    this.message = sm2.getDataRow().publicKey;
-    this.message = sm2.getDataRow().privateKey;
-    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.getDataRow().publicKey);
-    this.message = encode.getDataRow();
-    let decode = await SM2.decode(encode.getDataRow(), sm2.getDataRow().privateKey);
-    this.message = decode.getDataRow();
-    // let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.getDataRow().privateKey);
-    // this.message = sign.getDataRow();
-    // let verify = await SM2.verify(sign.getDataRow(), '这个是SM2的验签字符串~~', sm2.getDataRow().publicKey);
+    this.message = sm2.publicKey;
+    this.message = sm2.privateKey;
+    let encode = await SM2.encode('测试SM2加密字符串CSX~~', sm2.publicKey);
+    this.message = encode;
+    let decode = await SM2.decode(encode, sm2.privateKey);
+    this.message = decode;
+    // let sign = await SM2.sign('这个是SM2的验签字符串~~', sm2.privateKey);
+    // this.message = sign;
+    // let verify = await SM2.verify(sign, '这个是SM2的验签字符串~~', sm2.publicKey);
     // this.message = verify.getMsg();
 
     // let hmac1 = await SM3.hmac('这个是SM3的HMAC~~~');
-    // this.message = hmac1.getDataRow();
+    // this.message = hmac1;
 
     // let hmac2 = await SHA.hmac('这个是SHA的HMAC');
-    // this.message = hmac2.getDataRow();
+    // this.message = hmac2;
 
     // let digest = await SHA.digest('这个是SHA的摘要方法~~');
-    // this.message = digest.getDataRow();
+    // this.message = digest;
 
   }
 
@@ -530,17 +469,17 @@ export struct Index {
 
     let s = await SM2.convertSM2PubKey(pk);
 
-    let code = await SM2.encode('加密字符~~~~~', s.getDataRow());
+    let code = await SM2.encode('加密字符~~~~~', s);
 
-    let ddd = code.getDataRow();
+    let ddd = code;
 
     let pik = '7713d336bcbbffb8b7f9cab8db984a5c989a0b07697f569a06d5cd38e1351d07';
 
     let dc = await SM2.convertSM2PriKey(pik);
 
-    let aaaa = await SM2.decode(ddd, dc.getDataRow());
+    let aaaa = await SM2.decode(ddd, dc);
 
-    this.message = aaaa.getDataRow();
+    this.message = aaaa;
 
     let userList = new Array<User>();
     userList.push(new User('2345', '测试用户1'));
@@ -605,7 +544,7 @@ export struct Index {
     // Logger.error(OutDTO.OK('获取提示成功~').getMsg());
     //需要成功提示和单行数据-如更新
     // let dto = OutDTO.OKByDataRow<Person>('获取当数据成功~', p);
-    // Logger.error(dto.getMsg(), dto.getDataRow().name)
+    // Logger.error(dto.getMsg(), dto.name)
     //需要成功提示和对象集合-如查询列表
     // let outDTO = OutDTO.OKByDataTable<Person>('获取对象集合成功~', arrP);
     // Logger.error(outDTO.getMsg(), JSON.stringify(outDTO.getDataTable()));
@@ -614,10 +553,10 @@ export struct Index {
     // Logger.error("结果:" + err.getSuccess(), err.getMsg())
     //需要失败提示和详细单行数据
     // let errDTO = OutDTO.ErrorByDataRow<Person>('获取数据失败~', p);
-    // Logger.error("结果:" + errDTO.getSuccess() + "---" + errDTO.getMsg(), JSON.stringify(errDTO.getDataRow()));
+    // Logger.error("结果:" + errDTO.getSuccess() + "---" + errDTO.getMsg(), JSON.stringify(errDTO));
     //身份证校验
     // Logger.error(IdCardUtil.isValidCard18("120102199001015965").getMsg(), '------------------');
-    // this.message = IdCardUtil.convert15To18("420106640901234").getDataRow();
+    // this.message = IdCardUtil.convert15To18("420106640901234");
     // Logger.error(IdCardUtil.isValidCard15("420106840901234").getMsg(), '0000000000000000')
     // let n = ArrayUtil.append(["1", "2", "3"], ["4"]);
     // n.forEach(item => {
@@ -695,9 +634,6 @@ export struct Index {
             })
             Button("测试JSONUtil").margin({ bottom: '10vp' }).onClick(() => {
               this.test();
-            })
-            Button("发送post请求").margin({ bottom: '10vp' }).onClick(() => {
-              this.sendRequest();
             })
             Button("默认toast").margin({ bottom: '10vp' }).onClick(() => {
               ToastUtil.showToast('duration:2000,bottom:10vp');

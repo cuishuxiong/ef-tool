@@ -267,10 +267,10 @@ export struct Welcome {
   async testIdCard() {
 
     // let hmac2 = await SHA.hmac('这个是SHA的HMAC');
-    // this.msg = hmac2.getDataRow();
+    // this.msg = hmac2;
 
     let res = IdCardUtil.isValidCard18('12022519540815028x');
-    this.msg = res.getMsg();
+    this.msg = res.getDataRow();
   }
 
   async selectAudio() {
@@ -295,9 +295,9 @@ export struct Welcome {
       //关闭文件流
       fs.closeSync(file);
       //上传选择的的照片
-      let upName = await this.testUpload(bufferImg);
+      // let upName = await this.testUpload(bufferImg);
       //下载
-      this.testDownload(upName, name);
+      // this.testDownload(upName, name);
     }
   }
 
@@ -332,9 +332,9 @@ export struct Welcome {
       fs.closeSync(file);
       // WinLoadingUtil.showLoading({ content: '正在上传图片中,请等待...' });
       //上传选择的的照片
-      let upName = await this.testUpload(bufferImg);
+      // let upName = await this.testUpload(bufferImg);
       //下载
-      this.testDownload(upName, name);
+      // this.testDownload(upName, name);
     }
   }
 
@@ -351,9 +351,9 @@ export struct Welcome {
       let bufferImg: ArrayBuffer = new ArrayBuffer(info.size);
       fs.closeSync(file);
       //上传
-      let upName = await this.testUpload(bufferImg);
+      // let upName = await this.testUpload(bufferImg);
       //下载
-      await this.testDownload(upName, name);
+      // await this.testDownload(upName, name);
     }
   }
 
@@ -367,32 +367,19 @@ export struct Welcome {
     let ctx = getContext() as common.UIAbilityContext;
     let imageArray = await ctx.resourceManager.getMediaContent($r('app.media.icon').id);
     let imageResource = imageArray.buffer as ArrayBuffer;
-    await this.testUpload(imageResource);
-  }
-
-  async testUpload(data: ArrayBuffer): Promise<string> {
-    this.showDownBtn = Visibility.Visible;
-    let res = await efClientApi.upload('/api/eftool/upload', false, (progress: number) => {
-      if (progress >= 100) {
-        this.showDownBtn = Visibility.None;
-        // WinLoadingUtil.closeLoading();
-      }
-      this.process = progress;
-    }, data);
-    this.msg = res ? (res as OutDTO<string>).getDataRow() : '';
-    return this.msg;
+    // await this.testUpload(imageResource);
   }
 
   async testDownload(upName: string, downName: string) {
     this.showDownBtn = Visibility.Visible;
-    let res =
-      await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
-        if (progress >= 100) {
-          this.showDownBtn = Visibility.None;
-        }
-        this.process = progress;
-      });
-    ToastUtil.showToast(res ? (res as OutDTO<string>).getMsg() : '下载文件出错了~');
+    // let res =
+    //   await efClientApi.download('/api/eftool/download/' + upName, downName, (progress: number) => {
+    //     if (progress >= 100) {
+    //       this.showDownBtn = Visibility.None;
+    //     }
+    //     this.process = progress;
+    //   });
+    // ToastUtil.showToast(res ? (res as OutDTO<string>) : '下载文件出错了~');
     // let context = getContext(this) as common.UIAbilityContext;
     // //获取沙箱文件
     // let filesDir = context.filesDir + "/" + downName;
@@ -400,8 +387,8 @@ export struct Welcome {
     // let uri = fileUri.getUriFromPath(filesDir);
     // let suffix = uri.substring(uri.lastIndexOf(".") + 1);
     // let r = await PreviewUtil.canPreview(uri);
-    // if (!r.getSuccess()) {
-    //   ToastUtil.showToast(r.getMsg());
+    // if (!r) {
+    //   ToastUtil.showToast(r);
     // }
     // if (suffix === 'txt') {
     //   await PreviewUtil.previewTxt(uri);
@@ -455,9 +442,9 @@ export struct Welcome {
       //关闭文件流
       fs.closeSync(file);
       //上传选择的的照片
-      let upName = await this.testUpload(bufferImg);
+      // let upName = await this.testUpload(bufferImg);
       //下载
-      await this.testDownload(upName, name);
+      // await this.testDownload(upName, name);
     }
   }
 
@@ -465,8 +452,8 @@ export struct Welcome {
 
     let res = await SM4.encodeCBC('csx', 'o243DjGm8000zC05', '4zop22e82I1I9881');
 
-    if (res.getSuccess()) {
-      this.msg = res.getDataRow();
+    if (res) {
+      this.msg = res;
     }
 
     this.msg = StrUtil.replace('<em>珠海众</em>友<em>联</em>创企业管理咨询有限公司', /<em>(.*?)<\/em>/g, '$1')
@@ -474,7 +461,7 @@ export struct Welcome {
 
   async SM2d2i() {
     let result = await SM2.generateSM2Key();
-    let pubKey = result.getDataRow().publicKey;
+    let pubKey = result.publicKey;
 
     let encode = await SM2.encode('测试SM2加密格式转换~~', pubKey);
 
@@ -568,23 +555,23 @@ export struct Welcome {
     //模拟s生成key
     // let key = await SM2.generateSM2Key();
     //加密反会ASN1格式自付出
-    // let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.getDataRow().publicKey);
+    // let encode = await SM2.encode('测试ASN1与C1C3C2互转~~~', key.publicKey);
     //创建转换类
     // let convert = new SM2Convert();
     //转换格式
-    // let result = convert.d2i(encode.getDataRow());
+    // let result = convert.d2i(encode);
 
 
     // let reConvert = convert.i2dSM2(result);
     // this.msg = reConvert;
     let encode = await AES.encodeECB128('123456', '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
-    this.msg = encode.getDataRow();
-    let decode = await AES.decodeECB128(encode.getDataRow(), '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
-    this.msg = decode.getDataRow();
+    this.msg = encode;
+    let decode = await AES.decodeECB128(encode, '4eS1Q15z1@TFTe%eEf23fGFZf)2Rs588');
+    this.msg = decode;
     let encode1 = await AES.encodeCBC128("123456", "TESTsdiloia20230", "ass3[2K8%fw68sw7");
-    this.msg = encode1.getDataRow();
-    let decode1 = await AES.decodeCBC128(encode1.getDataRow(), "TESTsdiloia20230", "ass3[2K8%fw68sw7");
-    this.msg = decode1.getDataRow();
+    this.msg = encode1;
+    let decode1 = await AES.decodeCBC128(encode1, "TESTsdiloia20230", "ass3[2K8%fw68sw7");
+    this.msg = decode1;
     //关闭第一个窗体
     // if (this.alertWinName) {
     //   WinDialogUtil.closeAlert(this.alertWinName);
@@ -602,7 +589,7 @@ export struct Welcome {
     // this.msg = encodeCBC('hello 字符串', 'secret key 123');
 
     // this.msg = nDES.ndkEncodeCBC('hello 字符串', 'secret key 123');
-    // let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key.getDataRow());
+    // let str = DESNdk.ndkEncodeECB('测试NDK的DES加密', key);
     // this.msg = str;
   }
 
@@ -613,10 +600,10 @@ export struct Welcome {
     // let d = Base64Util.decodeSync(b);
 
     let encodeCBCResponse = await AES.encodeCBC128("Aa1234567", "MRZs0XSKKEjvtnsI", "");
-    if (!encodeCBCResponse.getSuccess()) {
-      console.error("CBC加密失败:", encodeCBCResponse.getMsg());
+    if (!encodeCBCResponse) {
+      console.error("CBC加密失败:", encodeCBCResponse);
     }
-    let hexStr = encodeCBCResponse.getDataRow();
+    let hexStr = encodeCBCResponse;
 
     const hexString = hexStr.match(/.{1,2}/g); // 将字符串按每两个字符分割为数组
     let arr = new Array<string>();
@@ -635,37 +622,37 @@ export struct Welcome {
 
   testMD5() {
     let hash = MD5.hash('测试MD5散列算法hex~~~');
-    if (hash.getSuccess()) {
-      this.msg = hash.getDataRow();
+    if (hash) {
+      this.msg = hash;
     }
     let hash64 = MD5.hash('Aa1234', 'base64');
-    if (hash64.getSuccess()) {
-      this.msg = hash64.getDataRow();
+    if (hash64) {
+      this.msg = hash64;
     }
 
     let key = RandomUtil.generateIV();
 
     let hmac = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法hex~~~~~');
-    if (hmac.getSuccess()) {
-      this.msg = hmac.getDataRow();
+    if (hmac) {
+      this.msg = hmac;
     }
     let hmac64 = MD5.hmac(key.getDataRow(), '测试MD5-hmac算法base64~~~~~', 'base64');
-    if (hmac64.getSuccess()) {
-      this.msg = hmac64.getDataRow();
+    if (hmac64) {
+      this.msg = hmac64;
     }
   }
 
   testSHA1() {
     let sha1 = SHA1.hash('测试SHA1散列算法~~~~~~~');
-    if (sha1.getSuccess()) {
-      this.msg = sha1.getDataRow();
+    if (sha1) {
+      this.msg = sha1;
     }
   }
 
   async save2photo() {
     let array = getContext().resourceManager.getMediaContentSync($r("app.media.icon").id);
     let res = await ImageUtil.pickerSave(buffer.from(array).buffer);
-    this.msg = res.getMsg();
+    this.msg = res.getDataRow();
   }
 
   async resFileCanPreview() {
@@ -709,9 +696,9 @@ export struct Welcome {
 
   async sm416() {
     // let key =  await SM4.generateSM4Key();
-    // this.msg = key.getDataRow();
+    // this.msg = key;
     let res = await SM4.encodeCBC('121212121', 'o243DjGm8000zC05', '4zop22e82I1I9881');
-    this.msg = res.getDataRow();
+    this.msg = res;
   }
 
   async recording() {
@@ -768,8 +755,8 @@ export struct Welcome {
                 try {
                   let array = getContext().resourceManager.getMediaContentSync($r("app.media.icon").id);
                   let result = await ImageUtil.pickerSaveGallery(buffer.from(array).buffer);
-                  if (result.getSuccess()) {
-                    ToastUtil.showToast(result.getMsg());
+                  if (result) {
+                    ToastUtil.showToast(result.getDataRow());
                   }
                 } catch (error) {
                   console.error("error is " + JSON.stringify(error));

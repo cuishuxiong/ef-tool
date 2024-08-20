@@ -1,7 +1,7 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { efRcpParams, Logger, NotificationUtil, ImmersionUtil, KvUtil, GlobalContext } from '@yunkss/eftool'
+import { Logger, NotificationUtil, ImmersionUtil, KvUtil, GlobalContext } from '@yunkss/eftool'
 
 
 export default class EntryAbility extends UIAbility {
@@ -21,8 +21,8 @@ export default class EntryAbility extends UIAbility {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
     //关于rcp的配置
-    efRcpParams.baseURL = "http://aliyunmr.com:18088";
-    efRcpParams.loadingTxt = '小的快马加鞭中...';
+    // efRcpParams.baseURL = "http://aliyunmr.com:18088";
+    // efRcpParams.loadingTxt = '小的快马加鞭中...';
     // efRcpSecurityParam.certContent = '111111111';
     // efRcpParams.isLogger = false;
     // efRcpParams.isLoading = false;

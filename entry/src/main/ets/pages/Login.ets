@@ -3,17 +3,30 @@
  * @DateTime 2024/8/7 16:24:19
  * @TODO Login 登录页面
  */
-import { efRcpClientApi, efRcpParams, GlobalContext, KvUtil, OutDTO, ToastUtil } from '@yunkss/eftool'
+import {
+  efRcp,
+  efRcpClientApi,
+  efRcpConfig,
+  EfRcpError,
+  GlobalContext,
+  KvUtil,
+  Logger,
+  OutDTO,
+  ToastUtil
+} from '@yunkss/eftool'
 import { router } from '@kit.ArkUI';
+import { util } from '@kit.ArkTS';
+import lottie from '@ohos/lottie';
+import { rcp } from '@kit.RemoteCommunicationKit';
 
 
 class User {
-  id?: string;
-  name?: string;
+  account?: string;
+  pwd?: string;
 
-  constructor(id: string, name: string) {
-    this.name = name;
-    this.id = id;
+  constructor(account: string, pwd: string) {
+    this.account = account;
+    this.pwd = pwd;
   }
 }
 
@@ -52,8 +65,64 @@ export struct Login {
    * 密码
    */
   @State pwd: string = "123456";
+  @State lottieStr: string = '';
+
+  buildRcpCfg() {
+    let resStr = util.TextDecoder.create('utf-8', { ignoreBOM: true });
+    this.lottieStr = resStr.decodeWithStream(new Uint8Array(getContext(this)
+      .resourceManager
+      .getRawFileContentSync('csx.json')
+      .buffer));
+
+    efRcp
+      .setBaseURL("http://aliyunmr.com:18088")
+      .enableLogInterceptor()
+      .setLoadingContent('充值有大礼包...')
+      .setTimeOut({
+        transferMs: 200000
+      })
+      .addCommonHeaders({
+        "platform": "HarmonyOS",
+        "version": "V1.0.0"
+      })// .setLoadingImg(wrapBuilder(loadingImg))
+      .enableLottie()
+      .addCodeEvent({
+        listener: (code: number) => {
+          Logger.debug("----code监听事件-----", code + "")
+        }
+      })
+      .addCryptoEvent({
+        requestEncoder: (request: rcp.RequestContext): rcp.RequestContext => {
+          if (request.request.content) {
+            Logger.debug('-----------------加密操作--------------', request.request.content as string)
+          }
+          return request;
+        },
+        responseDecoder: (response: rcp.Response): rcp.Response => {
+          if (response) {
+            Logger.debug('-----------------解密操作--------------', JSON.stringify(response.toJSON()))
+          }
+          return response;
+        }
+      })
+      .setUploadEvent({
+        onUploadProgress: (progress) => {
+          Logger.debug("---------测试上传进度----------", progress + "%")
+        }
+      })
+      .setDownLoadEvent({
+        onDownloadProgress: (progress) => {
+          Logger.debug("---------测试下载进度----------", progress + "%")
+        }
+      })
+      .create()
+      .builder();
+  }
 
   aboutToAppear(): void {
+
+    this.buildRcpCfg();
+
     //获取token值如果取到了说明登录过直接跳转
     let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
     kvUtil.get("Authorization", '').then(token => {
@@ -91,22 +160,22 @@ export struct Login {
         })
 
       TextInput({
-        text: this.account,
+        text: $$this.account,
         placeholder: '请输入账号'
       })
         .iptStyle()
-        .onChange((value: string) => {
-          this.account = value;
-        })
+      // .onChange((value: string) => {
+      //   this.account = value;
+      // })
       TextInput({
-        text: this.pwd,
+        text: $$this.pwd,
         placeholder: '请输入密码'
       })
         .iptStyle()
         .type(InputType.Password)
-        .onChange((value: string) => {
-          this.pwd = value;
-        })
+      // .onChange((value: string) => {
+      //   this.pwd = value;
+      // })
       Row() {
         Button('登录', {
           type: ButtonType.Normal
@@ -125,25 +194,45 @@ export struct Login {
                 alignment: Alignment.Top
               });
             }
+            setTimeout(() => {
+              efRcp
+                .setLottieAnimation((ctx: CanvasRenderingContext2D) => {
+                  lottie.destroy('2016');
+                  lottie.loadAnimation({
+                    container: ctx, // 渲染上下文
+                    renderer: 'canvas', // 渲染方式
+                    loop: true, // 是否循环播放,默认true
+                    autoplay: true, // 是否自动播放，默认true
+                    name: '2016', // 动画名称
+                    contentMode: 'Contain', // 填充的模式
+                    frameRate: 20, //设置animator的刷帧率为20
+                    animationData: JSON.parse(this.lottieStr)
+                  })
+                });
+            }, 100)
             //登录
-            let dto = await efRcpClientApi.post <OutDTO<UserDTO>>('/api/eftool/login', {
-              'account': this.account,
-              'pwd': this.pwd
-            }, {}, {}, '正在登录中,稍等...');
-            if (!(dto instanceof Error) && dto.getSuccess()) {
+            let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
+              url: '/api/eftool/login',
+              query: {
+                'account': this.account,
+                'pwd': this.pwd
+              },
+              loadingTxt: '正在登录中,稍等...'
+            });
+            if (!(dto instanceof EfRcpError) && dto.getSuccess()) {
               // ToastUtil.showToast('登录成功~');
               //请求成功后将token存储在efRcpParams.tokenValue
-              efRcpParams.tokenValue = dto.getDataRow().token;
-              efRcpParams.tokenName = "Authorization";
+              efRcpConfig.token.tokenValue = dto.getDataRow().token;
+              efRcpConfig.token.tokenName = "Authorization";
               //存入数据库
               let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
-              await kvUtil.put("Authorization", efRcpParams.tokenValue);
+              await kvUtil.put(efRcpConfig.token.tokenName, efRcpConfig.token.tokenValue);
               //跳转
               router.pushUrl({
                 url: 'pages/Home'
               })
             } else {
-              ToastUtil.showToast(dto.getMsg(), {
+              ToastUtil.showToast(dto.toString(), {
                 alignment: Alignment.Center
               });
             }
