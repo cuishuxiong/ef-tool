@@ -24,12 +24,12 @@
   "version": "2.0.0",
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
-    "@yunkss/ef_axios": "file:/Users/csx/Study/HarmonyOS/workspace/ef-tool/ef_axios/build/default/outputs/default/ef_axios.har",
+    "@yunkss/ef_axios": "1.0.2",
     "@yunkss/ef_crypto": "1.0.1",
     "@yunkss/ef_json": "1.0.1",
     "@yunkss/ef_core": "1.0.1",
-    "@yunkss/ef_ui": "file:/Users/csx/Study/HarmonyOS/workspace/ef-tool/ef_ui/build/default/outputs/default/ef_ui.har",
-    "@yunkss/ef_rcp": "file:/Users/csx/Study/HarmonyOS/workspace/ef-tool/ef_rcp/build/default/outputs/default/ef_rcp.har"
+    "@yunkss/ef_ui": "1.0.0",
+    "@yunkss/ef_rcp": "1.0.0"
   },
   "dynamicDependencies": {}
 }

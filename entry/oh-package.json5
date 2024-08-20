@@ -8,7 +8,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@yunkss/eftool": "file:../eftool",
     "@ohos/axios": "2.2.2"
   },
   "dynamicDependencies": {}

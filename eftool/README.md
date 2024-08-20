@@ -72,19 +72,19 @@ ohpm install @yunkss/eftool
 
 ### @yunkss/ef_json eftool的JSON相关包[地址](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_json)
 
-### @yunkss/ef_crypto eftool的加密封装包(解耦了OutDTO)[地址]()
+### @yunkss/ef_crypto eftool的加密封装包(解耦了OutDTO)[地址](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto)
 
-### @yunkss/ef_crypto_dto eftool的加密封装包(与1.2.x版本保持一致,返回结果为OutDTO)[地址]()
+### @yunkss/ef_crypto_dto eftool的加密封装包(与1.2.x版本保持一致,返回结果为OutDTO)[地址](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto_dto)
 
-### @yunkss/ef_axios eftool的efAxios网络请求封装包[地址]()
+### @yunkss/ef_axios eftool的efAxios网络请求封装包[地址](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios)
 
-### @yunkss/ef_rcp eftool的rcp网络请求封装包[地址]()
+### @yunkss/ef_rcp eftool的rcp网络请求封装包[地址](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp)
 
 ### @yunkss/ef_device eftool的设备相关工具包[地址]()
 
 ### @yunkss/ef_media eftool的媒体相关工具包[地址]()
 
-### @yunkss/ef_ui eftool的UI组件封装包[地址]()
+### @yunkss/ef_ui eftool的UI组件封装包[地址](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui)
 
 ## 特别鸣谢
 
