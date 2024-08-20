@@ -9,13 +9,14 @@ import {
   efRcpConfig,
   EfRcpError,
   GlobalContext,
+  JSONObject,
   KvUtil,
   Logger,
   OutDTO,
   ToastUtil
 } from '@yunkss/eftool'
 import { router } from '@kit.ArkUI';
-import { util } from '@kit.ArkTS';
+import { JSON, util } from '@kit.ArkTS';
 import lottie from '@ohos/lottie';
 import { rcp } from '@kit.RemoteCommunicationKit';
 
@@ -211,7 +212,7 @@ export struct Login {
                 });
             }, 100)
             //登录
-            let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
+            let dto = await efRcpClientApi.post<string>({
               url: '/api/eftool/login',
               query: {
                 'account': this.account,
@@ -219,10 +220,16 @@ export struct Login {
               },
               loadingTxt: '正在登录中,稍等...'
             });
-            if (!(dto instanceof EfRcpError) && dto.getSuccess()) {
+            if (!(dto instanceof EfRcpError) && dto) {
               // ToastUtil.showToast('登录成功~');
               //请求成功后将token存储在efRcpParams.tokenValue
-              efRcpConfig.token.tokenValue = dto.getDataRow().token;
+              let map = JSONObject.parse(JSON.stringify(dto));
+              if (map.hasKey('dataRow')) {
+                let dataRow = map.get("dataRow");
+                if (dataRow) {
+                }
+              }
+              efRcpConfig.token.tokenValue = map.hasKey('dataRow')?map.get("dataRow") as string:'';
               efRcpConfig.token.tokenName = "Authorization";
               //存入数据库
               let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
