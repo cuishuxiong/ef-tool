@@ -21,7 +21,7 @@ import { JSON } from '@kit.ArkTS';
 import fs from '@ohos.file.fs';
 import { RcpLoadingUtil } from '../ui/RcpLoadingUtil';
 import { RcpImgLayout, RcpLoadingShape } from '../ui/rcpLoading';
-import { CacheUtil } from '@yunkss/ef_core';
+import { CacheUtil, StringBuilder } from '@yunkss/ef_core';
 import { common } from '@kit.AbilityKit';
 import { fileUri } from '@kit.CoreFileKit';
 import { BusinessError } from '@kit.BasicServicesKit';
@@ -188,6 +188,29 @@ export class EfRcpClientApi {
   }
 
   /**
+   * 将json对象转换为字符串
+   * @param query
+   * @returns
+   */
+  private static buildParams(query: Record<string, Object>): string {
+    // 最后结果
+    let params = new StringBuilder();
+    // 拼接问号
+    params.append("?");
+    // 获取参数数组
+    const entries = Object.entries(query);
+    // 循环参数
+    entries.forEach((row, index) => {
+      params.append(row[0] + '=' + row[1]);
+      // 如果不是最后一个参数，拼接 &
+      if (index < entries.length - 1) {
+        params.append('&');
+      }
+    });
+    return params.toString();
+  }
+
+  /**
    * post请求 - json格式
    * @param postParam post请求入参,详见efRcpConfig.requestBaseParams
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
@@ -195,13 +218,20 @@ export class EfRcpClientApi {
    */
   async post<E>(postParam: efRcpConfig.requestBaseParams,
     securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
-    try { //转换请求参数
-      let jsonStr = JSON.stringify(postParam.query);
+    try {
+      //说明是params方式需要拼接到url
+      if (postParam.isParams && postParam.isParams === true) {
+        postParam.url += EfRcpClientApi.buildParams(postParam.query);
+      }
       //构建request
       let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
         postParam.loadingTxt);
-      //传入请求参数
-      request.content = jsonStr;
+      if (!postParam.isParams) {
+        //转换请求参数
+        let jsonStr = JSON.stringify(postParam.query);
+        //传入请求参数
+        request.content = jsonStr;
+      }
       //构建响应
       return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
     } catch (e) {
