@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@yunkss/eftool": "file:../eftool/build/default/outputs/default/eftool.har",
+    "@yunkss/eftool": "2.0.0",
     "@ohos/lottie": "^2.0.11"
   },
   "devDependencies": {
