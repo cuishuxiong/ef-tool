@@ -1,9 +1,9 @@
 {
   "license": "Apache-2.0",
-  "devDependencies": {
-    "@yunkss/ef_device": "../ef_device",
-    "@yunkss/ef_media": "../ef_media"
-  },
+//  "devDependencies": {
+//    "@yunkss/ef_device": "../ef_device",
+//    "@yunkss/ef_media": "../ef_media"
+//  },
   "keywords": [
     "axios",
     "JSON",
@@ -27,7 +27,7 @@
     "@yunkss/ef_axios": "1.0.2",
     "@yunkss/ef_crypto": "1.0.1",
     "@yunkss/ef_json": "1.0.1",
-    "@yunkss/ef_core": "1.0.1",
+    "@yunkss/ef_core": "1.0.2",
     "@yunkss/ef_ui": "1.0.0",
     "@yunkss/ef_rcp": "1.0.0"
   },
