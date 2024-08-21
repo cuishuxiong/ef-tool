@@ -222,7 +222,7 @@ export namespace efRcpConfig {
     /**
      * 请求参数 post/put
      */
-    query: Record<string, Object> | rcp.FormFields = {};
+    query?: Record<string, Object> | rcp.FormFields;
   }
 
   /**
