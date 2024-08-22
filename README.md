@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V2.0.0(API12)</center>
+# <center>V2.0.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ eftool = Efficient + Tool，Efficient是高效的表示，Tool表示工具。
 ohpm install @yunkss/eftool
 ```
 
-# 升级说明
+## 升级说明
 
 > 2.0.0版本升级改动较大,升级需要保持充足时间
 
@@ -77,6 +77,19 @@ ohpm install @yunkss/eftool
 > - <span style='color:red;'>1.0.x版本系列兼容**API9**</span>
 
 ## 🛠️包含组件
+
+### 暂未拆分组件
+
+| 模块             | 介绍            |
+|----------------|---------------|
+| FileUtil       | 提供对文件的一系列操作方法 |
+| ImageUtil      | 提供对图片的一系列处理方法 |
+| ImgPreviewUtil | 图片预览工具类       |
+| PreUtil        | 首选项工具类        |
+| KvUtil         | 数据库工具类        |
+| NetUtil        | 提供对网络的方法操作工具类 |
+
+### 已拆分组件
 
 一个HarmonyOS基础工具类，组成各种工具类，同时提供以下七部分组件：
 
