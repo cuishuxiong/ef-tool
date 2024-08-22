@@ -21,15 +21,15 @@ import { BusinessError } from '@kit.BasicServicesKit';
 /**
  * @Author csx
  * @DateTime 2024/8/15 19:07
- * @TODO RfCryptoInterceptor  内置针对于请求code拦截器
+ * @TODO RfCryptoInterceptor  内置针对于系统框架级别的请求code拦截器
  */
-export class EfCodeInterceptor implements rcp.Interceptor {
+export class EfSysCodeInterceptor implements rcp.Interceptor {
   /**
    * 编码监听
    */
-  private codeEventListener: efRcpConfig.codeEvent;
+  private codeEventListener: efRcpConfig.sysCodeEvent;
 
-  constructor(codeEventListener: efRcpConfig.codeEvent) {
+  constructor(codeEventListener: efRcpConfig.sysCodeEvent) {
     this.codeEventListener = codeEventListener;
   }
 
@@ -45,7 +45,8 @@ export class EfCodeInterceptor implements rcp.Interceptor {
       const response = await next.handle(context);
       //无监听则抛出异常
       if (!this.codeEventListener) {
-        let efRcpError = new EfRcpError(10010, '响应码监听异常', '启用编码监听请设置efRcpConfig.codeEvent属性~');
+        let efRcpError =
+          new EfRcpError(10010, '系统级响应码监听异常', '启用系统级响应码监听请设置efRcpConfig.sysCodeEvent属性~');
         return Promise.reject(efRcpError);
       } else {
         //设置监听
@@ -57,7 +58,7 @@ export class EfCodeInterceptor implements rcp.Interceptor {
       //无监听则抛出异常
       if (!this.codeEventListener) {
         let efRcpError: EfRcpError =
-          new EfRcpError(10010, '响应码监听异常', '启用编码监听请设置efRcpConfig.codeEvent属性~');
+          new EfRcpError(10010, '系统级响应码监听异常', '启用系统级响应码监听请设置efRcpConfig.sysCodeEvent属性~');
         return Promise.reject(efRcpError);
       } else {
         this.codeEventListener.listener(b.code);

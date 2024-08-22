@@ -30,7 +30,7 @@ export interface EfRcpResponse<E> {
   data?: E;
 
   /**
-   * 请求失败返回的错误信息
+   * 请求失败返回的系统框架级错误信息 - 如连接超时,400，401，403，500等
    */
   error?: EfRcpError;
 }

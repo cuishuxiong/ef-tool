@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.0.1] 2024-08
+
+### 🐞功能优化
+
+* 优化首选项setValue入参类型[issuesIALSX5](https://gitee.com/yunkss/ef-tool/issues/IALSX5)
+* 优化FileUtil,新增删除某个路径下的文件[issuesIALR7D](https://gitee.com/yunkss/ef-tool/issues/IALR7D)
+* 升级ef_rcp为1.0.1版本
+
 ## [v2.0.0] 2024-08
 
 ### 🐣新特性(API12)
@@ -43,7 +51,10 @@
 
 ### 🐞功能优化
 
-* JSONObject,JSONArray,JSONArrayList中parse,parseXXX方法如字符串中有\r\n报错问题[issuesIAESIG](https://gitee.com/yunkss/ef-tool/issues/IAESIG)
+*
+
+JSONObject,JSONArray,JSONArrayList中parse,parseXXX方法如字符串中有\r\n报错问题[issuesIAESIG](https://gitee.com/yunkss/ef-tool/issues/IAESIG)
+
 * 优化RandomUtil.generateIV支持生成utf8格式的字符串iv
 * 优化efAxios请求全局loading开关,以及可设置loading提示内容
 * efClientApi中新增postFormData方法[issuesIACLR2](https://gitee.com/yunkss/ef-tool/issues/IACLR2)

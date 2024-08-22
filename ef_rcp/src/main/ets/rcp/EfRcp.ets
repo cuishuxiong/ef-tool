@@ -18,7 +18,8 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 import { RcpLogInterceptor } from './RcpLogInterceptor';
 import { EfRcpError } from './EfRcpError';
 import { efRcpConfig } from './efRcpConfig'
-import { EfCodeInterceptor } from './EfCodeInterceptor';
+import { EfSysCodeInterceptor } from './EfSysCodeInterceptor';
+import { EfBusinessCodeInterceptor } from './EfBusinessCodeInterceptor';
 import { EfCryptoInterceptor } from './EfCryptoInterceptor';
 
 /**
@@ -198,15 +199,29 @@ class EfRcp {
   }
 
   /**
-   * 添加统一的编码拦截操作
-   * @param codeEvent  编码操作事件  efRcpConfig.codeEvent
+   * 添加统一的系统框架级别编码拦截操作
+   * @param codeEvent  系统级别编码操作事件  efRcpConfig.sysCodeEvent
    * @returns
    */
-  addCodeEvent(codeEvent: efRcpConfig.codeEvent): EfRcp {
+  addSysCodeEvent(codeEvent: efRcpConfig.sysCodeEvent): EfRcp {
     if (this.cfg.interceptors) {
-      this.cfg.interceptors.push(new EfCodeInterceptor(codeEvent));
+      this.cfg.interceptors.push(new EfSysCodeInterceptor(codeEvent));
     } else {
-      this.cfg.interceptors = [new EfCodeInterceptor(codeEvent)];
+      this.cfg.interceptors = [new EfSysCodeInterceptor(codeEvent)];
+    }
+    return this;
+  }
+
+  /**
+   * 添加统一的业务级别编码拦截操作
+   * @param businessCodeEvent 业务级别编码操作事件 efRcpConfig.businessCodeEvent
+   * @returns
+   */
+  addBusinessCodeEvent(businessCodeEvent: efRcpConfig.businessCodeEvent): EfRcp {
+    if (this.cfg.interceptors) {
+      this.cfg.interceptors.push(new EfBusinessCodeInterceptor(businessCodeEvent));
+    } else {
+      this.cfg.interceptors = [new EfBusinessCodeInterceptor(businessCodeEvent)];
     }
     return this;
   }

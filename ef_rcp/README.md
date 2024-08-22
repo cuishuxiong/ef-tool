@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.0(API12)</center>
+# <center>V1.0.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -16,12 +16,13 @@
 
 ## 🛠️包含组件
 
-| 模块             | 介绍                                 |
-|----------------|------------------------------------|
-| efRcp          | 提供针对efRcp的一系列请求相关功能的配置工具类          |
-| efRcpConfig    | efRcp所有的相关配置命名空间                   |
-| EfRcpError     | efRcp的统一异常处理对象,内置toString方法        |
-| efRcpClientApi | 提供针对于统一post,get,delete,put等请求的灵活封装 |
+| 模块             | 介绍                                   |
+|----------------|--------------------------------------|
+| efRcp          | 提供针对efRcp的一系列请求相关功能的配置工具类            |
+| efRcpConfig    | efRcp所有的相关配置命名空间                     |
+| efRcpClientApi | 提供针对于统一post,get,delete,put等请求的灵活封装   |
+| EfRcpError     | efRcp的统一异常处理对象,内置toString方法          |
+| EfRcpResponse  | efRcp的统一响应对象,成功请求的数据为data异常的结果为error |
 
 ## 📦安装
 
@@ -75,13 +76,27 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     transferMs?: number;
 ```
 
-* codeEvent 请求响应码对象
+* sysCodeEvent 系统级别的请求响应码对象(1.0.1有改动)
 
 ```
     /**
      * 请求响应码监听-业务自行处理数据
      */
     listener: (code: number) => void = () => {};
+```
+
+* businessCodeEvent 业务级别的请求响应码对象(1.0.1+)
+
+```
+    /**
+     * 业务级别自定义错误编码/异常code字段名称
+     */
+    businessCodeName: string = '';
+    /**
+     * 请求响应码监听-业务自行处理数据
+     */
+    listener: (code: Object | null) => void = () => {
+    };
 ```
 
 * cryptoEvent 请求拦截加解密操作
@@ -270,7 +285,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
   > 注意调用完setConfig后必须调用create方法重新创建session对象,否则配置不生效
 
-* addCodeEvent 添加统一的编码拦截操作
+* addSysCodeEvent 添加统一的系统框架级别编码拦截操作
+
+* addBusinessCodeEvent 添加统一的业务级别编码拦截操作
 
 * addCryptoEvent 添加自定义加解密拦截
 
@@ -304,66 +321,66 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async post<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async post<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * postForm请求 async/await 方式
 
 ```
     //参数说明   参数为form格式
-    async postForm<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async postForm<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * get请求 async/await 方式
 
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
-    async get<E>(getParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async get<E>(getParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //getParam get请求所需参数,详见efRcpConfig.commonParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * put请求 async/await 方式
 
 ```
     //参数说明
-    async put<E>(putParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async put<E>(putParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //putParam put请求所需参数,详见efRcpConfig.requestBaseParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * delete请求 async/await 方式
 
 ```
     //参数说明
-    async delete<E>(deleteParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async delete<E>(deleteParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //deleteParam delete请求所需参数,详见efRcpConfig.requestBaseParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * patch请求 async/await 方式
 
 ```
     //参数说明
-    async patch<E>(patchParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async patch<E>(patchParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //patchParam patch请求所需参数,详见efRcpConfig.requestBaseParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * cancel请求 async/await 方式
@@ -378,33 +395,33 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError>
+    async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //uploadParam 上传文件所需参数,详见efRcpConfig.uploadParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * downloadFile 统一的下载请求 async/await 方式
 
 ```
     //参数说明
-    async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError>
+    async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>>
     //downloadParam 下载文件所需参数,详见efRcpConfig.downloadParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * downloadStream 统一的下载请求 async/await 方式
 
 ```
     //参数说明
-    async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError>
+    async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>>
     //downloadParam 下载文件所需参数,详见efRcpConfig.downloadParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
-    //E 为响应结果对象
-    //EfRcpError 为统一异常对象
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
+
 ```
 
 * 初始化参数配置示例
@@ -432,10 +449,17 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       // .setLoadingImg(wrapBuilder(loadingImg))
       //启动lottie  与setLoadingImg互斥不可同事使用
       .enableLottie()
-      //添加统一编码处理逻辑,如跳转登录等
-      .addCodeEvent({
+      //添加统一系统框架级别编码处理逻辑,如超时等
+      .addSysCodeEvent({
         listener: (code: number) => {
-          Logger.debug("----code监听事件-----", code + "")
+          Logger.debug("---------addSysCodeEvent监听事件-----", code + "")
+        }
+      })
+      //添加业务级别的编码处理逻辑,一定要传入businessCodeName,即返回数据中编码对应的key
+      .addBusinessCodeEvent({
+        businessCodeName: 'csxErrorCode',
+        listener: (codeValue) => {
+          Logger.debug('---------addBusinessCodeEvent监听-----------', codeValue as string)
         }
       })
       //添加加解密逻辑

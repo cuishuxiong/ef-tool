@@ -16,6 +16,7 @@
 
 import dataPreferences from '@ohos.data.preferences';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { preferences } from '@kit.ArkData';
 
 /**
  * @Author 幻凡ss
@@ -58,7 +59,6 @@ export class PrefUtil {
    * @param T  返回类型
    */
   static getValueT<T>(key: string, def: T): T {
-    console.info('PrefUtil getValueT {' + key + '} start')
     const defStore = PrefUtil.getStore()
     const res = defStore?.getSync(key, '')
     if (!res) {
@@ -74,7 +74,6 @@ export class PrefUtil {
    * @returns value
    */
   static getValueStr(key: string): string {
-    console.info('PrefUtil getValueStr {' + key + '} start')
     const defStore = PrefUtil.getStore()
     return defStore?.getSync(key, '') as string
   }
@@ -84,7 +83,7 @@ export class PrefUtil {
    * @param key
    * @param value
    */
-  static setValue(key: string, value: string): void {
+  static setValue(key: string, value: preferences.ValueType): void {
     console.info('PrefUtil setValue {' + key + '} start')
     const defStore = PrefUtil.getStore()
     defStore?.putSync(key, value)

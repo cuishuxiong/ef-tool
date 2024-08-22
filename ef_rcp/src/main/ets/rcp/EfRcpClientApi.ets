@@ -248,8 +248,11 @@ export class EfRcpClientApi {
    */
   async postForm<E>(postParam: efRcpConfig.requestBaseParams,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
-    try { //转换请求参数
-      let form = new rcp.Form(postParam.query as rcp.FormFields);
+    try {
+      //说明是params方式需要拼接到url
+      if (postParam.isParams && postParam.isParams === true) {
+        postParam.url += EfRcpClientApi.buildParams(postParam.query);
+      }
       //更改请求方式
       if (postParam.headers && !postParam.headers['content-type']) {
         postParam.headers['content-type'] = "application/x-www-form-urlencoded";
@@ -261,12 +264,11 @@ export class EfRcpClientApi {
       //构建request
       let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
         postParam.loadingTxt);
-      //设置请求内容
-      request.content = form;
-      //判断是否需要传入证书
-      let isSecurity = false;
-      if (securityCfg) {
-        isSecurity = true;
+      if (!postParam.isParams) {
+        //转换请求参数
+        let form = new rcp.Form(postParam.query as rcp.FormFields);
+        //设置请求内容
+        request.content = form;
       }
       //构建响应
       return await EfRcpClientApi.buildResponse<E>(request, securityCfg);

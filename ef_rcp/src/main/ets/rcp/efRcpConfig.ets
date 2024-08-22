@@ -39,13 +39,28 @@ export namespace efRcpConfig {
   }
 
   /**
-   * 请求响应码对象
+   * 系统框架级别请求响应码对象
    */
-  export class codeEvent {
+  export class sysCodeEvent {
     /**
      * 请求响应码监听-业务自行处理数据
      */
     listener: (code: number) => void = () => {
+    };
+  }
+
+  /**
+   * 业务自定义级别请求响应码对象
+   */
+  export class businessCodeEvent {
+    /**
+     * 业务级别自定义错误编码/异常code字段名称
+     */
+    businessCodeName: string = '';
+    /**
+     * 请求响应码监听-业务自行处理数据
+     */
+    listener: (code: Object | null) => void = () => {
     };
   }
 

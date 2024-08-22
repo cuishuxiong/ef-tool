@@ -268,4 +268,25 @@ export class FileUtil {
     //返回
     return bufferImg;
   }
+
+  /**
+   * 删除路径下的文件
+   * @param path  要删除的路径
+   * @param fileName  要删除的文件 为空则删除path目录  直接写文件名即可无需左斜杠
+   * @returns true删除成功，false删除失败
+   */
+  static deleteFile(path: string, fileName?: string): boolean {
+    try {
+      if (fileName) {
+        //删除文件
+        fs.unlinkSync(path + '/' + fileName);
+        return true;
+      }
+      //删除整个目录
+      fs.rmdirSync(path);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
