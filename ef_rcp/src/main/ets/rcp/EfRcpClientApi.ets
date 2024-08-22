@@ -26,6 +26,7 @@ import { common } from '@kit.AbilityKit';
 import { fileUri } from '@kit.CoreFileKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { EfRcpError } from './EfRcpError';
+import { EfRcpResponse } from './EfRcpResponse';
 
 /**
  * @Author csx
@@ -142,7 +143,7 @@ export class EfRcpClientApi {
    * @returns
    */
   private static async buildResponse<E>(request: rcp.Request,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try {
       //是否针对当前请求开启证书加密
       if (securityCfg) {
@@ -165,25 +166,25 @@ export class EfRcpClientApi {
         await RcpLoadingUtil.closeLoading();
       }
       //返回response的数据
-      return response.toJSON() as E;
-    } catch (error) {
+      return { data: response.toJSON() as E };
+    } catch (e) {
       if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
       //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
-      if (error instanceof EfRcpError) {
-        let efRcpError = new EfRcpError(error.code, error.name, error.message, error.stack);
+      if (e instanceof EfRcpError) {
+        let efRcpError = new EfRcpError(e.code, e.name, e.message, e.stack);
         //抛出
         return Promise.reject(efRcpError);
       }
-      let b = error as BusinessError<Object>;
+      let b = e as BusinessError<Object>;
       if (b.data) {
         b.message = b.data as string;
       }
       let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
       //抛出
-      return Promise.reject(efRcpError);
+      return Promise.reject({ error: efRcpError });
     }
   }
 
@@ -217,7 +218,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async post<E>(postParam: efRcpConfig.requestBaseParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try {
       //说明是params方式需要拼接到url
       if (postParam.isParams && postParam.isParams === true) {
@@ -246,7 +247,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async postForm<E>(postParam: efRcpConfig.requestBaseParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //转换请求参数
       let form = new rcp.Form(postParam.query as rcp.FormFields);
       //更改请求方式
@@ -281,7 +282,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async get<E>(getParam: efRcpConfig.commonParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //创建请求
       let request =
         await EfRcpClientApi.buildRequest(getParam.url, 'GET', getParam.headers, getParam.cookies, getParam.loadingTxt);
@@ -299,7 +300,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async put<E>(putParam: efRcpConfig.requestBaseParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //转换请求参数
       let jsonStr = JSON.stringify(putParam.query);
       //构建request
@@ -321,7 +322,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async delete<E>(deleteParam: efRcpConfig.commonParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //创建请求
       let request =
         await EfRcpClientApi.buildRequest(deleteParam.url, 'DELETE', deleteParam.headers, deleteParam.cookies,
@@ -340,7 +341,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async patch<E>(patchParam: efRcpConfig.requestBaseParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //转换请求参数
       let jsonStr = JSON.stringify(patchParam.query);
       //构建request
@@ -376,7 +377,7 @@ export class EfRcpClientApi {
    * @returns 响应结果
    */
   async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,
-    securityCfg?: efRcpConfig.securityCfg): Promise<E | EfRcpError> {
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //更改请求方式
       if (uploadParam.headers && !uploadParam.headers['content-type']) {
         uploadParam.headers['content-type'] = "multipart/form-data";
@@ -404,7 +405,7 @@ export class EfRcpClientApi {
    * @param downloadParam 下载请求入参,详见efRcpConfig.downloadParams
    * @returns
    */
-  async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError> {
+  async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
@@ -444,17 +445,17 @@ export class EfRcpClientApi {
         await RcpLoadingUtil.closeLoading();
       }
       //返回response的数据
-      return response.toJSON() as E;
-    } catch (error) {
+      return { data: response.toJSON() as E };
+    } catch (e) {
       if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
       //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
-      let b = error as BusinessError;
+      let b = e as BusinessError;
       let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
       //抛出
-      return Promise.reject(efRcpError);
+      return Promise.reject({ error: efRcpError });
     }
   }
 
@@ -463,7 +464,7 @@ export class EfRcpClientApi {
    * @param downloadParam 下载请求入参,详见efRcpConfig.downloadParams
    * @returns
    */
-  async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<E | EfRcpError> {
+  async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
@@ -493,17 +494,17 @@ export class EfRcpClientApi {
         await RcpLoadingUtil.closeLoading();
       }
       //返回response的数据
-      return response.toJSON() as E;
-    } catch (error) {
+      return { data: response.toJSON() as E };
+    } catch (e) {
       if (efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
       //此处进行实例化操作后，接口调用处可使用内部封装的一系列方法
-      let b = error as BusinessError;
+      let b = e as BusinessError;
       let efRcpError = new EfRcpError(b.code, b.name, b.message, b.stack);
       //抛出
-      return Promise.reject(efRcpError);
+      return Promise.reject({ error: efRcpError });
     }
   }
 }

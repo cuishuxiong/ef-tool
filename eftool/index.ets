@@ -60,7 +60,7 @@ export {
 } from '@yunkss/ef_crypto';
 
 export {
-  efAxios, efAxiosParams, efClientApi
+  efAxios, efAxiosParams, efClientApi, EfAxiosError, EfAxiosConst
 } from '@yunkss/ef_axios';
 
 

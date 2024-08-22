@@ -5,3 +5,5 @@ export { efRcpClientApi } from './src/main/ets/rcp/EfRcpClientApi';
 export { EfRcpError } from './src/main/ets/rcp/EfRcpError';
 
 export { efRcpConfig } from './src/main/ets/rcp/efRcpConfig';
+
+export { EfRcpResponse } from './src/main/ets/rcp/EfRcpResponse';
