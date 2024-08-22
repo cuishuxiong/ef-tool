@@ -243,6 +243,11 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
      * 请求参数 post/put
      */
     query: Record<string, Object> | rcp.FormFields = {};
+    /**
+     * 解决post传参但是需要将参数拼接URL情况
+     */
+    isParams?: boolean;
+    
 ```
 
 * uploadParams 上传入参对象 - 继承所有commonParams参数
@@ -285,9 +290,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
   > 注意调用完setConfig后必须调用create方法重新创建session对象,否则配置不生效
 
-* addSysCodeEvent 添加统一的系统框架级别编码拦截操作
+* addSysCodeEvent 添加统一的系统框架级别编码拦截操作(1.0.1有改动)
 
-* addBusinessCodeEvent 添加统一的业务级别编码拦截操作
+* addBusinessCodeEvent 添加统一的业务级别编码拦截操作(1.0.1+)
 
 * addCryptoEvent 添加自定义加解密拦截
 
@@ -508,12 +513,6 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       })
       //设置loading为gif图片
       .setLoadingImg(wrapBuilder(loadingImg))
-      //添加统一编码处理逻辑,如跳转登录等
-      .addCodeEvent({
-        listener: (code: number) => {
-          Logger.debug("----code监听事件-----", code + "")
-        }
-      })
       //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
       .create()
       //获取统一的session对象，必须在create后调用
@@ -526,7 +525,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 ```
   async login() {
     //此处模拟系统第一次调用接口,设置lottie加载动画
-    //设置动画必须要加100ms的timer,原因为官方需要再canvas的onready方法后再设置动画
+    //设置动画必须要加50ms的timer,原因为官方需要再canvas的onready方法后再设置动画
     //而点击时才创建窗口,故需要等窗口的dom原始绘制完，再进行动画创建
     setTimeout(() => {
       efRcp
@@ -544,36 +543,38 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
             animationData: JSON.parse(this.lottieStr)
           })
         });
-      // lottie.play();
-    }, 100)
+    }, 50)
     //登录
     let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
       url: '/api/eftool/login',
       query: {
         'account': 'efadmin',
-        'pwd': '123456'
+        'pwd': '1234561'
       },
       loadingTxt: '正在登录中...'
     });
-    if (!(dto instanceof EfRcpError) && dto["success"]) {
-      // ToastUtil.showToast('登录成功~');
-      //请求成功后将token存储在efRcpParams.tokenValue
-      efRcpConfig.token.tokenValue = dto["dataRow"].token;
-      efRcpConfig.token.tokenName = "Authorization";
-      this.message = JSON.stringify(dto);
-    } else {
-      //可直接调用统一异常的toString方法转换为json字符串
-      this.message = (dto as EfRcpError).toString();
+    if (dto.data) {
+      if (dto.data["success"]) {
+        // ToastUtil.showToast('登录成功~');
+        //请求成功后将token存储在efRcpParams.tokenValue
+        efRcpConfig.token.tokenValue = dto.data["dataRow"].token;
+        efRcpConfig.token.tokenName = "Authorization";
+      }
+      this.message = JSON.stringify(dto.data);
     }
-  }
+    //else部分如果业务需要判断该系统异常则加,否则只判断dto.data即可
+    else {
+      this.message = (dto.error as EfRcpError).toString();
+    }
 ```
 
 * post示例 json格式
 
 ```
-  async postJSON() {
+   async postJSON() {
     let dto = await efRcpClientApi.post <OutDTO<UserDTO>>({
       url: '/api/eftool/post',
+      isParams: true, //此处模拟虽然是post,但是需要将参数拼接url的特例
       query: {
         "nickName": "旺旺崔冰冰",
         "account": 'yunkss@163.com',
@@ -780,6 +781,22 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 * getName 获取错误名称
 
 * getMessage 获取错误提示
+
+##### 5.EfRcpResponse工具类
+
+```
+  /**
+   * 请求成功返回的数据
+   */
+  data?: E;
+
+  /**
+   * 请求失败返回的系统框架级错误信息 - 如连接超时,400，401，403，500等
+   */
+  error?: EfRcpError;
+  
+  //如果系统不关注系统级别的异常,则调用接口只需要判断data不为空则请求成功即可
+```
 
 ## [eftool](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
 
