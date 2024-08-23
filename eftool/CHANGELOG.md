@@ -7,6 +7,9 @@
 * 优化首选项setValue入参类型[issuesIALSX5](https://gitee.com/yunkss/ef-tool/issues/IALSX5)
 * 优化FileUtil,新增删除某个路径下的文件[issuesIALR7D](https://gitee.com/yunkss/ef-tool/issues/IALR7D)
 * 升级ef_rcp为1.0.1版本
+  * 新增EfRcpResponse对象统一返回结果与异常
+  * 新增业务code监听事件
+  * 优化post请求但是入参需要拼接url的特殊请求
 
 ## [v2.0.0] 2024-08
 

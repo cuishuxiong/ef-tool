@@ -65,7 +65,7 @@ export {
 
 
 export {
-  efRcp, EfRcpError, efRcpConfig, efRcpClientApi
+  efRcp, EfRcpError, efRcpConfig, efRcpClientApi, EfRcpResponse
 } from '@yunkss/ef_rcp';
 
 export {
