@@ -231,12 +231,13 @@ export class JSONObject extends HashMap<string, JSONValue> {
         })
         sb.append(Const.quot + key + Const.quot + Const.mh + jo.toString());
       } else if (typeof val === 'string') {
-        if (DateUtil.isDate(val)) {
-          sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot +
-          DateUtil.formatDate(val, DateConst.YMD_HLINE_HMS) + Const.quot);
-        } else {
-          sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
-        }
+        // if (DateUtil.isDate(val)) {
+        //   sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot +
+        //   DateUtil.formatDate(val, DateConst.YMD_HLINE_HMS) + Const.quot);
+        // } else {
+        //   sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
+        // }
+        sb.append(Const.quot + key + Const.quot + Const.mh + Const.quot + val + Const.quot);
       } else if (typeof val === 'number' || typeof val === 'boolean') {
         sb.append(Const.quot + key + Const.quot + Const.mh + val);
       } else {

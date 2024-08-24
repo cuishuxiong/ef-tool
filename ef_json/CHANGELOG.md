@@ -1,5 +1,12 @@
 # Changelog
 
+## [v1.0.2] 2024-08
+
+### 🐞Bug修复
+
+* JSONObject.toString去除默认转换日期格式字符串[issuesIAM199](https://gitee.com/yunkss/ef-tool/issues/IAM199)
+
+
 ## [v1.0.1] 2024-08
 
 ### 🐞Bug修复

@@ -186,11 +186,12 @@ export class JSONArray extends Array<JSONValue> {
       } else if (item instanceof JSONObject || item instanceof Object) {
         sb.append(JSONObject.toJSONString(item));
       } else if (typeof item === 'string') {
-        if (DateUtil.isDate(item)) {
-          sb.append(DateUtil.formatDate(item, DateConst.YMD_HLINE_HMS));
-        } else {
-          sb.append(Const.quot + item + Const.quot);
-        }
+        // if (DateUtil.isDate(item)) {
+        //   sb.append(DateUtil.formatDate(item, DateConst.YMD_HLINE_HMS));
+        // } else {
+        //   sb.append(Const.quot + item + Const.quot);
+        // }
+        sb.append(Const.quot + item + Const.quot);
       } else {
         sb.append(item);
       }
