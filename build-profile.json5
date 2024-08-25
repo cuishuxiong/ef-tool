@@ -70,10 +70,6 @@
       "srcPath": "./ef_crypto",
     },
     {
-      "name": "ef_media",
-      "srcPath": "./ef_media",
-    },
-    {
       "name": "ef_device",
       "srcPath": "./ef_device",
     },
@@ -84,6 +80,10 @@
     {
       "name": "ef_crypto_dto",
       "srcPath": "./ef_crypto_dto",
+    },
+    {
+      "name": "ef_media",
+      "srcPath": "./ef_media",
     }
   ]
 }

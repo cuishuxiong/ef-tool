@@ -10,13 +10,14 @@ import {
   efRcpConfig,
   EfRcpError,
   GlobalContext,
+  ImageUtil,
   JSONObject,
   KvUtil,
   Logger,
   ToastUtil
 } from '@yunkss/eftool'
 import { router } from '@kit.ArkUI';
-import { JSON, util } from '@kit.ArkTS';
+import { buffer, JSON, util } from '@kit.ArkTS';
 import lottie from '@ohos/lottie';
 import { rcp } from '@kit.RemoteCommunicationKit';
 
@@ -68,13 +69,14 @@ export struct Login {
 
   buildRcpCfg() {
 
-    CharUtil
-
     let resStr = util.TextDecoder.create('utf-8', { ignoreBOM: true });
     this.lottieStr = resStr.decodeWithStream(new Uint8Array(getContext(this)
       .resourceManager
       .getRawFileContentSync('csx.json')
       .buffer));
+
+    //beta5写法
+    // this.lottieStr = resStr.decodeToString(getContext(this).resourceManager.getRawFileContentSync('csx.json'));
 
     efRcp
       .setBaseURL("http://aliyunmr.com:18088")
@@ -119,6 +121,10 @@ export struct Login {
   }
 
   aboutToAppear(): void {
+
+    let a = util.TextEncoder.create('utf-8');
+    let str = a.encodeInto('你好');
+    
 
     this.buildRcpCfg();
 
@@ -188,6 +194,11 @@ export struct Login {
             top: 40
           })
           .onClick(async () => {
+
+            // let img = await ImageUtil.getPixelMapFromMedia($r("app.media.login"));
+            // let res = await ImageUtil.savePixelMap(img.getDataRow(), getContext(this).cacheDir, 'csxTest.png');
+            // this.account = res.getMsg();
+
             if (this.account == '' || this.pwd == '') {
               ToastUtil.showToast('账号密码不能为空~', {
                 alignment: Alignment.Top

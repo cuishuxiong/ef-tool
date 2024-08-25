@@ -1,6 +1,11 @@
 {
   "apiType": "stageMode",
   "buildOption": {
+    "externalNativeOptions": {
+      "path": "./src/main/cpp/CMakeLists.txt",
+      "arguments": "",
+      "cppFlags": ""
+    },
   },
   "buildOptionSet": [
     {
@@ -18,6 +23,12 @@
           ]
         }
       },
+      "nativeLib": {
+        "debugSymbol": {
+          "strip": true,
+          "exclude": []
+        }
+      }
     },
   ],
   "targets": [
