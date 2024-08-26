@@ -18,8 +18,5 @@
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
     "@yunkss/ef_core": "1.0.2"
-  },
-  //  "devDependencies": {
-  //    "@yunkss/ef_core": "../ef_core"
-  //  }
+  }
 }
