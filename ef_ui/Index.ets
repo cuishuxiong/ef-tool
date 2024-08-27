@@ -34,8 +34,6 @@ export { LoadingUtil } from './src/main/ets/ui/prompt/LoadingUtil';
 
 export { TipsUtil } from './src/main/ets/ui/prompt/TipsUtil';
 
-export { messageUtil } from './src/main/ets/ui/prompt/MessageUtil';
-
 export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';
 
 export { WinDialogUtil } from './src/main/ets/ui/prompt/WinDialogUtil';
