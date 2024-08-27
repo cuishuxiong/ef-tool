@@ -6,6 +6,6 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "libef_media.so": "file:./src/main/cpp/types/libef_media"
+    "libefplayer.so": "file:./src/main/cpp/types/libefplayer"
   }
 }

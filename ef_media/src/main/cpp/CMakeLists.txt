@@ -1,6 +1,6 @@
 # the minimum version of CMake.
 cmake_minimum_required(VERSION 3.5.0)
-project(ef_media)
+project(efplayer)
 
 set(NATIVERENDER_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -11,12 +11,12 @@ endif()
 #链接头连接
 include_directories(${NATIVERENDER_ROOT_PATH}
                     ${NATIVERENDER_ROOT_PATH}/ffmpeg/${OHOS_ARCH}/include)
-add_library(ef_media SHARED napi_init.cpp)
+add_library(efplayer SHARED napi_init.cpp)
 
-target_link_libraries(ef_media PUBLIC libace_napi.z.so)
+target_link_libraries(efplayer PUBLIC libace_napi.z.so)
 
 
-target_include_directories(ef_media PRIVATE ${NATIVERENDER_ROOT_PATH}/ffmpeg/${OHOS_ARCH}/include)
+target_include_directories(efplayer PRIVATE ${NATIVERENDER_ROOT_PATH}/ffmpeg/${OHOS_ARCH}/include)
 
 #添加库avcodec
 add_library(avcodec_ffmpeg SHARED IMPORTED)
@@ -55,4 +55,4 @@ set_target_properties(swscale_ffmpeg PROPERTIES IMPORTED_LOCATION ${NATIVERENDER
 
 
 #引入
-target_link_libraries(ef_media PUBLIC avcodec_ffmpeg avdevice_ffmpeg avfilter_ffmpeg avformat_ffmpeg avutil_ffmpeg swresample_ffmpeg swscale_ffmpeg)
+target_link_libraries(efplayer PUBLIC avcodec_ffmpeg avdevice_ffmpeg avfilter_ffmpeg avformat_ffmpeg avutil_ffmpeg swresample_ffmpeg swscale_ffmpeg)
