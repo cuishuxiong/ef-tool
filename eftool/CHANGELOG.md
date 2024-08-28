@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.0.2] 2024-08
+
+### 🐞功能优化
+
+* 升级ef_json为1.0.2版本
+    * JSONObject.toString去除默认转换日期格式字符串[issuesIAM199](https://gitee.com/yunkss/ef-tool/issues/IAM199)
+* 升级ef_axios为1.0.3版本
+    * 优化支持多baseURL和设置公共请求头[感谢coffey的pull Request](https://gitee.com/coffey)
+* 升级ef_rcp为1.0.2版本
+    * 新增DNS相关配置
+    * 新增postMultipartForm方法，可实现附件和表单字段提交
+    * 优化单个请求支持重新设置baseURL
+    * 去除efRcpConfig中的baseURL参数
+    * 优化入参为特殊类型时报错为[issuesIAMATB](https://gitee.com/yunkss/ef-tool/issues/IAMATB)
+    * 完善文档中的demo
+
 ## [v2.0.1] 2024-08
 
 ### 🐞功能优化
@@ -7,9 +23,9 @@
 * 优化首选项setValue入参类型[issuesIALSX5](https://gitee.com/yunkss/ef-tool/issues/IALSX5)
 * 优化FileUtil,新增删除某个路径下的文件[issuesIALR7D](https://gitee.com/yunkss/ef-tool/issues/IALR7D)
 * 升级ef_rcp为1.0.1版本
-  * 新增EfRcpResponse对象统一返回结果与异常
-  * 新增业务code监听事件
-  * 优化post请求但是入参需要拼接url的特殊请求
+    * 新增EfRcpResponse对象统一返回结果与异常
+    * 新增业务code监听事件
+    * 优化post请求但是入参需要拼接url的特殊请求
 
 ## [v2.0.0] 2024-08
 
