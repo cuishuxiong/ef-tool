@@ -368,7 +368,6 @@ export class efAxiosParams {
    * 是否开启日志
    */
   static isLogger: boolean = true;
-
   /**
    *  公共请求头
    */

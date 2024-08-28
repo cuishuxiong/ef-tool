@@ -52,6 +52,11 @@ class EfClientApi {
     return addHead;
   }
 
+  /**
+   * 拼接url
+   * @param baseurl
+   * @returns
+   */
   private static appendBaseURL(baseurl?: string): string {
     let url: string = '';
     if (baseurl) {

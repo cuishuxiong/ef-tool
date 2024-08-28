@@ -213,6 +213,10 @@ export namespace efRcpConfig {
    */
   export class commonParams {
     /**
+     * 基础请求前缀地址
+     */
+    baseURL?: string;
+    /**
      * 请求路径 必填
      */
     url: string = '';
@@ -237,7 +241,7 @@ export namespace efRcpConfig {
     /**
      * 请求参数 post/put
      */
-    query: Record<string, Object> | rcp.FormFields = {};
+    query: Record<string, Object> | rcp.FormFields | rcp.MultipartFormFields | ESObject = {};
     /**
      * 解决post传参但是需要将参数拼接URL情况
      */
@@ -265,8 +269,25 @@ export namespace efRcpConfig {
   }
 
   /**
-   * 基础请求前缀地址
+   * DNS相关配置
    */
-  export let baseURL: string = "";
+  export class dnsCfg {
+    /**
+     * 优先使用指定的DNS服务器解析主机名
+     */
+    dnsServers?: rcp.DnsServers;
+    /**
+     * hostname匹配，则优先使用指定的地址
+     */
+    staticDnsRules?: rcp.StaticDnsRules;
+    /**
+     * 优先使用函数中返回的地址
+     */
+    dynamicDnsRule?: rcp.DynamicDnsRule;
+    /**
+     * 设置，则优先使用DNS服务器解析的地址
+     */
+    dnsOHCfg?: rcp.DnsOverHttpsConfiguration
+  }
 
 }

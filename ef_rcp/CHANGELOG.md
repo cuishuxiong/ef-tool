@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.0.2] 2024-08
+
+### 🐣新特性
+
+* 新增DNS相关配置
+* 新增postMultipartForm方法，可实现附件和表单字段提交
+
+### 🐞Bug修复
+
+* 优化单个请求支持重新设置baseURL
+* 去除efRcpConfig中的baseURL参数
+* 优化入参为特殊类型时报错为[issuesIAMATB](https://gitee.com/yunkss/ef-tool/issues/IAMATB)
+* 完善文档中的demo
+
 ## [v1.0.1] 2024-08
 
 ### 🐣新特性

@@ -1,6 +1,6 @@
 # <center>ef_axios</center>
 
-# <center>V1.0.2(API12)</center>
+# <center>V1.0.3(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ import { efAxiosParams, efClientApi,xxxx} from '@yunkss/ef_axios'
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-#### 使用经验
+#### 使用经验(1.0.3有改动)
 
 > 针对于efAxios的统一设置，如全局请求loading文本,是否加解密，是否显示日志，请求前缀等，建议在Ability中初始化,如下
 
@@ -80,6 +80,11 @@ import { efAxiosParams, efClientApi,xxxx} from '@yunkss/ef_axios'
         efAxiosParams.isAllEncrypt = false;
         efAxiosParams.isLogger = true;
         efAxiosParams.isLoading = false;
+        //设置公共请求头(1.0.3+)
+        efAxiosParams.headers = {
+          "appVersion": 'HarmonyOS',
+          "timestamp": new Date().getTime()
+        }
       }
       if(运行环境===product){
         //关于efAxios的配置
@@ -92,7 +97,7 @@ import { efAxiosParams, efClientApi,xxxx} from '@yunkss/ef_axios'
     }
 ```
 
-#### 1.efAxiosParams类参数详解
+#### 1.efAxiosParams类参数详解(1.0.3有改动)
 
 ```
   /**
@@ -139,14 +144,22 @@ import { efAxiosParams, efClientApi,xxxx} from '@yunkss/ef_axios'
    * 是否开启日志
    */
   static isLogger: boolean = true;
+  /**
+   *  公共请求头
+   */
+  static headers?: Record<string, Object>;
 ```
 
-#### 2.efClientParams类参数详解
+#### 2.efClientParams类参数详解(1.0.3有改动)
 
 > 优化后所有的请求方法入参均为efClientParams,当不需要query时,入参T传入null即可
 
 ```
 export class efClientParams<T> {
+  /**
+   * 请求基地址
+   */
+  baseUrl?: string;
   /**
    * 请求路径
    */
@@ -254,7 +267,7 @@ export class efClientParams<T> {
    //6.添加统一的请求头签名sign字段
 ```
 
-#### 6.EfClientApi工具类
+#### 6.EfClientApi工具类(1.0.3有改动)
 
 > 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
@@ -268,6 +281,7 @@ export class efClientParams<T> {
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.query 为请求入参对象
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //F  为请求入参对象,具体参照示例中的写法
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
@@ -283,6 +297,7 @@ export class efClientParams<T> {
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.formData 业务传入的formData数据
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
@@ -297,6 +312,7 @@ export class efClientParams<T> {
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
 ```
@@ -310,6 +326,7 @@ export class efClientParams<T> {
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //efClientParams.params表示get请求的入参符合key:value格式
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
     
@@ -324,6 +341,7 @@ export class efClientParams<T> {
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
     //注意demo中的delete请求为rest方式,即入参方式为 delete方法/param1/param2 以此类推
 ```
@@ -336,6 +354,7 @@ export class efClientParams<T> {
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.query 为请求入参对象
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //E 为响应结果对象
     //F 为请求入参对象,具体参照示例中的写法
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
@@ -365,6 +384,7 @@ export class efClientParams<T> {
     //efClientParams.uri   isUri=true时传入  表示上传的文件为uri格式
     //efClientParams.keyName  上传时后端接收的key,默认为file
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     
     //progressCallBack 上传进度回调,具体参照示例中的写法
 ```
@@ -378,7 +398,7 @@ export class efClientParams<T> {
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.filePath  下载文件名称 如下载png图片后希望名称为girl.png
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
-    
+    //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //progressCallBack 上传进度回调,具体参照示例中的写法
 ```
 
@@ -395,7 +415,8 @@ export class efClientParams<T> {
       headers: {
         "efAxiosHeader": '旺旺崔冰冰'
       },
-      loadingTxt: 'eftool登录中...'
+      loadingTxt: 'eftool登录中...',
+      // baseUrl:''  如有需要则自行设置
     })
     //此处如果异常报错则类型为EfAxiosError
     if (!(dto instanceof EfAxiosError) && dto) {
@@ -422,7 +443,8 @@ export class efClientParams<T> {
       headers: {
         "formData": "csx"
       },
-      loadingTxt: '模拟form请求...'
+      loadingTxt: '模拟form请求...',
+      // baseUrl:''  如有需要则自行设置
     });
     this.message = JSON.stringify(dto);
   }
@@ -434,7 +456,8 @@ export class efClientParams<T> {
   async get() {
     //模拟测试get请求
     const dto = await efClientApi.get<OutDTO<Record<string, Object>>>({
-      url: '/api/eftool/get/11111111'
+      url: '/api/eftool/get/11111111',
+      // baseUrl:''  如有需要则自行设置
     });
     this.message = JSON.stringify(dto);
   }
@@ -450,7 +473,8 @@ export class efClientParams<T> {
       params: {
         "key_csx": '测试get',
         "key_cc": '第二个参数'
-      }
+      },
+      // baseUrl:''  如有需要则自行设置
     })
     this.message = JSON.stringify(dto);
   }
@@ -466,7 +490,8 @@ export class efClientParams<T> {
       query: new User('put请求', 'xxxxxxxxx'),
       headers: {
         "efAxiosHeader": '旺旺崔冰冰'
-      }
+      },
+      // baseUrl:''  如有需要则自行设置
     })
     this.message = JSON.stringify(dto);
   }
@@ -478,7 +503,8 @@ export class efClientParams<T> {
   async delete() {
     //模拟测试delete请求
     const dto = await efClientApi.delete<OutDTO<Record<string, Object>>>({
-      url: '/api/eftool/delete/1212133'
+      url: '/api/eftool/delete/1212133',
+      // baseUrl:''  如有需要则自行设置
     });
     this.message = JSON.stringify(dto);
   }
@@ -510,7 +536,8 @@ export class efClientParams<T> {
     let res = await efClientApi.upload({
       url: '/api/eftool/upload',
       isUri: false,
-      data: buf
+      data: buf,
+      // baseUrl:''  如有需要则自行设置
     }, (progress: number) => {
       this.message = "上传进度:" + progress;
     });
@@ -527,7 +554,8 @@ export class efClientParams<T> {
       filePath: 'csx.jpg',
       headers: {
         "efAxiosHeader": '旺旺崔冰冰'
-      }
+      },
+      // baseUrl:''  如有需要则自行设置
     }, (progress: number) => {
       this.message = "下载进度:" + progress;
     });
@@ -536,6 +564,10 @@ export class efClientParams<T> {
 ```
 
 ## [eftool](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
+
+## 特别鸣谢
+
+* [感谢coffey提供pull Request](https://gitee.com/coffey)
 
 ## star `ef_axios` 希望您可以动一动小手点点小⭐⭐
 

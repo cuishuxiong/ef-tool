@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.1(API12)</center>
+# <center>V1.0.2(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -59,9 +59,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-##### 1.efRcpConfig配置类参数详解
-
-* baseURL 基础请求前缀地址
+##### 1.efRcpConfig配置类参数详解(1.0.2有改动)
 
 * timeout 超时对象
 
@@ -215,9 +213,13 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     static tokenValue: string = '';
 ```
 
-* commonParams 请求公共传参
+* commonParams 请求公共传参(1.0.2有改动)
 
 ```
+    /**
+    * 基础请求前缀地址 非必填 需要时设置
+    */
+    baseURL?:string; 
     /**
      * 请求路径 必填
      */
@@ -236,13 +238,13 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     loadingTxt?: string;
 ```
 
-* requestBaseParams post/put请求所需参数对象 - 继承所有commonParams参数
+* requestBaseParams post/put请求所需参数对象 - 继承所有commonParams参数(1.0.2有改动)
 
 ```
     /**
      * 请求参数 post/put
      */
-    query: Record<string, Object> | rcp.FormFields = {};
+     query: Record<string, Object> | rcp.FormFields | rcp.MultipartFormFields | ESObject = {};
     /**
      * 解决post传参但是需要将参数拼接URL情况
      */
@@ -268,7 +270,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     fileName: string = '';
 ```
 
-##### 2.efRcp工具类
+##### 2.efRcp工具类(1.0.2有改动)
 
 * getInstance 懒汉模式获取EfRcp类单例
 
@@ -276,49 +278,51 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 * builder 获取构建后的session对象
 
-* setBaseURL 设置全局请求地址前缀
+* setBaseURL 设置全局请求地址前缀 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* enableLogInterceptor 是否启用日志拦截器
+* enableLogInterceptor 是否启用日志拦截器 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* addCustomInterceptors 添加用户自定义拦截器 - 可添加多个
+* addCustomInterceptors 添加用户自定义拦截器 - 可添加多个 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* addCommonHeaders 添加公共的header
+* addCommonHeaders 添加公共的header - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* addCommonCookies 添加公共的cookie
+* addCommonCookies 添加公共的cookie - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
 * setConfig 全部自定义session配置 - 特殊场景如efRcp所有默认配置均不满足开发需求，则全部自定义并设置
 
   > 注意调用完setConfig后必须调用create方法重新创建session对象,否则配置不生效
 
-* addSysCodeEvent 添加统一的系统框架级别编码拦截操作(1.0.1有改动)
+* addSysCodeEvent 添加统一的系统框架级别编码拦截操作(1.0.1有改动) - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* addBusinessCodeEvent 添加统一的业务级别编码拦截操作(1.0.1+)
+* addBusinessCodeEvent 添加统一的业务级别编码拦截操作(1.0.1+) - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* addCryptoEvent 添加自定义加解密拦截
+* addCryptoEvent 添加自定义加解密拦截 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* setTimeOut 设置超时时间
+* setTimeOut 设置超时时间 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* setSessionListener 设置会话监听
+* setSessionListener 设置会话监听 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* setUploadEvent 设置上传进度操作
+* setUploadEvent 设置上传进度操作 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* setDownLoadEvent 设置下载进度操作
+* setDownLoadEvent 设置下载进度操作 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* addSecurity 设置证书
+* addSecurity 设置证书 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
-* disableLoading 禁用全局加载框
+* disableLoading 禁用全局加载框 - 设置后无需重新创建
 
-* setLoadingContent 更改全局默认loading的提示内容
+* setLoadingContent 更改全局默认loading的提示内容 - 设置后无需重新创建
 
 * setLoadingImg 更改全局默认loading的图片- 全局builder,内容业务自行传入,只支持gif动图,不支持内部使用状态变量
 
-* enableLottie 启用loading加载使用lottie动画
+* enableLottie 启用loading加载使用lottie动画 - 设置后无需重新创建
 
-* setLottieAnimation 设置lottie动画
+* setLottieAnimation 设置lottie动画 - 设置后无需重新创建
+
+* setDNS 设置DNS相关配置 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
 * efRcp 抛出的全局efRcp对象,可链式调用
 
-##### 3.efRcpClientApi工具类
+##### 3.efRcpClientApi工具类(1.0.2有改动)
 
 > 该工具类提供统一简化各种请求方式
 
@@ -342,6 +346,16 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
+```
+
+* postMultipartForm请求 async/await 方式 (1.0.2+)
+
+```
+    //参数说明   参数为MultipartForm格式
+    async postMultipartForm<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
+    //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
+    //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 ```
 
 * get请求 async/await 方式
@@ -431,7 +445,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 * 初始化参数配置示例
 
-> 请求相关的参数配置建议在Ability的onWindowStageCreate方法中配置绝大部分,少部分可在调用时灵活配置
+> 请求相关的参数配置建议在Ability的onWindowStageCreate方法中配置部分已知的固定类型的
+
+> 其余如拦截器等在使用时灵活配置即可,下方代码示例中有详细配置步骤,请查阅
 
 > 可使用BuildProfile获取到当前运行的还是debug/qa/test/release等 然后设置不同的请求信息
 
@@ -445,7 +461,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       .enableLogInterceptor()
       //更改loading文本
       .setLoadingContent('充值有大礼包...')
-      //设置公共头
+      //设置一部分不需要从接口获取的常量公共头
       .addCommonHeaders({
         "platform": "HarmonyOS",
         "version": "V1.0.0"
@@ -454,50 +470,8 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       // .setLoadingImg(wrapBuilder(loadingImg))
       //启动lottie  与setLoadingImg互斥不可同事使用
       .enableLottie()
-      //添加统一系统框架级别编码处理逻辑,如超时等
-      .addSysCodeEvent({
-        listener: (code: number) => {
-          Logger.debug("---------addSysCodeEvent监听事件-----", code + "")
-        }
-      })
-      //添加业务级别的编码处理逻辑,一定要传入businessCodeName,即返回数据中编码对应的key
-      .addBusinessCodeEvent({
-        businessCodeName: 'csxErrorCode',
-        listener: (codeValue) => {
-          Logger.debug('---------addBusinessCodeEvent监听-----------', codeValue as string)
-        }
-      })
-      //添加加解密逻辑
-      .addCryptoEvent({
-        requestEncoder: (request: rcp.RequestContext): rcp.RequestContext => {
-          if (request.request.content) {
-            Logger.debug('-----------------加密操作--------------', request.request.content as string)
-          }
-          return request;
-        },
-        responseDecoder: (response: rcp.Response): rcp.Response => {
-          if (response) {
-            Logger.debug('-----------------解密操作--------------', JSON.stringify(response.toJSON()))
-          }
-          return response;
-        }
-      })
-      //添加上传进度监听
-      .setUploadEvent({
-        onUploadProgress: (progress) => {
-          Logger.debug("---------测试上传进度----------", progress + "%")
-        }
-      })
-      //添加下载进度监听
-      .setDownLoadEvent({
-        onDownloadProgress: (progress) => {
-          Logger.debug("---------测试下载进度----------", progress + "%")
-        }
-      })
       //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
-      .create()
-      //获取统一的session对象，必须在create后调用
-      .builder();
+      .create();
   }
   if(运行环境===qa){
     //关于rcp的配置
@@ -514,9 +488,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       //设置loading为gif图片
       .setLoadingImg(wrapBuilder(loadingImg))
       //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
-      .create()
-      //获取统一的session对象，必须在create后调用
-      .builder();
+      .create();
   }
 ```
 
@@ -525,7 +497,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 ```
   async login() {
     //此处模拟系统第一次调用接口,设置lottie加载动画
-    //设置动画必须要加50ms的timer,原因为官方需要再canvas的onready方法后再设置动画
+    //设置动画必须要加100ms的timer,原因为官方需要再canvas的onready方法后再设置动画
     //而点击时才创建窗口,故需要等窗口的dom原始绘制完，再进行动画创建
     setTimeout(() => {
       efRcp
@@ -543,7 +515,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
             animationData: JSON.parse(this.lottieStr)
           })
         });
-    }, 50)
+    }, 100)
     //登录
     let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
       url: '/api/eftool/login',
@@ -568,6 +540,18 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     }
 ```
 
+* 切换baseURL示例(1.0.2+)
+
+```
+  async testChangeBaseURL() {
+    let dto = await efRcpClientApi.get<string>({
+      baseURL: 'https://gitee.com',
+      url: '/yunkss/ef-tool/access/add_access_log',
+    });
+    this.message = JSON.stringify(dto);
+  }
+```
+
 * post示例 json格式
 
 ```
@@ -587,12 +571,32 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
   }
 ```
 
-* post示例 form格式
+* post示例 form格式 - 附带重新设置某些参数如追加公共headers
 
 ```
   async postForm() {
+    //此处演示某些场景需要获取到一些数据后再次设置session的配置
+    efRcp
+      .addCommonHeaders({
+        //如此处需要从接口中获取公共参数如sign,后再去设置公共请求头
+        "csxChange": "HarmonyOS1.1.1",
+        "sign":"从接口获取的sign值"
+      })
+      .addSysCodeEvent({
+        listener: (code: number) => {
+          Logger.debug("---------addSysCodeEvent监听事件-----", code + "")
+        }
+      })
+      .addBusinessCodeEvent({
+        businessCodeName: 'csxErrorCode',
+        listener: (codeValue) => {
+          Logger.debug('---------addBusinessCodeEvent监听-----------', codeValue as string)
+        }
+      })
+      //切记需要调用create重新创建session否则设置不生效
+      .create();
     //登录
-    let dto = await efRcpClientApi.postForm <OutDTO<UserDTO>>({
+    let dto = await efRcpClientApi.postForm<OutDTO<UserDTO>>({
       url: '/api/eftool/postFormData',
       query: {
         "nickName": "旺旺崔冰冰",
@@ -700,6 +704,15 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 ```
 
 ```
+  //此处演示需要使用上传进度时再去设置,全局只需要设置一次即可
+   efRcp
+   .setUploadEvent({
+     onUploadProgress: (progress) => {
+       Logger.debug("---------测试上传进度----------", progress + "%")
+     }
+   })
+   //切记需要调用create重新创建session否则设置不生效
+   .create();
    let arr = getContext().resourceManager.getMediaContentSync($r("app.media.abc").id);
     //上传
     let dto =
@@ -730,6 +743,15 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 ```
 
 ```
+  //此处演示需要使用下载进度时再去设置,全局只需要设置一次即可
+  efRcp
+  .setDownLoadEvent({
+    onDownloadProgress: (progress) => {
+      Logger.debug("---------测试下载进度----------", progress + "%")
+    }
+  })
+  //切记需要调用create重新创建session否则设置不生效
+  .create();
   async testDownloadStream() {
     let dto =
       await efRcpClientApi.downloadStream<OutDTO<string>>({

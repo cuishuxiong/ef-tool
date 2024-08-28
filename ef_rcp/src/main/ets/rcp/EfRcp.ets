@@ -406,8 +406,85 @@ class EfRcp {
    * @returns
    */
   setBaseURL(baseURL: string): EfRcp {
-    efRcpConfig.baseURL = baseURL;
+    //【注】在beta5之前版本中，给config设置baseAddress不生效，无法跟url拼接，故采用了efRcpConfig.baseURL设置
+    // 在beta5版本中生效了 故优化为正确方式
+    this.cfg.baseAddress = baseURL;
     return this;
+  }
+
+  /**
+   * 设置DNS相关信息
+   * @param dnsCfg
+   */
+  setDNS(dnsCfg: efRcpConfig.dnsCfg) {
+    if (dnsCfg.dnsServers) {
+      if (this.cfg.requestConfiguration) {
+        if (this.cfg.requestConfiguration.dns) {
+          this.cfg.requestConfiguration.dns.dnsRules = dnsCfg.dnsServers;
+        } else {
+          this.cfg.requestConfiguration.dns = {
+            dnsRules: dnsCfg.dnsServers
+          }
+        }
+      } else {
+        this.cfg.requestConfiguration = {
+          dns: {
+            dnsRules: dnsCfg.dnsServers
+          }
+        }
+      }
+    }
+    if (dnsCfg.staticDnsRules) {
+      if (this.cfg.requestConfiguration) {
+        if (this.cfg.requestConfiguration.dns) {
+          this.cfg.requestConfiguration.dns.dnsRules = dnsCfg.staticDnsRules;
+        } else {
+          this.cfg.requestConfiguration.dns = {
+            dnsRules: dnsCfg.staticDnsRules
+          }
+        }
+      } else {
+        this.cfg.requestConfiguration = {
+          dns: {
+            dnsRules: dnsCfg.staticDnsRules
+          }
+        }
+      }
+    }
+    if (dnsCfg.dynamicDnsRule) {
+      if (this.cfg.requestConfiguration) {
+        if (this.cfg.requestConfiguration.dns) {
+          this.cfg.requestConfiguration.dns.dnsRules = dnsCfg.dynamicDnsRule;
+        } else {
+          this.cfg.requestConfiguration.dns = {
+            dnsRules: dnsCfg.dynamicDnsRule
+          }
+        }
+      } else {
+        this.cfg.requestConfiguration = {
+          dns: {
+            dnsRules: dnsCfg.dynamicDnsRule
+          }
+        }
+      }
+    }
+    if (dnsCfg.dnsOHCfg) {
+      if (this.cfg.requestConfiguration) {
+        if (this.cfg.requestConfiguration.dns) {
+          this.cfg.requestConfiguration.dns.dnsOverHttps = dnsCfg.dnsOHCfg;
+        } else {
+          this.cfg.requestConfiguration.dns = {
+            dnsOverHttps: dnsCfg.dnsOHCfg
+          }
+        }
+      } else {
+        this.cfg.requestConfiguration = {
+          dns: {
+            dnsOverHttps: dnsCfg.dnsOHCfg
+          }
+        }
+      }
+    }
   }
 }
 

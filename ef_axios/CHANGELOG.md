@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.3] 2024-08
+
+### 🐞Bug修复
+
+* 优化支持多baseURL和设置公共请求头[感谢coffey的pull Request](https://gitee.com/coffey)
+
 ## [v1.0.2] 2024-08
 
 ### 🐞Bug修复
