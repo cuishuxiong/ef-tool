@@ -42,7 +42,22 @@ class EfClientApi {
         addHead.set(row[0], row[1] as string, true);
       });
     }
+
+    //是否有公共header
+    if (efAxiosParams.headers) {
+      Object.entries(efAxiosParams.headers).forEach((row) => {
+        addHead.set(row[0], row[1] as string, true);
+      });
+    }
     return addHead;
+  }
+
+  private static appendBaseURL(baseurl?: string): string {
+    let url: string = '';
+    if (baseurl) {
+      url = baseurl;
+    }
+    return url;
   }
 
   /**
@@ -59,7 +74,8 @@ class EfClientApi {
       //发送请求
       let response: AxiosResponse<E> =
         await efAxios.post<E, AxiosResponse<E>, F>(efClientParams.url, efClientParams.query, {
-          headers: EfClientApi.appendHeader(efClientParams.headers)
+          headers: EfClientApi.appendHeader(efClientParams.headers),
+          baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl)
         });
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
@@ -95,7 +111,8 @@ class EfClientApi {
       addHead.set('Accept', '*/*', true);
       let response: AxiosResponse<E> =
         await efAxios.post<E, AxiosResponse<E>, FormData>(efClientParams.url, efClientParams.formData, {
-          headers: addHead
+          headers: addHead,
+          baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl)
         });
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
@@ -126,7 +143,8 @@ class EfClientApi {
         efAxiosParams.loadingTxt = efClientParams.loadingTxt;
       }
       let response: AxiosResponse<E> = await efAxios.get<E, AxiosResponse<E>, null>(efClientParams.url, {
-        headers: EfClientApi.appendHeader(efClientParams.headers)
+        headers: EfClientApi.appendHeader(efClientParams.headers),
+        baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl)
       });
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
@@ -158,7 +176,8 @@ class EfClientApi {
       }
       let response: AxiosResponse<E> = await efAxios.get<E, AxiosResponse<E>, null>(efClientParams.url, {
         params: efClientParams.params,
-        headers: EfClientApi.appendHeader(efClientParams.headers)
+        headers: EfClientApi.appendHeader(efClientParams.headers),
+        baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl)
       });
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
@@ -190,7 +209,8 @@ class EfClientApi {
       }
       let response: AxiosResponse<E> =
         await efAxios.put<E, AxiosResponse<E>, F>(efClientParams.url, efClientParams.query, {
-          headers: EfClientApi.appendHeader(efClientParams.headers)
+          headers: EfClientApi.appendHeader(efClientParams.headers),
+          baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl)
         });
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
@@ -221,7 +241,8 @@ class EfClientApi {
         efAxiosParams.loadingTxt = efClientParams.loadingTxt;
       }
       let response: AxiosResponse<E> = await efAxios.delete<E, AxiosResponse<E>, null>(efClientParams.url, {
-        headers: EfClientApi.appendHeader(efClientParams.headers)
+        headers: EfClientApi.appendHeader(efClientParams.headers),
+        baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl)
       });
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
@@ -297,9 +318,16 @@ class EfClientApi {
       addHead.set('Content-Type', 'multipart/form-data', true);
       addHead.set('Accept', '*/*', true);
       addHead.set('Req-Type', 'uploadOrDownload', true);
+      //是否有公共header
+      if (efAxiosParams.headers) {
+        Object.entries(efAxiosParams.headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
       let response: AxiosResponse<string> =
         await efAxios.post<string, AxiosResponse<string>, FormData>(efClientParams.url, formData, {
           headers: addHead,
+          baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl),
           context: getContext(this) as common.UIAbilityContext,
           onUploadProgress: (progressEvent: AxiosProgressEvent): void => {
             if (progressEvent && progressEvent.loaded && progressEvent.total) {
@@ -362,6 +390,12 @@ class EfClientApi {
       //需要添加的header对象
       let addHead: AxiosHeaders = EfClientApi.appendHeader(efClientParams.headers);
       addHead.set('Req-Type', 'uploadOrDownload', true);
+      //是否有公共header
+      if (efAxiosParams.headers) {
+        Object.entries(efAxiosParams.headers).forEach((row) => {
+          addHead.set(row[0], row[1] as string, true);
+        });
+      }
       //下载
       let response: AxiosResponse<string> = await efAxios({
         url: efClientParams.url,
@@ -369,6 +403,7 @@ class EfClientApi {
         context: context,
         filePath: finalPath,
         headers: addHead,
+        baseURL: EfClientApi.appendBaseURL(efClientParams.baseUrl),
         onDownloadProgress: (progressEvent: AxiosProgressEvent): void => {
           if (progressEvent && progressEvent.loaded && progressEvent.total) {
             //回调进度
@@ -398,6 +433,10 @@ class EfClientApi {
  * 单个请求的入参实体
  */
 export class efClientParams<T> {
+  /**
+   * 请求基地址
+   */
+  baseUrl?: string;
   /**
    * 请求路径
    */

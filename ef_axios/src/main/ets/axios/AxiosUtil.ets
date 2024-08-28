@@ -58,7 +58,7 @@ export class AxiosUtil {
    */
   static convertRequestInfo(config: InternalAxiosRequestConfig) {
     //设置请求URL
-    if (!config.baseURL) {
+    if (!config.baseURL || config.baseURL == '') {
       config.baseURL = efAxiosParams.baseURL;
     }
     //防篡改字段的随机数因子
@@ -368,6 +368,11 @@ export class efAxiosParams {
    * 是否开启日志
    */
   static isLogger: boolean = true;
+
+  /**
+   *  公共请求头
+   */
+  static headers?: Record<string, Object>;
 }
 
 /**
@@ -440,4 +445,3 @@ efAxios.interceptors.response.use(async (response: AxiosResponse) => {
   // 对响应错误做点什么
   return Promise.reject(error);
 });
-
