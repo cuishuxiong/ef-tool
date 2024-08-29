@@ -27,6 +27,7 @@ import { fileUri } from '@kit.CoreFileKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { EfRcpError } from './EfRcpError';
 import { EfRcpResponse } from './EfRcpResponse';
+import { plainToClass, plainToInstance, ClassConstructor } from 'class-transformer';
 
 /**
  * @Author csx
@@ -145,7 +146,7 @@ export class EfRcpClientApi {
    * @param isSecurity 是否开启证书校验
    * @returns
    */
-  private static async buildResponse<E>(request: rcp.Request,
+  private static async buildResponse<E>(request: rcp.Request, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try {
       //是否针对当前请求开启证书加密
@@ -171,8 +172,13 @@ export class EfRcpClientApi {
       //此处需要处理如果返回的data为null则页面端无任何提示
       let result = response.toJSON();
       if (result) {
-        //返回response的数据
-        return { data: response.toJSON() as E };
+        //response.toJSON后的数据为Object类型，此处考虑转换为E类型
+        if (cls) {
+          let clsObj = plainToInstance(cls, response.toJSON())
+          return { data: clsObj };
+        } else {
+          return { data: result as E };
+        }
       } else {
         return { error: new EfRcpError(response.statusCode, '异常提醒', '请求异常原因未知') };
       }
@@ -223,10 +229,11 @@ export class EfRcpClientApi {
   /**
    * post请求 - json格式
    * @param postParam post请求入参,详见efRcpConfig.requestBaseParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async post<E>(postParam: efRcpConfig.requestBaseParams,
+  async post<E>(postParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try {
       //说明是params方式需要拼接到url
@@ -243,7 +250,7 @@ export class EfRcpClientApi {
         request.content = jsonStr;
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -252,10 +259,11 @@ export class EfRcpClientApi {
   /**
    * post请求 - 普通表单
    * @param postParam post请求入参,详见efRcpConfig.requestBaseParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async postForm<E>(postParam: efRcpConfig.requestBaseParams,
+  async postForm<E>(postParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try {
       //说明是params方式需要拼接到url
@@ -280,7 +288,7 @@ export class EfRcpClientApi {
         request.content = form;
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -289,10 +297,11 @@ export class EfRcpClientApi {
   /**
    * post请求 - 普通表单-可附带附件
    * @param postParam post请求入参,详见efRcpConfig.requestBaseParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async postMultipartForm<E>(postParam: efRcpConfig.requestBaseParams,
+  async postMultipartForm<E>(postParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try {
       //说明是params方式需要拼接到url
@@ -317,7 +326,7 @@ export class EfRcpClientApi {
         request.content = form;
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -327,17 +336,18 @@ export class EfRcpClientApi {
   /**
    * get请求
    * @param getParam get请求入参,详见efRcpConfig.commonParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async get<E>(getParam: efRcpConfig.commonParams,
+  async get<E>(getParam: efRcpConfig.commonParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //创建请求
       let request =
         await EfRcpClientApi.buildRequest(getParam.url, 'GET', getParam.headers, getParam.cookies, getParam.loadingTxt,
           getParam.baseURL);
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -346,10 +356,11 @@ export class EfRcpClientApi {
   /**
    * put请求
    * @param putParam put请求入参,详见efRcpConfig.requestBaseParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async put<E>(putParam: efRcpConfig.requestBaseParams,
+  async put<E>(putParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //转换请求参数
       let jsonStr = JSON.stringify(putParam.query);
@@ -360,7 +371,7 @@ export class EfRcpClientApi {
       //传入请求参数
       request.content = jsonStr;
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -369,17 +380,18 @@ export class EfRcpClientApi {
   /**
    * delete请求
    * @param deleteParam delete请求入参,详见efRcpConfig.commonParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async delete<E>(deleteParam: efRcpConfig.commonParams,
+  async delete<E>(deleteParam: efRcpConfig.commonParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //创建请求
       let request =
         await EfRcpClientApi.buildRequest(deleteParam.url, 'DELETE', deleteParam.headers, deleteParam.cookies,
           deleteParam.loadingTxt, deleteParam.baseURL);
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -388,10 +400,11 @@ export class EfRcpClientApi {
   /**
    * patch请求
    * @param patchParam  patch请求所需参数,详见efRcpConfig.commonParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg  本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async patch<E>(patchParam: efRcpConfig.requestBaseParams,
+  async patch<E>(patchParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //转换请求参数
       let jsonStr = JSON.stringify(patchParam.query);
@@ -402,7 +415,7 @@ export class EfRcpClientApi {
       //传入请求参数
       request.content = jsonStr;
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -424,10 +437,11 @@ export class EfRcpClientApi {
   /**
    * 上传文件 - MultipartFormFields形式
    * @param uploadParam uploadFile请求入参,详见efRcpConfig.uploadParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,
+  async uploadFile<E>(uploadParam: efRcpConfig.uploadParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //更改请求方式
       if (uploadParam.headers && !uploadParam.headers['content-type']) {
@@ -445,7 +459,7 @@ export class EfRcpClientApi {
       //设置参数
       request.content = multipart;
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
       return e;
     }
@@ -454,9 +468,11 @@ export class EfRcpClientApi {
   /**
    * 下载文件 - 保存路径方式 - 外部调用方式与downloadStream一致
    * @param downloadParam 下载请求入参,详见efRcpConfig.downloadParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @returns
    */
-  async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>> {
+  async downloadFile<E>(downloadParam: efRcpConfig.downloadParams,
+    cls?: ClassConstructor<E>): Promise<EfRcpResponse<E>> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
@@ -498,8 +514,19 @@ export class EfRcpClientApi {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
-      //返回response的数据
-      return { data: response.toJSON() as E };
+      //此处需要处理如果返回的data为null则页面端无任何提示
+      let result = response.toJSON();
+      if (result) {
+        //response.toJSON后的数据为Object类型，此处考虑转换为E类型
+        if (cls) {
+          let clsObj = plainToInstance(cls, response.toJSON())
+          return { data: clsObj };
+        } else {
+          return { data: result as E };
+        }
+      } else {
+        return { error: new EfRcpError(response.statusCode, '异常提醒', '请求异常原因未知') };
+      }
     } catch (e) {
       if (efRcpConfig.loading.enable) {
         //关闭loading
@@ -516,9 +543,11 @@ export class EfRcpClientApi {
   /**
    * 下载文件 - 保存流形式  外部调用方式与downloadFile一致
    * @param downloadParam 下载请求入参,详见efRcpConfig.downloadParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @returns
    */
-  async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>> {
+  async downloadStream<E>(downloadParam: efRcpConfig.downloadParams,
+    cls?: ClassConstructor<E>): Promise<EfRcpResponse<E>> {
     try {
       //根路径
       let filesDir = (getContext() as common.UIAbilityContext).filesDir;
@@ -550,8 +579,19 @@ export class EfRcpClientApi {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
-      //返回response的数据
-      return { data: response.toJSON() as E };
+      //此处需要处理如果返回的data为null则页面端无任何提示
+      let result = response.toJSON();
+      if (result) {
+        //response.toJSON后的数据为Object类型，此处考虑转换为E类型
+        if (cls) {
+          let clsObj = plainToInstance(cls, response.toJSON())
+          return { data: clsObj };
+        } else {
+          return { data: result as E };
+        }
+      } else {
+        return { error: new EfRcpError(response.statusCode, '异常提醒', '请求异常原因未知') };
+      }
     } catch (e) {
       if (efRcpConfig.loading.enable) {
         //关闭loading

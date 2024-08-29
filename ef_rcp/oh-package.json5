@@ -21,6 +21,9 @@
   "homepage": "https://gitee.com/yunkss",
   "dependencies": {
     "@yunkss/ef_json": "1.0.2",
-    "@yunkss/ef_core": "1.0.2"
-  }
+    "@yunkss/ef_core": "1.0.2",
+    "class-transformer": "^0.5.1"
+  },
+  "devDependencies": {},
+  "dynamicDependencies": {}
 }
