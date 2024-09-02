@@ -68,15 +68,14 @@ export struct Login {
   @State lottieStr: string = '';
 
   buildRcpCfg() {
-
     let resStr = util.TextDecoder.create('utf-8', { ignoreBOM: true });
-    this.lottieStr = resStr.decodeWithStream(new Uint8Array(getContext(this)
-      .resourceManager
-      .getRawFileContentSync('csx.json')
-      .buffer));
+    // this.lottieStr = resStr.decodeWithStream(new Uint8Array(getContext(this)
+    //   .resourceManager
+    //   .getRawFileContentSync('csx.json')
+    //   .buffer));
 
     //beta5写法
-    // this.lottieStr = resStr.decodeToString(getContext(this).resourceManager.getRawFileContentSync('csx.json'));
+    this.lottieStr = resStr.decodeToString(getContext(this).resourceManager.getRawFileContentSync('csx.json'));
 
     efRcp
       .setBaseURL("http://aliyunmr.com:18088")
@@ -87,7 +86,7 @@ export struct Login {
         "version": "V1.0.0"
       })// .setLoadingImg(wrapBuilder(loadingImg))
       .enableLottie()
-      .addCodeEvent({
+      .addSysCodeEvent({
         listener: (code: number) => {
           Logger.debug("----code监听事件-----", code + "")
         }
@@ -121,10 +120,6 @@ export struct Login {
   }
 
   aboutToAppear(): void {
-
-    let a = util.TextEncoder.create('utf-8');
-    let str = a.encodeInto('你好');
-    
 
     this.buildRcpCfg();
 
@@ -229,9 +224,9 @@ export struct Login {
               },
               loadingTxt: '正在登录中,稍等...'
             });
-            if (!(dto instanceof EfRcpError) && dto.success) {
+            if (dto.data) {
               //请求成功后将token存储在efRcpConfig.tokenValue
-              efRcpConfig.token.tokenValue = dto.dataRow?.token as string;
+              efRcpConfig.token.tokenValue = dto.data?.dataRow?.token as string;
               efRcpConfig.token.tokenName = "Authorization";
               //存入数据库
               let kvUtil = GlobalContext.getContext().getT<KvUtil>("kvUtil");
@@ -241,7 +236,7 @@ export struct Login {
                 url: 'pages/Home'
               })
             } else {
-              ToastUtil.showToast(JSONObject.toJSONString(dto), {
+              ToastUtil.showToast(JSONObject.toJSONString(dto.error), {
                 alignment: Alignment.Center
               });
             }

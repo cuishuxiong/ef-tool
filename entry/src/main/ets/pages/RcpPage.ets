@@ -37,7 +37,7 @@ struct RcpPage {
 
   async postForm() {
     //登录
-    let dto = await efRcpClientApi.postForm <OutDTO<UserDTO>>({
+    let dto = await efRcpClientApi.postForm<OutDTO<UserDTO>>({
       url: '/api/eftool/postFormData',
       query: {
         "nickName": "旺旺崔冰冰",
@@ -51,7 +51,7 @@ struct RcpPage {
   }
 
   async postJSON() {
-    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>({
+    let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
       url: '/api/eftool/post',
       query: {
         "nickName": "旺旺崔冰冰",
@@ -92,7 +92,7 @@ struct RcpPage {
   }
 
   async testCancel() {
-    let dto = await efRcpClientApi.post <OutDTO<UserDTO>>({
+    let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
       url: '/api/eftool/post',
       query: {
         "nickName": "旺旺崔冰冰",
