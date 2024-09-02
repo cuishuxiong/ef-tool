@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.2(API12)</center>
+# <center>V1.0.3(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -252,6 +252,16 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     
 ```
 
+* deleteParams delete请求所需参数对象 - 继承所有commonParams参数(1.0.3+)
+
+```
+    /**
+     * 请求参数 delete
+     */
+    query: Record<string, Object> | ESObject = {};
+
+```
+
 * uploadParams 上传入参对象 - 继承所有commonParams参数
 
 ```
@@ -322,7 +332,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 * efRcp 抛出的全局efRcp对象,可链式调用
 
-##### 3.efRcpClientApi工具类(1.0.2有改动)
+##### 3.efRcpClientApi工具类(1.0.3有改动)
 
 > 该工具类提供统一简化各种请求方式
 
@@ -330,8 +340,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async post<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async post<E>(postParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -341,8 +352,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明   参数为form格式
-    async postForm<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async postForm<E>(postParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -352,8 +364,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明   参数为MultipartForm格式
-    async postMultipartForm<E>(postParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async postMultipartForm<E>(postParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //postParam post请求所需参数,详见efRcpConfig.requestBaseParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 ```
@@ -362,8 +375,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
-    async get<E>(getParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async get<E>(getParam: efRcpConfig.commonParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //getParam get请求所需参数,详见efRcpConfig.commonParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -373,19 +387,20 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async put<E>(putParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async put<E>(putParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //putParam put请求所需参数,详见efRcpConfig.requestBaseParams
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
 ```
 
-* delete请求 async/await 方式
+* delete请求 async/await 方式(1.0.3有改动)
 
 ```
     //参数说明
-    async delete<E>(deleteParam: efRcpConfig.commonParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
-    //deleteParam delete请求所需参数,详见efRcpConfig.requestBaseParams
+    async delete<E>(deleteParam: efRcpConfig.deleteParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    //deleteParam delete请求所需参数,详见efRcpConfig.deleteParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -395,8 +410,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async patch<E>(patchParam: efRcpConfig.requestBaseParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async patch<E>(patchParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //patchParam patch请求所需参数,详见efRcpConfig.requestBaseParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -414,8 +430,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async uploadFile<E>(uploadParam: efRcpConfig.uploadParams,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
+    async uploadFile<E>(uploadParam: efRcpConfig.uploadParams, cls?: ClassConstructor<E>,securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>>
     //uploadParam 上传文件所需参数,详见efRcpConfig.uploadParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -425,8 +442,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async downloadFile<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>>
+    async downloadFile<E>(downloadParam: efRcpConfig.downloadParams, cls?: ClassConstructor<E>): Promise<EfRcpResponse<E>>
     //downloadParam 下载文件所需参数,详见efRcpConfig.downloadParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -436,8 +454,9 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
     //参数说明
-    async downloadStream<E>(downloadParam: efRcpConfig.downloadParams): Promise<EfRcpResponse<E>>
+    async downloadStream<E>(downloadParam: efRcpConfig.downloadParams, cls?: ClassConstructor<E>): Promise<EfRcpResponse<E>>
     //downloadParam 下载文件所需参数,详见efRcpConfig.downloadParams
+    //cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错,嵌套对象时只有第一层生效
     //securityCfg 本次请求是否需要更换证书 - 证书对象,详见efRcpConfig.securityCfg
     //EfRcpResponse<E> 为响应结果对象,请求成功数据存入data字段，请求失败存入error字段，如有场景需要判断系统框架级别error则获取使用
 
@@ -516,27 +535,25 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
           })
         });
     }, 100)
-    //登录
-    let dto = await efRcpClientApi.post<OutDTO<UserDTO>>({
+    //登录  如果需要转换类型,则post后可不写类型,将类型传入到post方法的第二个入参
+    let dto = await efRcpClientApi.post({
       url: '/api/eftool/login',
       query: {
         'account': 'efadmin',
-        'pwd': '1234561'
+        'pwd': '123456'
       },
-      loadingTxt: '正在登录中...'
-    });
+      loadingTxt: '小的正在努力奋斗...'
+    }, OutDTO<UserDTO>);//OutDTO<UserDTO>表示需要将返回结果转换为OutDTO<UserDTO>类型,则OutDTO的方法可以调用
     if (dto.data) {
-      if (dto.data["success"]) {
-        // ToastUtil.showToast('登录成功~');
-        //请求成功后将token存储在efRcpParams.tokenValue
-        efRcpConfig.token.tokenValue = dto.data["dataRow"].token;
-        efRcpConfig.token.tokenName = "Authorization";
-      }
-      this.message = JSON.stringify(dto.data);
+      //dto.data.getXXX()  getXXX 方法此处不会报错
+      //请求成功后将token存储在efRcpParams.tokenValue
+      efRcpConfig.token.tokenValue = dto.data.getDataRow().token;
+      efRcpConfig.token.tokenName = "Authorization";
+      this.message = JSON.stringify(dto.data.getDataRow());
     }
     //else部分如果业务需要判断该系统异常则加,否则只判断dto.data即可
     else {
-      this.message = (dto.error as EfRcpError).toString();
+      this.message = dto.error?.message;
     }
 ```
 
@@ -651,6 +668,18 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
   async testDelete() {
     let dto = await efRcpClientApi.delete<OutDTO<string>>({
       url: '/api/eftool/delete/5345345'
+    });
+    this.message = JSON.stringify(dto);
+  }
+```
+
+```
+  async testDeleteBody() {
+    let dto = await efRcpClientApi.delete<OutDTO<string>>({
+      url: '/api/eftool/deleteBody',
+      query: {
+        "id": "1111111"
+      }
     });
     this.message = JSON.stringify(dto);
   }

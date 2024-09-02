@@ -248,6 +248,18 @@ export namespace efRcpConfig {
     isParams?: boolean;
   }
 
+
+  /**
+   * delete请求所需参数对象
+   */
+  export class deleteParams extends commonParams {
+    /**
+     * 请求参数 delete
+     */
+    query?: Record<string, Object> | ESObject = {};
+  }
+
+
   /**
    * 上传入参对象
    */

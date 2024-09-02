@@ -4,7 +4,9 @@
 
 ### 🐞Bug修复
 
-* 优化请求中使用as转换
+* 优化请求中使用as转换导致调用泛型方法报错
+* 优化Loading的content设置空不生效问题[issuesIANKDF](https://gitee.com/yunkss/ef-tool/issues/IANKDF)
+* 优化delete支持body传参[issuesIANBVZ](https://gitee.com/yunkss/ef-tool/issues/IANBVZ)
 
 ## [v1.0.2] 2024-08
 

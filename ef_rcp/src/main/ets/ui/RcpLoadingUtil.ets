@@ -65,9 +65,6 @@ export class RcpLoadingUtil {
       RcpLoadingUtil.cacheWindow = windowClass;
       //更新属性
       if (options) {
-        if (!options.content) {
-          options.content = '小的正在努力加载中...';
-        }
         if (options.imgLayout == undefined) {
           options.imgLayout = RcpImgLayout.RIGHT;
         }

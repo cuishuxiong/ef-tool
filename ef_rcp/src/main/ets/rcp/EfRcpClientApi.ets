@@ -384,12 +384,16 @@ export class EfRcpClientApi {
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async delete<E>(deleteParam: efRcpConfig.commonParams, cls?: ClassConstructor<E>,
+  async delete<E>(deleteParam: efRcpConfig.deleteParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
     try { //创建请求
       let request =
         await EfRcpClientApi.buildRequest(deleteParam.url, 'DELETE', deleteParam.headers, deleteParam.cookies,
           deleteParam.loadingTxt, deleteParam.baseURL);
+      //判断是否body传参
+      if (deleteParam.query) {
+        request.content = JSON.stringify(deleteParam.query);
+      }
       //构建响应
       return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
     } catch (e) {
