@@ -32,6 +32,8 @@ export { ExceptionUtil } from './src/main/ets/ui/prompt/ExceptionUtil';
 
 export { LoadingUtil } from './src/main/ets/ui/prompt/LoadingUtil';
 
+export { message } from './src/main/ets/ui/prompt/MessageUtil';
+
 export { TipsUtil } from './src/main/ets/ui/prompt/TipsUtil';
 
 export { ToastUtil } from './src/main/ets/ui/prompt/ToastUtil';
