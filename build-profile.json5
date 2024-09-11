@@ -5,20 +5,33 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/csx/.ohos/config/default_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.cer",
-          "storePassword": "0000001BF9E31D0C4074F7F27FB3962AAEABEC933A05442BE55FC313C95C92ABF666BCBF0B03E9E323BABA",
+          "certpath": "C:/Users/cui/.ohos/config/default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.cer",
+          "storePassword": "0000001B69B58A06A0272E0391C680876B603554F98E076490530B5EB418783DC3DF1C95AB3F9F0D071172",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B747C18E4C128E9184D367F5A778E25AE9F8BA84F0F22652D44B31FF84293AB24E45943CA05DEAA",
-          "profile": "/Users/csx/.ohos/config/default_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p7b",
+          "keyPassword": "0000001B0D27700FD9F441566FB0F2339AF98673A87CDCAA2ACE1F3B1230938F969778435E828DFCD5E99B",
+          "profile": "C:/Users/cui/.ohos/config/default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/csx/.ohos/config/default_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p12"
+          "storeFile": "C:/Users/cui/.ohos/config/default_ef-tool_pD-sWpvyM743i95f4iirGR2OiHNx0CL1QtTAJWsXOnQ=.p12"
+        }
+      },
+      {
+        "name": "eftool",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "0000001A1CE3D5F51F26B1FA09F4149D3E1E1A283DFA0CBAD9F6A84EB0A0DD9A251F801364CD6B616445",
+          "certpath": "D:/HarmonyOSNext/certs_prod/eftoolProd.cer",
+          "keyAlias": "eftool",
+          "keyPassword": "0000001A68D91CAB81D12C4B95DF404780ACBB023E998A3D2C6CA7C9E52A6276B579E22A4C06C585EA5F",
+          "profile": "D:/HarmonyOSNext/certs_prod/eftoolProdRelease.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "D:/HarmonyOSNext/certs_prod/.p12"
         }
       }
     ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "eftool",
         "compatibleSdkVersion": "5.0.0(12)",
         "runtimeOS": "HarmonyOS"
       }
@@ -84,6 +97,10 @@
     {
       "name": "ef_media",
       "srcPath": "./ef_media",
+    },
+    {
+      "name": "ef_audio",
+      "srcPath": "./ef_audio",
     }
   ]
 }

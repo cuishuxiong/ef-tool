@@ -1,0 +1,11 @@
+{
+  "module": {
+    "name": "ef_audio",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet",
+      "2in1"
+    ]
+  }
+}
