@@ -318,6 +318,12 @@ class EfClientApi {
           formData.append('file', efClientParams.data);
         }
       }
+      //如果上传需要拼接参数
+      if (efClientParams.params) {
+        Object.entries(efClientParams.params).forEach(item => {
+          formData.append(item[0], item[1]);
+        })
+      }
       //需要添加的header对象
       let addHead: AxiosHeaders = EfClientApi.appendHeader(efClientParams.headers);
       addHead.set('Content-Type', 'multipart/form-data', true);
@@ -451,7 +457,7 @@ export class efClientParams<T> {
    */
   query?: T;
   /**
-   *  get入参
+   *  get入参/upload入参
    */
   params?: Record<string, Object>;
   /**

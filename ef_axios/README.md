@@ -1,6 +1,6 @@
 # <center>ef_axios</center>
 
-# <center>V1.0.3(API12)</center>
+# <center>V1.0.4(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -372,7 +372,7 @@ export class efClientParams<T> {
     
 ```
 
-* upload 统一的上传请求 async/await 方式
+* upload 统一的上传请求 async/await 方式(1.0.4有改动)
 
 ```
     //参数说明
@@ -381,6 +381,7 @@ export class efClientParams<T> {
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.isUri  是否为uri文件
     //efClientParams.data  isUri=false时传入 表示上传的文件为ArrayBuffer格式
+    //efClientParams.params  如果上传文件需要提交表单信息则传入
     //efClientParams.uri   isUri=true时传入  表示上传的文件为uri格式
     //efClientParams.keyName  上传时后端接收的key,默认为file
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
@@ -537,7 +538,10 @@ export class efClientParams<T> {
       url: '/api/eftool/upload',
       isUri: false,
       data: buf,
-      // baseUrl:''  如有需要则自行设置
+      // baseUrl:'',  如有需要则自行设置
+      // params:{
+      //   'field1':'value1'
+      //}   模拟需要提交表单信息
     }, (progress: number) => {
       this.message = "上传进度:" + progress;
     });

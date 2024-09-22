@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.4] 2024-00
+
+### 🐞Bug修复
+
+* 优化upload上传文件同时支持表单信息[issuesIASJA8](https://gitee.com/yunkss/ef-tool/issues/IASJA8)
+
 ## [v1.0.3] 2024-08
 
 ### 🐞Bug修复
