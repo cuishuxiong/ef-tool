@@ -129,11 +129,15 @@ class EfRcp {
   }
 
   /**
-   * 启用日志拦截器
+   * 是否启用日志拦截器-默认启用 true
    * @returns
    */
-  enableLogInterceptor(): EfRcp {
-    return this.addLogInterceptor();
+  enableLogInterceptor(enable: boolean = true): EfRcp {
+    if (enable) {
+      efRcpConfig.logger.enable = true;
+      return this.addLogInterceptor();
+    }
+    return this;
   }
 
   /**

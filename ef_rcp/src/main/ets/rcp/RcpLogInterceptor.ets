@@ -16,6 +16,7 @@
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { CacheUtil, Logger } from '@yunkss/ef_core'
 import { JSONObject } from '@yunkss/ef_json';
+import { efRcpConfig } from './efRcpConfig';
 import { EfRcpError } from './EfRcpError';
 
 
@@ -42,24 +43,28 @@ export class RcpLogInterceptor implements rcp.Interceptor {
         //请求存入缓存
         CacheUtil.save<rcp.Request>(url, context.request);
       }
-      Logger.debug("--------请求信息---------", "");
-      Logger.debug("--------请求URL:", (context.request.url.href));
-      Logger.debug("--------请求方式:", context.request.method);
-      if (context.request.headers) {
-        Logger.debug("--------请求  头:", JSONObject.toJSONString(context.request.headers as object));
-      }
-      if (context.request.cookies) {
-        Logger.debug("--------请求cookie:", JSONObject.toJSONString(context.request.cookies as object));
-      }
-      if (context.request.content) {
-        Logger.debug("--------请求入参:", context.request.content.toString() as string);
+      if (efRcpConfig.logger.enable) {
+        Logger.debug("--------请求信息---------", "");
+        Logger.debug("--------请求URL:", (context.request.url.href));
+        Logger.debug("--------请求方式:", context.request.method);
+        if (context.request.headers) {
+          Logger.debug("--------请求  头:", JSONObject.toJSONString(context.request.headers as object));
+        }
+        if (context.request.cookies) {
+          Logger.debug("--------请求cookie:", JSONObject.toJSONString(context.request.cookies as object));
+        }
+        if (context.request.content) {
+          Logger.debug("--------请求入参:", context.request.content.toString() as string);
+        }
       }
       //获取响应结果
       const response = await next.handle(context);
-      //是否开启打印日志
-      Logger.debug("--------响应信息---------", "");
-      Logger.debug("--------响应状态:", response.statusCode + "");
-      Logger.debug("--------响应内容:", response.toString() as string);
+      if (efRcpConfig.logger.enable) {
+        //是否开启打印日志
+        Logger.debug("--------响应信息---------", "");
+        Logger.debug("--------响应状态:", response.statusCode + "");
+        Logger.debug("--------响应内容:", response.toString() as string);
+      }
       return response;
     } catch (error) {
       //抛出

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.4] 2024-09
+
+### 🐞Bug修复
+
+* 优化enableLogInterceptor支持入参开关日志打印[issuesIAS3WI](https://gitee.com/yunkss/ef-tool/issues/IAS3WI)
+
 ## [v1.0.3] 2024-08
 
 ### 🐞Bug修复

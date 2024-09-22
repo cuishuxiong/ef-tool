@@ -302,4 +302,11 @@ export namespace efRcpConfig {
     dnsOHCfg?: rcp.DnsOverHttpsConfiguration
   }
 
+  /**
+   * 日志是否启用开关
+   */
+  export class logger {
+    static enable?: boolean;
+  }
+
 }

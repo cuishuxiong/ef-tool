@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.3(API12)</center>
+# <center>V1.0.4(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -504,6 +504,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
         "platform": "HarmonyOS",
         "version": "V1.0.1"
       })
+      .enableLogInterceptor(false)  设置为false即可关闭
       //设置loading为gif图片
       .setLoadingImg(wrapBuilder(loadingImg))
       //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
