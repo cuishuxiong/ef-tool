@@ -141,6 +141,16 @@ class EfRcp {
   }
 
   /**
+   * 设置相应结果JSON异常时是提示错误还是将Response字符串返回
+   * @param isConvert  true表示返回Response字符串
+   * @returns
+   */
+  convertError(isConvert: boolean): EfRcp {
+    efRcpConfig.isConvertError = isConvert;
+    return this;
+  }
+
+  /**
    * 添加用户自定义拦截器
    * @param customInterceptors 自定义拦截器数组
    * @returns

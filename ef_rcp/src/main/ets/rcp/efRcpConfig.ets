@@ -309,4 +309,9 @@ export namespace efRcpConfig {
     static enable?: boolean;
   }
 
+  /**
+   * 请求转换JSON失败时是否返回结果字符串
+   */
+  export let isConvertError: boolean = false;
+
 }

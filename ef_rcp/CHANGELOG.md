@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.5] 2024-09
+
+### 🐞Bug修复
+
+* 优化拦截器异常后提示内容[issuesIASVO3](https://gitee.com/yunkss/ef-tool/issues/IASVO3)
+
 ## [v1.0.4] 2024-09
 
 ### 🐞Bug修复

@@ -180,7 +180,12 @@ export class EfRcpClientApi {
           return { data: result as E };
         }
       } else {
-        return { error: new EfRcpError(response.statusCode, '异常提醒', '请求异常原因未知') };
+        let errStr = 'efRcp解析【' + request.method + '】结果异常~';
+        //此处优化为调用者传入是否直接返回对应的字符串信息
+        if (efRcpConfig.isConvertError) {
+          errStr = response.toString() as string;
+        }
+        return { error: new EfRcpError(response.statusCode, request.method + '请求异常提醒', errStr) };
       }
     } catch (e) {
       if (efRcpConfig.loading.enable) {
@@ -529,7 +534,12 @@ export class EfRcpClientApi {
           return { data: result as E };
         }
       } else {
-        return { error: new EfRcpError(response.statusCode, '异常提醒', '请求异常原因未知') };
+        let errStr = 'efRcp解析下载结果异常~';
+        //此处优化为调用者传入是否直接返回对应的字符串信息
+        if (efRcpConfig.isConvertError) {
+          errStr = response.toString() as string;
+        }
+        return { error: new EfRcpError(response.statusCode, '异常提醒', errStr) };
       }
     } catch (e) {
       if (efRcpConfig.loading.enable) {
@@ -594,7 +604,12 @@ export class EfRcpClientApi {
           return { data: result as E };
         }
       } else {
-        return { error: new EfRcpError(response.statusCode, '异常提醒', '请求异常原因未知') };
+        let errStr = 'efRcp解析下载结果异常~';
+        //此处优化为调用者传入是否直接返回对应的字符串信息
+        if (efRcpConfig.isConvertError) {
+          errStr = response.toString() as string;
+        }
+        return { error: new EfRcpError(response.statusCode, '异常提醒', errStr) };
       }
     } catch (e) {
       if (efRcpConfig.loading.enable) {

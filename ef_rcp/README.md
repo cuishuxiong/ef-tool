@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.4(API12)</center>
+# <center>V1.0.5(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-##### 1.efRcpConfig配置类参数详解(1.0.2有改动)
+##### 1.efRcpConfig配置类参数详解(1.0.5有改动)
 
 * timeout 超时对象
 
@@ -280,7 +280,13 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     fileName: string = '';
 ```
 
-##### 2.efRcp工具类(1.0.2有改动)
+* isConvertError 请求转换JSON失败时是否返回结果字符串
+
+```
+  export let isConvertError: boolean = false;
+```
+
+##### 2.efRcp工具类(1.0.5有改动)
 
 * getInstance 懒汉模式获取EfRcp类单例
 
@@ -331,6 +337,8 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 * setDNS 设置DNS相关配置 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
 * efRcp 抛出的全局efRcp对象,可链式调用
+
+* convertError 将异常结果转换
 
 ##### 3.efRcpClientApi工具类(1.0.3有改动)
 
@@ -480,6 +488,8 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       .enableLogInterceptor()
       //更改loading文本
       .setLoadingContent('充值有大礼包...')
+      //表示如果response.toJSON()异常时将响应字符串返回,false则表示值返回异常提醒而不返回结果
+      .convertError(true)
       //设置一部分不需要从接口获取的常量公共头
       .addCommonHeaders({
         "platform": "HarmonyOS",
