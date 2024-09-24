@@ -1,6 +1,6 @@
 # <center>ef_axios</center>
 
-# <center>V1.0.4(API12)</center>
+# <center>V1.0.5(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -267,7 +267,7 @@ export class efClientParams<T> {
    //6.添加统一的请求头签名sign字段
 ```
 
-#### 6.EfClientApi工具类(1.0.3有改动)
+#### 6.EfClientApi工具类(1.0.5有改动)
 
 > 该工具类提供统一简化各种请求方式,入参为json格式内部进行转换为所需对象
 
@@ -277,7 +277,7 @@ export class efClientParams<T> {
 
 ```
     //参数说明
-    async post<F, E>(efClientParams: efClientParams<F>): Promise<E | EfAxiosError>  
+    async post<F, E>(efClientParams: efClientParams<F>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError>  
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.query 为请求入参对象
@@ -286,6 +286,7 @@ export class efClientParams<T> {
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //当前请求需要传入efClientParams.query 为F类型的对象
+    //cls为当返回的泛型类有方法或者需要设置为状态变量是传入泛型具体的类型
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
 ```
 
@@ -293,13 +294,14 @@ export class efClientParams<T> {
 
 ```
     //参数说明
-    async postFormData<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError>
+    async postFormData<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError>
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.formData 业务传入的formData数据
     //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cls为当返回的泛型类有方法或者需要设置为状态变量是传入泛型具体的类型
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
 ```
 
@@ -307,13 +309,14 @@ export class efClientParams<T> {
 
 ```
     //参数说明 格式为  getXXXX/id/name/xxxx
-    async get<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError>
+    async get<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError>
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
+    //cls为当返回的泛型类有方法或者需要设置为状态变量是传入泛型具体的类型
     //注意demo中的get请求为rest方式,即入参无需?param1=value,而是 get方法/param1/param2 以此类推
 ```
 
@@ -321,13 +324,14 @@ export class efClientParams<T> {
 
 ```
     //参数说明   参数为json格式
-    async getByParams<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError>
+    async getByParams<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError>
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //E 为响应结果对象
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
     //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //efClientParams.params表示get请求的入参符合key:value格式
+    //cls为当返回的泛型类有方法或者需要设置为状态变量是传入泛型具体的类型
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
     
 ```
@@ -336,7 +340,7 @@ export class efClientParams<T> {
 
 ```
     //参数说明
-    async delete<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError> 
+    async delete<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> 
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //E 为响应结果对象
@@ -344,13 +348,14 @@ export class efClientParams<T> {
     //efClientParams.baseURL 为单独接口需要更换基地址时设置(1.0.3+)
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
     //注意demo中的delete请求为rest方式,即入参方式为 delete方法/param1/param2 以此类推
+    //cls为当返回的泛型类有方法或者需要设置为状态变量是传入泛型具体的类型
 ```
 
 * put请求 async/await 方式
 
 ```
     //参数说明
-    async put<F, E>(efClientParams: efClientParams<F>): Promise<E | EfAxiosError>
+    async put<F, E>(efClientParams: efClientParams<F>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError>
     //efClientParams为优化后的请求入参对象,具体参数详见上方2.efClientParams类参数详解
     //当前请求需要传入efClientParams.url 为请求方法的url 全路径应该为 efAxiosParams.baseURL+efClientParams.url 组合而成
     //efClientParams.query 为请求入参对象
@@ -358,6 +363,7 @@ export class efClientParams<T> {
     //E 为响应结果对象
     //F 为请求入参对象,具体参照示例中的写法
     //efClientParams.headers  提供给如果当前请求需要额外设置headers请求头参数时使用,保持json格式
+    //cls为当返回的泛型类有方法或者需要设置为状态变量是传入泛型具体的类型
     //注意返回结果如未报错则是E类型，否则为EfAxiosError
 ```
 
@@ -403,7 +409,7 @@ export class efClientParams<T> {
     //progressCallBack 上传进度回调,具体参照示例中的写法
 ```
 
-#### 7.使用示例
+#### 7.使用示例(1.0.5有改动)
 
 * 登录示例/post
 
@@ -428,6 +434,7 @@ export class efClientParams<T> {
     this.message = JSON.stringify(dto);
   }
 ```
+
 
 * postForm示例
 
@@ -463,6 +470,21 @@ export class efClientParams<T> {
     this.message = JSON.stringify(dto);
   }
 ```
+
+> 1.0.5版本优化将泛型转换后泛型方法也可调用,同时如果结果是状态变量也会触发UI更新
+
+```
+  async get() {
+    //模拟测试get请求
+    let res = await efClientApi.get({
+      url: 'xxxxxxxx/xxxxxxx'
+    }, currentProperty);
+    if (res instanceof currentProperty) {
+      this.cp = res;
+    }
+  }
+```
+
 
 * getParams示例
 

@@ -22,6 +22,8 @@ import { fileUri } from '@kit.CoreFileKit';
 import { EfAxiosError } from './EfAxiosError';
 import { ArrayList } from '@kit.ArkTS';
 import { EfAxiosConst } from '../EfAxiosConst';
+import { ClassConstructor } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
 
 /**
  * @Author csx
@@ -68,9 +70,10 @@ class EfClientApi {
   /**
    * post请求 - json格式
    * @param efClientParams post请求入参实体
+   * @package cls入参实体转换对象
    * @returns 响应结果
    */
-  async post<F, E>(efClientParams: efClientParams<F>): Promise<E | EfAxiosError> {
+  async post<F, E>(efClientParams: efClientParams<F>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> {
     try {
       //如果当前请求efClientParams.loadingTxt传入参数  则 更改当前的loading文本
       if (efClientParams.loadingTxt) {
@@ -85,6 +88,10 @@ class EfClientApi {
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
         efAxiosParams.loadingTxt = EfAxiosConst.loadingTxt;
+      }
+      //需要转换类型解决状态变量监听的问题
+      if (cls) {
+        return plainToClass(cls, response.data);
       }
       //返回response的数据
       return response.data;
@@ -104,7 +111,7 @@ class EfClientApi {
    * @param efClientParams formData请求入参实体
    * @returns 响应结果
    */
-  async postFormData<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError> {
+  async postFormData<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> {
     //需要添加的header对象
     try {
       //如果当前请求efClientParams.loadingTxt传入参数  则 更改当前的loading文本
@@ -122,6 +129,10 @@ class EfClientApi {
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
         efAxiosParams.loadingTxt = EfAxiosConst.loadingTxt;
+      }
+      //需要转换类型解决状态变量监听的问题
+      if (cls) {
+        return plainToClass(cls, response.data);
       }
       //返回response的数据
       return response.data;
@@ -141,7 +152,7 @@ class EfClientApi {
    * @param efClientParams  get请求入参实体
    * @returns 响应结果
    */
-  async get<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError> {
+  async get<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> {
     try {
       //如果当前请求efClientParams.loadingTxt传入参数  则 更改当前的loading文本
       if (efClientParams.loadingTxt) {
@@ -154,6 +165,10 @@ class EfClientApi {
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
         efAxiosParams.loadingTxt = EfAxiosConst.loadingTxt;
+      }
+      //需要转换类型解决状态变量监听的问题
+      if (cls) {
+        return plainToClass(cls, response.data);
       }
       //返回response的数据
       return response.data;
@@ -173,7 +188,7 @@ class EfClientApi {
    * @param efClientParams  get请求入参实体
    * @returns
    */
-  async getByParams<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError> {
+  async getByParams<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> {
     try {
       //如果当前请求efClientParams.loadingTxt传入参数  则 更改当前的loading文本
       if (efClientParams.loadingTxt) {
@@ -187,6 +202,10 @@ class EfClientApi {
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
         efAxiosParams.loadingTxt = EfAxiosConst.loadingTxt;
+      }
+      //需要转换类型解决状态变量监听的问题
+      if (cls) {
+        return plainToClass(cls, response.data);
       }
       //返回response的数据
       return response.data;
@@ -206,7 +225,7 @@ class EfClientApi {
    * @param efClientParams  put请求入参实体
    * @returns
    */
-  async put<F, E>(efClientParams: efClientParams<F>): Promise<E | EfAxiosError> {
+  async put<F, E>(efClientParams: efClientParams<F>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> {
     try {
       //如果当前请求efClientParams.loadingTxt传入参数  则 更改当前的loading文本
       if (efClientParams.loadingTxt) {
@@ -220,6 +239,10 @@ class EfClientApi {
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
         efAxiosParams.loadingTxt = EfAxiosConst.loadingTxt;
+      }
+      //需要转换类型解决状态变量监听的问题
+      if (cls) {
+        return plainToClass(cls, response.data);
       }
       //返回response的数据
       return response.data;
@@ -239,7 +262,7 @@ class EfClientApi {
    * @param efClientParams  删除请求入参实体
    * @returns
    */
-  async delete<E>(efClientParams: efClientParams<null>): Promise<E | EfAxiosError> {
+  async delete<E>(efClientParams: efClientParams<null>, cls?: ClassConstructor<E>): Promise<E | EfAxiosError> {
     try {
       //如果当前请求efClientParams.loadingTxt传入参数  则 更改当前的loading文本
       if (efClientParams.loadingTxt) {
@@ -252,6 +275,10 @@ class EfClientApi {
       //如果当前请求更改过loading文字的话 - 更改默认值
       if (efClientParams.loadingTxt) {
         efAxiosParams.loadingTxt = EfAxiosConst.loadingTxt;
+      }
+      //需要转换类型解决状态变量监听的问题
+      if (cls) {
+        return plainToClass(cls, response.data);
       }
       //返回response的数据
       return response.data;
