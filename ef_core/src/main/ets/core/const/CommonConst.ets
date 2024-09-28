@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/4/25 20:39:04
  * @TODO CommonConst  公共常量
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 export class CommonConst {
   /**

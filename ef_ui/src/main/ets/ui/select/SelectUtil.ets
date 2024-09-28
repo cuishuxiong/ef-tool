@@ -22,6 +22,7 @@ import { UiConst } from '@yunkss/ef_core';
  * @Author csx
  * @DateTime 2024/3/27 19:56
  * @TODO SelectUtil
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct SelectUtil {

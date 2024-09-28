@@ -21,6 +21,7 @@ import { fileIo } from '@kit.CoreFileKit';
  * @Author csx
  * @DateTime 2024/8/14 23:40
  * @TODO efRcpConfig  efRcp配置对象命名空间   本类灵感来源于官方rcp.xxxxxxx
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 export namespace efRcpConfig {
 

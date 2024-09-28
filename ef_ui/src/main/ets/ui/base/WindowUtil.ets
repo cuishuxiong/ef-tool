@@ -23,6 +23,7 @@ import { ToastUtil } from '../prompt/ToastUtil';
  * @Author csx
  * @DateTime 2024/4/3 09:11:04
  * @TODO WindowUtil  提供对窗口的工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class WindowUtil {
   /**

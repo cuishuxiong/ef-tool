@@ -22,6 +22,7 @@ import { JSONObject } from '@yunkss/ef_json';
  * @Author csx
  * @DateTime 2024/8/12 22:45
  * @TODO EfAxiosError  efAxios统一自定义异常
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios
  */
 export class EfAxiosError implements BusinessError {
   /**

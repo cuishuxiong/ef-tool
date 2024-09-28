@@ -26,6 +26,7 @@ import { photoAccessHelper } from '@kit.MediaLibraryKit';
  * @Author csx
  * @DateTime 2024/5/11 09:26:05
  * @TODO PickerUtil  拉起系统picker工具类-均无需获取权限
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class PickerUtil {
   /**

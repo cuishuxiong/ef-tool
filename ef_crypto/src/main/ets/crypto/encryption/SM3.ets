@@ -23,6 +23,7 @@ import { DynamicUtil } from '../util/DynamicUtil';
  * @Author csx
  * @DateTime 2024/3/18 10:37:03
  * @TODO SM3 国密SM3工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class SM3 {
   /**

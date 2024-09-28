@@ -28,6 +28,7 @@ function loadingTxt(fontSize: string | number) {
  * @Author csx
  * @DateTime 2024/5/24 21:05
  * @TODO rcpLoading loading组件
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 @Entry({ routeName: 'rcpLoading', storage: LocalStorage.getShared() })
 @Component

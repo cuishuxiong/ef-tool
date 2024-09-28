@@ -29,6 +29,7 @@ import { plainToClass } from 'class-transformer';
  * @Author csx
  * @DateTime 2024/4/19 08:00:04
  * @TODO EfApi  axios封装的请求工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios
  */
 class EfClientApi {
   /**

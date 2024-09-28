@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2023/12/29 22:45
  * @TODO OutDTO  输出对象
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 export class OutDTO<T> {
   //成功失败标识

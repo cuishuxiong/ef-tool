@@ -21,6 +21,7 @@ import { buffer } from '@kit.ArkTS';
  * @Author csx
  * @DateTime 2024/3/18 10:15:03
  * @TODO SM4Sync SM4同步操作类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class SM4Sync {
   /**

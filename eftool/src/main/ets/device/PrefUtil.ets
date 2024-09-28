@@ -22,6 +22,7 @@ import { preferences } from '@kit.ArkData';
  * @Author 幻凡ss
  * @DateTime 2024/7/4 00:12
  * @TODO PrefUtil  首选项工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool
  */
 export class PrefUtil {
   /**

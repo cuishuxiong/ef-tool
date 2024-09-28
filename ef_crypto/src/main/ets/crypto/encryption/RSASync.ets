@@ -23,6 +23,7 @@ import { CryptoKey, CryptoSyncUtil } from '../util/CryptoSyncUtil';
  * @Author csx
  * @DateTime 2024/3/18 10:48:03
  * @TODO RS 同步操作类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 
 export class RSASync {

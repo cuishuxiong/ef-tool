@@ -28,6 +28,7 @@ function loadingTxt(fontSize: string | number) {
  * @Author csx
  * @DateTime 2024/5/24 21:05
  * @TODO Loading
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios
  */
 @Entry({ routeName: 'efAxiosLoading', storage: LocalStorage.getShared() })
 @Component

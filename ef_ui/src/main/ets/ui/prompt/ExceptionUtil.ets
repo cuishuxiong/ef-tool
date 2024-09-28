@@ -21,6 +21,7 @@ import { ExceptionPrompt, MarginType } from '@ohos.arkui.advanced.ExceptionPromp
  * @Author csx
  * @DateTime 2024/3/28 10:13:03
  * @TODO ExceptionUtil  异常提醒工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct ExceptionUtil {

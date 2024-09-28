@@ -23,6 +23,7 @@ import { common } from '@kit.AbilityKit';
  * @Author csx
  * @DateTime 2024/6/6 00:23
  * @TODO FileUtil  文件工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool
  */
 export class FileUtil {
   /**

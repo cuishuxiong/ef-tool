@@ -21,6 +21,7 @@ import { UiConst as Const } from '@yunkss/ef_core'
  * @Author csx
  * @DateTime 2024/1/24 19:31
  * @TODO ToastUtil 文本提示框工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class ToastUtil {
   /**

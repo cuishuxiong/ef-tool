@@ -22,6 +22,7 @@ import { EfRcpError } from './EfRcpError';
  * @Author csx
  * @DateTime 2024/8/22 13:47:23
  * @TODO EfRcpResponse 统一的rcp请求响应对象
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 export interface EfRcpResponse<E> {
   /**

@@ -23,6 +23,7 @@ import { DynamicSyncUtil } from '../util/DynamicSyncUtil';
  * @Author csx
  * @DateTime 2024/3/20 21:43
  * @TODO SHA
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class SHASync {
   /**

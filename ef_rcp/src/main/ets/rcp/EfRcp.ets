@@ -27,6 +27,7 @@ import { EfCryptoInterceptor } from './EfCryptoInterceptor';
  * @DateTime 2024/7/23 23:56
  * @TODO RcpUtil 远场通信服务工具类
  * @TODO 本类单例思路来源于Java懒汉模式,链式调用思路来源于jdk8 lambda表达式
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 class EfRcp {
   /**

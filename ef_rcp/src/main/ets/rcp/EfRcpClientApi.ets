@@ -33,6 +33,7 @@ import { plainToClass, plainToInstance, ClassConstructor } from 'class-transform
  * @Author csx
  * @DateTime 2024/7/24 00:39
  * @TODO EfRcpClientApi rcp请求工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 export class EfRcpClientApi {
   /**

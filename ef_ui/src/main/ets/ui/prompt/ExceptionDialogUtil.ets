@@ -22,6 +22,7 @@ import { ExceptionUtil } from './ExceptionUtil'
  * @Author csx
  * @DateTime 2024/3/28 10:50:03
  * @TODO ExceptionDialogUtil 异常提醒弹框工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct ExceptionDialogUtil {

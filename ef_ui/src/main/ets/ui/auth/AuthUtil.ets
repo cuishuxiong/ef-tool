@@ -24,6 +24,7 @@ import { ToastUtil } from '../../ui/prompt/ToastUtil';
  * @Author csx
  * @DateTime 2024/2/2 21:33
  * @TODO AuthUtil  权限相关工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class AuthUtil {
   /**

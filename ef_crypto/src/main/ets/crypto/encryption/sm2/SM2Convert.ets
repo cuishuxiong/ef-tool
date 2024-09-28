@@ -21,6 +21,7 @@ import { SM2Sequence } from './SM2Sequence';
  * @Author csx
  * @DateTime 2024/3/18 10:39:03
  * @TODO ASN1Util   SM2ASN.1工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class ASN1Util {
   static readonly BOOLEAN: string = "01";

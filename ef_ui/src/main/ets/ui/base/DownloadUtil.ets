@@ -20,6 +20,7 @@ import { ProgressButton } from '@kit.ArkUI'
  * @Author csx
  * @DateTime 2024/3/28 20:52
  * @TODO DownloadUtil  下载按钮工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct DownloadUtil {

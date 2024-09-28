@@ -21,6 +21,7 @@ import { UiConst } from '@yunkss/ef_core';
  * @Author csx
  * @DateTime 2024/8/23 00:47
  * @TODO MessageUtil 警告类提示框工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 class MessageUtil {
   /**

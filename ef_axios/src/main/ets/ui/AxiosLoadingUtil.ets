@@ -26,6 +26,7 @@ import('./axiosLoading'); // 引入命名路由页面
  * @Author csx
  * @DateTime 2024/6/19 00:16
  * @TODO WinLoadingUtil  子窗口方式实现全局加载框
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios
  */
 export class WinLoadingUtil {
   /**

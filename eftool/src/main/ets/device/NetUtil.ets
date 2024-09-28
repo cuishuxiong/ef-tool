@@ -23,6 +23,7 @@ import { GlobalContext, Logger } from '@yunkss/ef_core';
  * @Author csx
  * @DateTime 2024/8/3 09:25
  * @TODO NetUtil 网络相关工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool
  */
 export class NetUtil {
   /**

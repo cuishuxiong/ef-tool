@@ -22,6 +22,7 @@ import { IdUtil } from './IdUtil';
  * @Author csx
  * @DateTime 2023/12/29 20:10
  * @TODO Logger   日志工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 export class Logger {
   //优化日志   https://gitee.com/harmonyos_samples/logger

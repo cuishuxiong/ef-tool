@@ -22,6 +22,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
  * @Author csx
  * @DateTime 2024/8/15 19:07
  * @TODO EfBusinessCodeInterceptor  内置针对于业务系统内部请求自定义code拦截器
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 export class EfBusinessCodeInterceptor implements rcp.Interceptor {
   /**

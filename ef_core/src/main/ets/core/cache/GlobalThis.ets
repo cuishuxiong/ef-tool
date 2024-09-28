@@ -20,6 +20,7 @@ import { common } from '@kit.AbilityKit';
  * @Author csx
  * @DateTime 2024/7/29 11:04:59
  * @TODO GlobalThis  全局替换版本GlobalThis 单例对象
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 export class GlobalThis {
   private constructor() {

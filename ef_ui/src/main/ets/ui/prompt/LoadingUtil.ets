@@ -22,6 +22,7 @@ import { UiConst } from '@yunkss/ef_core';
  * @Author csx
  * @DateTime 2024/3/25 15:54:03
  * @TODO LoadingUtil 全局加载工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct LoadingUtil {

@@ -21,6 +21,7 @@ import { AuthUtil } from '@yunkss/ef_ui';
  * @Author csx
  * @DateTime 2024/6/3 19:12
  * @TODO AudioUtil  音频工具类(暂未开发完,需要迁移到media后完善)
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool
  */
 export class AudioUtil {
   //视频 https://gitee.com/harmonyos_samples/video-show

@@ -19,6 +19,7 @@
  * @Author csx
  * @DateTime 2023/12/29 21:52
  * @TODO StringBuilder
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 export class StringBuilder {
   private value: (string | number | boolean | null)[];

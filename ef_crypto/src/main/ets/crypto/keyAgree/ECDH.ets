@@ -21,6 +21,7 @@ import { DynamicUtil } from '../util/DynamicUtil';
  * @Author csx
  * @DateTime 2024/3/20 20:21
  * @TODO ECDH  动态协商共享密钥
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class ECDH {
   /**

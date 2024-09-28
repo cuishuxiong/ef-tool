@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/8/12 23:46
  * @TODO EfAxiosConst  efAxios所需的常量
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios
  */
 export class EfAxiosConst {
   /**

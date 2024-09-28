@@ -19,7 +19,10 @@ import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import { BusinessError, request } from '@kit.BasicServicesKit'
 import { util } from '@kit.ArkTS'
 
-
+/**
+ * @TODO 图片预览工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool
+ */
 @Preview
 @CustomDialog
 @Component

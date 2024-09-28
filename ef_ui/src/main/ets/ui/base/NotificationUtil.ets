@@ -25,6 +25,7 @@ import { image } from '@kit.ImageKit';
  * @Author csx
  * @DateTime 2024/4/10 23:28
  * @TODO NotificationUtil  通知工具列
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class NotificationUtil {
   //添加跳转设置权限开启通知

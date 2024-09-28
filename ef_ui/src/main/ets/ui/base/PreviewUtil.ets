@@ -25,6 +25,7 @@ import { OutDTO } from '@yunkss/ef_core';
  * @Author csx
  * @DateTime 2024/5/11 09:41:05
  * @TODO PreviewUtil  预览工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class PreviewUtil {
   /**

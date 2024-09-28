@@ -57,6 +57,7 @@ function cityTxtColor() {
  * @Author csx
  * @DateTime 2024/3/26 10:02:02
  * @TODO Cascade  级联选择器
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct Cascade {

@@ -25,6 +25,7 @@ import { CryptoUtil } from '../util/CryptoUtil';
  * @Author csx
  * @DateTime 2024/3/18 10:39:03
  * @TODO AES
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class AES {
   /**

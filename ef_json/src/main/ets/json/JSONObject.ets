@@ -25,6 +25,7 @@ import { DateConst, DateUtil, StringBuilder, CommonConst as Const } from '@yunks
  * @Author csx
  * @DateTime 2024/4/25 19:25:04
  * @TODO JSONObject  定义json对象
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_json
  */
 export class JSONObject extends HashMap<string, JSONValue> {
   /**

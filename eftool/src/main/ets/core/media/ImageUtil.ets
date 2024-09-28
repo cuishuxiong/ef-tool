@@ -20,6 +20,7 @@ import fs from '@ohos.file.fs';
  * @Author csx
  * @DateTime 2024/6/6 00:17
  * @TODO ImageUtil  图片处理类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool
  */
 import { image } from '@kit.ImageKit';
 import { Base64Util, StrUtil, OutDTO } from '@yunkss/ef_core';

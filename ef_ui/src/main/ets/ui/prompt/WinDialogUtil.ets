@@ -26,6 +26,7 @@ import { HashMap } from '@kit.ArkTS';
  * @Author csx
  * @DateTime 2024/5/23 21:45
  * @TODO WinDialogUtil 窗口方式实现全局Dialog
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 import('./efAlert'); // 引入命名路由页面
 

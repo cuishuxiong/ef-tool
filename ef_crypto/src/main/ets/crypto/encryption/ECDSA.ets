@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/3/20 20:05
  * @TODO ECDSA
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 
 import { CryptoKey, CryptoUtil } from '../util/CryptoUtil';

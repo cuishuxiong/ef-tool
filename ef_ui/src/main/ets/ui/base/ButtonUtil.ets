@@ -22,6 +22,7 @@ import { JSONObject } from '@yunkss/ef_json';
  * 场景按钮UI
  * @param params  场景类型参数
  * @param callBack  按钮回调函数
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Builder
 function buildFunctionBtn(params: functionalButtonComponentManager.FunctionalButtonParams,
@@ -198,6 +199,7 @@ export let FunctionalButtonBuilder: WrappedBuilder<[functionalButtonComponentMan
  * @Author csx
  * @DateTime 2024/7/2 16:24:07
  * @TODO ButtonUtil  场景化按钮工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct ButtonUtil {

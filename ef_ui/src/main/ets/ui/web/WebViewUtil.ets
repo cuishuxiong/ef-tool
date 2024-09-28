@@ -20,6 +20,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
  * @Author csx
  * @DateTime 2024/9/3 23:24
  * @TODO WebViewUtil
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 @Component
 export struct WebViewUtil {

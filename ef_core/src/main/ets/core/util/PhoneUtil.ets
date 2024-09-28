@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/1/7 16:13
  * @TODO PhoneUtil 手机工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 import { OutDTO } from '../base/OutDTO';
 import { RegexConst as Const } from '../const/RegexConst'

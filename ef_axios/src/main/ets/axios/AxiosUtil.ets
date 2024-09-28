@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
 import axios from '@ohos/axios'
 import { AxiosError, InternalAxiosRequestConfig, AxiosResponse, AxiosStatic } from '@ohos/axios';
 import { RandomUtil, Logger } from '@yunkss/ef_core';
@@ -28,6 +27,7 @@ import { EfAxiosConst } from '../EfAxiosConst';
  * @Author csx
  * @DateTime 2024/4/10 23:27
  * @TODO AxiosUtil  网络工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_axios
  */
 export class AxiosUtil {
   /**

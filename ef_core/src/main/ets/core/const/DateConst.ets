@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/1/3 20:45
  * @TODO DateConst  日期格式的常量
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 export class DateConst {
   /**

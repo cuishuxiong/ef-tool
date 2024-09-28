@@ -23,5 +23,6 @@ import { JSONObject } from './JSONObject';
  * @Author csx
  * @DateTime 2024/4/25 19:17:04
  * @TODO JSONValue  定义json值的类型
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_json
  */
 export type JSONValue = string | number | boolean | Date | Object | JSONObject | JSONArray | JSONArrayList | null;

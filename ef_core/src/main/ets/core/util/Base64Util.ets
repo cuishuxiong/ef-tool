@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/6/6 00:19
  * @TODO Base64Util  base64工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 import { buffer, util } from '@kit.ArkTS';
 

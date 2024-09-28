@@ -26,6 +26,7 @@ import { DateConst, DateUtil, StringBuilder, CommonConst as Const } from '@yunks
  * @Author csx
  * @DateTime 2024/4/25 19:35:04
  * @TODO JSONArray  定义json集合
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_json
  */
 export class JSONArray extends Array<JSONValue> {
   /**

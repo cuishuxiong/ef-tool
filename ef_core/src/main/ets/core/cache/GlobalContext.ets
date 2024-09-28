@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/8/3 09:33
  * @TODO GlobalContext  全局网络对象上下文
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 import { connection } from '@kit.NetworkKit';
 

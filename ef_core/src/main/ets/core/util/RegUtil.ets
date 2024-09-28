@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2023/12/29 21:56
  * @TODO ReUtil 正则工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_core
  */
 import { RegexConst as Const } from '../const/RegexConst'
 import { OutDTO } from '../base/OutDTO'

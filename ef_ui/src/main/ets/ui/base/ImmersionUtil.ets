@@ -28,6 +28,7 @@ export class TextMargin {
  * @Author csx
  * @DateTime 2024/3/28 20:54
  * @TODO ImmersionUtil  沉浸式导航工具类
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_ui
  */
 export class ImmersionUtil {
   //适配屏幕挖孔

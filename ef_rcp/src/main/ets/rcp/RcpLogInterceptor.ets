@@ -24,6 +24,7 @@ import { EfRcpError } from './EfRcpError';
  * @Author csx
  * @DateTime 2024/7/24 00:02
  * @TODO RcpInterceptor  rcp日志拦截器配置
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_rcp
  */
 export class RcpLogInterceptor implements rcp.Interceptor {
   /**

@@ -18,6 +18,7 @@
  * @Author csx
  * @DateTime 2024/3/20 21:43
  * @TODO SHA1  工具类 源码来自官方库  https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fchecksum
+ * @Use 详细使用方法以及文档详见ohpm官网,地址https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Fef_crypto
  */
 export class SHA1 {
   hexcase = 0;
