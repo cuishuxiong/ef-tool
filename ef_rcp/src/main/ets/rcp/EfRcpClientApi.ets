@@ -341,14 +341,19 @@ export class EfRcpClientApi {
 
   /**
    * get请求
-   * @param getParam get请求入参,详见efRcpConfig.commonParams
+   * @param getParam get请求入参,详见efRcpConfig.requestBaseParams
    * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
    * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
    * @returns 响应结果
    */
-  async get<E>(getParam: efRcpConfig.commonParams, cls?: ClassConstructor<E>,
+  async get<E>(getParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
     securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
-    try { //创建请求
+    try {
+      //支持传入record入参，转换成拼接url
+      if (getParam.isParams && getParam.isParams === true) {
+        getParam.url += EfRcpClientApi.buildParams(getParam.query);
+      }
+      //创建请求
       let request =
         await EfRcpClientApi.buildRequest(getParam.url, 'GET', getParam.headers, getParam.cookies, getParam.loadingTxt,
           getParam.baseURL);

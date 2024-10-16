@@ -194,9 +194,14 @@ export class rcpLoadingOptions {
    * 弹框形状
    */
   @Track layoutShape?: RcpLoadingShape;
+  /**
+   * 弹框默认背景颜色
+   */
+  @Track winBgColor?: string;
 
   constructor() {
     this.content = '小的正在努力加载中...';
+    this.winBgColor = '#00000000';
   }
 }
 

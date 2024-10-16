@@ -81,7 +81,7 @@ export class RcpLoadingUtil {
       //设置窗口大小
       await windowClass.resize(d.width, d.height);
       // 设置窗口背景颜色
-      windowClass.setWindowBackgroundColor('#00000000');
+      windowClass.setWindowBackgroundColor(options?.winBgColor);
       //显示窗口
       await windowClass.showWindow();
     } catch (exception) {

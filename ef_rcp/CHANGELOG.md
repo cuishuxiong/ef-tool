@@ -1,5 +1,12 @@
 # Changelog
 
+## [v1.0.6] 2024-10
+
+### 🐞Bug修复
+
+* 优化全局弹框透明背景色可自定义配置[issuesIARAM8](https://gitee.com/yunkss/ef-tool/issues/IARAM8)
+* 优化get方法支持recore方式入参
+
 ## [v1.0.5] 2024-09
 
 ### 🐞Bug修复
