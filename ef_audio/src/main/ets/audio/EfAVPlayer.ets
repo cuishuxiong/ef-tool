@@ -1,118 +1,45 @@
-# <center>ef_audio</center>
+/**
+ Copyright 2024 csx - @yunkss/eftool
 
-# <center>V1.0.0(API12)</center>
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
---------------------------------------------------------------------------------
+ http://www.apache.org/licenses/LICENSE-2.0
 
-## 📚简介
-
-`ef_audio`是`eftool`的xxxxxxxxxxxx
-
-> 你可以引入使用，也可以**拷贝**和修改使用，如需分享扩展
-> ### **希望可以注明原出处即可**
-> 也希望能把bug及时反馈回来。
-
-> 我努力健全**中文**注释，为源码学习者提供良好地学习环境，争取做到人人都能看得懂。
-
-## 🛠️包含组件
-
-| 模块       | 介绍                                 |
-| ---------- | ------------------------------------ |
-| EfAVPlayer | 提供eftool封装AVPlayer的常规使用功能 |
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+import media from '@ohos.multimedia.media';
+import { EfAVPlayerState, EFPlayOptions } from '../type';
+import { BusinessError } from '@kit.BasicServicesKit';
 
 
-## 📦安装
-
-### 🍊ohpm
-
-* 执行安装命令
-
-```
-ohpm install @yunkss/ef_audio
-```
-
-## 📦使用
-
-### 1.在项目中引入插件
-
-```
-import { EfAVPlayer} from '@yunkss/ef_audio'
-```
-
-### 2.实例化 
-
-```
-efAVPlay: EfAVPlayer = new EfAVPlayer()
-```
-
-### 3.初始化
-
-```
-this.efAVPlay.init()
-```
-
-#### 4.设置播放的url
-
-```
-this.efAVPlay.setUrl("https://env-00jxhf99mujs.normal.cloudstatic.cn/play/0.m4a")
-```
-
-
-
-
-
-
-
-### 前言
-
-EfAVPlayer 针对 AVPlayer的不同状态封装了常见的 API。初始化、播放、暂停、停止、释放资源等。支持 url、fdSrc、dataSrc三种资源路径。
-
-![img](https://alliance-communityfile-drcn.dbankcdn.com/FileServer/getFile/cmtyPub/011/111/111/0000000000011111111.20241015135130.64410763661269625666794578238334:50001231000000:2800:A6E707914B74421E3C9C965655A5E1F78879279A6A557114DA6F47F62547CE6B.png?needInitFileName=true?needInitFileName=true)
-
-并且考虑常见的使用场景，提供了两个示例demo。
-
-#### 基本示例
-
-> ```
-> EfAVPlayerIndex
-> ```
-
-![image-20241016100542237](https://env-00jxhf99mujs.normal.cloudstatic.cn/md%E5%9B%BE%E7%89%87/image-20241016100542237.png)
-
-
-
-#### 播放器示例
-
-实现了播放、暂停、音量大小调整、循环播放、列表播放、随机播放、单曲播放等功能
-
-![image-20241016100624387](https://env-00jxhf99mujs.normal.cloudstatic.cn/md%E5%9B%BE%E7%89%87/image-20241016100624387.png)
-
-
-
-
-
-
-
-### EfAVPlayer 类参数详解
-
-```typescript
-
+/**
+ * @Author wsy
+ * @DateTime 2024/10/13 0:11
+ * @TODO EfAVPlayer 类用于管理多媒体播放器
+ */
+export class EfAVPlayer {
   /**
-   * 存储多媒体播放器实例，初始值为 null。
+   * 私有属性，存储多媒体播放器实例，初始值为 null。
    */
-   avPlayer: media.AVPlayer | null = null;
+  private avPlayer: media.AVPlayer | null = null;
   /**
-   * 用于存储状态变化的回调函数，初始值为 undefined。
+   * 私有属性，用于存储状态变化的回调函数，初始值为 undefined。
    */
-   stateChangeCallback?: Function;
+  private stateChangeCallback?: Function;
   /**
-   * 用于存储错误的回调函数，初始值为 undefined。
+   * 私有属性，用于存储错误的回调函数，初始值为 undefined。
    */
-   errorCallback?: Function;
+  private errorCallback?: Function;
   /**
-   * 用于存储时间更新的回调函数，初始值为 undefined。
+   * 私有属性，用于存储时间更新的回调函数，初始值为 undefined。
    */
-   timeUpdateCallback?: Function;
+  private timeUpdateCallback?: Function;
   /**
    * 指定的相对音量大小，取值范围为[0.00-1.00]，1表示最大音量
    */
@@ -134,7 +61,7 @@ EfAVPlayer 针对 AVPlayer的不同状态封装了常见的 API。初始化、�
    */
   state: EfAVPlayerState = "idle"
   /**
-   * 存储播放选项，包括立即播放和循环播放等设置。
+   * 私有属性，存储播放选项，包括立即播放和循环播放等设置。
    */
   private efPlayOptions: EFPlayOptions = {
     immediately: true,
@@ -389,16 +316,4 @@ EfAVPlayer 针对 AVPlayer的不同状态封装了常见的 API。初始化、�
     }
     await this.play()
   }
-```
-
-
-
-## [eftool](https://ohpm.openharmony.cn/#/cn/detail/@yunkss%2Feftool)工具类ohpm地址
-
-## 特别鸣谢
-
-* [万少](https://juejin.cn/user/4441682708283191)
-
-## star `ef_audio` 希望您可以动一动小手点点小⭐⭐
-
-## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化
+}
