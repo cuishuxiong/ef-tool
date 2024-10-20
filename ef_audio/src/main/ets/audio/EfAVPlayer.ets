@@ -184,7 +184,7 @@ export class EfAVPlayer {
   private async _onError() {
     const avPlayer = await this.init();
     avPlayer.on("error", (err: BusinessError) => {
-
+      console.error("EfAVPlayer", err.message, err.code)
       this.errorCallback && this.errorCallback(err);
     });
   }

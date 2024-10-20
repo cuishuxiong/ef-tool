@@ -25,7 +25,7 @@ enum PlayMode {
 }
 
 interface PlayModeIcon {
-  url: Resource
+  url: ResourceStr
   mode: PlayMode
   name: string
 }
@@ -50,23 +50,23 @@ export struct EfAVPlayerDemo {
   playModeIcons: PlayModeIcon[] = [
     {
       mode: PlayMode.order,
-      url: $r("app.media.order"),
+      url: "https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/order",
       name: "顺序播放"
     },
     {
       mode: PlayMode.single,
-      url: $r("app.media.single"),
+      url: "https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/single",
       name: "单曲循环"
     },
     {
       mode: PlayMode.repeat,
-      url: $r("app.media.repeat"),
+      url: "https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/repeat",
       name: "列表循环"
 
     },
     {
       mode: PlayMode.random,
-      url: $r("app.media.random"),
+      url: "https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/random",
       name: "随机播放"
 
     },
@@ -76,27 +76,27 @@ export struct EfAVPlayerDemo {
   @State
   playList: SongItem[] = [
     {
-      img: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/0.jpg',
+      img: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/0.jpg',
       name: '直到世界的尽头',
-      url: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/0.m4a',
+      url: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/0.m4a',
       id: '0000'
     },
     {
-      img: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/1.jpg',
+      img: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/1.jpg',
       name: '画',
-      url: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/1.mp3',
+      url: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/1.mp3',
       id: '0001'
     },
     {
-      img: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/2.jpg',
+      img: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/2.jpg',
       name: 'Sweet Dreams',
-      url: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/2.mp3',
+      url: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/2.mp3',
       id: '0002'
     },
     {
-      img: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/3.jpg',
+      img: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/3.jpg',
       name: '奢香夫人',
-      url: 'https://env-00jxhf99mujs.normal.cloudstatic.cn/play/3.m4a',
+      url: 'https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/3.m4a',
       id: '0003'
     }
   ]
@@ -241,25 +241,27 @@ export struct EfAVPlayerDemo {
           .bindPopup($$this.showPlayModePopup, { message: this.playModeIcons[this.playModeIndex].name })
 
         //   上一首
-        Image($r("app.media.previous"))
+        Image("https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/previous")
           .toolIcon()
           .onClick(() => {
             this.previous()
           })
         //   播放&暂停
-        Image(this.avPlayer.state === "playing" ? $r("app.media.pause") : $r("app.media.play"))
+        Image(this.avPlayer.state === "playing" ?
+          "https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/pause" :
+          "https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/play")
           .fillColor(this.avPlayer.state === "playing" ? Color.Red : Color.Black)
           .toolIcon()
 
           .onClick(this.playToggle)
         //   下一首
-        Image($r("app.media.next"))
+        Image("https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/next")
           .toolIcon()
           .onClick(() => {
             this.next()
           })
         //   音量
-        Image($r("app.media.voice"))
+        Image("https://mp-9c1e1be5-c4d2-4eb3-96a7-57f45b401012.cdn.bspapp.com/ef_audio_resource/voice")
           .toolIcon()
           .onClick(() => {
             this.showVolumn = true

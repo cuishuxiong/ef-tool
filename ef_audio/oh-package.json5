@@ -1,12 +1,11 @@
 {
   "name": "@yunkss/ef_audio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "eftool",
     "audio",
     "录音",
-    "音频播放",
-    "xxxxxx"
+    "音频播放"
   ],
   "author": "csx",
   "description": "eftool的音频相关封装包,封装了常用工具类如字符串、正则、身份证、格式校验、日期、手机号、base64等,提供一系列快捷操作方法.",
