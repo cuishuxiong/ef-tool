@@ -368,11 +368,11 @@ class EfRcp {
   }
 
   /**
-   * 禁用全局加载框
+   * 全局加载框
    * @returns
    */
-  disableLoading(): EfRcp {
-    efRcpConfig.loading.enable = false;
+  disableLoading(status: boolean = false): EfRcp {
+    efRcpConfig.loading.enable = status;
     return this;
   }
 

@@ -119,12 +119,13 @@ export class EfRcpClientApi {
    * @param cookies 自定义cookie
    * @param isSecurity 是否开启证书加密
    * @param loadingTxt 是否覆写loading文本
+   * @param loading 是否开启全局加载框
    * @returns
    */
   private static async buildRequest(url: string, method: string, headers?: Record<string, string>,
-    cookies?: Record<string, string>, loadingTxt?: string, baseURL?: string): Promise<rcp.Request> {
+    cookies?: Record<string, string>, loadingTxt?: string, baseURL?: string, loading?: boolean): Promise<rcp.Request> {
     //是否开启全局loading
-    if (efRcpConfig.loading.enable) {
+    if (efRcpConfig.loading.enable || loading == true) {
       await RcpLoadingUtil.showLoading({
         content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
         imgLayout: RcpImgLayout.TOP,
@@ -145,10 +146,11 @@ export class EfRcpClientApi {
    * 构建响应对象
    * @param request  请求
    * @param isSecurity 是否开启证书校验
+   * @param loading 是否临时控制Loading
    * @returns
    */
   private static async buildResponse<E>(request: rcp.Request, cls?: ClassConstructor<E>,
-    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
+    securityCfg?: efRcpConfig.securityCfg, loading?: boolean): Promise<EfRcpResponse<E>> {
     try {
       //是否针对当前请求开启证书加密
       if (securityCfg) {
@@ -166,7 +168,7 @@ export class EfRcpClientApi {
       }
       //发送请求
       let response = await efRcp.builder().fetch(request);
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || loading == true) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -189,7 +191,7 @@ export class EfRcpClientApi {
         return { error: new EfRcpError(response.statusCode, request.method + '请求异常提醒', errStr) };
       }
     } catch (e) {
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || loading == true) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -248,7 +250,7 @@ export class EfRcpClientApi {
       }
       //构建request
       let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
-        postParam.loadingTxt, postParam.baseURL);
+        postParam.loadingTxt, postParam.baseURL, postParam.loading);
       if (!postParam.isParams) {
         //转换请求参数
         let jsonStr = JSON.stringify(postParam.query);
@@ -256,7 +258,7 @@ export class EfRcpClientApi {
         request.content = jsonStr;
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, postParam.loading);
     } catch (e) {
       return e;
     }
@@ -286,7 +288,7 @@ export class EfRcpClientApi {
       }
       //构建request
       let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
-        postParam.loadingTxt, postParam.baseURL);
+        postParam.loadingTxt, postParam.baseURL, postParam.loading);
       if (!postParam.isParams) {
         //转换请求参数
         let form = new rcp.Form(postParam.query as rcp.FormFields);
@@ -294,7 +296,7 @@ export class EfRcpClientApi {
         request.content = form;
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, postParam.loading);
     } catch (e) {
       return e;
     }
@@ -324,7 +326,7 @@ export class EfRcpClientApi {
       }
       //构建request
       let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
-        postParam.loadingTxt, postParam.baseURL);
+        postParam.loadingTxt, postParam.baseURL, postParam.loading);
       if (!postParam.isParams) {
         //转换请求参数
         let form = new rcp.MultipartForm(postParam.query as rcp.MultipartFormFields);
@@ -332,7 +334,7 @@ export class EfRcpClientApi {
         request.content = form;
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, postParam.loading);
     } catch (e) {
       return e;
     }
@@ -356,9 +358,9 @@ export class EfRcpClientApi {
       //创建请求
       let request =
         await EfRcpClientApi.buildRequest(getParam.url, 'GET', getParam.headers, getParam.cookies, getParam.loadingTxt,
-          getParam.baseURL);
+          getParam.baseURL, getParam.loading);
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, getParam.loading);
     } catch (e) {
       return e;
     }
@@ -378,11 +380,11 @@ export class EfRcpClientApi {
       //构建request
       let request =
         await EfRcpClientApi.buildRequest(putParam.url, 'PUT', putParam.headers, putParam.cookies, putParam.loadingTxt,
-          putParam.baseURL);
+          putParam.baseURL, putParam.loading);
       //传入请求参数
       request.content = jsonStr;
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, putParam.loading);
     } catch (e) {
       return e;
     }
@@ -400,13 +402,13 @@ export class EfRcpClientApi {
     try { //创建请求
       let request =
         await EfRcpClientApi.buildRequest(deleteParam.url, 'DELETE', deleteParam.headers, deleteParam.cookies,
-          deleteParam.loadingTxt, deleteParam.baseURL);
+          deleteParam.loadingTxt, deleteParam.baseURL, deleteParam.loading);
       //判断是否body传参
       if (deleteParam.query) {
         request.content = JSON.stringify(deleteParam.query);
       }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, deleteParam.loading);
     } catch (e) {
       return e;
     }
@@ -426,11 +428,11 @@ export class EfRcpClientApi {
       //构建request
       let request =
         await EfRcpClientApi.buildRequest(patchParam.url, 'PATCH', patchParam.headers, patchParam.cookies,
-          patchParam.loadingTxt, patchParam.baseURL);
+          patchParam.loadingTxt, patchParam.baseURL, patchParam.loading);
       //传入请求参数
       request.content = jsonStr;
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, patchParam.loading);
     } catch (e) {
       return e;
     }
@@ -470,11 +472,15 @@ export class EfRcpClientApi {
       let multipart = new rcp.MultipartForm(uploadParam.fileInfo);
       //创建请求
       let request = await EfRcpClientApi.buildRequest(uploadParam.url, 'POST', uploadParam.headers, uploadParam.cookies,
-        uploadParam.loadingTxt, uploadParam.baseURL);
+        uploadParam.loadingTxt, uploadParam.baseURL, uploadParam.loading);
       //设置参数
       request.content = multipart;
+      //是否需要断点续传
+      if (uploadParam.transferRange && (uploadParam.transferRange.from || uploadParam.transferRange.to)) {
+        request.transferRange = { from: uploadParam.transferRange.from, to: uploadParam.transferRange.to };
+      }
       //构建响应
-      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg);
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, uploadParam.loading);
     } catch (e) {
       return e;
     }
@@ -514,7 +520,7 @@ export class EfRcpClientApi {
         file: filePath
       };
       //是否开启全局loading
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
         await RcpLoadingUtil.showLoading({
           content: downloadParam.loadingTxt ? downloadParam.loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
@@ -525,7 +531,7 @@ export class EfRcpClientApi {
         downloadParam.url = downloadParam.baseURL + downloadParam.url;
       }
       let response = await efRcp.builder().downloadToFile(downloadParam.url, downloadToFile)
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -548,7 +554,7 @@ export class EfRcpClientApi {
         return { error: new EfRcpError(response.statusCode, '异常提醒', errStr) };
       }
     } catch (e) {
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -583,7 +589,7 @@ export class EfRcpClientApi {
         stream: streamData
       }
       //是否开启全局loading
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
         await RcpLoadingUtil.showLoading({
           content: downloadParam.loadingTxt ? downloadParam.loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
@@ -595,7 +601,7 @@ export class EfRcpClientApi {
       }
       //发送下载请求
       let response = await efRcp.builder().downloadToStream(downloadParam.url, downloadToStream);
-      if (efRcpConfig.loading.enable) {
+      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }

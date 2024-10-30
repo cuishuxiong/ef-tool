@@ -59,7 +59,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-##### 1.efRcpConfig配置类参数详解(1.0.5有改动)
+##### 1.efRcpConfig配置类参数详解(1.0.6有改动)
 
 * timeout 超时对象
 
@@ -213,7 +213,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
     static tokenValue: string = '';
 ```
 
-* commonParams 请求公共传参(1.0.2有改动)
+* commonParams 请求公共传参(1.0.6有改动)
 
 ```
     /**
@@ -236,6 +236,10 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
      * 当次请求需要设置的loading文本
      */
     loadingTxt?: string;
+    /**
+     * 当次请求的临时开启或关闭Loading控制(1.0.6+)
+     */
+    loading?: boolean;
 ```
 
 * requestBaseParams post/put请求所需参数对象 - 继承所有commonParams参数(1.0.2有改动)
@@ -262,13 +266,17 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 ```
 
-* uploadParams 上传入参对象 - 继承所有commonParams参数
+* uploadParams 上传入参对象 - 继承所有commonParams参数(1.0.6有改动)
 
 ```
     /**
      * 上传文件字段
      */
     fileInfo: rcp.MultipartFormFields = {};
+    /**
+     * 断点续传参数(1.0.6+)
+     */
+    transferRange: rcp.TransferRange = {};
 ```
 
 * downloadParams 下载入参对象 - 继承所有commonParams参数
@@ -325,6 +333,8 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 * addSecurity 设置证书 - 设置后需要调用create重新创建,可批量链式调用后最后再去create
 
 * disableLoading 禁用全局加载框 - 设置后无需重新创建
+
+> 1.0.6+支持传入变量来控制是否启用，且无需再次create
 
 * setLoadingContent 更改全局默认loading的提示内容 - 设置后无需重新创建
 

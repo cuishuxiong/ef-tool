@@ -2,10 +2,16 @@
 
 ## [v1.0.6] 2024-10
 
+### 🐣新特性
+
+* 新增上传文件支持断点续传
+
 ### 🐞Bug修复
 
 * 优化全局弹框透明背景色可自定义配置[issuesIARAM8](https://gitee.com/yunkss/ef-tool/issues/IARAM8)
-* 优化get方法支持recore方式入参
+* 优化get方法支持record方式入参
+* 优化全局Loading支持开关[issuesIAZAT7](https://gitee.com/yunkss/ef-tool/issues/IAZAT7)
+* 优化单个方法支持临时启用或关闭Loading[issuesIAZAT7](https://gitee.com/yunkss/ef-tool/issues/IAZAT7)
 
 ## [v1.0.5] 2024-09
 

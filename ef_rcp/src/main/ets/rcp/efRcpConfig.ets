@@ -233,6 +233,10 @@ export namespace efRcpConfig {
      * 当次请求需要设置的loading文本
      */
     loadingTxt?: string;
+    /**
+     * 当次请求的临时开启或关闭Loading控制(1.0.6+)
+     */
+    loading?: boolean;
   }
 
   /**
@@ -242,7 +246,7 @@ export namespace efRcpConfig {
     /**
      * 请求参数 post/put
      */
-    query: Record<string, Object> | rcp.FormFields | rcp.MultipartFormFields | ESObject = {};
+    query?: Record<string, Object> | rcp.FormFields | rcp.MultipartFormFields | ESObject;
     /**
      * 解决post传参但是需要将参数拼接URL情况
      */
@@ -269,6 +273,10 @@ export namespace efRcpConfig {
      * 上传文件字段
      */
     fileInfo: rcp.MultipartFormFields = {};
+    /**
+     * 断点续传参数(1.0.6+)
+     */
+    transferRange?: rcp.TransferRange = {};
   }
 
   /**
