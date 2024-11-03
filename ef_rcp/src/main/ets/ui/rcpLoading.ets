@@ -148,7 +148,7 @@ struct rcpLoading {
           .justifyContent(FlexAlign.Start)
         }
       }
-      .backgroundColor('#aa000000')
+      .backgroundColor(this.options.winBgColor)
       .borderRadius(UiConst.NUMBER_10)
       .margin({
         top: this.options.position === Alignment.Top ? UiConst.NUMBER_40 : UiConst.NUMBER_20,
@@ -201,7 +201,6 @@ export class rcpLoadingOptions {
 
   constructor() {
     this.content = '小的正在努力加载中...';
-    this.winBgColor = '#00000000';
   }
 }
 

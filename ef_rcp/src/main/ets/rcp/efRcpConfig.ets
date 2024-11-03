@@ -237,6 +237,10 @@ export namespace efRcpConfig {
      * 当次请求的临时开启或关闭Loading控制(1.0.6+)
      */
     loading?: boolean;
+    /**
+     * Loading窗口的背景颜色(1.0.7+)
+     */
+    loadingColor?: string;
   }
 
   /**

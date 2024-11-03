@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.6(API12)</center>
+# <center>V1.0.7(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -240,6 +240,10 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
      * 当次请求的临时开启或关闭Loading控制(1.0.6+)
      */
     loading?: boolean;
+    /**
+     * Loading窗口的背景颜色(1.0.7+)
+     */
+    loadingColor?: string;
 ```
 
 * requestBaseParams post/put请求所需参数对象 - 继承所有commonParams参数(1.0.2有改动)
