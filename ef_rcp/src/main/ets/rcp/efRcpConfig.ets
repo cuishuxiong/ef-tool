@@ -66,6 +66,22 @@ export namespace efRcpConfig {
   }
 
   /**
+   * 系统级别和业务自定义级别请求响应码对象
+   */
+  export class codeEvent {
+    /**
+     * 业务级别自定义错误编码/异常code字段名称
+     */
+    businessCodeName: string = '';
+    /**
+     * 请求响应码监听-业务自行处理数据
+     */
+    listener: (sysCode: Object | null, busCode: Object | null) => void = () => {
+    };
+  }
+
+
+  /**
    * 请求拦截加解密操作
    */
   export class cryptoEvent {
