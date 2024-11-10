@@ -1,6 +1,6 @@
 # <center>eftool</center>
 
-# <center>V2.0.2(API12)</center>
+# <center>V2.0.3(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -27,6 +27,7 @@
 | @yunkss/ef_crypto(已发布)     | 提供加解密相关解耦结果去除OutDTO  |
 | @yunkss/ef_crypto_dto(已发布) | 提供加解密相关保结果为OutDTO    |
 | @yunkss/ef_media           | 提供媒体相关               |
+| @yunkss/ef_audio(已发布)      | 提供音频相关               |
 | @yunkss/ef_device          | 提供设备相关               |
 | @yunkss/ef_axios(已发布)      | 提供网络请求efAxios相关      |
 | @yunkss/ef_rcp(已发布)        | 提供网络请求efRcp相关        |

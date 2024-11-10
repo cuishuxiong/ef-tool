@@ -1,5 +1,22 @@
 # Changelog
 
+## [v2.0.3] 2024-11
+
+### 🐞功能优化
+
+* 升级ef_core为1.0.3版本
+    * RegUtil修复中文正则表达式问题
+* 升级ef_axios为1.0.5版本
+    * 优化upload上传文件同时支持表单信息[issuesIASJA8](https://gitee.com/yunkss/ef-tool/issues/IASJA8)
+    * 优化请求中使用as转换导致调用泛型方法报错,以及状态变量刷新UI问题
+* 升级ef_rcp为1.0.7版本
+    * 优化拦截器异常后提示内容[issuesIASVO3](https://gitee.com/yunkss/ef-tool/issues/IASVO3)
+    * 优化全局弹框透明背景色可自定义配置[issuesIARAM8](https://gitee.com/yunkss/ef-tool/issues/IARAM8)
+    * 优化get方法支持record方式入参
+    * 优化全局Loading支持开关[issuesIAZAT7](https://gitee.com/yunkss/ef-tool/issues/IAZAT7)
+    * 优化单个方法支持临时启用或关闭Loading[issuesIAZAT7](https://gitee.com/yunkss/ef-tool/issues/IAZAT7)
+    * 新增上传文件支持断点续传
+
 ## [v2.0.2] 2024-08
 
 ### 🐞功能优化
