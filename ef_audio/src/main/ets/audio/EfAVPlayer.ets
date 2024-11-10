@@ -1,5 +1,5 @@
 /**
- Copyright 2024 csx - @yunkss/eftool
+ Copyright 2024 csx - @yunkss/ef_audio
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
