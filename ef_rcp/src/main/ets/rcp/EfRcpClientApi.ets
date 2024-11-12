@@ -127,7 +127,7 @@ export class EfRcpClientApi {
     cookies?: Record<string, string>, loadingTxt?: string, baseURL?: string, loading?: boolean,
     loadingColor?: string): Promise<rcp.Request> {
     //是否开启全局loading
-    if (efRcpConfig.loading.enable || loading == true) {
+    if (loading ? loading : loading == false ? loading : efRcpConfig.loading.enable) {
       await RcpLoadingUtil.showLoading({
         content: loadingTxt ? loadingTxt : efRcpConfig.loading.content,
         imgLayout: RcpImgLayout.TOP,
@@ -171,7 +171,7 @@ export class EfRcpClientApi {
       }
       //发送请求
       let response = await efRcp.builder().fetch(request);
-      if (efRcpConfig.loading.enable || loading == true) {
+      if (loading ? loading : loading == false ? loading : efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -194,7 +194,7 @@ export class EfRcpClientApi {
         return { error: new EfRcpError(response.statusCode, request.method + '请求异常提醒', errStr) };
       }
     } catch (e) {
-      if (efRcpConfig.loading.enable || loading == true) {
+      if (loading ? loading : loading == false ? loading : efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -523,7 +523,8 @@ export class EfRcpClientApi {
         file: filePath
       };
       //是否开启全局loading
-      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
+      if (downloadParam.loading ? downloadParam.loading :
+        downloadParam.loading == false ? downloadParam.loading : efRcpConfig.loading.enable) {
         await RcpLoadingUtil.showLoading({
           content: downloadParam.loadingTxt ? downloadParam.loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
@@ -535,7 +536,8 @@ export class EfRcpClientApi {
         downloadParam.url = downloadParam.baseURL + downloadParam.url;
       }
       let response = await efRcp.builder().downloadToFile(downloadParam.url, downloadToFile)
-      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
+      if (downloadParam.loading ? downloadParam.loading :
+        downloadParam.loading == false ? downloadParam.loading : efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -558,7 +560,8 @@ export class EfRcpClientApi {
         return { error: new EfRcpError(response.statusCode, '异常提醒', errStr) };
       }
     } catch (e) {
-      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
+      if (downloadParam.loading ? downloadParam.loading :
+        downloadParam.loading == false ? downloadParam.loading : efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }
@@ -593,7 +596,8 @@ export class EfRcpClientApi {
         stream: streamData
       }
       //是否开启全局loading
-      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
+      if (downloadParam.loading ? downloadParam.loading :
+        downloadParam.loading == false ? downloadParam.loading : efRcpConfig.loading.enable) {
         await RcpLoadingUtil.showLoading({
           content: downloadParam.loadingTxt ? downloadParam.loadingTxt : efRcpConfig.loading.content,
           imgLayout: RcpImgLayout.TOP,
@@ -606,7 +610,8 @@ export class EfRcpClientApi {
       }
       //发送下载请求
       let response = await efRcp.builder().downloadToStream(downloadParam.url, downloadToStream);
-      if (efRcpConfig.loading.enable || downloadParam.loading == true) {
+      if (downloadParam.loading ? downloadParam.loading :
+        downloadParam.loading == false ? downloadParam.loading : efRcpConfig.loading.enable) {
         //关闭loading
         await RcpLoadingUtil.closeLoading();
       }

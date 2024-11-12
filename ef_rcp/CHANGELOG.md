@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.0.8] 2024-11
+
+### 🐣新特性
+
+* 新增支持自定义Loading[issuesIB2P5J](https://gitee.com/yunkss/ef-tool/issues/IB2P5J)
+* 新增系统以及自定义编码共存拦截器
+
+### 🐞Bug修复
+
+* 修复方法内的Loading参数优先级[issuesIB3PAS](https://gitee.com/yunkss/ef-tool/issues/IB3PAS)
+
 ## [v1.0.7] 2024-11
 
 ### 🐞Bug修复
