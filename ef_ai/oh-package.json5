@@ -1,0 +1,20 @@
+{
+  "name": "@yunkss/ef_ai",
+  "version": "1.0.0",
+  "keywords": [
+    "eftool",
+    "AI",
+    "AI抠图",
+    "意图框架",
+    "卡证识别",
+    "文档扫描",
+    "AI字幕"
+  ],
+  "author": "csx",
+  "description": "eftool的AI相关封装包,封装了常用的卡证识别组件,意图框架，AI抠图等,提供一系列快捷操作方法.",
+  "main": "Index.ets",
+  "repository": "https://gitee.com/yunkss/ef-tool.git",
+  "license": "Apache-2.0",
+  "homepage": "https://gitee.com/yunkss",
+  "dependencies": {}
+}
