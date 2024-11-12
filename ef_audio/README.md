@@ -1,6 +1,6 @@
 # <center>ef_audio</center>
 
-# <center>V1.0.0(API12)</center>
+# <center>V1.0.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -70,13 +70,13 @@ EfAVPlayer 针对 AVPlayer的不同状态封装了常见的 API。初始化、�
 > EfAVPlayerIndex
 > ```
 
-![image-20241016100542237](https://env-00jxhf99mujs.normal.cloudstatic.cn/md%E5%9B%BE%E7%89%87/image-20241016100542237.png)
+![image-20241016100542237](https://z4a.net/images/2024/11/12/image-20241016100542237.png)
 
 #### 播放器示例
 
 实现了播放、暂停、音量大小调整、循环播放、列表播放、随机播放、单曲播放等功能
 
-![image-20241016100624387](https://env-00jxhf99mujs.normal.cloudstatic.cn/md%E5%9B%BE%E7%89%87/image-20241016100624387.png)
+![image-20241016100624387](https://z4a.net/images/2024/11/12/image-20241016100624387.png)
 
 ### EfAVPlayer 类参数详解
 
