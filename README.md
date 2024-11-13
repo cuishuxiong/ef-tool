@@ -122,6 +122,6 @@ ohpm install @yunkss/eftool
 
 ## star`eftool`希望您可以动一动小手点点小⭐⭐
 
-[![eftool.jpg](https://z4a.net/images/2024/11/13/eftool.jpg)]
+![eftool.jpg](https://z4a.net/images/2024/11/13/eftool.jpg)
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化
