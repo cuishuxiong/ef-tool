@@ -21,7 +21,7 @@ import { EfRcpError } from "./EfRcpError";
 /**
  * @Author csx
  * @DateTime 2024/11/7 08:01:04
- * @TODO EfSysAndBusInterceptor  系统级别和业务级别编码拦截器
+ * @TODO EfCodeInterceptor  系统级别和业务级别编码拦截器
  */
 export class EfCodeInterceptor implements rcp.Interceptor {
   /**
@@ -58,13 +58,13 @@ export class EfCodeInterceptor implements rcp.Interceptor {
               }
             }
           } else {
-            let efRcpError = new EfRcpError(10010, '响应码监听异常',
+            let efRcpError = new EfRcpError(11010, '响应码监听异常',
               '未设置业务编码监听对应的code属性efRcpConfig.codeEvent.businessCodeName~');
             return Promise.reject(efRcpError);
           }
         }
       } else {
-        let efRcpError = new EfRcpError(10010, '响应码监听异常',
+        let efRcpError = new EfRcpError(11010, '响应码监听异常',
           '启用响应码监听请设置efRcpConfig.codeEvent属性~');
         return Promise.reject(efRcpError);
       }

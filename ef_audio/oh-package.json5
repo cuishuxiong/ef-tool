@@ -7,8 +7,8 @@
     "录音",
     "音频播放"
   ],
-  "author": "csx",
-  "description": "eftool的音频相关封装包,封装了常用工具类如字符串、正则、身份证、格式校验、日期、手机号、base64等,提供一系列快捷操作方法.",
+  "author": "万少",
+  "description": "eftool的音频相关封装包,封装了常用的播放，暂停，快进，设置url等,提供一系列快捷操作方法.",
   "main": "Index.ets",
   "repository": "https://gitee.com/yunkss/ef-tool.git",
   "license": "Apache-2.0",

@@ -1,6 +1,6 @@
 # <center>ef_rcp</center>
 
-# <center>V1.0.7(API12)</center>
+# <center>V1.0.8(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 
 > 后端Demo示例地址[点此访问](https://gitee.com/yunkss/ef-axios-java)
 
-##### 1.efRcpConfig配置类参数详解(1.0.6有改动)
+##### 1.efRcpConfig配置类参数详解(1.0.8有改动)
 
 * timeout 超时对象
 
@@ -95,6 +95,20 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
      */
     listener: (code: Object | null) => void = () => {
     };
+```
+
+* codeEvent 系统级别和业务自定义级别请求响应码对象(1.0.8+)
+
+```
+  /**
+   * 业务级别自定义错误编码/异常code字段名称
+   */
+  businessCodeName: string = '';
+  /**
+   * 请求响应码监听-业务自行处理数据sysCode系统级别编码,busCode业务自定义编码
+   */
+  listener: (sysCode: Object | null, busCode: Object | null) => void = () => {
+  };
 ```
 
 * cryptoEvent 请求拦截加解密操作
@@ -198,6 +212,10 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
      * lottie动画所需画板 - enableLottie 为true时生效
      */
     static lottieRenderingCtx: CanvasRenderingContext2D =  new CanvasRenderingContext2D(new RenderingContextSettings(true));
+    /**
+     * 自定义Loading弹框 1.0.8+
+     */
+    static loadingBuilder?: WrappedBuilder<[]>;
 ```
 
 * token token相关配置
@@ -298,7 +316,7 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
   export let isConvertError: boolean = false;
 ```
 
-##### 2.efRcp工具类(1.0.5有改动)
+##### 2.efRcp工具类(1.0.8有改动)
 
 * getInstance 懒汉模式获取EfRcp类单例
 
@@ -353,6 +371,10 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
 * efRcp 抛出的全局efRcp对象,可链式调用
 
 * convertError 将异常结果转换
+
+* setLoadingBuilder 设置自定义Loading弹框内容样式(1.0.8+)
+
+* addCodeEvent 添加系统以及业务编码同时监听(1.0.8+)
 
 ##### 3.efRcpClientApi工具类(1.0.3有改动)
 
@@ -513,6 +535,17 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       // .setLoadingImg(wrapBuilder(loadingImg))
       //启动lottie  与setLoadingImg互斥不可同事使用
       .enableLottie()
+      //设置自定义loading样式和内容
+      .setLoadingBuilder(wrapBuilder(loadingBuilder))
+      //添加系统以及业务编码监听
+      .addCodeEvent({
+        businessCodeName: 'csxErrorCode',
+        listener: (sysCode, busCode) => {
+          //此处解决弹框不出现问题
+          this.getUIContext().runScopedTask(() => {
+            ToastUtil.showToast(sysCode + '+++++++' + busCode);
+          });
+        }
       //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
       .create();
   }
@@ -531,9 +564,41 @@ import { efRcpClientApi, efRcpConfig,xxxx} from '@yunkss/ef_rcp'
       .enableLogInterceptor(false)  设置为false即可关闭
       //设置loading为gif图片
       .setLoadingImg(wrapBuilder(loadingImg))
+      //设置自定义loading样式和内容
+      .setLoadingBuilder(wrapBuilder(loadingBuilder))
+      //添加系统以及业务编码监听
+      .addCodeEvent({
+        businessCodeName: 'csxErrorCode',
+        listener: (sysCode, busCode) => {
+          //此处解决弹框不出现问题
+          this.getUIContext().runScopedTask(() => {
+            ToastUtil.showToast(sysCode + '+++++++' + busCode);
+          });
+        }
       //创建session对象,需要再设置为一系列操作后再调用，否则设置不生效,可在特殊情况处设置其他操作后重新创建session
       .create();
   }
+```
+
+* 自定义loading样式示例(1.0.8+)
+
+```
+
+  //1.编写业务所需自定义样式，注意不可以使用传入变量
+  @Builder
+  function loadingBuilder() {
+    Column() {
+      Image($r("app.media.tLoading")).width(40)
+      Text('11111...').fontColor('#fff')
+    }
+    .width('300px')
+    .height('400px')
+    .backgroundColor('#aa000000')
+  }
+
+  //2.在Ability或者需要的地方调用
+  efRcp
+  .setLoadingBuilder(wrapBuilder(loadingBuilder))
 ```
 
 * 登录示例

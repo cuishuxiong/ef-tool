@@ -21,6 +21,7 @@ import { efRcpConfig } from './efRcpConfig'
 import { EfSysCodeInterceptor } from './EfSysCodeInterceptor';
 import { EfBusinessCodeInterceptor } from './EfBusinessCodeInterceptor';
 import { EfCryptoInterceptor } from './EfCryptoInterceptor';
+import { EfCodeInterceptor } from './EfCodeInterceptor';
 
 /**
  * @Author csx
@@ -242,6 +243,20 @@ class EfRcp {
   }
 
   /**
+   * 添加系统和自定义编码拦截器
+   * @param codeEvent  系统和业务自定义编码监听事件  efRcpConfig.codeEvent
+   * @returns
+   */
+  addCodeEvent(codeEvent: efRcpConfig.codeEvent): EfRcp {
+    if (this.cfg.interceptors) {
+      this.cfg.interceptors.push(new EfCodeInterceptor(codeEvent));
+    } else {
+      this.cfg.interceptors = [new EfCodeInterceptor(codeEvent)];
+    }
+    return this;
+  }
+
+  /**
    * 添加自定义加解密拦截
    * @param cryptoEvent 加解密操作事件 efRcpConfig.cryptoEvent
    * @returns
@@ -393,6 +408,16 @@ class EfRcp {
    */
   setLoadingImg(builder: WrappedBuilder<[]>): EfRcp {
     efRcpConfig.loading.imgBuilder = builder;
+    return this;
+  }
+
+  /**
+   * 设置自定义loading布局
+   * @param loadingBuilder  布局构造builder 1.0.8+
+   * @returns
+   */
+  setLoadingBuilder(loadingBuilder: WrappedBuilder<[]>): EfRcp {
+    efRcpConfig.loading.loadingBuilder = loadingBuilder;
     return this;
   }
 

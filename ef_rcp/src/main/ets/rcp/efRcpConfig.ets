@@ -66,7 +66,7 @@ export namespace efRcpConfig {
   }
 
   /**
-   * 系统级别和业务自定义级别请求响应码对象
+   * 系统级别和业务自定义级别请求响应码对象(1.0.8+)
    */
   export class codeEvent {
     /**
@@ -74,7 +74,7 @@ export namespace efRcpConfig {
      */
     businessCodeName: string = '';
     /**
-     * 请求响应码监听-业务自行处理数据
+     * 请求响应码监听-业务自行处理数据sysCode系统级别编码,busCode业务自定义编码
      */
     listener: (sysCode: Object | null, busCode: Object | null) => void = () => {
     };
@@ -209,6 +209,10 @@ export namespace efRcpConfig {
      */
     static lottieRenderingCtx: CanvasRenderingContext2D =
       new CanvasRenderingContext2D(new RenderingContextSettings(true));
+    /**
+     * 自定义Loading弹框 1.0.8+
+     */
+    static loadingBuilder?: WrappedBuilder<[]>;
   }
 
   /**
