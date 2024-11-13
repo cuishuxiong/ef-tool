@@ -123,6 +123,6 @@ ohpm install @yunkss/eftool
 
 ## eftool公众号现已开通，保持初心做最能帮助鸿蒙开发者的公众号
 
-[![eftool.jpg](https://z4a.net/images/2024/02/21/cascade1.th.jpg)](https://z4a.net/images/2024/11/13/eftool.jpg)
+[![eftool.jpg](https://z4a.net/images/2024/11/13/eftool.jpg)]
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化
