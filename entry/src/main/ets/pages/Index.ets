@@ -37,6 +37,7 @@ import {
   RandomUtil
 } from '@yunkss/eftool'
 import { FormData } from '@ohos/axios';
+import { EfAVPlayerDemo } from 'ef_audio';
 
 class Message {
   msg: string = '';
@@ -625,6 +626,7 @@ export struct Index {
       Stack({ alignContent: Alignment.TopStart }) {
         Scroll(this.scroller) {
           Column() {
+            EfAVPlayerDemo()
             Text(this.callCity)
             Text(this.message)
               .fontWeight(FontWeight.Bold)
