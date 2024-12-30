@@ -2,23 +2,36 @@
   "app": {
     "signingConfigs": [
       {
-        "name": "default",
+        "name": "eftool",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\yeah1\\.ohos\\config\\default_ef-tool_wiR9xobcrmIbQWnKmBjFTVnoObEwoAqABNDHzORkjrk=.cer",
-          "storePassword": "0000001A25833A7C028933D7AF26D42D3D9FEFFED7F28FB9B215456859867CABCCBEDA4CCBDFDAEC3BA0",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001A16445364E655F62C584B2F86FB4324BA419F49CB67EAF0BB9942C493CA32FC7CCAE377BBDAE2",
-          "profile": "C:\\Users\\yeah1\\.ohos\\config\\default_ef-tool_wiR9xobcrmIbQWnKmBjFTVnoObEwoAqABNDHzORkjrk=.p7b",
+          "certpath": "/Users/csx/eftoolKey/eftoolProd.cer",
+          "storePassword": "0000001AF913B22E22C40A5CBCE78456CA6E7C3098AB04F5518B2902C31B46F48ABBA0EC770FBB71F4CF",
+          "keyAlias": "eftool",
+          "keyPassword": "0000001ADFBDCC744AB2767A7F03EFC5050D5717A225F9C1DB984FF9148A11ECFF6B51EF4F866354EC03",
+          "profile": "/Users/csx/eftoolKey/eftoolProd.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\yeah1\\.ohos\\config\\default_ef-tool_wiR9xobcrmIbQWnKmBjFTVnoObEwoAqABNDHzORkjrk=.p12"
+          "storeFile": "/Users/csx/eftoolKey/eftool.p12"
+        }
+      },
+      {
+        "name": "debug",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/csx/.ohos/config/debug_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.cer",
+          "storePassword": "0000001B7D85D469F6A3F9EDD0A63BAACB9C8EA96893C09C164BE7FB5E52237E6903483F16CFDCF9FE225A",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B8D422E95AFC7F431406296CE6C0B257A58F9BA84393F2BF3BD8B26736D66432C915FD831593071",
+          "profile": "/Users/csx/.ohos/config/debug_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/csx/.ohos/config/debug_ef-tool_UCv0ZIleBZjB3LgKrY1NJeLWpi9upmIs1uxjJdwOZh4=.p12"
         }
       }
     ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "eftool",
         "compatibleSdkVersion": "5.0.0(12)",
         "runtimeOS": "HarmonyOS"
       }
@@ -88,6 +101,10 @@
     {
       "name": "ef_audio",
       "srcPath": "./ef_audio",
+    },
+    {
+      "name": "ef_ai",
+      "srcPath": "./ef_ai",
     }
   ]
 }
