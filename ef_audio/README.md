@@ -1,6 +1,6 @@
 # <center>ef_audio</center>
 
-# <center>V1.1.0(API12)</center>
+# <center>V1.1.1(API12)</center>
 
 --------------------------------------------------------------------------------
 
@@ -46,6 +46,8 @@ efAVPlay: EfAVPlayer = new EfAVPlayer()
 ```
 
 ### 3.初始化
+
+> 需要注意，init是异步的，需要加上 await  使用。 如 await  this.efAVPlay.init()
 
 ```
 this.efAVPlay.init()
