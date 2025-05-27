@@ -128,6 +128,6 @@ ohpm install @yunkss/eftool
 
 ## 鸿蒙开发交流群现已有2群,HarmonyOS开发者可积极交流
 
-![qrcode.jpg](https://img.picgo.net/2025/05/16/WechatIMG466978be2d61316d143.md.png)
+![qrcode.jpg](https://img.picgo.net/2025/05/27/_20250527101525_76ff5aaf71dc111c7.md.jpg)
 
 ## 👴希望大家如有好的需求踊跃提交,如有问题请前往gitee提交issue，我闲暇时间会扩充与修复优化
