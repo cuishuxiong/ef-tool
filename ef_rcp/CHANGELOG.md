@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.0.9] 2025-07
+
+### 🐣新特性
+
+* 新增putForm请求方式[issuesIBRM39](https://gitee.com/yunkss/ef-tool/issues/IBRM39)
+
+### 🐞Bug修复
+
+* 优化响应非json或字符串时解析异常问题
+* 添加插件市场唯一编码
+* 优化SSL peer certificate or SSH remote key was not
+  OK问题[issuesIBKNZ6](https://gitee.com/yunkss/ef-tool/issues/IBKNZ6)
+
 ## [v1.0.8] 2024-11
 
 ### 🐣新特性

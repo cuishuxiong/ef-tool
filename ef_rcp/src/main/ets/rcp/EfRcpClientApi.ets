@@ -139,7 +139,7 @@ export class EfRcpClientApi {
     if (baseURL) {
       url = baseURL + url
     }
-    let request = new rcp.Request(url, method, EfRcpClientApi.buildHeaders(headers), "",
+    let request = new rcp.Request(url, method, EfRcpClientApi.buildHeaders(headers), undefined,
       EfRcpClientApi.buildCookies(cookies));
     //返回
     return request;
@@ -186,6 +186,11 @@ export class EfRcpClientApi {
           return { data: result as E };
         }
       } else {
+        //此处新增如果是非字符串类型则直接返回
+        if (response.statusCode == 200) {
+          return { data: response.body as E };
+        }
+
         let errStr = 'efRcp解析【' + request.method + '】结果异常~';
         //此处优化为调用者传入是否直接返回对应的字符串信息
         if (efRcpConfig.isConvertError) {
@@ -386,6 +391,44 @@ export class EfRcpClientApi {
           putParam.baseURL, putParam.loading, putParam.loadingColor);
       //传入请求参数
       request.content = jsonStr;
+      //构建响应
+      return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, putParam.loading);
+    } catch (e) {
+      return e;
+    }
+  }
+
+  /**
+   * putForm请求
+   * @param putParam put请求入参,详见efRcpConfig.requestBaseParams
+   * @param cls 需要返回的泛型对象,内部会做类型转换，转换后泛型的方法调用不会报错
+   * @param securityCfg 本次请求需要更换的证书入参信息,详见efRcpConfig.securityCfg,不需要则不传
+   * @returns 响应结果
+   */
+  async putForm<E>(putParam: efRcpConfig.requestBaseParams, cls?: ClassConstructor<E>,
+    securityCfg?: efRcpConfig.securityCfg): Promise<EfRcpResponse<E>> {
+    try {
+      //说明是params方式需要拼接到url
+      if (putParam.isParams && putParam.isParams === true) {
+        putParam.url += EfRcpClientApi.buildParams(putParam.query);
+      }
+      //更改请求方式
+      if (putParam.headers && !putParam.headers['content-type']) {
+        putParam.headers['content-type'] = "application/x-www-form-urlencoded";
+      } else {
+        putParam.headers = {
+          'content-type': 'application/x-www-form-urlencoded'
+        }
+      }
+      //构建request
+      let request = await EfRcpClientApi.buildRequest(putParam.url, 'PUT', putParam.headers, putParam.cookies,
+        putParam.loadingTxt, putParam.baseURL, putParam.loading, putParam.loadingColor);
+      if (!putParam.isParams) {
+        //转换请求参数
+        let form = new rcp.Form(putParam.query as rcp.FormFields);
+        //设置请求内容
+        request.content = form;
+      }
       //构建响应
       return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, putParam.loading);
     } catch (e) {
