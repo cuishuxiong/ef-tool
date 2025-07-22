@@ -260,10 +260,15 @@ export class EfRcpClientApi {
       let request = await EfRcpClientApi.buildRequest(postParam.url, 'POST', postParam.headers, postParam.cookies,
         postParam.loadingTxt, postParam.baseURL, postParam.loading, postParam.loadingColor);
       if (!postParam.isParams) {
-        //转换请求参数
-        let jsonStr = JSON.stringify(postParam.query);
-        //传入请求参数
-        request.content = jsonStr;
+        //此处优化非字符串类型不做处理
+        try {
+          //转换请求参数
+          let jsonStr = JSON.stringify(postParam.query);
+          //传入请求参数
+          request.content = jsonStr;
+        } catch (e) {
+          request.content = postParam.query
+        }
       }
       //构建响应
       return await EfRcpClientApi.buildResponse<E>(request, cls, securityCfg, postParam.loading);
