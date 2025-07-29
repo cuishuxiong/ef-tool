@@ -28,6 +28,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { EfRcpError } from './EfRcpError';
 import { EfRcpResponse } from './EfRcpResponse';
 import { plainToClass, plainToInstance, ClassConstructor } from 'class-transformer';
+import { JSONUtil } from '@yunkss/ef_json';
 
 /**
  * @Author csx
@@ -262,10 +263,14 @@ export class EfRcpClientApi {
       if (!postParam.isParams) {
         //此处优化非字符串类型不做处理
         try {
-          //转换请求参数
-          let jsonStr = JSON.stringify(postParam.query);
-          //传入请求参数
-          request.content = jsonStr;
+          if (JSONUtil.isJSONString(postParam.query) || JSONUtil.isJSONStringArray(postParam.query)) {
+            //转换请求参数
+            let jsonStr = JSON.stringify(postParam.query);
+            //传入请求参数
+            request.content = jsonStr;
+          } else {
+            request.content = postParam.query
+          }
         } catch (e) {
           request.content = postParam.query
         }

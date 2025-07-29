@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.12] 2025-07
+
+### 🐞Bug修复
+
+* 优化某些情况请求入参非JSON字符串时判断错误情况[issuesICLZA4](https://gitee.com/yunkss/ef-tool/issues/ICLZA4)
+
 ## [v1.0.11] 2025-07
 
 ### 🐞Bug修复
