@@ -216,9 +216,10 @@ export class CryptoUtil {
    * @param pubKey  给定秘钥规格公钥
    * @param symAlgName 秘钥规格
    * @param symEncryptName  加密规格
+   * @param isC1C3C2  是否转成C1C3C2格式
    */
   static async encodeAsym(str: string, pubKey: string, symAlgName: string, symEncryptName: string,
-    keyName: number): Promise<string> {
+    keyName: number,isC1C3C2:boolean): Promise<string> {
     //将公钥转换
     let pubPair = await CryptoUtil.convertPubKeyFromStr(pubKey, symAlgName, keyName);
     //生成加密器
@@ -230,7 +231,7 @@ export class CryptoUtil {
     //开始加密
     let updateOutput = await encoder.doFinal({ data: encode.encodeInto(str) });
     //转换字符串
-    return StrAndUintUtil.unitArray2String(updateOutput.data);
+    return StrAndUintUtil.unitArray2String(updateOutput.data,isC1C3C2);
   }
 
   /**

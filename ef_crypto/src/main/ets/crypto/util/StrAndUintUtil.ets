@@ -47,7 +47,7 @@ export class StrAndUintUtil {
     //转换成可以读懂的字符串
     let asn1Str = buffer.from(arr).toString('hex');
     if (isC1C3C2) {
-      asn1Str = new SM2Convert().d2i(asn1Str);
+      asn1Str = "04" + new SM2Convert().d2i(asn1Str);
     }
     return asn1Str;
   }

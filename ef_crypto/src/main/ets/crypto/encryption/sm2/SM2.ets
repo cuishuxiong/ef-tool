@@ -38,8 +38,8 @@ export class SM2 {
    * @param encodeStr  待加密的字符串
    * @param pubKey  SM2公钥
    */
-  static async encode(str: string, pubKey: string): Promise<string> {
-    return CryptoUtil.encodeAsym(str, pubKey, 'SM2_256', 'SM2_256|SM3', 256);
+  static async encode(str: string, pubKey: string,isC1C3C2:boolean): Promise<string> {
+    return CryptoUtil.encodeAsym(str, pubKey, 'SM2_256', 'SM2_256|SM3', 256,isC1C3C2);
   }
 
   /**
